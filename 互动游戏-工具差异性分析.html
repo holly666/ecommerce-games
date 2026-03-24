@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具选择大冒险 - 差异化分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        #start-screen { text-align: center; padding: 60px 20px; }
+        .title { font-size: 3em; background: linear-gradient(45deg, #ffd700, #ff6b6b, #48dbfb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px; }
+        .subtitle { font-size: 1.3em; color: #a0a0a0; margin-bottom: 40px; }
+        .start-btn { background: linear-gradient(45deg, #ff6b6b, #ffd700); border: none; padding: 20px 60px; font-size: 1.5em; color: white; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4); }
+        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6); }
+        .rules { margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 15px; text-align: left; }
+        .rules h3 { color: #ffd700; margin-bottom: 15px; }
+        .rules li { margin: 10px 0; color: #ccc; }
+        #game-screen { display: none; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 15px; margin-bottom: 30px; }
+        .score { font-size: 1.5em; color: #ffd700; }
+        .question-num { font-size: 1.2em; color: #a0a0a0; }
+        .question-box { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin-bottom: 30px; border: 2px solid rgba(255, 215, 0, 0.3); }
+        .knowledge-tag { display: inline-block; background: linear-gradient(45deg, #ff6b6b, #ffd700); padding: 5px 15px; border-radius: 20px; font-size: 0.9em; margin-bottom: 15px; }
+        .question-text { font-size: 1.3em; line-height: 1.8; margin-bottom: 20px; }
+        .hint { background: rgba(255,215,0,0.2); padding: 10px; border-radius: 10px; font-size: 0.9em; color: #ffd700; margin-top: 10px; }
+        .options { display: grid; gap: 15px; }
+        .option { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; cursor: pointer; transition: all 0.3s; text-align: left; }
+        .option:hover { border-color: #ffd700; transform: scale(1.02); background: rgba(255,255,255,0.2); }
+        .option.correct { background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; }
+        .option.wrong { background: linear-gradient(135deg, #ef4444, #dc2626); border-color: #ef4444; }
+        .option.disabled { pointer-events: none; }
+        .explanation { background: rgba(255,215,0,0.1); padding: 15px; border-radius: 10px; margin-top: 15px; display: none; }
+        .explanation.show { display: block; }
+        .explanation-title { color: #ffd700; font-weight: bold; margin-bottom: 5px; }
+        #result-screen { display: none; text-align: center; padding: 60px 20px; }
+        .result-title { font-size: 2.5em; margin-bottom: 20px; }
+        .final-score { font-size: 4em; color: #ffd700; margin: 30px 0; }
+        .result-msg { font-size: 1.5em; color: #a0a0a0; margin-bottom: 40px; }
+        .restart-btn { background: linear-gradient(45deg, #ff6b6b, #ffd700); border: none; padding: 18px 50px; font-size: 1.3em; color: white; border-radius: 50px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <h1 class="title">🎯 工具选择大冒险</h1>
+            <p class="subtitle">市场信息获取工具的差异性分析</p>
+            <button class="start-btn" onclick="startGame()">开始挑战</button>
+            <div class="rules">
+                <h3>📋 游戏规则</h3>
+                <ul>
+                    <li>共 <strong>6道情景题</strong></li>
+                    <li>根据老板的需求和预算，选择最合适的工具</li>
+                    <li>答对 <strong>+10分</strong></li>
+                    <li>🎯 目标：学会根据3个维度选择工具！</li>
+                </ul>
+            </div>
+        </div>
+        <div id="game-screen">
+            <div class="header">
+                <div class="question-num">题 <span id="q-num">1</span>/6</div>
+                <div class="score">🏆 <span id="score">0</span>分</div>
+            </div>
+            <div class="question-box">
+                <span class="knowledge-tag" id="knowledge-tag"></span>
+                <p class="question-text" id="question-text"></p>
+                <div class="hint" id="hint"></div>
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">💡 答案解析</div>
+                    <p id="explanation-text"></p>
+                </div>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        <div id="result-screen">
+            <h1 class="result-title">🎉 挑战完成！</h1>
+            <p class="final-score"><span id="final-score">0</span> 分</p>
+            <p class="result-msg" id="result-msg"></p>
+            <button class="restart-btn" onclick="restartGame()">再玩一次</button>
+        </div>
+    </div>
+    <script>
+        const questions = [
+            {
+                tag: "📊 数据来源差异",
+                scenario: "🌟 场景1：你是做电商代运营的，想帮客户做一次大规模的消费者满意度调查，预计要收集3000份问卷，请问应该优先考虑什么类型的数据来源工具？",
+                hint: "💡 提示：考虑是直接向用户收集，还是从公开渠道获取？",
+                options: [
+                    "A. 选择能直接面向用户收集数据的工具（如问卷星）",
+                    "B. 选择从社交媒体公开抓取数据的工具（如八爪鱼）",
+                    "C. 选择电商平台自带的分析工具（如生意参谋）"
+                ],
+                answer: 0,
+                explanation: "大规模问卷调查需要直接面向用户收集数据，所以应选择能直接收集数据的工具，如在线问卷调查平台！"
+            },
+            {
+                tag: "🔍 分析深度差异",
+                scenario: "📈 场景2：你的淘宝店每月销售额50万，想深入分析访客行为、转化漏斗、流量来源等，需要详细的数据可视化报表，应该选择什么级别的工具？",
+                hint: "💡 提示：需要深入分析和可视化，还是只需基础统计？",
+                options: [
+                    "A. 选择提供深入分析和可视化的高级工具（如生意参谋专业版）",
+                    "B. 选择基础统计功能的免费工具（如问卷星基础版）",
+                    "C. 选择只能看原始数据的工具"
+                ],
+                answer: 0,
+                explanation: "销售额50万的店铺需要深入的数据分析，应该选择能提供深度分析和可视化的高级工具！"
+            },
+            {
+                tag: "💰 使用成本差异",
+                scenario: "🎒 场景3：你刚创业做微商，预算有限但想做市场调研，应该优先考虑什么成本的工具？",
+                hint: "💡 提示：预算有限时，哪些工具更友好？",
+                options: [
+                    "A. 选择有免费版本的基础工具（如问卷星免费版）",
+                    "B. 选择付费的高级工具（如飞瓜数据专业版）",
+                    "C. 选择价格最贵的工具"
+                ],
+                answer: 0,
+                explanation: "预算有限时，应该优先选择有免费版本的基础工具，等业务做大了再升级付费版！"
+            },
+            {
+                tag: "📊 数据来源差异",
+                scenario: "🔎 场景4：你想监控竞店在天猫的所有商品价格变化，看看他们什么时候降价促销，应该选择什么数据来源的工具？",
+                hint: "💡 提示：是要直接问用户，还是从公开网站抓取？",
+                options: [
+                    "A. 选择从公开网站自动抓取数据的工具（如网络爬虫）",
+                    "B. 选择发送问卷给用户的工具",
+                    "C. 选择电商平台分析工具"
+                ],
+                answer: 0,
+                explanation: "监控竞店价格变化需要从公开网站自动抓取数据，应该选择网络爬虫类的工具！"
+            },
+            {
+                tag: "🔍 分析深度差异",
+                scenario: "📉 场景5：你的品牌要做年度复盘，只需要看看问卷的汇总数据（有多少人满意、不满意），不需要复杂分析，应该选择什么级别的工具？",
+                hint: "💡 提示：只需要简单的汇总统计，不需要深度分析",
+                options: [
+                    "A. 选择提供数据提取和初步统计的基础工具",
+                    "B. 选择高级的数据可视化分析工具",
+                    "C. 选择AI智能分析工具"
+                ],
+                answer: 0,
+                explanation: "只需要初步统计时，选择提供基础统计功能的工具就够了，不必花冤枉钱买高级功能！"
+            },
+            {
+                tag: "💰 使用成本差异",
+                scenario: "🚀 场景6：你的公司月销300万，想做精细化运营，需要实时监控数据、自动生成报表，应该选择什么成本的工具？",
+                hint: "💡 提示：业务做大了，需要更专业的工具来提高效率",
+                options: [
+                    "A. 选择付费的高级工具，能提供更全面深入的服务",
+                    "B. 继续用免费版基础工具",
+                    "C. 选择最便宜的工具"
+                ],
+                answer: 0,
+                explanation: "业务做大了就需要付费的高级工具，虽然要花钱但能带来更大价值，这就是成本与收益的平衡！"
+            }
+        ];
+        
+        let currentQuestion = 0, score = 0;
+        
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('q-num').textContent = currentQuestion + 1;
+            document.getElementById('knowledge-tag').textContent = q.tag;
+            document.getElementById('question-text').textContent = q.scenario;
+            document.getElementById('hint').textContent = q.hint;
+            document.getElementById('explanation').classList.remove('show');
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.textContent = opt;
+                btn.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+        
+        function selectAnswer(index) {
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.answer) opt.classList.add('correct');
+            });
+            
+            if (index === q.answer) {
+                score += 10;
+                document.getElementById('score').textContent = score;
+            } else {
+                options[index].classList.add('wrong');
+            }
+            
+            document.getElementById('explanation-text').textContent = q.explanation;
+            document.getElementById('explanation').classList.add('show');
+            
+            setTimeout(() => {
+                nextQuestion();
+            }, 3000);
+        }
+        
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= questions.length) showResult();
+            else showQuestion();
+        }
+        
+        function showResult() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').textContent = score;
+            
+            let msg = score === 60 ? "🎓 学神！完全掌握工具选择3大维度！" :
+                     score >= 50 ? "⭐ 学霸！几乎全部掌握！" :
+                     score >= 40 ? "👍 不错！再复习一下就全懂了！" :
+                     "💪 加油！再听一遍知识点就会了！";
+            document.getElementById('result-msg').textContent = msg;
+        }
+        
+        function restartGame() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            showQuestion();
+        }
+    </script>
+</body>
+</html>
