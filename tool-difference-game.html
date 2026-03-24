@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>奶茶店老板的抉择 - 工具选择大冒险</title>
+    <title>淘宝店主的逆袭 - 工具选择大冒险</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%); min-height: 100vh; color: #333; }
@@ -48,15 +48,15 @@
 <body>
     <div class="container">
         <div id="start-screen">
-            <h1 class="title">🧋 奶茶店老板的抉择</h1>
+            <h1 class="title">🛒 淘宝店主的逆袭</h1>
             <p class="subtitle">市场信息获取工具 - 选择大冒险</p>
             <button class="start-btn" onclick="startGame()">开始闯关</button>
             <div class="rules">
                 <h3>📋 游戏规则</h3>
                 <ul>
                     <li>共 <strong>6道情景题</strong></li>
-                    <li>作为奶茶店老板，遇到经营难题该选什么工具？</li>
-                    <li>答对 <strong>+10分</strong></li>
+                    <li>作为淘宝店主，遇到经营难题该选什么工具？</li>
+                    <li>答对 <strong>+17分</strong>，满分 <strong>100分</strong></li>
                     <li>🎯 目标：学会根据3个维度选择工具！</li>
                 </ul>
             </div>
@@ -64,7 +64,7 @@
         <div id="game-screen">
             <div class="header">
                 <div class="question-num">第 <span id="q-num">1</span>/6 题</div>
-                <div class="score">💰 <span id="score">0</span>分</div>
+                <div class="score">🏆 <span id="score">0</span>分</div>
             </div>
             <div class="question-box">
                 <span class="knowledge-tag" id="knowledge-tag"></span>
@@ -86,20 +86,20 @@
             <h1 class="result-title">🎉 挑战完成！</h1>
             <p class="final-score"><span id="final-score">100</span> 分</p>
             <p class="result-msg" id="result-msg"></p>
-            <button class="restart-btn" onclick="restartGame()">再当一次老板</button>
+            <button class="restart-btn" onclick="restartGame()">再当一次店主</button>
         </div>
     </div>
     <script>
         const questions = [
             {
                 tag: "📊 数据来源差异",
-                scenarioTitle: "🧋 情景1：开业前的市场调研",
-                scenarioText: "你准备在大学城开一家奶茶店，想做一期市场调研，了解学生們对奶茶口味、价位、甜度的偏好，预计要收集500份问卷。",
+                scenarioTitle: "🎮 情景1：卖游戏周边的淘宝新手",
+                scenarioText: "你是一名职校生，刚在淘宝开了家游戏周边店（卖键盘、鼠标垫、游戏皮肤等），想做一期市场调研，了解同学们对游戏周边的价格偏好，预计要收集500份问卷。",
                 question: "这么大的调研量，你应该用哪个工具？",
                 hint: "💡 提示：是要直接问用户（发问卷），还是去网上抓取数据？",
                 options: [
                     "A. 问卷星 - 能直接面向用户发问卷收集数据",
-                    "B. 八爪鱼 - 从大众点评抓取竞品数据",
+                    "B. 八爪鱼 - 从B站抓取UP主数据",
                     "C. 生意参谋 - 看淘宝店铺数据"
                 ],
                 answer: 0,
@@ -107,8 +107,8 @@
             },
             {
                 tag: "💰 使用成本差异",
-                scenarioTitle: "💰 情景2：预算有限的创业初期",
-                scenarioText: "你刚大学毕业创业，存款不多，但特别想了解周边奶茶店的价格和新品情况，预算很紧张。",
+                scenarioTitle: "💸 情景2：预算有限的创业小白",
+                scenarioText: "你刚毕业，存款不多，但特别想了解竞店的价格和新品情况，预算很紧张。",
                 question: "作为预算有限的创业者，应该优先考虑什么成本的工具？",
                 hint: "💡 提示：刚创业没钱，应该选什么价位的工具？",
                 options: [
@@ -121,8 +121,8 @@
             },
             {
                 tag: "🔍 分析深度差异",
-                scenarioTitle: "📈 情景3：店铺生意变好了",
-                scenarioText: "你的奶茶店开了半年，每月营收10万+，现在想深入分析顾客的消费习惯、哪些产品卖得好、什么时候人最多，需要详细的数据报表。",
+                scenarioTitle: "📈 情景3：店铺月销10万+了",
+                scenarioText: "你的游戏周边店开了半年，每月营收10万+，现在想深入分析顾客的消费习惯、哪些产品卖得好、什么时候访客最多，需要详细的数据报表。",
                 question: "想看深度数据分析和可视化报表，应该选什么级别的工具？",
                 hint: "💡 提示：生意做大了，需要更专业的分析功能",
                 options: [
@@ -136,7 +136,7 @@
             {
                 tag: "📊 数据来源差异",
                 scenarioTitle: "🔎 情景4：监控竞争对手",
-                scenarioText: "你发现隔壁那家奶茶店生意超好，想自动抓取他们店铺的所有产品价格和新品信息，做一个监控表，看看他们什么时候搞促销。",
+                scenarioText: "你发现隔壁那家卖游戏周边的店生意超火，想自动抓取他们店铺的所有产品价格和新品信息，做一个监控表，看看他们什么时候搞促销。",
                 question: "想自动抓取竞争对手网站的数据，应该选什么工具？",
                 hint: "💡 提示：是要直接问顾客，还是去竞店网站自动抓取？",
                 options: [
@@ -163,8 +163,8 @@
             },
             {
                 tag: "💰 使用成本差异",
-                scenarioTitle: "🚀 情景6：准备扩张连锁店",
-                scenarioText: "你的奶茶店大获成功，准备开第3家连锁店了！现在需要实时监控各店数据、自动生成日报表，需要更专业的功能。",
+                scenarioTitle: "🚀 情景6：准备开天猫旗舰店",
+                scenarioText: "你的淘宝店大获成功，准备升级开天猫旗舰店了！现在需要实时监控各店数据、自动生成日报表，需要更专业的功能。",
                 question: "业务做大了需要更专业的工具，应该选什么成本的？",
                 hint: "💡 提示：有钱了就要用更专业的工具提高效率",
                 options: [
@@ -243,12 +243,11 @@
         function showResult() {
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            document.getElementById('final-score').textContent = score;
             
-            let msg = score === 60 ? "👑 奶茶店大王！完全掌握工具选择技巧！" :
-                     score >= 50 ? "⭐ 优秀老板！生意一定很火爆！" :
-                     score >= 40 ? "👍 不错的老板胚子！再学学就更棒了！" :
-                     "💪 加油！下次一定能把店经营得更好！";
+            let msg = score === 100 ? "👑 淘宝大神！店铺必定爆火！" :
+                     score >= 85 ? "⭐ 优秀店主！生意一定很火爆！" :
+                     score >= 70 ? "👍 不错的店主！再学学就更棒了！" :
+                     "💪 加油！下次一定能当大老板！";
             document.getElementById('result-msg').textContent = msg;
         }
         
