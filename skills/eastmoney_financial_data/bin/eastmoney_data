@@ -1,0 +1,16 @@
+#!/bin/bash
+# 东方财富金融数据查询
+
+APIKEY="${EASTMONEY_APIKEY:-mkt_UsR5Lcy8be3_6ACn2EuAIOKaINZc6T6xr6xNHdsYajg}"
+
+if [ -z "$1" ]; then
+    echo "用法: eastmoney_data \"查询内容\""
+    exit 1
+fi
+
+QUERY="$1"
+
+curl -s -X POST 'https://mkapi2.dfcfs.com/finskillshub/api/claw/query' \
+    -H 'Content-Type: application/json' \
+    -H "apikey: $APIKEY" \
+    -d "{\"toolQuery\":\"$QUERY\"}" | jq '.'

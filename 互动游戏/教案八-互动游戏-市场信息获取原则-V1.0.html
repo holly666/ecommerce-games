@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>市场信息获取原则 - 互动小游戏 V1.0</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #667eea;
+            margin: 0;
+            font-size: 32px;
+        }
+        .header .subtitle {
+            color: #666;
+            margin-top: 10px;
+        }
+        .version {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffd700;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .game-box {
+            margin-bottom: 30px;
+        }
+        .game-title {
+            font-size: 24px;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rule-box {
+            background: #fff9e6;
+            border: 2px dashed #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .rule-title {
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 8px;
+        }
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        .question-num {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-btn {
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .option-btn.correct {
+            background: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724;
+        }
+        .option-btn.wrong {
+            background: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24;
+        }
+        .option-btn.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .answer-area {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        .answer-area.show {
+            display: block;
+        }
+        .answer-area.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        .answer-area.wrong {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+        .answer-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .score-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffd700;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .progress {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .koujue-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .koujue-title {
+            font-size: 20px;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .koujue-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        .koujue-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .koujue-zi {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .koujue-yuanze {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .koujue-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .koujue-btn:hover {
+            background: #5568d3;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="score-display" id="scoreDisplay">🎯 0分</div>
+
+<div class="game-container" style="position: relative;">
+    <div class="version">V1.0</div>
+    
+    <div class="header">
+        <h1>🎮 市场信息获取原则</h1>
+        <p class="subtitle">互动小游戏 · 2.4节知识点</p>
+    </div>
+
+    <!-- 进度 -->
+    <div class="progress" id="progress">第 1/10 题</div>
+
+    <!-- 游戏1：原则判断 -->
+    <div class="game-box" id="gameBox">
+        <div class="game-title">
+            <span>🎯</span> 游戏1：原则判断大冒险
+        </div>
+        
+        <div class="rule-box">
+            <div class="rule-title">📋 游戏规则：</div>
+            <p>请阅读情景题，点击你认为正确的答案。每题 <strong>10分</strong>，看看你能得多少分！</p>
+        </div>
+
+        <!-- 题目区域 -->
+        <div id="questionArea">
+            <!-- 题目会通过JS动态生成 -->
+        </div>
+    </div>
+
+    <!-- 口诀复习 -->
+    <div class="koujue-section">
+        <div class="koujue-title">📚 五大原则口诀：准时关全法</div>
+        <div class="koujue-grid" id="koujueGrid">
+            <!-- 口诀会通过JS动态生成 -->
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🎮 市场信息获取原则 · 互动小游戏 V1.0</p>
+        <p>适用于：中职《网络营销推广》2.4节</p>
+    </div>
+</div>
+
+<script>
+    let score = 0;
+    let currentQuestion = 0;
+
+    // ========== 题目数据 ==========
+    const questions = [
+        {
+            question: "小明的网店想了解竞争对手的价格策略，以下哪种方式是合法的？",
+            options: [
+                "A. 雇佣黑客入侵竞品网站后台",
+                "B. 在竞品店铺公开页面查看价格",
+                "C. 偷拍竞品仓库盘点单据",
+                "D. 找人潜入竞品公司当卧底"
+            ],
+            correctIndex: 1,
+            explanation: "✅ 在竞品店铺公开页面查看价格是合法的！\n❌ 其他方式都违法！"
+        },
+        {
+            question: "小华做市场调研，只发放了50份问卷就用数据下结论，这种做法有什么问题？",
+            options: [
+                "A. 样本量太小，不够全面",
+                "B. 问卷太长了",
+                "C. 应该用语音访谈",
+                "D. 应该只问年轻人"
+            ],
+            correctIndex: 0,
+            explanation: "✅ 样本量太小，不够全面！\n这就是违反'全面性'原则。"
+        },
+        {
+            question: "小红看到某网红推荐某品牌护肤品很好，就直接进货售卖，她的做法对吗？",
+            options: [
+                "A. 对，跟风网红不会错",
+                "B. 不对，应该验证多个来源的数据",
+                "C. 对，网红推荐的就是好",
+                "D. 不对，应该只看销量"
+            ],
+            correctIndex: 1,
+            explanation: "✅ 应该验证多个来源！\n只听一家之言违反'准确性'原则。"
+        },
+        {
+            question: "某公司使用2021年的市场数据做2024年的营销计划，有什么问题？",
+            options: [
+                "A. 数据太旧了，违反时效性",
+                "B. 数据太新了",
+                "C. 数据太多了",
+                "D. 数据太少了"
+            ],
+            correctIndex: 0,
+            explanation: "✅ 数据太旧了！\n这违反'时效性'原则。"
+        },
+        {
+            question: "小强想开网店卖零食，以下哪个信息是与他目标相关的？",
+            options: [
+                "A. 大学生零食消费偏好",
+                "B. 老年人保健品趋势",
+                "C. 宠物食品市场规模",
+                "D. 汽车配件发展趋势"
+            ],
+            correctIndex: 0,
+            explanation: "✅ 大学生零食消费偏好最相关！\n其他都与他卖零食无关，违反'关联性'原则。"
+        },
+        {
+            question: "某公司未经用户同意，把用户信息卖给培训机构，这种行为？",
+            options: [
+                "A. 正常商业行为",
+                "B. 违法！侵犯隐私",
+                "C. 聪明的做法",
+                "D. 可以尝试"
+            ],
+            correctIndex: 1,
+            explanation: "✅ 违法！\n这严重违反'合法性'原则，可能构成犯罪！"
+        },
+        {
+            question: "小刚调研市场时，只调研了城市用户，忽略了农村用户，有什么问题？",
+            options: [
+                "A. 没有问题",
+                "B. 不全面，违反全面性原则",
+                "C. 太累了",
+                "D. 应该只调研农村"
+            ],
+            correctIndex: 1,
+            explanation: "✅ 不全面！\n只调研城市忽略农村，违反'全面性'原则。"
+        },
+        {
+            question: "小美想知道产品好不好卖，以下哪个是获取信息的好方法？",
+            options: [
+                "A. 只看一条差评",
+                "B. 只看一条好评",
+                "C. 同时分析多条评价+销量数据+竞品对比",
+                "D. 凭感觉猜测"
+            ],
+            correctIndex: 2,
+            explanation: "✅ 同时分析多条评价+销量数据+竞品对比！\n这体现了'准确性'原则 - 多来源交叉验证。"
+        },
+        {
+            question: "某奶茶店要推出新品，以下哪个信息采集是有效的？",
+            options: [
+                "A. 采集完全无关的时尚潮流数据",
+                "B. 采集目标顾客（年轻人）的口味偏好",
+                "C. 采集老年人的饮食偏好",
+                "D. 采集汽车销量数据"
+            ],
+            correctIndex: 1,
+            explanation: "✅ 采集目标顾客的口味偏好！\n这符合'关联性'原则 - 与目标高度相关。"
+        },
+        {
+            question: "小亮做电商创业，以下哪个做法是正确的？",
+            options: [
+                "A. 直接复制爆款，不管侵权",
+                "B. 用最新数据做决策，合法获取竞品信息",
+                "C. 随便找几个人问问就行",
+                "D. 不需要调研，直接卖"
+            ],
+            correctIndex: 1,
+            explanation: "✅ 用最新数据做决策，合法获取竞品信息！\n这符合'时效性'+'合法性'原则。"
+        }
+    ];
+
+    // ========== 口诀数据 ==========
+    const koujueData = [
+        { zi: "准", yuanze: "准确性", jiqiao: "交叉验证" },
+        { zi: "时", yuanze: "时效性", jiqiao: "最新数据" },
+        { zi: "关", yuanze: "关联性", jiqiao: "高度相关" },
+        { zi: "全", yuanze: "全面性", jiqiao: "多维度" },
+        { zi: "法", yuanze: "合法性", jiqiao: "守法" }
+    ];
+
+    // ========== 初始化题目 ==========
+    function initQuestion() {
+        const q = questions[currentQuestion];
+        const html = `
+            <div class="question-card">
+                <div class="question-num">第 ${currentQuestion + 1} 题</div>
+                <div class="question-text">${q.question}</div>
+                <div class="options">
+                    ${q.options.map((opt, i) => `
+                        <button class="option-btn" id="option-${i}" onclick="selectAnswer(${i})">${opt}</button>
+                    `).join('')}
+                </div>
+                <div class="answer-area" id="answerArea">
+                    <div class="answer-title" id="answerTitle"></div>
+                    <div id="answerText"></div>
+                </div>
+            </div>
+        `;
+        document.getElementById('questionArea').innerHTML = html;
+        updateProgress();
+    }
+
+    // ========== 初始化口诀 ==========
+    function initKoujue() {
+        const html = koujueData.map((item, i) => `
+            <div class="koujue-item">
+                <div class="koujue-zi">${item.zi}</div>
+                <div class="koujue-yuanze">${item.yuanze}</div>
+                <button class="koujue-btn" onclick="this.innerHTML='${item.jiqiao}'; this.style.background='#28a745'">点击记忆</button>
+            </div>
+        `).join('');
+        document.getElementById('koujueGrid').innerHTML = html;
+    }
+
+    // ========== 选择答案 ==========
+    function selectAnswer(index) {
+        const q = questions[currentQuestion];
+        
+        // 禁用所有按钮
+        for (let i = 0; i < q.options.length; i++) {
+            document.getElementById(`option-${i}`).classList.add('disabled');
+        }
+        
+        const answerArea = document.getElementById('answerArea');
+        const answerTitle = document.getElementById('answerTitle');
+        const answerText = document.getElementById('answerText');
+        
+        if (index === q.correctIndex) {
+            // 答对了
+            document.getElementById(`option-${index}`).classList.add('correct');
+            score += 10;
+            answerArea.className = 'answer-area show correct';
+            answerTitle.innerHTML = '🎉 回答正确！+10分';
+        } else {
+            // 答错了
+            document.getElementById(`option-${index}`).classList.add('wrong');
+            document.getElementById(`option-${q.correctIndex}`).classList.add('correct');
+            answerArea.className = 'answer-area show wrong';
+            answerTitle.innerHTML = '😅 回答错误！';
+        }
+        
+        answerText.innerText = q.explanation;
+        document.getElementById('scoreDisplay').innerText = '🎯 ' + score + '分';
+        
+        // 延迟进入下一题
+        setTimeout(() => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                initQuestion();
+            } else {
+                showResult();
+            }
+        }, 3000);
+    }
+
+    // ========== 更新进度 ==========
+    function updateProgress() {
+        document.getElementById('progress').innerText = `第 ${currentQuestion + 1}/${questions.length} 题`;
+    }
+
+    // ========== 显示结果 ==========
+    function showResult() {
+        let message = '';
+        if (score >= 80) {
+            message = '🏆 太棒了！你是市场信息获取高手！';
+        } else if (score >= 50) {
+            message = '👍 不错！再复习一下五大原则！';
+        } else {
+            message = '📚 要加油啦！记住口诀：准时关全法';
+        }
+        
+        const html = `
+            <div class="question-card" style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 20px;">🎉</div>
+                <div class="question-text">游戏结束！</div>
+                <div style="font-size: 36px; color: #667eea; margin: 20px 0;">${score} 分</div>
+                <div style="font-size: 20px; color: #666; margin-bottom: 20px;">${message}</div>
+                <button class="koujue-btn" style="font-size: 18px; padding: 15px 30px;" onclick="restart()">再来一次</button>
+            </div>
+        `;
+        document.getElementById('questionArea').innerHTML = html;
+        document.getElementById('progress').innerText = '游戏结束';
+    }
+
+    // ========== 重新开始 ==========
+    function restart() {
+        score = 0;
+        currentQuestion = 0;
+        document.getElementById('scoreDisplay').innerText = '🎯 0分';
+        initQuestion();
+    }
+
+    // ========== 初始化 ==========
+    window.onload = function() {
+        initQuestion();
+        initKoujue();
+    };
+</script>
+
+</body>
+</html>

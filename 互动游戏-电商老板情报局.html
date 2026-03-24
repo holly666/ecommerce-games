@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商老板情报局 - 市场信息获取工具</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        #start-screen { text-align: center; padding: 60px 20px; }
+        .title { font-size: 3em; background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px; }
+        .subtitle { font-size: 1.3em; color: #a0a0a0; margin-bottom: 40px; }
+        .start-btn { background: linear-gradient(45deg, #ff6b6b, #feca57); border: none; padding: 20px 60px; font-size: 1.5em; color: white; border-radius: 50px; cursor: pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4); }
+        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6); }
+        .rules { margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: left; }
+        .rules h3 { color: #feca57; margin-bottom: 15px; }
+        .rules li { margin: 10px 0; color: #ccc; }
+        #game-screen { display: none; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 30px; }
+        .score { font-size: 1.5em; color: #ffd700; }
+        .question-num { font-size: 1.2em; color: #a0a0a0; }
+        .question-box { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; margin-bottom: 30px; text-align: center; border: 2px solid rgba(254, 202, 87, 0.3); }
+        .scenario { background: linear-gradient(135deg, #667eea, #764ba2); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 1.1em; }
+        .question-text { font-size: 1.3em; line-height: 1.8; margin-bottom: 20px; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option { background: linear-gradient(135deg, #2d2d44, #1a1a2e); border: 2px solid #3d3d5c; padding: 20px; border-radius: 15px; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 1em; }
+        .option:hover { border-color: #feca57; transform: scale(1.02); background: linear-gradient(135deg, #3d3d5c, #2d2d44); }
+        .option.correct { background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; }
+        .option.wrong { background: linear-gradient(135deg, #ef4444, #dc2626); border-color: #ef4444; }
+        .option.disabled { pointer-events: none; }
+        #result-screen { display: none; text-align: center; padding: 60px 20px; }
+        .result-title { font-size: 2.5em; margin-bottom: 20px; }
+        .final-score { font-size: 4em; color: #ffd700; margin: 30px 0; }
+        .result-msg { font-size: 1.5em; color: #a0a0a0; margin-bottom: 40px; }
+        .restart-btn { background: linear-gradient(45deg, #ff6b6b, #feca57); border: none; padding: 18px 50px; font-size: 1.3em; color: white; border-radius: 50px; cursor: pointer; transition: all 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <h1 class="title">🏪 电商老板情报局</h1>
+            <p class="subtitle">市场信息获取工具 · 创业实战篇</p>
+            <button class="start-btn" onclick="startGame()">开始挑战</button>
+            <div class="rules">
+                <h3>📋 游戏规则</h3>
+                <ul>
+                    <li>共 <strong>6道情景题</strong></li>
+                    <li>假如你是电商老板，遇到这些问题该用什么工具？</li>
+                    <li>答对 <strong>+10分</strong>，答错 <strong>0分</strong></li>
+                    <li>看看你有没有老板潜质？</li>
+                </ul>
+            </div>
+        </div>
+        <div id="game-screen">
+            <div class="header">
+                <div class="question-num">题 <span id="q-num">1</span>/6</div>
+                <div class="score">💰 <span id="score">0</span>分</div>
+            </div>
+            <div class="question-box">
+                <div class="scenario" id="scenario"></div>
+                <p class="question-text" id="question-text"></p>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        <div id="result-screen">
+            <h1 class="result-title">🎉 挑战完成！</h1>
+            <p class="final-score"><span id="final-score">0</span> 分</p>
+            <p class="result-msg" id="result-msg"></p>
+            <button class="restart-btn" onclick="restartGame()">再当一次老板</button>
+        </div>
+    </div>
+    <script>
+        const questions = [
+            { 
+                scenario: "🌟 场景1：你刚开了一家卖汉服的网店，想做一期市场调研，了解目标客户对汉服的款式、价位、购买渠道的偏好，预计收集500份问卷",
+                question: "这么大的调研量，你应该用哪个工具？",
+                options: ["问卷星", "生意参谋", "抖查查", "百度指数"], 
+                answer: 0,
+                explanation: "问卷星适合做大规模问卷调查，快速收集消费者偏好数据！"
+            },
+            { 
+                scenario: "📊 场景2：你开了半年淘宝店，最近想看看店铺的访客来源、转化率、哪些产品卖得好，应该用哪个工具？",
+                question: "想看自己店铺的数据，该用哪个工具？",
+                options: ["问卷星", "生意参谋", "网络爬虫", "八爪鱼"], 
+                answer: 1,
+                explanation: "生意参谋是淘宝官方数据分析工具，专门看店铺流量和转化！"
+            },
+            { 
+                scenario: "🔥 场景3：你想做抖音带货，想了解'新中式穿搭'这个关键词最近一个月在抖音的搜索热度、哪些内容火，你应该用哪个工具？",
+                question: "想分析抖音上的热门关键词和数据，该用哪个？",
+                options: ["抖查查", "八爪鱼", "腾讯问卷", "百度指数"], 
+                answer: 0,
+                explanation: "抖查查是抖音数据分析神器，专门查抖音热门和搜索趋势！"
+            },
+            { 
+                scenario: "🕷️ 场景4：你发现竞店一款和你相似的产品价格一直很便宜，你想自动抓取它店铺所有商品的价格变化，做一个价格监控表",
+                question: "想自动抓取竞争对手网站的数据，该用哪个工具？",
+                options: ["问卷星", "网络爬虫", "识微商情", "飞瓜数据"], 
+                answer: 1,
+                explanation: "网络爬虫可以自动化抓取网页数据，做竞品监控！"
+            },
+            { 
+                scenario: "📢 场景5：你的汉服品牌最近请了网红推广，想监控推广后在小红书、微博上的用户口碑和评价，看看大家都在说什么",
+                question: "想监控社交媒体上的品牌口碑，该用哪个工具？",
+                options: ["百度指数", "八爪鱼", "识微商情", "问卷星"], 
+                answer: 2,
+                explanation: "识微商情是AI舆情监控工具，专门监控品牌在社交媒体的口碑！"
+            },
+            { 
+                scenario: "🔍 场景6：你打算进军美妆赛道，想分析'早八妆'这个关键词在百度、微博、小红书近一年的搜索趋势和热度变化",
+                question: "想分析全网的搜索趋势和热度，该用哪个工具？",
+                options: ["问卷星", "识微商情", "百度指数", "网络爬虫"], 
+                answer: 2,
+                explanation: "百度指数可以查关键词搜索趋势，了解全网热度变化！"
+            }
+        ];
+        let currentQuestion = 0, score = 0;
+        function startGame() { document.getElementById('start-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'block'; showQuestion(); }
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('q-num').textContent = currentQuestion + 1;
+            document.getElementById('scenario').textContent = q.scenario;
+            document.getElementById('question-text').textContent = q.question;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.textContent = opt;
+                btn.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+        function selectAnswer(index) {
+            const options = document.querySelectorAll('.option');
+            const correctAnswer = questions[currentQuestion].answer;
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === correctAnswer) opt.classList.add('correct');
+            });
+            if (index === correctAnswer) { score += 10; document.getElementById('score').textContent = score; }
+            else options[index].classList.add('wrong');
+            setTimeout(nextQuestion, 2000);
+        }
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= questions.length) showResult();
+            else showQuestion();
+        }
+        function showResult() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').textContent = score;
+            let msg = score === 60 ? "👑 老板级人物！满分通过！" : score >= 50 ? "⭐ 优秀老板！很有商业头脑！" : score >= 40 ? "👍 不错的老板胚子！" : "💪 继续学习，下一个商业巨头就是你！";
+            document.getElementById('result-msg').textContent = msg;
+        }
+        function restartGame() { currentQuestion = 0; score = 0; document.getElementById('score').textContent = '0'; document.getElementById('result-screen').style.display = 'none'; document.getElementById('game-screen').style.display = 'block'; showQuestion(); }
+    </script>
+</body>
+</html>

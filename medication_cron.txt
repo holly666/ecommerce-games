@@ -1,0 +1,14 @@
+# 服药提醒 - 每天早上5点
+0 5 * * * cd /Users/holly/.openclaw/workspace && /usr/bin/python3 -c "
+from datetime import datetime
+start = datetime(2026, 2, 24)
+today = datetime.now()
+diff = (today - start).days
+msgs = []
+if diff % 2 == 0:
+    msgs.append('今天是服药日，该吃肠溶片了！请按时服药。')
+if diff % 3 == 0:
+    msgs.append('今天是服药日，该吃维生素D了！请按时服药。')
+if msgs:
+    print(chr(10).join(msgs))
+"

@@ -1,0 +1,213 @@
+        }
+                
+                // 获取填空题
+                const fillUrl = `https://open.feishu.cn/open-apis/bitable/v1/apps/${CONFIG.FILL_APP_TOKEN}/tables/${CONFIG.FILL_TABLE_ID}/records?page_size=200`;
+                const fillRes = await fetch(fillUrl, { headers: { 'Authorization': `Bearer ${state.accessToken}` } });
+                const fillData = await fillRes.json();
+                
+                let allQuestions = [];
+                
+                // 处理选择题
+                if (quizData.data && quizData.data.items) {
+                    const quizQuestions = quizData.data.items
+                        .filter(item => {
+                            const point = item.fields['对应知识点'] || '';
+                            return point.includes(chapterId);
+                        })
+                        .map(item => {
+                            const correct = item.fields['正确答案'] || '';
+                            let type = 'single';
+                            if (correct.length > 1) type = 'multiple';
+                            else if (correct === '对' || correct === '错') type = 'judge';
+                            
+                            return {
+                                type: type,
+                                text: item.fields['题目内容'] || '',
+                                options: [
+                                    item.fields['选项A'] || '',
+                                    item.fields['选项B'] || '',
+                                    item.fields['选项C'] || '',
+                                    item.fields['选项D'] || ''
+                                ].filter(o => o),
+                                answer: '',
+                                correct: correct,
+                                explanation: item.fields['答案解析'] || ''
+                            };
+                        });
+                    allQuestions = allQuestions.concat(quizQuestions);
+                }
+                
+                // 处理填空题
+                if (fillData.data && fillData.data.items) {
+                    const fillQuestions = fillData.data.items
+                        .filter(item => {
+                            const point = item.fields['对应知识点'] || '';
+                            return point.includes(chapterId);
+                        })
+                        .map(item => ({
+                            type: 'fill',
+                            text: item.fields['题目内容'] || '',
+                            answer: '',
+                            correct: item.fields['正确答案'] || ''
+                        }));
+                    allQuestions = allQuestions.concat(fillQuestions);
+                }
+                
+                state.questions = allQuestions;
+                console.log('加载到 ' + state.questions.length + ' 道题');
+            } catch (e) { 
+                console.error('加载失败', e); 
+                alert('加载题目失败，将使用演示题目');
+            }
+        }
+
+        function renderQuestion() {
+            const q = state.questions[state.currentIndex];
+            const card = document.getElementById('questionCard');
+            document.getElementById('progressFill').style.width = ((state.currentIndex / state.questions.length) * 100) + '%';
+            document.getElementById('currentNum').textContent = state.currentIndex + 1;
+            document.getElementById('score').textContent = state.score;
+            
+            const typeLabel = q.type === 'single' ? '单选题' : (q.type === 'judge' ? '判断题' : '填空题');
+            let html = `<span class="type ${q.type}">${typeLabel}</span><div class="text">${q.text}</div>`;
+            
+            if (q.type === 'single') {
+                html += '<div class="options">';
+                q.options.forEach((opt, i) => {
+                    const letter = String.fromCharCode(65 + i);
+                    html += `<div class="option" onclick="selectOption('${letter}')">${opt}</div>`;
+                });
+                html += '</div>';
+            } else if (q.type === 'judge') {
+                html += '<div class="options">';
+                html += '<div class="option" onclick="selectOption(\'对\')">✓ 对</div>';
+                html += '<div class="option" onclick="selectOption(\'错\')">✗ 错</div>';
+                html += '</div>';
+            }
+            card.innerHTML = html;
+            document.getElementById('nextBtn').disabled = !q.answer;
+            document.getElementById('nextBtn').textContent = state.currentIndex === state.questions.length - 1 ? '查看结果' : '下一题';
+        }
+
+        function selectOption(answer) {
+            const q = state.questions[state.currentIndex];
+            q.answer = answer;
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.textContent.includes(answer)) opt.classList.add('selected');
+            });
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            const q = state.questions[state.currentIndex];
+            if (q.answer === q.correct) {
+                state.score++;
+            } else {
+                state.wrongQuestions.push({ ...q, userAnswer: q.answer });
+            }
+            
+            if (state.currentIndex < state.questions.length - 1) {
+                state.currentIndex++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            showPage('resultPage');
+            const percent = Math.round(state.score / state.questions.length * 100);
+            document.getElementById('finalScore').textContent = percent + '%';
+            document.getElementById('finalStats').textContent = `正确 ${state.score}/${state.questions.length}`;
+            
+            // 保存进度
+            const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+            const total = (progress.totalQuestions || 0) + state.questions.length;
+            const correctTotal = Math.round(((progress.correctRate || 0) / 100 * (progress.totalQuestions || 0) + state.score) / total * 100);
+            progress.totalQuestions = total;
+            progress.correctRate = correctTotal;
+            progress.lastDate = new Date().toDateString();
+            localStorage.setItem('learningProgress', JSON.stringify(progress));
+            
+            // 保存章节进度
+            state.chapterProgress[state.chapterId] = {
+                total: state.questions.length,
+                correct: state.score,
+                done: true
+            };
+            localStorage.setItem('chapterProgress', JSON.stringify(state.chapterProgress));
+            
+            // 保存错题
+            if (state.wrongQuestions.length > 0) {
+                const wrongBook = JSON.parse(localStorage.getItem('wrongBook') || '[]');
+                state.wrongQuestions.forEach(q => {
+                    wrongBook.push({ text: q.text, answer: q.correct, chapter: state.chapterId, date: new Date().toISOString() });
+                });
+                localStorage.setItem('wrongBook', JSON.stringify(wrongBook));
+                
+                document.getElementById('wrongListContainer').style.display = 'block';
+                document.getElementById('wrongContent').innerHTML = state.wrongQuestions.map(q => `
+                    <div class="wrong-item">
+                        <div class="q">${q.text}</div>
+                        <div class="a">正确答案: ${q.correct}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function backHome() {
+            loadProgress();
+            renderChapters();
+            showPage('homePage');
+        }
+
+        function navigateTo(page) {
+            if (page === 'home') { loadProgress(); renderChapters(); showPage('homePage'); }
+            else if (page === 'wrongbook') { loadWrongBook(); showPage('wrongbookPage'); }
+            else if (page === 'profile') { showPage('profilePage'); }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId + 'Page').classList.add('active');
+        }
+
+        function loadWrongBook() {
+            const wrongBook = JSON.parse(localStorage.getItem('wrongBook') || '[]');
+            document.getElementById('wrongTotal').textContent = wrongBook.length;
+            
+            if (wrongBook.length === 0) {
+                document.getElementById('wrongList').innerHTML = '<div class="loading">暂无错题</div>';
+                return;
+            }
+            
+            document.getElementById('wrongList').innerHTML = wrongBook.reverse().map((q, i) => `
+                <div class="wrong-item">
+                    <div class="header">
+                        <span class="chapter">${q.chapter || '未知'}</span>
+                    </div>
+                    <div class="question">${q.text}</div>
+                    <div class="answer">正确答案: ${q.answer}</div>
+                </div>
+            `).join('');
+        }
+
+        function clearProgress() {
+            if (confirm('确定清除所有学习数据吗？')) {
+                localStorage.removeItem('learningProgress');
+                localStorage.removeItem('chapterProgress');
+                localStorage.removeItem('wrongBook');
+                alert('已清除');
+                loadProgress();
+                renderChapters();
+                loadWrongBook();
+            }
+        }
+
+        function showAbout() {
+            alert('📚 网络营销推广知识点练习系统\n\n版本: 1.0\n\n基于飞书Bitable题库');
+        }
+    </script>
+</body>
+</html>

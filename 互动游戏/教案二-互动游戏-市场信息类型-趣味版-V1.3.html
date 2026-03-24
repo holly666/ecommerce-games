@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>奶茶店老板模拟器</title>
+</head>
+<body>
+<div id="page1">
+<h1>🧋 奶茶店老板模拟器</h1>
+<p>市场信息收集挑战</p>
+<input type="button" value="开始创业" onclick="go()">
+</div>
+<div id="page2" style="display:none">
+<h2>第一关：行业趋势</h2>
+<p>问题1: 你看到街上最火的奶茶店门口都排长队，主要原因是？</p>
+<input type="button" value="A. 价格便宜" onclick="check('A')">
+<input type="button" value="B. 口味新奇/颜值高" onclick="check('B')">
+</div>
+<script>
+function go(){document.getElementById('page1').style.display='none';document.getElementById('page2').style.display='block';}
+function check(a){if(a=='B'){alert('正确！');go2();}else{alert('错误！');}}
+function go2(){alert('进入下一关');}
+</script>
+</body>
+</html>

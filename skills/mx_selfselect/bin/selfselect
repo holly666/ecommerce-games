@@ -1,0 +1,46 @@
+#!/bin/bash
+# 妙想自选股管理
+
+APIKEY="${MX_APIKEY:-mkt_UsR5Lcy8be3_6ACn2EuAIOKaINZc6T6xr6xNHdsYajg}"
+
+ACTION="$1"
+shift
+
+case "$ACTION" in
+  list)
+    curl -s -X POST 'https://mkapi2.dfcfs.com/finskillshub/api/claw/self-select/get' \
+      -H 'Content-Type: application/json' \
+      -H "apikey: $APIKEY" | jq '.'
+    ;;
+  add)
+    if [ -z "$1" ]; then
+      echo "用法: selfselect add <股票名称>"
+      exit 1
+    fi
+    QUERY="把$1添加到我的自选股列表"
+    curl -s -X POST 'https://mkapi2.dfcfs.com/finskillshub/api/claw/self-select/manage' \
+      -H 'Content-Type: application/json' \
+      -H "apikey: $APIKEY" \
+      -d "{\"query\":\"$QUERY\"}" | jq '.'
+    ;;
+  remove)
+    if [ -z "$1" ]; then
+      echo "用法: selfselect remove <股票名称>"
+      exit 1
+    fi
+    QUERY="把$1从我的自选股列表删除"
+    curl -s -X POST 'https://mkapi2.dfcfs.com/finskillshub/api/claw/self-select/manage' \
+      -H 'Content-Type: application/json' \
+      -H "apikey: $APIKEY" \
+      -d "{\"query\":\"$QUERY\"}" | jq '.'
+    ;;
+  *)
+    echo "用法: selfselect <list|add|remove> [股票名称]"
+    echo ""
+    echo "示例:"
+    echo "  selfselect list                    # 查询自选股"
+    echo "  selfselect add 贵州茅台            # 添加自选股"
+    echo "  selfselect remove 贵州茅台         # 删除自选股"
+    exit 1
+    ;;
+esac

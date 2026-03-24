@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奶茶店老板模拟器 - 市场信息收集挑战</title>
+<script>
+var gameData = {
+ stage: 0,
+ score: 0,
+ info: {industry:false, customer:false, competitor:false, product:false}
+};
+
+var industryQuiz = [
+ {q:"你看到街上现在最火的奶茶店门口都排长队，你觉得主要原因是？", options:["A.  价格便宜","B.  口味新奇/颜值高","C.  开了很多年","D.  请了很多明星代言"], a:"B", explain:"越新奇越好看的越火！这就是行业趋势~"},
+ {q:"你打算把店开在美食街，政府说这里不能做餐饮，这时候应该？", options:["A.  偷偷开","B.  换个地方","C.  找关系搞定","D.  投诉政府"], a:"B", explain:"要遵守政策规定，换个合法位置！这是行业政策信息~"},
+ {q:"你听说现在奶茶店越开越多，很多人都在问还能不能开，你应该？", options:["A.  放弃不开了","B.  继续开但要有特色","C.  借钱多开几家","D.  管他呢先开再说"], a:"B", explain:"市场有竞争是正常的，关键要有差异化！这是市场竞争格局信息~"}
+];
+
+var customerQuiz = [
+ {q:"你观察了一周，来买奶茶的顾客主要是？", options:["A.  大爷大妈","B.  年轻小姐姐/小哥哥","C.  中年男士","D.  带孩子的家长"], a:"B", explain:"年轻人是奶茶的主力消费群体！这是目标消费群体~"},
+ {q:"你发现顾客点单时最常说的是？", options:["A.  最便宜的是哪款","B.  哪个最拍照好看","C.  量最大的","D.  最健康的"], a:"B", explain:"年轻人最在意颜值！这是需求偏好信息~"},
+ {q:"下午3点和晚上8点店里人最多，这两个时间段是？", options:["A.  早上和中午","B.  下午和晚上","C.  中午和下午","D.  晚上和深夜"], a:"B", explain:"这是消费高峰时段，要提前准备好原料！这是购买行为信息~"}
+];
+
+var competitorQuiz = [
+ {q:"隔壁奶茶店生意很好，你偷偷观察发现他们最大的优势是？", options:["A.  价格最便宜","B.  口味特别/品种多","C.  位置更好","D.  装修最豪华"], a:"B", explain:"口味和品种是核心竞争力！这是竞争对手的优劣势~"},
+ {q:"对面那家店价格卖很贵但还有人买，你觉得原因是？", options:["A.  位置好","B.  品牌有名/装修好看","C.  味道好","D.  服务态度好"], a:"B", explain:"品牌和颜值可以支撑高价！这是竞品的竞争策略~"},
+ {q:"你发现某竞店被顾客投诉"服务态度差"，你可以？", options:["A.  也降低价格","B.  强调自己的服务态度","C.  跟着态度差","D.  不管它"], a:"B", explain:"抓住对手的弱点，突出自己的优势！这是竞品分析~"}
+];
+
+var productQuiz = [
+ {q:"你打算主推一款新产品，你觉得下面哪个更容易爆火？", options:["A.  原味珍珠奶茶","B.  芝士莓莓/多肉葡萄","C.  经典奶茶","D.  纯茶"], a:"B", explain:"水果茶颜值高、好拍照，最容易火！这是商品功能信息~"},
+ {q:"你发现顾客很在意包装，你该怎么做？", options:["A.  用普通塑料杯","B.  用好看的渐变色杯/联名杯","C.  用纸杯更环保","D.  不管包装"], a:"B", explain:"颜值即正义！好看的杯子顾客愿意拍照分享！这是包装设计信息~"},
+ {q:"有顾客说"上次买的奶茶太甜了"，你应该？", options:["A.  不管","B.  推出半糖/三分糖选项","C.  说这是标准口味","D.  降价"], a:"B", explain:"根据顾客反馈调整产品！这是商品反馈信息~"}
+];
+
+var currentQuiz = [];
+var quizIndex = 0;
+var collected = {industry:0, customer:0, competitor:0, product:0};
+
+function startGame(){
+ document.getElementById('startPage').style.display='none';
+ document.getElementById('gamePage').style.display='block';
+ gameData.stage=1;
+ collected={industry:0,customer:0,competitor:0,product:0};
+ renderGame();
+}
+
+function renderGame(){
+ var html='';
+ var progress = ((gameData.stage-1)/4)*100;
+ document.getElementById('progressBar').style.width=progress+'%';
+ document.getElementById('stageNum').innerText=gameData.stage;
+ document.getElementById('scoreDisplay').innerText=gameData.score;
+ 
+ var stageNames = ['未开始','📈 行业趋势','👤 消费群体','🏪 竞争对手','🧋 商品信息'];
+ var stageStatus = ['','未收集','未收集','未收集','未收集'];
+ if(collected.industry>=3)stageStatus[1]='✅ 已收集';
+ if(collected.customer>=3)stageStatus[2]='✅ 已收集';
+ if(collected.competitor>=3)stageStatus[3]='✅ 已收集';
+ if(collected.product>=3)stageStatus[4]='✅ 已收集';
+ 
+ var infoStatus = '<div class="info-status">'+
+  '<div class="info-item '+(collected.industry>=3?'done':'')+'">'+stageStatus[1]+'</div>'+
+  '<div class="info-item '+(collected.customer>=3?'done':'')+'">'+stageStatus[2]+'</div>'+
+  '<div class="info-item '+(collected.competitor>=3?'done':'')+'">'+stageStatus[3]+'</div>'+
+  '<div class="info-item '+(collected.product>=3?'done':'')+'">'+stageStatus[4]+'</div>'+
+  '</div>';
+ document.getElementById('infoPanel').innerHTML=infoStatus;
+ 
+ if(gameData.stage===1){
+  html='<div class="stage-header">📈 第一关：行业趋势调研</div>'+
+   '<div class="story">你计划开一家奶茶店，先要了解行业发展趋势！回答3道现实问题~</div>'+
+   '<div class="progress-info">收集进度：'+collected.industry+'/3</div>'+
+   '<div class="quiz">';
+  currentQuiz=industryQuiz;quizIndex=0;
+  html+=renderQuiz(currentQuiz[0],collected.industry+1);
+  html+='</div>';
+ }else if(gameData.stage===2){
+  html='<div class="stage-header">👤 第二关：目标消费群体调研</div>'+
+   '<div class="story">了解了行业，现在要研究谁会来买你的奶茶！观察你的潜在顾客~</div>'+
+   '<div class="progress-info">收集进度：'+collected.customer+'/3</div>'+
+   '<div class="quiz">';
+  currentQuiz=customerQuiz;quizIndex=0;
+  html+=renderQuiz(currentQuiz[0],collected.customer+1);
+  html+='</div>';
+ }else if(gameData.stage===3){
+  html='<div class="stage-header">🏪 第三关：竞争对手调研</div>'+
+   '<div class="story">周边有几家奶茶店，了解他们的策略才能脱颖而出！</div>'+
+   '<div class="progress-info">收集进度：'+collected.competitor+'/3</div>'+
+   '<div class="quiz">';
+  currentQuiz=competitorQuiz;quizIndex=0;
+  html+=renderQuiz(currentQuiz[0],collected.competitor+1);
+  html+='</div>';
+ }else if(gameData.stage===4){
+  html='<div class="stage-header">🧋 第四关：商品信息调研</div>'+
+   '<div class="story">最后要确定你的产品定位，什么口味、包装最受欢迎？</div>'+
+   '<div class="progress-info">收集进度：'+collected.product+'/3</div>'+
+   '<div class="quiz">';
+  currentQuiz=productQuiz;quizIndex=0;
+  html+=renderQuiz(currentQuiz[0],collected.product+1);
+  html+='</div>';
+ }else if(gameData.stage===5){
+  html=renderDecision();
+ }else if(gameData.stage===6){
+  html=renderResult();
+ }
+ document.getElementById('gameContent').innerHTML=html;
+}
+
+function renderQuiz(q, num){
+ var html='<div class="q-num">第 '+num+' 题</div>'+
+  '<div class="q-text">'+q.q+'</div>'+
+  '<div class="opts">';
+ q.options.forEach(function(o,i){
+  var lt=String.fromCharCode(65+i);
+  html+='<div class="opt" onclick="answer(\''+lt+'\')">'+o+'</div>';
+ });
+ html+='</div>';
+ return html;
+}
+
+function answer(sel){
+ var q = currentQuiz[quizIndex];
+ var correct = currentQuiz[quizIndex].a;
+ 
+ if(sel===correct){
+  gameData.score+=10;
+  if(gameData.stage===1)collected.industry++;
+  if(gameData.stage===2)collected.customer++;
+  if(gameData.stage===3)collected.competitor++;
+  if(gameData.stage===4)collected.product++;
+  
+  alert('✅ 正确！+10分\n💡 '+q.explain);
+  
+  // 检查是否完成本关
+  var currentCollected = 0;
+  if(gameData.stage===1)currentCollected=collected.industry;
+  if(gameData.stage===2)currentCollected=collected.customer;
+  if(gameData.stage===3)currentCollected=collected.competitor;
+  if(gameData.stage===4)currentCollected=collected.product;
+  
+  if(currentCollected>=3){
+   // 完成此阶段
+   if(gameData.stage===1)gameData.info.industry=true;
+   if(gameData.stage===2)gameData.info.customer=true;
+   if(gameData.stage===3)gameData.info.competitor=true;
+   if(gameData.stage===4)gameData.info.product=true;
+   
+   alert('🎉 恭喜通关！该类市场信息收集完成！');
+   gameData.stage++;
+   renderGame();
+  }else{
+   // 继续下一题
+   quizIndex++;
+   renderGame();
+  }
+ }else{
+  alert('❌ 不对哦，再想想~');
+ }
+}
+
+function renderDecision(){
+ var allCollected = collected.industry>=3 && collected.customer>=3 && collected.competitor>=3 && collected.product>=3;
+ var bonusMsg = allCollected ? '<div class="bonus">🎁 完成全部信息收集任务，奖励50分！</div>' : '';
+ 
+ var html='<div class="decision-title">🎯 最终决策</div>'+
+  '<div class="story">恭喜！你已收集完所有市场信息。现在请做出你的开店决策：</div>'+bonusMsg+
+  '<div class="options">'+
+  '<div class="opt" onclick="finalChoice(1)">'+
+  '<div class="opt-title">💰 经济实惠型</div>'+
+  '<div class="opt-desc">定价10-15元，主打性价比，吸引价格敏感的顾客</div>'+
+  '</div>'+
+  '<div class="opt" onclick="finalChoice(2)">'+
+  '<div class="opt-title">⭐ 中高端网红店</div>'+
+  '<div class="opt-desc">定价18-25元，主打颜值口味，目标年轻女性白领</div>'+
+  '</div>'+
+  '<div class="opt" onclick="finalChoice(3)">'+
+  '<div class="opt-title">🏆 高端精品店</div>'+
+  '<div class="opt-desc">定价30元+，主打健康高端，用真奶真茶吸引追求品质的顾客</div>'+
+  '</div>'+
+  '</div>';
+ return html;
+}
+
+function finalChoice(choice){
+ var baseScore = gameData.score;
+ var bonus = 0;
+ if(collected.industry>=3 && collected.customer>=3 && collected.competitor>=3 && collected.product>=3){
+  bonus=50;
+ }
+ gameData.score += bonus;
+ gameData.stage=6;
+ renderGame();
+}
+
+function renderResult(){
+ var finalScore = gameData.score;
+ var rank = '';
+ var desc = '';
+ if(finalScore>=170){
+  rank='🏆 市场洞察大师';
+  desc='你真的懂市场！开店肯定火！';
+ }else if(finalScore>=130){
+  rank='📈 奶茶店小能手';
+  desc='基本的都懂了，开店应该没问题~';
+ }else if(finalScore>=80){
+  rank='🧋 入门创业者';
+  desc='还需要多学习市场信息知识哦~';
+ }else{
+  rank='💪 需要更多学习';
+  desc='先把四大市场信息类型搞清楚吧！';
+ }
+ 
+ var allDone = collected.industry>=3 && collected.customer>=3 && collected.competitor>=3 && collected.product>=3;
+ 
+ var html='<div class="result-title">🎉 创业结果</div>'+
+  '<div class="final-score">'+finalScore+'分</div>'+
+  '<div class="rank">'+rank+'</div>'+
+  '<div class="desc">'+desc+'</div>'+
+  '<div class="summary">'+
+  '<div>📈 行业趋势: '+(collected.industry>=3?'✅ 收集完成':'❌ 未完成')+'</div>'+
+  '<div>👤 消费群体: '+(collected.customer>=3?'✅ 收集完成':'❌ 未完成')+'</div>'+
+  '<div>🏪 竞争对手: '+(collected.competitor>=3?'✅ 收集完成':'❌ 未完成')+'</div>'+
+  '<div>🧋 商品信息: '+(collected.product>=3?'✅ 收集完成':'❌ 未完成')+'</div>'+
+  '</div>'+
+  '<button class="restart" onclick="restartGame()">🔁 再玩一次</button>';
+ return html;
+}
+
+function restartGame(){
+ gameData={stage:0,score:0,info:{industry:false,customer:false,competitor:false,product:false}};
+ collected={industry:0,customer:0,competitor:0,product:0};
+ document.getElementById('startPage').style.display='block';
+ document.getElementById('gamePage').style.display='none';
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:sans-serif;background:linear-gradient(135deg,#1a1a2e,#16213e);min-height:100vh;color:#fff}
+.page{display:none}
+.page.active{display:block}
+.start{text-align:center;padding:60px 20px}
+.start h1{font-size:32px;margin-bottom:10px;color:#fff}
+.start .sub{font-size:18px;margin-bottom:30px;opacity:0.8}
+.start .desc{font-size:15px;margin:20px 0;color:#aaa;line-height:1.8}
+.start button{width:220px;padding:16px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;border-radius:50px;font-size:18px;cursor:pointer;box-shadow:0 4px 15px rgba(240,147,251,0.4)}
+.game{padding:20px}
+.top-bar{background:rgba(255,255,255,0.1);padding:15px;border-radius:12px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}
+.progress{width:150px;height:8px;background:rgba(255,255,255,0.2);border-radius:4px}
+.progress-bar{height:100%;background:linear-gradient(90deg,#f093fb,#f5576c);width:0%;border-radius:4px}
+.score{font-size:18px;font-weight:bold;color:#f093fb}
+.info-status{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.info-item{padding:8px 15px;background:rgba(255,255,255,0.1);border-radius:20px;font-size:13px;opacity:0.6}
+.info-item.done{background:linear-gradient(135deg,#f093fb,#f5576c);opacity:1}
+.game-content{background:rgba(255,255,255,0.1);border-radius:16px;padding:25px}
+.stage-header{font-size:24px;font-weight:bold;margin-bottom:10px;text-align:center}
+.story{background:rgba(255,255,255,0.1);padding:15px;border-radius:10px;margin-bottom:15px;font-size:15px;line-height:1.6;text-align:center}
+.progress-info{text-align:center;color:#f093fb;margin-bottom:10px;font-size:14px}
+.q-num{text-align:center;color:#f093fb;margin-bottom:10px}
+.q-text{font-size:17px;margin-bottom:20px;text-align:center;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{padding:15px;background:rgba(255,255,255,0.15);border-radius:10px;cursor:pointer;text-align:left;font-size:15px;transition:all 0.3s}
+.opt:hover{background:rgba(240,147,251,0.3);transform:scale(1.02)}
+.options{display:flex;flex-direction:column;gap:15px}
+.options .opt{padding:20px;text-align:left}
+.opt-title{font-size:18px;font-weight:bold;margin-bottom:8px;color:#f093fb}
+.opt-desc{font-size:14px;opacity:0.8}
+.result-title{font-size:28px;text-align:center;margin-bottom:20px}
+.final-score{font-size:64px;font-weight:bold;text-align:center;background:linear-gradient(135deg,#f093fb,#f5576c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.rank{font-size:24px;text-align:center;margin:15px 0;color:#f093fb}
+.desc{text-align:center;margin-bottom:20px;opacity:0.8}
+.summary{background:rgba(255,255,255,0.1);padding:20px;border-radius:12px;margin:20px 0}
+.summary div{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1);font-size:16px}
+.bonus{background:linear-gradient(135deg,#f093fb,#f5576c);padding:15px;border-radius:10px;text-align:center;margin:15px 0;font-size:15px;font-weight:bold}
+.restart{width:100%;padding:15px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;border-radius:10px;font-size:16px;cursor:pointer;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page start" id="startPage" style="display:block">
+<h1>🧋 奶茶店老板模拟器</h1>
+<p class="sub">市场信息收集挑战</p>
+<p class="desc">
+你需要收集4种市场信息才能做出正确的开店决策：<br>
+📈 行业趋势 → 👤 消费群体 → 🏪 竞争对手 → 🧋 商品信息<br><br>
+每关3道现实问题，全部答对才算收集完成！<br>
+全部通关还有额外奖励~
+</p>
+<button id="startBtn" style="width:220px;padding:16px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;border-radius:50px;font-size:18px;cursor:pointer;box-shadow:0 4px 15px rgba(240,147,251,0.4)">开始创业</button>
+</div>
+
+<script>
+document.getElementById('startBtn').addEventListener('click', function(){
+ startGame();
+});
+
+<div class="page game" id="gamePage">
+<div class="top-bar">
+<div>第 <span id="stageNum">1</span> / 4 关</div>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+<div>得分: <span id="scoreDisplay">0</span></div>
+</div>
+<div id="infoPanel"></div>
+<div class="game-content" id="gameContent"></div>
+</div>
+</body>
+</html>

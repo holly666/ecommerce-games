@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "skills": {
+    "xiucheng-self-improving-agent": {
+      "version": "1.0.0",
+      "installedAt": 1772880006063
+    },
+    "capability-evolver": {
+      "version": "1.27.3",
+      "installedAt": 1772880560011
+    },
+    "summarize": {
+      "version": "1.0.0",
+      "installedAt": 1772880905447
+    },
+    "habit-tracker": {
+      "version": "1.0.0",
+      "installedAt": 1772882582000
+    },
+    "skill-vetter": {
+      "version": "1.0.0",
+      "installedAt": 1772883303148
+    },
+    "obsidian-ontology-sync": {
+      "version": "1.0.1",
+      "installedAt": 1772883540710
+    },
+    "cron-scheduler": {
+      "version": "1.0.0",
+      "installedAt": 1772925441535
+    },
+    "find-skills": {
+      "version": "0.1.0",
+      "installedAt": 1772925445229
+    },
+    "tavily-search": {
+      "version": "1.0.0",
+      "installedAt": 1772925447283
+    },
+    "self-improving-agent": {
+      "version": "1.0.11",
+      "installedAt": 1772927958167
+    },
+    "proactive-agent": {
+      "version": "3.1.0",
+      "installedAt": 1772929512018
+    },
+    "weather": {
+      "version": "1.0.0",
+      "installedAt": 1772929515605
+    },
+    "humanizer": {
+      "version": "1.0.0",
+      "installedAt": 1772929518783
+    },
+    "nano-pdf": {
+      "version": "1.0.0",
+      "installedAt": 1772929521893
+    },
+    "auto-updater": {
+      "version": "1.0.0",
+      "installedAt": 1772929524969
+    },
+    "obsidian": {
+      "version": "1.0.0",
+      "installedAt": 1772929529262
+    },
+    "pdf-text-extractor": {
+      "version": "1.0.0",
+      "installedAt": 1772936645341
+    },
+    "feishu-calendar": {
+      "version": "1.0.0",
+      "installedAt": 1772953322705
+    },
+    "agent-browser": {
+      "version": "0.2.0",
+      "installedAt": 1772958245247
+    }
+  }
+}

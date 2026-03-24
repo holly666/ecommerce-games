@@ -1,0 +1,19 @@
+#!/bin/bash
+# 东方财富智能选股
+
+APIKEY="${EASTMONEY_APIKEY:-mkt_UsR5Lcy8be3_6ACn2EuAIOKaINZc6T6xr6xNHdsYajg}"
+
+if [ -z "$1" ]; then
+    echo "用法: eastmoney_select \"选股条件\" [页码] [每页数量]"
+    echo "示例: eastmoney_select \"今日涨幅2%的股票\""
+    exit 1
+fi
+
+KEYWORD="$1"
+PAGE_NO="${2:-1}"
+PAGE_SIZE="${3:-20}"
+
+curl -s -X POST 'https://mkapi2.dfcfs.com/finskillshub/api/claw/stock-screen' \
+    -H 'Content-Type: application/json' \
+    -H "apikey: $APIKEY" \
+    -d "{\"keyword\":\"$KEYWORD\",\"pageNo\":$PAGE_NO,\"pageSize\":$PAGE_SIZE}" | jq '.'

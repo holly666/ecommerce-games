@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市场信息的类型 - 互动游戏</title>
+<script>
+var questions = [
+// 选择题
+{"type":"single","text":"手机行业今年销量增长30%，这是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"A"},
+{"type":"single","text":"00后大学生喜欢汉服，这是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"B"},
+{"type":"single","text":"某护肤品含有玻尿酸成分，这是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"D"},
+{"type":"single","text":"某品牌手机定价2999元，这是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"C"},
+{"type":"single","text":"哪个不属于行业趋势信息？","options":["A. 行业发展趋势","B. 市场竞争格局","C. 用户购买偏好","D. 新兴技术"],"correct":"C"},
+{"type":"single","text":"哪个不属于目标消费群体信息？","options":["A. 用户年龄分布","B. 需求偏好","C. 竞品价格策略","D. 购买行为"],"correct":"C"},
+{"type":"single","text":"哪个不属于商品信息？","options":["A. 产品功能","B. 用户评价","C. 市场份额","D. 包装设计"],"correct":"C"},
+{"type":"single","text":"构建用户画像需要哪种信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"B"},
+{"type":"single","text":"用于预判市场机会与风险的是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"A"},
+{"type":"single","text":"用于制定差异化竞争策略的是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"C"},
+{"type":"single","text":"用于优化商品设计的是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"D"},
+{"type":"single","text":"从行业协会获取的是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"A"},
+{"type":"single","text":"从电商平台获取的是什么信息？","options":["A. 行业趋势信息","B. 目标消费群体信息","C. 竞争对手信息","D. 商品信息"],"correct":"D"},
+// 填空题
+{"type":"fill","text":"____信息包括行业发展趋势、市场热点、行业政策、竞争格局、新兴技术等，用于预判市场机会与风险","correct":"行业趋势"},
+{"type":"fill","text":"____信息包括基本信息、需求偏好、购买行为、消费习惯等，用于构建用户画像","correct":"目标消费群体"},
+{"type":"fill","text":"____信息包括竞争对手的市场份额、竞争优劣势、营销策略、用户评价等，用于制定差异化竞争策略","correct":"竞争对手"},
+{"type":"fill","text":"____信息涵盖商品的功能、质量、包装、售后服务等方面的信息，用于优化商品设计","correct":"商品"},
+{"type":"fill","text":"____可从行业报告、行业协会、政府部门等渠道获取","correct":"行业趋势信息"},
+{"type":"fill","text":"____可从市场调研、社交媒体、客户反馈等渠道获取","correct":"目标消费群体信息"},
+{"type":"fill","text":"____可从竞品分析、行业报告、竞争对手网站等渠道获取","correct":"竞争对手信息"},
+{"type":"fill","text":"____可从电商平台、市场调研、客户反馈、社交媒体等渠道获取","correct":"商品信息"}
+];
+
+var state = {score:0, currentIndex:0, wrongAnswers:[]};
+var selectedOpts = [];
+
+function startGame(){
+ document.getElementById('page1').style.display='none';
+ document.getElementById('page2').style.display='block';
+ state.score=0;state.currentIndex=0;state.wrongAnswers=[];
+ renderQ();
+}
+
+function renderQ(){
+ var q=questions[state.currentIndex];
+ selectedOpts=[];
+ document.getElementById('progress').style.width=((state.currentIndex/questions.length)*100)+'%';
+ document.getElementById('cnum').innerText=state.currentIndex+1;
+ document.getElementById('total').innerText=questions.length;
+ document.getElementById('score').innerText=state.score;
+ 
+ var tl=q.type==='single'?'单选题':'填空题';
+ var html='<div class="type">'+tl+'</div><div class="qtxt">'+q.text+'</div>';
+ 
+ if(q.type==='single'){
+  html+='<div class="opts">';
+  q.options.forEach(function(o,i){
+   var lt=String.fromCharCode(65+i);
+   html+='<div class="opt" id="opt'+lt+'" onclick="toggleOpt(\''+lt+'\')">'+o+'</div>';
+  });
+  html+='<button class="subBtn" onclick="submitSingle()">提交答案</button></div>';
+ }else{
+  html+='<input type="text" id="ans" placeholder="请输入答案"><button class="subBtn" onclick="submitFill()">提交答案</button>';
+ }
+ document.getElementById('qcard').innerHTML=html;
+}
+
+function toggleOpt(opt){
+ var idx=selectedOpts.indexOf(opt);
+ if(idx>-1){selectedOpts.splice(idx,1);document.getElementById('opt'+opt).style.background='';}
+ else{selectedOpts.push(opt);document.getElementById('opt'+opt).style.background='#e8f4ff';}
+}
+
+function submitSingle(){
+ if(selectedOpts.length===0){alert('请选择一个选项');return;}
+ var q=questions[state.currentIndex];
+ var ans=selectedOpts.sort().join('');
+ q.userAnswer=ans;
+ var ok=(ans===q.correct);
+ if(ok){state.score+=10;}else{state.wrongAnswers.push(q);}
+ alert(ok?'✅ 正确！+10分':'❌ 错误！正确答案：'+q.correct);
+ next();
+}
+
+function submitFill(){
+ var q=questions[state.currentIndex];
+ var a=document.getElementById('ans').value;
+ if(!a){alert('请输入答案');return;}
+ q.userAnswer=a;
+ var ok=(a===q.correct);
+ if(ok){state.score+=10;}else{state.wrongAnswers.push(q);}
+ alert(ok?'✅ 正确！+10分':'❌ 错误！正确答案：'+q.correct);
+ next();
+}
+
+function next(){
+ if(state.currentIndex<questions.length-1){state.currentIndex++;renderQ();}else{showResult();}
+}
+
+function showResult(){
+ document.getElementById('page2').style.display='none';
+ document.getElementById('page3').style.display='block';
+ document.getElementById('finalScore').innerText=state.score;
+ document.getElementById('totalQ').innerText=questions.length;
+ document.getElementById('wrongQ').innerText=state.wrongAnswers.length;
+ var rate=Math.round((state.score/(questions.length*10))*100);
+ document.getElementById('correctRate').innerText=rate+'%';
+ var msg='';
+ if(rate>=90)msg='🏆 太棒了！你是市场信息高手！';
+ else if(rate>=70)msg='👍 不错！继续加油！';
+ else if(rate>=50)msg='📚 还可以，多复习一下知识点！';
+ else msg='💪 要加油了！记住四大类型！';
+ document.getElementById('msg').innerText=msg;
+}
+
+function restart(){
+ document.getElementById('page3').style.display='none';
+ document.getElementById('page1').style.display='block';
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:sans-serif;background:#f5f5f5;padding:20px}
+.page{display:none}
+.page.active{display:block}
+.start{text-align:center;padding-top:60px}
+.start h1{color:#333;margin-bottom:10px;font-size:28px}
+.start .sub{color:#666;margin-bottom:30px}
+.start button{width:200px;padding:15px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:12px;font-size:18px;cursor:pointer}
+.header{background:white;padding:15px;border-radius:12px;margin-bottom:15px}
+.progress{height:8px;background:#eee;border-radius:4px;margin-bottom:12px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);width:0%;transition:width 0.3s}
+.info{font-size:14px;color:#666;display:flex;justify-content:space-between}
+.qcard{background:white;padding:20px;border-radius:12px}
+.type{display:inline-block;padding:5px 14px;background:#e8f4ff;color:#667eea;border-radius:20px;font-size:13px;margin-bottom:12px}
+.qtxt{font-size:18px;margin-bottom:20px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{padding:14px;border:2px solid #eee;border-radius:10px;cursor:pointer;font-size:15px}
+.opt:hover{border-color:#667eea;background:#f8f9ff}
+.subBtn{width:100%;padding:14px;background:#667eea;color:white;border:none;border-radius:10px;font-size:16px;margin-top:15px;cursor:pointer}
+.qcard input{width:100%;padding:14px;border:2px solid #ddd;border-radius:10px;font-size:16px;margin-bottom:10px}
+.result{text-align:center;padding:40px 20px}
+.result h2{font-size:28px;margin-bottom:20px}
+.circle{width:150px;height:150px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px}
+.circle .sc{font-size:48px;font-weight:bold}
+.stats{display:flex;justify-content:center;gap:30px;margin:25px 0}
+.stat{text-align:center}
+.stat .n{font-size:24px;color:#667eea;font-weight:bold}
+.stat .l{font-size:12px;color:#666}
+.msg{font-size:18px;margin:20px 0;color:#333}
+.btns{display:flex;gap:15px;justify-content:center;margin-top:30px}
+.btns button{padding:12px 25px;border-radius:10px;font-size:15px;cursor:pointer}
+.b1{background:#667eea;color:white;border:none}
+.b2{background:white;color:#667eea;border:2px solid #667eea}
+</style>
+</head>
+<body>
+<div class="page start" id="page1" style="display:block">
+<h1>🎮 市场信息的类型</h1>
+<p class="sub">互动小游戏 · 2.2节知识点</p>
+<p style="margin-bottom:30px;color:#666">共22道题，满分220分</p>
+<button onclick="startGame()">开始挑战</button>
+</div>
+
+<div class="page" id="page2">
+<div class="header">
+<div class="progress"><div class="progress-fill" id="progress"></div></div>
+<div class="info"><span>第 <span id="cnum">1</span>/<span id="total">0</span> 题</span><span>得分: <span id="score">0</span></span></div>
+</div>
+<div class="qcard" id="qcard"></div>
+</div>
+
+<div class="page result" id="page3">
+<h2>🎉 挑战完成！</h2>
+<div class="circle"><div class="sc" id="finalScore">0</div><div>得分</div></div>
+<div class="stats">
+<div class="stat"><div class="n" id="totalQ">0</div><div class="l">总题数</div></div>
+<div class="stat"><div class="n" id="wrongQ">0</div><div class="l">错题数</div></div>
+<div class="stat"><div class="n" id="correctRate">0%</div><div class="l">正确率</div></div>
+</div>
+<div class="msg" id="msg"></div>
+<div class="btns"><button class="b2" onclick="restart()">再来一次</button></div>
+</div>
+</body>
+</html>

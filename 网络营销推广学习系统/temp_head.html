@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络营销推广 - 知识点练习</title>
+    <script src="questions.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; min-height: 100vh; padding-bottom: 70px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* 登录页 */
+        .login-page { text-align: center; padding-top: 80px; }
+        .login-page h1 { color: #333; margin-bottom: 8px; font-size: 22px; }
+        .login-page .subtitle { color: #666; font-size: 14px; margin-bottom: 40px; }
+        .login-page input { width: 100%; padding: 16px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; margin-bottom: 16px; background: white; }
+        .login-page button { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; }
+        
+        /* 首页 */
+        .home-page .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; border-radius: 16px; margin-bottom: 20px; }
+        .home-page .header h2 { font-size: 20px; margin-bottom: 4px; }
+        .home-page .header p { font-size: 13px; opacity: 0.9; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stats-card { background: white; padding: 16px 8px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .stats-card .num { font-size: 20px; font-weight: bold; color: #667eea; }
+        .stats-card .label { font-size: 11px; color: #999; margin-top: 4px; }
+        
+        .section-title { font-size: 15px; color: #333; margin-bottom: 12px; padding-left: 4px; border-left: 3px solid #667eea; }
+        .chapter-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+        .chapter-item { background: white; padding: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; }
+        .chapter-item .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .chapter-item h3 { font-size: 14px; color: #333; font-weight: 500; }
+        .chapter-item .progress-tag { font-size: 12px; padding: 4px 10px; border-radius: 20px; background: #f0f0f0; color: #666; }
+        .chapter-item .progress-tag.done { background: #d4edda; color: #28a745; }
+        .chapter-item .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+        .chapter-item .tag { background: #f0f4ff; color: #667eea; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
+        
+        /* 做题页 */
+        .quiz-page .progress-bar { height: 4px; background: #eee; border-radius: 2px; margin-bottom: 16px; overflow: hidden; }
+        .quiz-page .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; }
+        .quiz-page .progress { background: white; padding: 16px; border-radius: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; }
+        .quiz-page .progress .left { font-size: 14px; color: #666; }
+        .quiz-page .progress .right { font-size: 14px; color: #667eea; font-weight: 500; }
+        
+        .question-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .question-card .type { background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 16px; }
+        .question-card .type.judge { background: #6f42c1; }
+        .question-card .type.fill-blank { background: #fd7e14; }
+        .question-card .text { font-size: 15px; color: #333; line-height: 1.7; margin-bottom: 20px; }
+        
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option { padding: 14px 16px; border: 2px solid #eee; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        .option:hover { border-color: #667eea; background: #f8f9ff; }
+        .option.selected { border-color: #667eea; background: #f0f4ff; }
+        
+        .fill-blank-input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 10px; font-size: 15px; margin-bottom: 20px; }
+        .fill-blank-input:focus { border-color: #667eea; outline: none; }
+        
+        .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        .btn:disabled { background: #ccc; }
+        .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea; }
+        
+        /* 结果页 */
+        .result-page { text-align: center; padding-top: 40px; }
+        .result-page .score-circle { width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0 auto 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        .result-page .score-circle .percent { font-size: 42px; font-weight: bold; }
+        .result-page .score-circle .label { font-size: 14px; opacity: 0.9; }
+        .result-page .stats { color: #666; margin-bottom: 24px; }
+        
+        .result-page .wrong-list { background: white; padding: 20px; border-radius: 12px; text-align: left; margin-bottom: 20px; }
+        .result-page .wrong-list h3 { font-size: 15px; margin-bottom: 16px; }
+        .result-page .wrong-item { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .result-page .wrong-item:last-child { border-bottom: none; }
+        .result-page .wrong-item .q { font-size: 13px; color: #333; margin-bottom: 6px; }
+        .result-page .wrong-item .a { font-size: 12px; color: #dc3545; }
+        
+        /* 错题本 */
+        .wrongbook-page .stat-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 16px; }
+        .wrongbook-page .stat-card h3 { font-size: 14px; color: #666; margin-bottom: 12px; }
+        .wrongbook-page .stat-card .big-num { font-size: 32px; font-weight: bold; color: #667eea; }
+        
+        .wrongbook-page .wrong-item { background: white; padding: 16px; border-radius: 12px; margin-bottom: 10px; }
+        .wrongbook-page .wrong-item .header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .wrongbook-page .wrong-item .chapter { font-size: 12px; color: #667eea; background: #f0f4ff; padding: 2px 8px; border-radius: 4px; }
+        .wrongbook-page .wrong-item .question { font-size: 14px; color: #333; margin-bottom: 8px; }
+        .wrongbook-page .wrong-item .answer { font-size: 13px; color: #28a745; background: #d4edda; padding: 8px 12px; border-radius: 8px; }
+        
+        /* 个人中心 */
+        .profile-page .profile-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 32px 20px; border-radius: 16px; text-align: center; margin-bottom: 20px; }
+        .profile-page .profile-header .avatar { width: 72px; height: 72px; border-radius: 50%; background: white; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #667eea; }
+        .profile-page .profile-header .name { font-size: 18px; font-weight: bold; }
+        
+        .profile-page .menu-list { background: white; border-radius: 12px; overflow: hidden; }
+        .profile-page .menu-item { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .profile-page .menu-item:last-child { border-bottom: none; }
+        .profile-page .menu-item .left { display: flex; align-items: center; gap: 12px; }
+        .profile-page .menu-item .icon { font-size: 20px; }
+        .profile-page .menu-item .label { font-size: 15px; color: #333; }
+        
+        /* 导航 */
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid #eee; padding: 8px 0; }
+        .nav-bar .nav-item { flex: 1; text-align: center; font-size: 11px; color: #999; cursor: pointer; }
+        .nav-bar .nav-item.active { color: #667eea; }
+        .nav-bar .nav-item span { display: block; font-size: 22px; margin-bottom: 2px; }
+        
+        .loading { text-align: center; padding: 40px; color: #999; }
+    </style>
+</head>
+<body>
+    <!-- 登录页 -->
+    <div class="page login-page active" id="loginPage">
+        <h1>📚 网络营销推广</h1>
+        <p class="subtitle">知识点练习系统</p>
+        <input type="text" id="studentName" placeholder="请输入你的名字">
+        <button onclick="login()">开始学习</button>
+    </div>
+    
+    <!-- 首页 -->
+    <div class="page home-page" id="homePage">
+        <div class="header">
+            <h2 id="welcomeText">你好！</h2>
+            <p>选择章节开始练习</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stats-card"><div class="num" id="totalQuestions">0</div><div class="label">累计做题</div></div>
+            <div class="stats-card"><div class="num" id="correctRate">0%</div><div class="label">正确率</div></div>
+            <div class="stats-card"><div class="num" id="continueDays">1</div><div class="label">连续学习</div></div>
+            <div class="stats-card"><div class="num" id="wrongCount">0</div><div class="label">错题数</div></div>
+        </div>
+        
+        <div class="section-title">📖 章节练习</div>
+        <div class="chapter-list" id="chapterList"></div>
+        
+        <div class="nav-bar">
+            <div class="nav-item active" data-page="home"><span>📚</span>练习</div>
+            <div class="nav-item" data-page="wrongbook"><span>📝</span>错题本</div>
+            <div class="nav-item" data-page="profile"><span>👤</span>我的</div>
+        </div>
+    </div>
+    
+    <!-- 做题页 -->
+    <div class="page quiz-page" id="quizPage">
+        <div class="container">
+            <div class="progress-bar"><div class="fill" id="progressFill" style="width: 0%"></div></div>
+            <div class="progress">
+                <span class="left">题目 <span id="currentNum">1</span>/<span id="totalNum">10</span></span>
+                <span class="right">得分: <span id="score">0</span></span>
+            </div>
+            <div class="question-card" id="questionCard"><div class="loading">加载中</div></div>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>下一题</button>
+        </div>
+    </div>
+    
+    <!-- 结果页 -->
+    <div class="page result-page" id="resultPage">
+        <div class="score-circle">
+            <div class="percent" id="finalScore">0%</div>
+            <div class="label">正确率</div>
+        </div>
+        <div class="stats" id="finalStats">正确 0/0</div>
+        <div id="wrongListContainer" style="display:none;">
+            <div class="wrong-list">
+                <h3>📝 错题回顾</h3>
+                <div id="wrongContent"></div>
+            </div>
+        </div>
+        <button class="btn" onclick="backHome()">返回首页</button>
+    </div>
+    
+    <!-- 错题本 -->
+    <div class="page wrongbook-page" id="wrongbookPage">
+        <div class="container">
+            <h2 style="margin-bottom: 16px;">📝 错题本</h2>
+            <div class="stat-card">
+                <h3>错题总数</h3>
+                <div class="big-num" id="wrongTotal">0</div>
+            </div>
+            <div id="wrongList"></div>
+            <div class="nav-bar">
+                <div class="nav-item" data-page="home"><span>📚</span>练习</div>
+                <div class="nav-item active" data-page="wrongbook"><span>📝</span>错题本</div>
+                <div class="nav-item" data-page="profile"><span>👤</span>我的</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 个人中心 -->
+    <div class="page profile-page" id="profilePage">
+        <div class="profile-header">
+            <div class="avatar" id="avatar">👤</div>
+            <div class="name" id="profileName">同学</div>
+        </div>
+        <div class="container">
+            <div class="menu-list">
+                <div class="menu-item" onclick="clearProgress()">
+                    <div class="left"><span class="icon">🗑️</span><span class="label">清除学习数据</span></div>
+                </div>
+                <div class="menu-item" onclick="showAbout()">
+                    <div class="left"><span class="icon">ℹ️</span><span class="label">关于系统</span></div>
+                </div>
+            </div>
+            <div class="nav-bar">
+                <div class="nav-item" data-page="home"><span>📚</span>练习</div>
+                <div class="nav-item" data-page="wrongbook"><span>📝</span>错题本</div>
+                <div class="nav-item active" data-page="profile"><span>👤</span>我的</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            APP_ID: 'cli_a920a1113d785bd3',
+            APP_SECRET: '13Fd1AWYAHOmilViL2vuN7wJyGbEHmHS',
+            // 选择题库
+            QUIZ_APP_TOKEN: 'Wh6AbmYvcaMtOTs52Xhc0uytn7c',
+            QUIZ_TABLE_ID: 'tblNb2boGp8ih3zD',
+            // 填空题库
+            FILL_APP_TOKEN: 'Rh9tbheeMaLMERsJd5dcN0Xknec',
+            FILL_TABLE_ID: 'tblBK4toHSjvY2o3'
+        };
+
+        let state = { name: '', questions: [], currentIndex: 0, score: 0, wrongQuestions: [], chapterProgress: {}, accessToken: '' };
+

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网络营销推广 - 练习系统</title>
+<script>
+var localQuestions = [
+{"type":"single","text":"网络营销推广策略的核心概念是？","options":["A. 制定推广细节","B. 制定整体规划","C. 短期促销","D. 广告投放"],"correct":"B","knowledgePoint":"1.1"},
+{"type":"single","text":"网络营销推广策略的特点不包括？","options":["A. 宏观性","B. 指导性","C. 精确性","D. 灵活性"],"correct":"C","knowledgePoint":"1.1"},
+{"type":"multiple","text":"网络营销推广策略内容包括？","options":["A. 营销目标","B. 目标受众","C. 营销渠道","D. 预算分配"],"correct":"ABCD","knowledgePoint":"1.1"},
+{"type":"judge","text":"网络营销推广策略制定后不能再调整。","options":["对","错"],"correct":"错","knowledgePoint":"1.1"},
+{"type":"single","text":"方案的核心作用是？","options":["A. 制定战略","B. 转化为可执行计划","C. 分析市场","D. 评估状况"],"correct":"B","knowledgePoint":"1.2"},
+{"type":"single","text":"SEM是指？","options":["A. 邮件营销","B. 搜索引擎营销","C. 内容营销","D. 社媒营销"],"correct":"B","knowledgePoint":"1.3"},
+{"type":"single","text":"以下哪个是免费工具？","options":["A. SEO","B. 万相台","C. 百度推广","D. 信息流"],"correct":"A","knowledgePoint":"1.4"},
+{"type":"single","text":"设计专员属于？","options":["A. 运营部","B. 市场营销部","C. 美工设计部","D. 客服部"],"correct":"C","knowledgePoint":"1.5"},
+{"type":"multiple","text":"市场信息包括？","options":["A. 行业趋势","B. 消费群体","C. 竞争对手","D. 商品信息"],"correct":"ABCD","knowledgePoint":"2.1"},
+{"type":"single","text":"原则口诀是？","options":["A. 快准全","B. 准时关全法","C. 有效全面","D. 及时准确"],"correct":"B","knowledgePoint":"2.4"},
+{"type":"judge","text":"准确性要求交叉验证。","options":["对","错"],"correct":"对","knowledgePoint":"2.4"},
+{"type":"single","text":"处理流程顺序是？","options":["A. 采集→分析→整理→过滤","B. 采集→过滤→整理→分析","C. 过滤→采集→整理→分析","D. 整理→采集→过滤→分析"],"correct":"B","knowledgePoint":"2.7"},
+{"type":"single","text":"市场细分是按？","options":["A. 产品特点","B. 消费者需求差异","C. 产品等级","D. 地域"],"correct":"B","knowledgePoint":"3.1"},
+{"type":"single","text":"功能目标高度重叠是？","options":["A. 直接竞店","B. 间接竞店","C. 替代品竞店","D. 潜在竞店"],"correct":"A","knowledgePoint":"3.2"},
+{"type":"single","text":"数码相机与智能手机是？","options":["A. 直接竞品","B. 间接竞品","C. 潜在竞品","D. 非竞品"],"correct":"C","knowledgePoint":"3.3"},
+{"type":"single","text":"个性化推荐是？","options":["A. 商品差异化","B. 消费者差异化","C. 品牌差异化","D. 价格差异化"],"correct":"B","knowledgePoint":"3.5"},
+{"type":"fill","text":"策略是指商家为实现特定的网络营销目标而制定的整体规划","correct":"营销目标","knowledgePoint":"1.1"},
+{"type":"fill","text":"网络营销推广策略的特点包括宏观性、指导性与____","correct":"灵活性","knowledgePoint":"1.1"},
+{"type":"fill","text":"方案是根据____制定的具体执行计划","correct":"营销策略","knowledgePoint":"1.2"},
+{"type":"fill","text":"SEM是指____","correct":"搜索引擎营销","knowledgePoint":"1.3"},
+{"type":"fill","text":"工具按是否付费分为____和免费推广工具","correct":"付费推广工具","knowledgePoint":"1.4"},
+{"type":"fill","text":"部门包括运营部，市场营销部，美工设计部和____","correct":"客服部","knowledgePoint":"1.5"},
+{"type":"fill","text":"市场信息包括行业趋势、目标消费群体、____和商品信息","correct":"竞争对手信息","knowledgePoint":"2.1"},
+{"type":"fill","text":"原则口诀：准时关全法，包括合法性、准确性、全面性、时效性和____","correct":"关联性","knowledgePoint":"2.4"},
+{"type":"fill","text":"处理流程：采集→____→整理→分析","correct":"过滤","knowledgePoint":"2.7"},
+{"type":"fill","text":"市场信息是____的决策基石","correct":"网络营销","knowledgePoint":"2.8"},
+{"type":"fill","text":"市场细分是根据消费者需求、偏好或____的差异性","correct":"行为特征","knowledgePoint":"3.1"},
+{"type":"fill","text":"竞店分为直接竞店和____","correct":"间接竞店","knowledgePoint":"3.2"},
+{"type":"fill","text":"竞品分为直接竞品、间接竞品和____","correct":"潜在竞品","knowledgePoint":"3.3"},
+{"type":"fill","text":"差异化营销包括商品差异化，价格差异化、____差异化等","correct":"渠道","knowledgePoint":"3.5"}
+];
+var chapters = [
+{id:'1.1',name:'1.1 网络营销推广活动策略'},
+{id:'1.2',name:'1.2 网络营销推广活动方案'},
+{id:'1.3',name:'1.3 网络营销推广的方法'},
+{id:'1.4',name:'1.4 网络营销推广的工具'},
+{id:'1.5',name:'1.5 部门及岗位职能'},
+{id:'2.1',name:'2.1 市场信息的概念'},
+{id:'2.2',name:'2.2 市场信息的类型'},
+{id:'2.3',name:'2.3 市场信息获取的方法'},
+{id:'2.4',name:'2.4 市场信息获取的原则'},
+{id:'2.5',name:'2.5 市场信息获取工具'},
+{id:'2.6',name:'2.6 各类工具的差异性'},
+{id:'2.7',name:'2.7 市场信息处理流程'},
+{id:'2.8',name:'2.8 市场信息采集的重要性'},
+{id:'3.1',name:'3.1 市场细分'},
+{id:'3.2',name:'3.2 竞店的类型'},
+{id:'3.3',name:'3.3 竞品的类型'},
+{id:'3.4',name:'3.4 竞争对手数据收集途径'},
+{id:'3.5',name:'3.5 差异化营销策略'}
+];
+var state = {name:'',chapterId:'',questions:[],currentIndex:0,score:0,wrongQuestions:[]};
+function login(){
+ var name = document.getElementById('studentName').value;
+ if(!name){alert('请输入名字');return;}
+ state.name=name;
+ document.getElementById('welcomeText').innerText='你好，'+name+'！';
+ showPage('home');
+ renderChapters();
+}
+function showPage(pid){
+ document.querySelectorAll('.page').forEach(function(p){p.style.display='none';});
+ document.getElementById(pid).style.display='block';
+}
+function renderChapters(){
+ var html='';
+ chapters.forEach(function(c){html+='<div class="ch" onclick="startQuiz(\''+c.id+'\')">'+c.name+'</div>';});
+ document.getElementById('cl').innerHTML=html;
+}
+function startQuiz(ch){
+ state.chapterId=ch;
+ state.questions=localQuestions.filter(function(q){return q.knowledgePoint===ch;});
+ if(state.questions.length===0){state.questions=localQuestions.slice(0,5);}
+ state.currentIndex=0;state.score=0;state.wrongQuestions=[];
+ showPage('quiz');
+ document.getElementById('total').innerText=state.questions.length;
+ renderQ();
+}
+function renderQ(){
+ var q=state.questions[state.currentIndex];
+ selectedOpts = []; // 重置选项
+ document.getElementById('pbar').style.width=((state.currentIndex/state.questions.length)*100)+'%';
+ document.getElementById('cnum').innerText=state.currentIndex+1;
+ document.getElementById('sc').innerText=state.score;
+ var tl=q.type==='single'?'单选题':(q.type==='judge'?'判断题':'填空题');
+ var html='<div class="type">'+tl+'</div><div class="qtxt">'+q.text+'</div>';
+ if(q.type==='single'||q.type==='multiple'){
+  html+='<div class="opts">';
+  q.options.forEach(function(o,i){var lt=String.fromCharCode(65+i);html+='<div class="opt" id="opt'+lt+'" onclick="toggleOpt(\''+lt+'\')">'+o+'</div>';});
+  html+='<button onclick="submitMulti()">提交答案</button></div>';
+ }else if(q.type==='judge'){
+  html+='<div class="opts"><div class="opt" onclick="sel(\'对\')">✓ 对</div><div class="opt" onclick="sel(\'错\')">✗ 错</div></div>';
+ }else{
+  html+='<input type="text" id="ans" placeholder="请输入答案"><button onclick="subFill()">提交</button>';
+ }
+ document.getElementById('qc').innerHTML=html;
+}
+function sel(a){
+ var q=state.questions[state.currentIndex];q.answer=a;
+ var ok=(a===q.correct);
+ if(ok){state.score+=10;}else{state.wrongQuestions.push(q);}
+ alert(ok?'✅ 正确！+10分':'❌ 错误！正确答案：'+q.correct);
+ next();
+}
+var selectedOpts = [];
+function toggleOpt(opt){
+ var idx = selectedOpts.indexOf(opt);
+ if(idx>-1){selectedOpts.splice(idx,1);document.getElementById('opt'+opt).style.background='';}
+ else{selectedOpts.push(opt);document.getElementById('opt'+opt).style.background='#e8f4ff';}
+}
+function submitMulti(){
+ if(selectedOpts.length===0){alert('请至少选择一个选项');return;}
+ var q=state.questions[state.currentIndex];
+ var ans = selectedOpts.sort().join('');
+ q.answer=ans;
+ var ok=(ans===q.correct);
+ if(ok){state.score+=10;}else{state.wrongQuestions.push(q);}
+ selectedOpts=[];
+ alert(ok?'✅ 正确！+10分':'❌ 错误！正确答案：'+q.correct);
+ next();
+}
+function subFill(){
+ var q=state.questions[state.currentIndex];
+ var a=document.getElementById('ans').value;
+ if(!a){alert('请输入答案');return;}
+ q.answer=a;var ok=(a===q.correct);
+ if(ok){state.score+=10;}else{state.wrongQuestions.push(q);}
+ alert(ok?'✅ 正确！+10分':'❌ 错误！正确答案：'+q.correct);
+ next();
+}
+function next(){
+ if(state.currentIndex<state.questions.length-1){state.currentIndex++;renderQ();}else{showResult();}
+}
+function showResult(){
+ showPage('result');
+ document.getElementById('fs').innerText=state.score;
+ document.getElementById('tn').innerText=state.questions.length;
+ document.getElementById('wc').innerText=state.wrongQuestions.length;
+}
+function back(){showPage('home');}
+function again(){startQuiz(state.chapterId);}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:sans-serif;background:#f5f5f5;padding:20px}
+.page{display:none}
+.page.active{display:block}
+.p0{text-align:center;padding-top:60px}
+.p0 h1{color:#333;margin-bottom:8px}
+.p0 p{color:#666;margin-bottom:30px}
+.p0 input{width:80%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:16px;margin-bottom:15px}
+.p0 button{width:80%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:10px;font-size:16px;cursor:pointer}
+.stats{background:white;padding:20px;border-radius:12px;margin-bottom:20px;display:flex;justify-content:space-around}
+.stat-num{font-size:24px;color:#667eea;font-weight:bold}
+.stat-label{font-size:12px;color:#666}
+.ch{background:white;padding:16px;margin-bottom:10px;border-radius:10px;cursor:pointer;font-size:16px}
+.ch:hover{background:#f0f4ff}
+.qz-header{background:white;padding:15px;border-radius:10px;margin-bottom:15px}
+.pbar{height:6px;background:#eee;border-radius:3px;margin-bottom:10px}
+.pfill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);width:0%;transition:width 0.3s}
+.qinfo{font-size:14px;color:#666;display:flex;justify-content:space-between}
+.qcard{background:white;padding:20px;border-radius:12px}
+.type{display:inline-block;padding:4px 12px;background:#e8f4ff;color:#667eea;border-radius:20px;font-size:12px;margin-bottom:10px}
+.qtxt{font-size:18px;margin-bottom:20px;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{padding:14px;border:2px solid #eee;border-radius:10px;cursor:pointer;font-size:15px}
+.opt:hover{border-color:#667eea;background:#f8f9ff}
+.qcard input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:15px;margin-bottom:10px}
+.qcard button{width:100%;padding:12px;background:#667eea;color:white;border:none;border-radius:8px;font-size:15px;cursor:pointer}
+.result{text-align:center;padding:40px 20px}
+.result h2{font-size:28px;margin-bottom:20px}
+.circ{width:150px;height:150px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px}
+.circ .sc{font-size:48px;font-weight:bold}
+.rstats{display:flex;justify-content:center;gap:30px;margin:20px 0}
+.rstat{text-align:center}
+.rstat .n{font-size:24px;color:#667eea;font-weight:bold}
+.rstat .l{font-size:12px;color:#666}
+.btns{display:flex;gap:15px;justify-content:center;margin-top:30px}
+.btns button{padding:12px 25px;border-radius:10px;font-size:15px;cursor:pointer}
+.b1{background:#667eea;color:white;border:none}
+.b2{background:white;color:#667eea;border:2px solid #667eea}
+</style>
+</head>
+<body>
+<div class="page p0 active" id="login">
+<h1>📚 网络营销推广</h1>
+<p>知识点练习系统</p>
+<input type="text" id="studentName" placeholder="请输入你的名字">
+<button onclick="login()">开始学习</button>
+</div>
+<div class="page" id="home">
+<div class="stats">
+<div><div class="stat-num">30</div><div class="stat-label">总题数</div></div>
+<div><div class="stat-num">0%</div><div class="stat-label">正确率</div></div>
+<div><div class="stat-num" id="curScore">0</div><div class="stat-label">当前得分</div></div>
+</div>
+<div>欢迎你，<span id="welcomeText">同学</span>！请选择一个章节开始练习：</div>
+<div id="cl"></div>
+</div>
+<div class="page" id="quiz">
+<div class="qz-header">
+<div class="pbar"><div class="pfill" id="pbar"></div></div>
+<div class="qinfo"><span>第 <span id="cnum">1</span>/<span id="total">0</span> 题</span><span>得分: <span id="sc">0</span></span></div>
+</div>
+<div class="qcard" id="qc"></div>
+</div>
+<div class="page result" id="result">
+<h2>🎉 完成练习！</h2>
+<div class="circ"><div class="sc" id="fs">0</div><div>得分</div></div>
+<div class="rstats"><div class="rstat"><div class="n" id="tn">0</div><div class="l">总题数</div></div><div class="rstat"><div class="n" id="wc">0</div><div class="l">错题数</div></div></div>
+<div class="btns"><button class="b2" onclick="back()">返回首页</button><button class="b1" onclick="again()">再来一组</button></div>
+</div>
+</body>
+</html>
