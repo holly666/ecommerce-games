@@ -84,7 +84,7 @@
         </div>
         <div id="result-screen">
             <h1 class="result-title">🎉 挑战完成！</h1>
-            <p class="final-score"><span id="final-score">60</span> 分</p>
+            <p class="final-score"><span id="final-score">100</span> 分</p>
             <p class="result-msg" id="result-msg"></p>
             <button class="restart-btn" onclick="restartGame()">再当一次老板</button>
         </div>
@@ -220,7 +220,7 @@
             });
             
             if (index === q.answer) {
-                score += 10;
+                score += 17;
                 document.getElementById('score').textContent = score;
             } else {
                 options[index].classList.add('wrong');
