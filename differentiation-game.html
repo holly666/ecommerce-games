@@ -394,6 +394,8 @@
             } else {
                 // 错误
                 options[index].classList.add('wrong');
+                // 禁用所有选项，防止再次点击
+                options.forEach(opt => opt.classList.add('disabled'));
                 
                 const optionsContainer = document.getElementById('options');
                 const retryBtn = document.createElement('div');
