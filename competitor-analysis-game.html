@@ -370,12 +370,15 @@
                 retryBtn.textContent = '🔄 再试一次';
                 retryBtn.onclick = (e) => {
                     e.stopPropagation();
-                    // 移除解释和重试按钮，重新显示选项
-                    document.getElementById('explanation').classList.remove('show');
-                    retryBtn.remove();
-                    options.forEach(opt => {
-                        opt.classList.remove('disabled', 'wrong', 'correct');
-                    });
+                    // 显示解析
+                    document.getElementById('explanation-text').textContent = q.explanation;
+                    document.getElementById('explanation').classList.add('show');
+                    
+                    // 禁用选项
+                    options.forEach(opt => opt.classList.add('disabled'));
+                    
+                    // 2秒后进入下一题
+                    setTimeout(() => { nextQuestion(); }, 2000);
                 };
                 optionsContainer.appendChild(retryBtn);
             }
