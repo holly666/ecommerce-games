@@ -361,43 +361,29 @@
                 // 答错了
                 options[index].classList.add('wrong');
                 
-                // 显示解释，但不进入下一题
-                document.getElementById('explanation-text').textContent = q.explanation;
-                document.getElementById('explanation').classList.add('show');
-                
-                // 添加重试按钮
-                const optionsContainer = document.getElementById('options');
-                const retryBtn = document.createElement('div');
-                retryBtn.id = 'retry-btn';
-                retryBtn.className = 'option';
-                retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9800, #ffc107); border-color: #ff9800; color: #1a1a2e; text-align: center; font-weight: bold;';
-                retryBtn.textContent = '🔄 再试一次';
-                retryBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    // 显示正确答案
+                // 显示查看解析和下一题按钮
+                const explainDiv = document.createElement('div');
+                explainDiv.style.cssText = 'margin-top: 15px; display: flex; gap: 10px;';
+                const explainBtn = document.createElement('button');
+                explainBtn.className = 'explain-btn';
+                explainBtn.textContent = '📖 查看解析';
+                explainBtn.onclick = () => {
                     document.getElementById('explanation-text').textContent = q.explanation;
                     document.getElementById('explanation').classList.add('show');
+                    explainDiv.remove();
                     
-                    // 显示Agency
                     const agencyTip = document.getElementById('agency-tip');
                     document.getElementById('agency-tip-text').textContent = q.agencyTip;
                     agencyTip.style.display = 'block';
-                    
-                    // 禁用选项
-                    options.forEach(opt => opt.classList.add('disabled'));
-                    
-                    // 添加下一题按钮
-                    const nextDiv = document.createElement('div');
-                    nextDiv.style.cssText = 'margin-top: 15px;';
-                    const nextBtn = document.createElement('button');
-                    nextBtn.className = 'option';
-                    nextBtn.style.cssText = 'background: #10b981; color: #fff; padding: 12px 30px; border: none; border-radius: 25px; cursor: pointer; font-size: 1em;';
-                    nextBtn.textContent = '✅ 下一题';
-                    nextBtn.onclick = () => { nextQuestion(); };
-                    nextDiv.appendChild(nextBtn);
-                    retryBtn.replaceWith(nextDiv);
                 };
-                optionsContainer.appendChild(retryBtn);
+                const skipBtn = document.createElement('button');
+                skipBtn.className = 'option';
+                skipBtn.style.cssText = 'background: #666; color: #fff; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer;';
+                skipBtn.textContent = '⏭️ 下一题';
+                skipBtn.onclick = () => { nextQuestion(); };
+                explainDiv.appendChild(explainBtn);
+                explainDiv.appendChild(skipBtn);
+                document.getElementById('question-box').appendChild(explainDiv);
             }
         }
         
