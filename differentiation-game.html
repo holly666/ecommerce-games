@@ -447,6 +447,12 @@
             document.getElementById('result-msg').textContent = msg;
         }
         
+        // 重新开始
+        function restartGame() {
+            resultScreen.style.display = 'none';
+            startScreen.style.display = 'block';
+        }
+        
         // 绑定事件
         startBtn.onclick = startGame;
         restartBtn.onclick = restartGame;
