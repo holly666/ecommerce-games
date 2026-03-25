@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商老板的决策室 - 项目二沙盘</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 750px; margin: 0 auto; padding: 20px; }
+        
+        /* 开始界面 */
+        #start-screen { text-align: center; padding: 30px 20px; }
+        .logo { font-size: 4em; margin-bottom: 10px; }
+        .title { font-size: 2.2em; color: #ffd700; margin-bottom: 5px; }
+        .subtitle { font-size: 1.1em; color: #7ec8e3; margin-bottom: 25px; }
+        .start-btn { background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; border: none; padding: 18px 50px; font-size: 1.2em; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        
+        .info-box { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left; }
+        .info-title { color: #ffd700; font-size: 1.1em; margin-bottom: 10px; }
+        .info-text { color: #b8d4e3; font-size: 0.9em; line-height: 1.7; }
+        
+        /* 游戏界面 */
+        #game-screen { display: none; }
+        .stats-bar { display: flex; justify-content: space-around; background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .stat-item { text-align: center; }
+        .stat-icon { font-size: 1.5em; }
+        .stat-value { font-size: 1.3em; font-weight: bold; color: #ffd700; }
+        .stat-label { font-size: 0.7em; color: #888; }
+        
+        .level-tag { display: inline-block; background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; padding: 8px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; }
+        
+        .task-box { background: #fff; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .task-title { color: #333; font-size: 1.2em; margin-bottom: 10px; font-weight: bold; }
+        .task-desc { color: #666; font-size: 0.95em; line-height: 1.7; margin-bottom: 15px; }
+        
+        .knowledge-hint { background: #f0f7ff; border-left: 4px solid #ffd700; padding: 12px; margin-bottom: 15px; border-radius: 0 8px 8px 0; }
+        .knowledge-hint-title { color: #b8860b; font-weight: bold; font-size: 0.9em; }
+        .knowledge-hint-text { color: #666; font-size: 0.85em; margin-top: 5px; }
+        
+        .options { display: grid; gap: 12px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 15px; border-radius: 12px; cursor: pointer; transition: all 0.2s; text-align: left; }
+        .option:hover { border-color: #ffd700; background: #fffbf0; transform: translateX(5px); }
+        .option .title { font-size: 1em; color: #333; font-weight: 500; }
+        .option .desc { font-size: 0.85em; color: #888; margin-top: 5px; }
+        .option.correct { background: linear-gradient(135deg, #00ff88, #00cc6a); border-color: #00ff88; color: #fff; }
+        .option.correct .title, .option.correct .desc { color: #fff; }
+        .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
+        .option.wrong .title, .option.wrong .desc { color: #fff; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        
+        .result-box { display: none; padding: 15px; border-radius: 10px; margin-top: 15px; }
+        .result-box.show { display: block; animation: fadeIn 0.3s; }
+        .result-correct { background: #e8f5e9; border: 2px solid #4caf50; color: #2e7d32; }
+        .result-wrong { background: #ffebee; border: 2px solid #f44336; color: #c62828; }
+        
+        .continue-btn { display: none; background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; border: none; padding: 15px 40px; font-size: 1.1em; border-radius: 25px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .continue-btn.show { display: inline-block; }
+        
+        /* 结果界面 */
+        #result-screen { display: none; text-align: center; padding: 40px 20px; }
+        .final-logo { font-size: 5em; }
+        .final-title { font-size: 2em; color: #ffd700; margin: 20px 0; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 600px) { .stats-bar { gap: 15px; } .options { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <div class="logo">🏪</div>
+            <h1 class="title">电商老板的决策室</h1>
+            <p class="subtitle">项目二知识点沙盘模拟</p>
+            <button class="start-btn" onclick="startGame()">💼 开始经营</button>
+            
+            <div class="info-box">
+                <div class="info-title">🎮 游戏说明</div>
+                <div class="info-text">
+                    你是一家网店的老板，每天都要处理各种市场信息。
+                    <br><br>
+                    📊 根据客户需求和市场情况，做出正确决策！
+                    <br>
+                    💡 决策正确赚大钱，决策错误亏本！
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-title">📚 涉及的知识点</div>
+                <div class="info-text">
+                    市场信息概念 · 信息类型 · 获取方法 · 获取原则 · 调研工具 · 处理流程
+                </div>
+            </div>
+        </div>
+        
+        <div id="game-screen">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="money">50000</div>
+                    <div class="stat-label">资金(元)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="completed">0</div>
+                    <div class="stat-label">已完成</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value" id="reputation">0</div>
+                    <div class="stat-label">声望</div>
+                </div>
+            </div>
+            
+            <div class="level-tag" id="level-tag">第1关</div>
+            
+            <div class="task-box">
+                <div class="task-title" id="task-title">决策问题</div>
+                <div class="task-desc" id="task-desc"></div>
+                
+                <div class="knowledge-hint" id="knowledge-hint">
+                    <div class="knowledge-hint-title">💡 涉及知识点</div>
+                    <div class="knowledge-hint-text" id="knowledge-text"></div>
+                </div>
+                
+                <div class="options" id="options"></div>
+                
+                <div class="result-box" id="result-box">
+                    <div id="result-text"></div>
+                </div>
+                
+                <button class="continue-btn" id="continue-btn" onclick="nextLevel()">下一关 →</button>
+            </div>
+        </div>
+        
+        <div id="result-screen">
+            <div class="final-logo" id="final-logo">🏆</div>
+            <h1 class="final-title" id="final-title">游戏结束</h1>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="final-money">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value" id="final-reputation">0</div>
+                </div>
+            </div>
+            <p class="subtitle" id="final-msg"></p>
+            <button class="start-btn" onclick="restartGame()">再经营一次</button>
+        </div>
+    </div>
+
+    <script>
+        const levels = [
+            // 第1关：市场信息概念
+            {
+                title: "第1关：了解市场",
+                task: "你想了解今年新能源汽车市场的整体销量情况，这属于什么类型的市场信息？",
+                knowledge: "市场信息概念 - 行业趋势信息",
+                options: [
+                    { title: "A. 商品信息", desc: "商品的功能、质量、包装等信息", result: "❌ 这是商品本身的信息" },
+                    { title: "B. 行业趋势信息", desc: "行业发展趋势、市场热点等", result: "✅ 正确！市场销量属于行业趋势信息" },
+                    { title: "C. 竞争对手信息", desc: "竞品的价格、份额、策略等", result: "❌ 这是分析竞品，不是了解市场整体" },
+                    { title: "D. 用户信息", desc: "消费者的需求、偏好等", result: "❌ 这是用户画像，不是市场概况" }
+                ],
+                correct: 1
+            },
+            // 第2关：信息类型
+            {
+                title: "第2关：用户是谁？",
+                task: "你准备推出一款针对00后的产品，需要了解00后消费者的购物偏好，这属于什么信息？",
+                knowledge: "市场信息类型 - 目标消费群体信息",
+                options: [
+                    { title: "A. 行业趋势信息", desc: "行业发展趋势、市场热点", result: "❌ 行业趋势是宏观市场，不是目标用户" },
+                    { title: "B. 目标消费群体信息", desc: "用户的基本信息、需求偏好、购买行为", result: "✅ 正确！00后消费者偏好属于目标消费群体信息" },
+                    { title: "C. 竞争对手信息", desc: "竞品的市场表现", result: "❌ 这不是分析竞品" },
+                    { title: "D. 商品信息", desc: "商品的功能、质量", result: "❌ 这是商品本身信息" }
+                ],
+                correct: 1
+            },
+            // 第3关：信息类型
+            {
+                title: "第3关：政策影响",
+                task: "政府发布了新的新能源补贴政策，你想了解这个政策的具体内容，这属于什么信息？",
+                knowledge: "市场信息类型 - 行业趋势信息（政策）",
+                options: [
+                    { title: "A. 行业趋势信息", desc: "行业发展趋势、市场热点、行业政策", result: "✅ 正确！政府政策属于行业趋势信息中的政策信息" },
+                    { title: "B. 竞争对手信息", desc: "竞品的动态", result: "❌ 这不是分析竞品" },
+                    { title: "C. 用户信息", desc: "消费者偏好", result: "❌ 这不是用户信息" },
+                    { title: "D. 商品信息", desc: "商品功能质量", result: "❌ 这不是商品信息" }
+                ],
+                correct: 0
+            },
+            // 第4关：获取方法
+            {
+                title: "第4关：用户反馈",
+                task: "你想了解用户对你家产品的真实评价，最直接的方式是什么？",
+                knowledge: "市场信息获取方法 - 市场调研法/客户反馈法",
+                options: [
+                    { title: "A. 看百度评价", desc: "搜索网络上的评价", result: "⚠️ 间接获取，可能不够真实" },
+                    { title: "B. 问卷调查/用户访谈", desc: "直接向用户收集反馈", result: "✅ 正确！直接获取第一手数据，最真实" },
+                    { title: "C. 看竞品分析报告", desc: "第三方报告", result: "❌ 这是二手数据，不够直接" },
+                    { title: "D. 猜测用户想法", desc: "凭感觉判断", result: "❌ 这不是科学的方法" }
+                ],
+                correct: 1
+            },
+            // 第5关：获取方法
+            {
+                title: "第5关：网络热度",
+                task: "你想了解近期网上对你竞争对手的讨论热度，应该用什么方法？",
+                knowledge: "市场信息获取方法 - 社交媒体监测法",
+                options: [
+                    { title: "A. 街头问卷", desc: "线下问卷调查", result: "❌ 线下问卷无法快速了解网络热度" },
+                    { title: "B. 社交媒体监测", desc: "分析社交媒体的评论、点赞、分享", result: "✅ 正确！社交媒体监测法最适合了解网络讨论热度" },
+                    { title: "C. 行业协会报告", desc: "购买行业报告", result: "⚠️ 报告可能有滞后性" },
+                    { title: "D. 问朋友", desc: "询问身边的人", result: "❌ 样本太小，不准确" }
+                ],
+                correct: 1
+            },
+            // 第6关：获取方法
+            {
+                title: "第6关：竞品分析",
+                task: "你想了解竞争对手的价格策略，应该用什么方法？",
+                knowledge: "市场信息获取方法 - 竞品信息挖掘法",
+                options: [
+                    { title: "A. 客户访谈", desc: "访谈自己的客户", result: "❌ 这是获取用户信息，无法了解竞品" },
+                    { title: "B. 搜索引擎", desc: "搜索竞品信息", result: "⚠️ 可以但不够系统" },
+                    { title: "C. 竞品信息挖掘法", desc: "关注竞品的价格、渠道、份额等", result: "✅ 正确！竞品信息挖掘法专门分析竞争对手" },
+                    { title: "D. 大数据工具", desc: "用爬虫工具采集", result: "⚠️ 大数据工具适合大规模采集" }
+                ],
+                correct: 2
+            },
+            // 第7关：获取原则
+            {
+                title: "第7关：原则问题",
+                task: "有个员工说可以帮你搞到竞品的内部资料，价格便宜，你应该？",
+                knowledge: "市场信息获取原则 - 合法性",
+                options: [
+                    { title: "A. 同意", desc: "价格便宜，可以试试", result: "❌ 这是商业间谍行为，违法！" },
+                    { title: "B. 拒绝并举报", desc: "非法手段不能碰", result: "✅ 正确！获取信息必须合法合规" },
+                    { title: "C. 先试试看", desc: "用一下试试", result: "❌ 违法风险很高，可能承担法律责任" },
+                    { title: "D. 当没听见", desc: "不表态", result: "⚠️ 应该明确拒绝" }
+                ],
+                correct: 1
+            },
+            // 第8关：获取原则
+            {
+                title: "第8关：数据核实",
+                task: "你从网上看到一份数据，说某竞品市场份额80%，接下来应该怎么做？",
+                knowledge: "市场信息获取原则 - 准确性",
+                options: [
+                    { title: "A. 直接相信", desc: "网上数据应该准确", result: "❌ 单一路源可能有偏差" },
+                    { title: "B. 交叉验证", desc: "对比多个数据源核实", result: "✅ 正确！多个数据源交叉验证确保准确性" },
+                    { title: "C. 不相信", desc: "网上数据都是假的", result: "❌ 过于绝对" },
+                    { title: "D. 问老板", desc: "让老板判断", result: "❌ 这是你的工作" }
+                ],
+                correct: 1
+            },
+            // 第9关：调研工具
+            {
+                title: "第9关：问卷工具",
+                task: "你需要收集1000份用户调查问卷，应该使用什么工具？",
+                knowledge: "市场信息获取工具 - 在线问卷调查平台",
+                options: [
+                    { title: "A. 百度指数", desc: "搜索热度分析工具", result: "❌ 这是分析搜索趋势的" },
+                    { title: "B. 生意参谋", desc: "电商数据分析工具", result: "❌ 这是分析店铺数据的" },
+                    { title: "C. 问卷星/腾讯问卷", desc: "在线问卷编制、发放、分析", result: "✅ 正确！问卷星适合大规模问卷调研" },
+                    { title: "D. 八爪鱼", desc: "数据采集爬虫工具", result: "❌ 这是爬取网页数据的" }
+                ],
+                correct: 2
+            },
+            // 第10关：调研工具
+            {
+                title: "第10关：热度查询",
+                task: "你想了解「新能源汽车」这个关键词的搜索热度，应该用什么工具？",
+                knowledge: "市场信息获取工具 - 搜索引擎",
+                options: [
+                    { title: "A. 问卷星", desc: "问卷调查工具", result: "❌ 这是发问卷的" },
+                    { title: "B. 生意参谋", desc: "电商数据工具", result: "❌ 这是电商店铺分析" },
+                    { title: "C. 百度指数", desc: "关键词搜索热度分析", result: "✅ 正确！百度指数专门分析搜索热度" },
+                    { title: "D. 飞瓜数据", desc: "短视频数据分析", result: "⚠️ 这是抖音数据分析，不适合百度" }
+                ],
+                correct: 2
+            },
+            // 第11关：调研工具
+            {
+                title: "第11关：店铺数据",
+                task: "你想分析自己网店的流量来源和转化率，应该用什么工具？",
+                knowledge: "市场信息获取工具 - 电商平台数据分析工具",
+                options: [
+                    { title: "A. 问卷星", desc: "问卷工具", result: "❌ 这是发问卷的" },
+                    { title: "B. 百度指数", desc: "搜索热度工具", result: "❌ 这是分析搜索趋势的" },
+                    { title: "C. 生意参谋/商智", desc: "电商平台数据分析工具", result: "✅ 正确！生意参谋分析店铺流量、销售、用户行为" },
+                    { title: "D. 八爪鱼", desc: "爬虫工具", result: "❌ 这是采集网页数据的" }
+                ],
+                correct: 2
+            },
+            // 第12关：处理流程
+            {
+                title: "第12关：数据处理",
+                task: "你收集到大量调研数据后，第一步应该做什么？",
+                knowledge: "市场信息处理流程 - 采集→过滤→整理→分析",
+                options: [
+                    { title: "A. 直接分析", desc: "马上开始分析数据", result: "❌ 需要先过滤无效数据" },
+                    { title: "B. 过滤数据", desc: "去除无关、重复、不准确的信息", result: "✅ 正确！先过滤再分析，避免无效工作" },
+                    { title: "C. 整理成表格", desc: "先把数据整理好", result: "⚠️ 过滤后再整理" },
+                    { title: "D. 给客户看", desc: "直接交付", result: "❌ 还没处理完" }
+                ],
+                correct: 1
+            },
+            // 第13关：处理流程
+            {
+                title: "第13关：分析方法",
+                task: "数据整理完成后，需要分析形成结论，应该用什么方法？",
+                knowledge: "市场信息处理流程 - 分析方法",
+                options: [
+                    { title: "A. 算命", desc: "凭感觉猜测", result: "❌ 这不是科学方法" },
+                    { title: "B. 定量分析+定性分析", desc: "用统计学方法分析数据", result: "✅ 正确！定量（数据统计）+定性（解读含义）结合" },
+                    { title: "C. 随便看看", desc: "随便浏览一下", result: "❌ 不够专业" },
+                    { title: "D. 问朋友意见", desc: "让朋友帮忙判断", result: "❌ 不够客观" }
+                ],
+                correct: 1
+            },
+            // 第14关：工具差异
+            {
+                title: "第14关：工具选择",
+                task: "你预算有限，只需要基础问卷功能，应该选择什么工具？",
+                knowledge: "工具差异性 - 使用成本",
+                options: [
+                    { title: "A. 付费高级工具", desc: "功能全面但收费", result: "❌ 预算有限不适合" },
+                    { title: "B. 免费问卷平台", desc: "问卷星/腾讯问卷有免费版", result: "✅ 正确！免费基础功能足够使用" },
+                    { title: "C. 定制开发", desc: "找人开发专属系统", result: "❌ 成本太高" },
+                    { title: "D. 不用工具", desc: "手动发问卷", result: "⚠️ 效率太低" }
+                ],
+                correct: 1
+            },
+            // 第15关：综合应用
+            {
+                title: "第15关：综合题",
+                task: "你想了解某品牌手机在社交媒体上的用户评价和讨论热度，最合适的方法是？",
+                knowledge: "综合应用 - 方法+工具",
+                options: [
+                    { title: "A. 线下问卷", desc: "实地发放问卷", result: "❌ 效率低，无法快速了解全网讨论" },
+                    { title: "B. 社交媒体监测+大数据工具", desc: "用工具监测社交媒体", result: "✅ 正确！社交媒体监测法+专业工具分析全网讨论" },
+                    { title: "C. 行业协会报告", desc: "购买报告", result: "⚠️ 可能没有最新的社交媒体数据" },
+                    { title: "D. 问品牌客服", desc: "直接问官方", result: "❌ 官方不会告诉你真实评价" }
+                ],
+                correct: 1
+            }
+        ];
+        
+        let currentLevel = 0;
+        let money = 50000;
+        let completed = 0;
+        let reputation = 0;
+        
+        function startGame() {
+            currentLevel = 0;
+            money = 50000;
+            completed = 0;
+            reputation = 0;
+            
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            
+            showLevel();
+        }
+        
+        function showLevel() {
+            const level = levels[currentLevel];
+            document.getElementById('level-tag').textContent = level.title;
+            document.getElementById('task-title').textContent = "📋 决策问题";
+            document.getElementById('task-desc').textContent = level.task;
+            document.getElementById('knowledge-text').textContent = level.knowledge;
+            document.getElementById('money').textContent = money;
+            document.getElementById('completed').textContent = completed;
+            document.getElementById('reputation').textContent = reputation;
+            
+            document.getElementById('result-box').classList.remove('show');
+            document.getElementById('continue-btn').classList.remove('show');
+            
+            const optsContainer = document.getElementById('options');
+            optsContainer.innerHTML = '';
+            
+            level.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.innerHTML = `<div class="title">${opt.title}</div><div class="desc">${opt.desc}</div>`;
+                btn.onclick = () => selectOption(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+        
+        function selectOption(idx) {
+            const level = levels[currentLevel];
+            const opts = document.querySelectorAll('.option');
+            
+            opts.forEach(o => o.classList.add('disabled'));
+            
+            if (idx === level.correct) {
+                opts[idx].classList.add('correct');
+                money += 5000;
+                reputation += 10;
+                completed++;
+                document.getElementById('result-box').className = 'result-box show result-correct';
+            } else {
+                opts[idx].classList.add('wrong');
+                opts[level.correct].classList.add('correct');
+                money -= 3000;
+                document.getElementById('result-box').className = 'result-box show result-wrong';
+            }
+            
+            if (money < 0) money = 0;
+            
+            document.getElementById('money').textContent = money;
+            document.getElementById('completed').textContent = completed;
+            document.getElementById('reputation').textContent = reputation;
+            document.getElementById('result-text').textContent = level.options[idx].result;
+            document.getElementById('continue-btn').classList.add('show');
+        }
+        
+        function nextLevel() {
+            currentLevel++;
+            if (currentLevel >= levels.length) {
+                showResult();
+            } else {
+                showLevel();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            document.getElementById('final-money').textContent = money;
+            document.getElementById('final-reputation').textContent = reputation;
+            
+            let logo, title, msg;
+            if (reputation >= 120) {
+                logo = "👑";
+                title = "电商传奇！";
+                msg = "你对项目二知识点了如指掌！";
+            } else if (reputation >= 80) {
+                logo = "⭐";
+                title = "资深老板！";
+                msg = "掌握得不错，继续保持！";
+            } else if (reputation >= 40) {
+                logo = "💼";
+                title: "新手老板";
+                msg = "还需继续复习知识点哦！";
+            } else {
+                logo = "📚";
+                title = "需要学习";
+                msg = "项目二知识点还需加强！";
+            }
+            
+            document.getElementById('final-logo').textContent = logo;
+            document.getElementById('final-title').textContent = title;
+            document.getElementById('final-msg').textContent = msg;
+        }
+        
+        function restartGame() {
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
