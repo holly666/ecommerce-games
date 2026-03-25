@@ -337,7 +337,7 @@
             document.getElementById('phase-tag').textContent = '场景' + (currentIndex + 1);
             document.getElementById('knowledge-tag').textContent = '策略选择';
             document.getElementById('scenario-title').textContent = q.caseName;
-            document.getElementById('scenario-text').textContent = q.caseText;
+            document.getElementById('scenario-text').innerHTML = q.caseText.replace(/\n/g, '<br>');
             document.getElementById('question-text').textContent = q.question;
             document.getElementById('think-text').textContent = q.hint;
             
@@ -380,7 +380,17 @@
                 document.getElementById('explanation-text').textContent = q.explanation;
                 document.getElementById('explanation').classList.add('show');
                 
-                setTimeout(function() { nextCase(); }, 3000);
+                // 显示下一题按钮，移除自动跳转
+                const optionsContainer = document.getElementById('options');
+                const nextBtn = document.createElement('div');
+                nextBtn.className = 'option';
+                nextBtn.style.cssText = 'background: linear-gradient(135deg, #667eea, #764ba2); border-color: #667eea; color: #fff; text-align: center; font-weight: bold; margin-top: 15px; grid-column: span 4;';
+                nextBtn.textContent = '➡️ 进入下一题';
+                nextBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    nextCase();
+                };
+                optionsContainer.appendChild(nextBtn);
             } else {
                 // 错误
                 options[index].classList.add('wrong');
