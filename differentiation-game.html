@@ -59,10 +59,6 @@
         .explanation { background: #e8f5e9; padding: 18px; border-radius: 12px; margin-top: 18px; display: none; color: #2e7d32; border-left: 4px solid #4caf50; text-align: left; }
         .explanation.show { display: block; animation: fadeIn 0.3s; }
         .explanation-title { font-weight: bold; margin-bottom: 10px; }
-        .explain-btn { background: #667eea; color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin-right: 10px; }
-        .explain-btn:hover { background: #5a6fd6; }
-        .agency-btn { background: #764ba2; color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-size: 0.9em; }
-        .agency-btn:hover { background: #6a4190; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -78,10 +74,6 @@
         
         .restart-btn { background: linear-gradient(135deg, #d4a574, #8b4513); color: #1a1510; border: 2px solid #ffd700; border: none; padding: 16px 45px; font-size: 1.2em; border-radius: 8px; cursor: pointer; font-weight: bold; }
         
-        .agency-tip { background: linear-gradient(135deg, #667eea, #764ba2); padding: 15px; border-radius: 10px; margin-top: 15px; text-align: left; }
-        .agency-tip-title { color: #fff; font-weight: bold; margin-bottom: 8px; font-size: 0.9em; }
-        .agency-tip-text { color: rgba(255,255,255,0.8); font-size: 0.8em; line-height: 1.5; }
-        
         .strategy-card { background: linear-gradient(135deg, #2d2318, #3d2e1a); border: 1px solid #ffd700; border-radius: 12px; padding: 15px; margin: 10px 0; text-align: left; }
         .strategy-name { color: #ffd700; font-weight: bold; margin-bottom: 8px; font-size: 1em; }
         .strategy-desc { color: #d4c4a8; font-size: 0.85em; line-height: 1.5; }
@@ -89,12 +81,13 @@
 </head>
 <body>
     <div class="container">
+        <!-- 开始界面 -->
         <div id="start-screen">
             <div class="decor-line"></div>
             <h1 class="title">🎯 差异化营销沙盘</h1>
             <p class="subtitle">📊 营销策略模拟器</p>
             <div class="decor-line"></div>
-            <button class="start-btn" onclick="startGame()">🚀 开始模拟</button>
+            <button id="start-btn" class="start-btn">🚀 开始模拟</button>
             <div class="story-box">
                 <div class="story-title">📖 沙盘简介</div>
                 <p class="story-text">你是一家新兴企业的营销总监。面对8个不同的商业场景，你需要分析市场情况，选择最合适的差异化营销策略，带领企业走向成功！</p>
@@ -133,9 +126,10 @@
             </div>
         </div>
         
+        <!-- 游戏界面 -->
         <div id="game-screen">
             <div class="progress-bar">
-                <div class="step active" id="step1"><span class="step-num">1</span></div>
+                <div class="step" id="step1"><span class="step-num">1</span></div>
                 <div class="step" id="step2"><span class="step-num">2</span></div>
                 <div class="step" id="step3"><span class="step-num">3</span></div>
                 <div class="step" id="step4"><span class="step-num">4</span></div>
@@ -164,16 +158,12 @@
                 <div class="explanation" id="explanation">
                     <div class="explanation-title">🎯 策略解析</div>
                     <p id="explanation-text"></p>
-                    
-                    <div class="agency-tip" id="agency-tip" style="display:none;">
-                        <div class="agency-tip-title">🌟 商业洞察</div>
-                        <p class="agency-tip-text" id="agency-tip-text"></p>
-                    </div>
                 </div>
             </div>
             <div class="options" id="options"></div>
         </div>
         
+        <!-- 结果界面 -->
         <div id="result-screen">
             <h1 class="result-title" id="result-title">🎉 模拟结束!</h1>
             <div class="final-score"><span id="final-score">0</span></div>
@@ -183,12 +173,12 @@
                 <div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">决策失误</div></div>
                 <div class="stat"><div class="stat-value" id="stat-score">0</div><div class="stat-label">商业声望</div></div>
             </div>
-            <button class="restart-btn" onclick="restartGame()">再玩一次</button>
+            <button class="restart-btn" id="restart-btn">再玩一次</button>
         </div>
     </div>
 
     <script>
-        // 7种差异化策略
+        // 游戏数据
         const strategyOptions = [
             { type: "product", text: "📦 商品差异化策略", desc: "基于商品特征、功能、性能等差异" },
             { type: "price", text: "💰 价格差异化策略", desc: "通过价格策略差异化吸引不同消费者" },
@@ -198,6 +188,88 @@
             { type: "service", text: "🤝 服务差异化策略", desc: "提供与竞争对手不同的服务方式" },
             { type: "promotion", text: "📢 推广差异化策略", desc: "设计不同的推广方法组合" }
         ];
+        
+        const allCases = [
+            {
+                caseName: "📱 手机新品上市",
+                caseText: "你是一家手机公司的营销总监。公司刚刚研发了一款具有独特拍照功能的智能手机，拍照效果远超竞争对手。\n\n【市场情况】\n- 产品技术领先，拍照功能是核心竞争力\n- 目标用户是追求拍照效果的年轻群体\n- 竞品同质化严重",
+                question: "面对这款新品，你认为最合适的差异化营销策略是什么？",
+                hint: "💡 思考：这款手机的核心优势是什么？应该围绕什么来打造差异化？",
+                answer: "product",
+                explanation: "✅ 【商品差异化策略】\n\n正确！这款手机的核心竞争力是独特的拍照功能，属于商品本身的差异化。应该围绕产品功能特点进行定位和营销，突出与竞品的不同之处。"
+            },
+            {
+                caseName: "☕ 咖啡店定价",
+                caseText: "你是一家精品咖啡店的老板。附近有多家咖啡店，竞争激烈。你发现有些顾客愿意为高品质咖啡支付更高价格，而另一部分顾客对价格敏感。\n\n【市场情况】\n- 咖啡市场同质化严重\n- 存在不同消费层次的用户\n- 店铺具备制作高品质咖啡的能力",
+                question: "为了吸引不同消费群体，你应该采用哪种差异化策略？",
+                hint: "💡 思考：如何让不同消费能力的人都成为你的顾客？",
+                answer: "price",
+                explanation: "✅ 【价格差异化策略】\n\n正确！可以通过推出不同价位的产品线——高端精品咖啡满足追求品质的用户，普通美式满足价格敏感用户。实现市场全覆盖。"
+            },
+            {
+                caseName: "👶 母婴用品渠道",
+                caseText: "你是一家母婴用品公司的营销总监。公司产品定位高端，主要面向高收入年轻父母。但目前主要依靠线上渠道销售，触达受限。\n\n【市场情况】\n- 产品定位高端，价格较高\n- 目标用户注重购物体验\n- 线上渠道增长放缓",
+                question: "为了更好地触达目标用户，应该采用哪种策略？",
+                hint: "💡 思考：高端母婴用品的目标用户希望在哪里、以什么方式购买产品？",
+                answer: "channel",
+                explanation: "✅ 【渠道差异化策略】\n\n正确！高端母婴用品的目标用户注重购物体验和信任感，应该开拓线下精品店、母婴连锁店等渠道，提供面对面的服务和体验，而不是仅依赖线上。"
+            },
+            {
+                caseName: "💼 高端健身房",
+                caseText: "你是一家健身房的营销负责人。健身房行业竞争激烈，大型连锁健身房以低价吸引会员。你发现一部分高端用户愿意支付更高费用获得个性化服务。\n\n【市场情况】\n- 行业价格战激烈\n- 存在高端细分市场\n- 可以提供私教、营养指导等服务",
+                question: "针对这部分高端用户，应该采用哪种差异化策略？",
+                hint: "💡 思考：高端用户除了健身，还关注什么？",
+                answer: "customer",
+                explanation: "✅ 【消费者差异化策略】\n\n正确！高端用户需要的是个性化服务——专属私教、营养指导、定制训练计划等。根据不同消费者的需求和偏好，提供定制化的产品和服务。"
+            },
+            {
+                caseName: "👜 奢侈品包包",
+                caseText: "你是一家新兴皮具品牌的创始人。市场上已有LV、Gucci等国际大牌，消费者对这些品牌认知度很高。\n\n【市场情况】\n- 大牌垄断高端市场\n- 消费者品牌意识强\n- 产品品质不错，但缺乏知名度",
+                question: "面对强势的品牌竞争，你应该如何突围？",
+                hint: "💡 思考：新品牌如何在消费者心中建立独特位置？",
+                answer: "brand",
+                explanation: "✅ 【品牌差异化策略】\n\n正确！在品牌认知已经固化的市场，需要通过独特的品牌故事、文化内涵、价值主张来建立差异化形象。比如强调手工制作、东方美学、可持续理念等。"
+            },
+            {
+                caseName: "🚗 汽车4S店",
+                caseText: "你是一家汽车4S店的销售经理。附近有多家同品牌4S店，产品相同，价格也差不多。客户服务质量成为差异化关键。\n\n【市场情况】\n- 产品与竞品完全相同\n- 价格透明，难以拉开差距\n- 客户体验很重要",
+                question: "在产品无法差异化的情况下，如何吸引更多客户？",
+                hint: "💡 思考：客户买车后最关注什么？",
+                answer: "service",
+                explanation: "✅ 【服务差异化策略】\n\n正确！当产品无法差异化时，服务是重要的突破口。可以提供更专业的购车咨询、更贴心的试驾体验、更完善的售后保养、更多车主活动等。"
+            },
+            {
+                caseName: "🎮 游戏推广",
+                caseText: "你是一款新游戏的营销负责人。游戏即将上线，需要在激烈的游戏市场中获得关注。游戏玩法有创新，但知名度为零。\n\n【市场情况】\n- 游戏市场同质化严重\n- 玩法有创新但缺乏认知\n- 预算有限，无法大规模投放",
+                question: "面对资源有限的情况，应该采用哪种差异化策略来推广？",
+                hint: "💡 思考：如何在有限预算下让更多人知道这款游戏？",
+                answer: "promotion",
+                explanation: "✅ 【推广差异化策略】\n\n正确！可以采用创新推广方式——比如找游戏主播试玩、举办创意短视频大赛、与热门IP联动、打造病毒式传播话题等，用创意而不是金钱来获得关注。"
+            },
+            {
+                caseName: "🍵 新中式茶饮",
+                caseText: "你是一家新中式茶饮品牌的创始人。茶饮市场竞争激烈，蜜雪冰城主打低价，喜茶主打高端。你的品牌主打养生茶饮，强调健康概念。\n\n【市场情况】\n- 茶饮市场竞争激烈\n- 健康养生是消费趋势\n- 品牌定位独特但知名度低",
+                question: "为了在竞争中脱颖而出，应该采用哪种策略组合？",
+                hint: "💡 思考：这个品牌的核心定位是什么？如何让更多人知道？",
+                answer: "brand",
+                explanation: "✅ 【品牌差异化策略】\n\n正确！新中式养生茶饮的核心竞争力是独特的品牌定位——将传统茶饮与健康养生结合。需要通过品牌故事、文化包装、视觉设计等建立"健康茶饮"的独特品牌形象，与竞品形成鲜明对比。"
+            }
+        ];
+        
+        // 游戏状态
+        let caseOrder = [];
+        let currentIndex = 0;
+        let score = 0;
+        let rightCount = 0;
+        let wrongCount = 0;
+        let currentOptions = [];
+        
+        // DOM元素
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
         
         // 打乱数组
         function shuffle(array) {
@@ -209,7 +281,7 @@
             return arr;
         }
         
-        // 生成题目选项（随机顺序）
+        // 生成选项
         function generateOptions(correctType) {
             let options = [];
             
@@ -217,55 +289,40 @@
             const correct = strategyOptions.find(o => o.type === correctType);
             options.push({ type: correct.type, text: correct.text, correct: true });
             
-            // 6个错误选项
+            // 错误选项
             const wrongTypes = strategyOptions.filter(o => o.type !== correctType);
             shuffle(wrongTypes).forEach(o => {
                 options.push({ type: o.type, text: o.text, correct: false });
             });
             
-            // 打乱选项顺序
-            shuffle(options);
-            
-            return options;
+            return shuffle(options);
         }
         
-        const allCases = [
-    {caseName:"📱 手机新品上市",caseText:"你是一家手机公司的营销总监。公司刚刚研发了一款具有独特拍照功能的智能手机，拍照效果远超竞争对手。\n\n【市场情况】\n- 产品技术领先，拍照功能是核心竞争力\n- 目标用户是追求拍照效果的年轻群体\n- 竞品同质化严重",question:"面对这款新品，你认为最合适的差异化营销策略是什么？",hint:"💡 思考：这款手机的核心优势是什么？应该围绕什么来打造差异化？",answer:"product",explanation:"✅ 【商品差异化策略】\n\n正确！这款手机的核心竞争力是独特的拍照功能，属于商品本身的差异化。应该围绕产品功能特点进行定位和营销，突出与竞品的不同之处。"},
-    {caseName:"☕ 咖啡店定价",caseText:"你是一家精品咖啡店的老板。附近有多家咖啡店，竞争激烈。你发现有些顾客愿意为高品质咖啡支付更高价格，而另一部分顾客对价格敏感。\n\n【市场情况】\n- 咖啡市场同质化严重\n- 存在不同消费层次的用户\n- 店铺具备制作高品质咖啡的能力",question:"为了吸引不同消费群体，你应该采用哪种差异化策略？",hint:"💡 思考：如何让不同消费能力的人都成为你的顾客？",answer:"price",explanation:"✅ 【价格差异化策略】\n\n正确！可以通过推出不同价位的产品线——高端精品咖啡满足追求品质的用户，普通美式满足价格敏感用户。实现市场全覆盖。"},
-    {caseName:"👶 母婴用品渠道",caseText:"你是一家母婴用品公司的营销总监。公司产品定位高端，主要面向高收入年轻父母。但目前主要依靠线上渠道销售，触达受限。\n\n【市场情况】\n- 产品定位高端，价格较高\n- 目标用户注重购物体验\n- 线上渠道增长放缓",question:"为了更好地触达目标用户，应该采用哪种策略？",hint:"💡 思考：高端母婴用品的目标用户希望在哪里、以什么方式购买产品？",answer:"channel",explanation:"✅ 【渠道差异化策略】\n\n正确！高端母婴用品的目标用户注重购物体验和信任感，应该开拓线下精品店、母婴连锁店等渠道，提供面对面的服务和体验，而不是仅依赖线上。"},
-    {caseName:"💼 高端健身房",caseText:"你是一家健身房的营销负责人。健身房行业竞争激烈，大型连锁健身房以低价吸引会员。你发现一部分高端用户愿意支付更高费用获得个性化服务。\n\n【市场情况】\n- 行业价格战激烈\n- 存在高端细分市场\n- 可以提供私教、营养指导等服务",question:"针对这部分高端用户，应该采用哪种差异化策略？",hint:"💡 思考：高端用户除了健身，还关注什么？",answer:"customer",explanation:"✅ 【消费者差异化策略】\n\n正确！高端用户需要的是个性化服务——专属私教、营养指导、定制训练计划等。根据不同消费者的需求和偏好，提供定制化的产品和服务。"},
-    {caseName:"👜 奢侈品包包",caseText:"你是一家新兴皮具品牌的创始人。市场上已有LV、Gucci等国际大牌，消费者对这些品牌认知度很高。\n\n【市场情况】\n- 大牌垄断高端市场\n- 消费者品牌意识强\n- 产品品质不错，但缺乏知名度",question:"面对强势的品牌竞争，你应该如何突围？",hint:"💡 思考：新品牌如何在消费者心中建立独特位置？",answer:"brand",explanation:"✅ 【品牌差异化策略】\n\n正确！在品牌认知已经固化的市场，需要通过独特的品牌故事、文化内涵、价值主张来建立差异化形象。比如强调手工制作、东方美学、可持续理念等。"},
-    {caseName:"🚗 汽车4S店",caseText:"你是一家汽车4S店的销售经理。附近有多家同品牌4S店，产品相同，价格也差不多。客户服务质量成为差异化关键。\n\n【市场情况】\n- 产品与竞品完全相同\n- 价格透明，难以拉开差距\n- 客户体验很重要",question:"在产品无法差异化的情况下，如何吸引更多客户？",hint:"💡 思考：客户买车后最关注什么？",answer:"service",explanation:"✅ 【服务差异化策略】\n\n正确！当产品无法差异化时，服务是重要的突破口。可以提供更专业的购车咨询、更贴心的试驾体验、更完善的售后保养、更多车主活动等。"},
-    {caseName:"🎮 游戏推广",caseText:"你是一款新游戏的营销负责人。游戏即将上线，需要在激烈的游戏市场中获得关注。游戏玩法有创新，但知名度为零。\n\n【市场情况】\n- 游戏市场同质化严重\n- 玩法有创新但缺乏认知\n- 预算有限，无法大规模投放",question:"面对资源有限的情况，应该采用哪种差异化策略来推广？",hint:"💡 思考：如何在有限预算下让更多人知道这款游戏？",answer:"promotion",explanation:"✅ 【推广差异化策略】\n\n正确！可以采用创新推广方式——比如找游戏主播试玩、举办创意短视频大赛、与热门IP联动、打造病毒式传播话题等，用创意而不是金钱来获得关注。"},
-    {caseName:"🍵 新中式茶饮",caseText:"你是一家新中式茶饮品牌的创始人。茶饮市场竞争激烈，蜜雪冰城主打低价，喜茶主打高端。你的品牌主打养生茶饮，强调健康概念。\n\n【市场情况】\n- 茶饮市场竞争激烈\n- 健康养生是消费趋势\n- 品牌定位独特但知名度低",question:"为了在竞争中脱颖而出，应该采用哪种策略组合？",hint:"💡 思考：这个品牌的核心定位是什么？如何让更多人知道？",answer:"brand",explanation:"✅ 【品牌差异化策略】\n\n正确！新中式养生茶饮的核心竞争力是独特的品牌定位——将传统茶饮与健康养生结合。需要通过品牌故事、文化包装、视觉设计等建立"健康茶饮"的独特品牌形象，与竞品形成鲜明对比。"}
-];
-        
-        let caseOrder = [];
-        let currentIndex = 0, score = 0, rightCount = 0, wrongCount = 0;
-        let currentOptions = [];
-        
+        // 开始游戏
         function startGame() {
-            // 打乱题目顺序
             caseOrder = shuffle([...Array(allCases.length).keys()]);
             currentIndex = 0;
             score = 0;
             rightCount = 0;
             wrongCount = 0;
             
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'block';
+            startScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+            resultScreen.style.display = 'none';
+            
             showCase();
         }
         
+        // 显示题目
         function showCase() {
             const q = allCases[caseOrder[currentIndex]];
             
             // 更新进度
-            for(let i=1;i<=8;i++) {
-                const step = document.getElementById('step'+i);
+            for (let i = 1; i <= 8; i++) {
+                const step = document.getElementById('step' + i);
                 step.className = 'step';
-                if(i-1 < currentIndex) step.className = 'step completed';
-                if(i-1 === currentIndex) step.className = 'step active';
+                if (i - 1 < currentIndex) step.className = 'step completed';
+                if (i - 1 === currentIndex) step.className = 'step active';
             }
             
             document.getElementById('phase-tag').textContent = '场景' + (currentIndex + 1);
@@ -275,30 +332,30 @@
             document.getElementById('question-text').textContent = q.question;
             document.getElementById('think-text').textContent = q.hint;
             
-            // 重置解释框
+            // 重置
             document.getElementById('explanation').classList.remove('show');
-            document.getElementById('agency-tip').style.display = 'none';
-            
-            // 生成随机选项
-            currentOptions = generateOptions(q.answer);
+            document.getElementById('score').textContent = score;
             
             // 生成选项
+            currentOptions = generateOptions(q.answer);
+            
             const optionsContainer = document.getElementById('options');
             optionsContainer.innerHTML = '';
+            
             currentOptions.forEach((opt, index) => {
                 const btn = document.createElement('div');
                 btn.className = 'option';
                 btn.textContent = String.fromCharCode(65 + index) + ". " + opt.text;
-                btn.onclick = () => selectAnswer(index);
+                btn.onclick = function() { selectAnswer(index); };
                 optionsContainer.appendChild(btn);
             });
         }
         
-        function selectAnswer(index, isRetry = false) {
+        // 选择答案
+        function selectAnswer(index) {
             const q = allCases[caseOrder[currentIndex]];
             const options = document.querySelectorAll('.option');
             
-            // 显示正确答案
             if (currentOptions[index].correct) {
                 // 正确
                 options.forEach((opt, i) => {
@@ -309,24 +366,20 @@
                 score += 12;
                 document.getElementById('score').textContent = score;
                 
-                // 显示解析
                 document.getElementById('explanation-text').textContent = q.explanation;
                 document.getElementById('explanation').classList.add('show');
                 
-                // 3秒后进入下一题
-                setTimeout(() => { nextCase(); }, 3000);
+                setTimeout(function() { nextCase(); }, 3000);
             } else {
                 // 错误
                 options[index].classList.add('wrong');
                 
-                // 添加重试按钮
                 const optionsContainer = document.getElementById('options');
                 const retryBtn = document.createElement('div');
-                retryBtn.id = 'retry-btn';
                 retryBtn.className = 'option';
                 retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9800, #ff5722); border-color: #ff9800; color: #fff; text-align: center; font-weight: bold; margin-top: 10px;';
                 retryBtn.textContent = '🔄 再试一次';
-                retryBtn.onclick = (e) => {
+                retryBtn.onclick = function(e) {
                     e.stopPropagation();
                     retryBtn.remove();
                     options.forEach(opt => {
@@ -337,6 +390,7 @@
             }
         }
         
+        // 下一题
         function nextCase() {
             currentIndex++;
             if (currentIndex >= allCases.length) {
@@ -346,9 +400,10 @@
             }
         }
         
+        // 显示结果
         function showResult() {
-            document.getElementById('game-screen').style.display = 'none';
-            document.getElementById('result-screen').style.display = 'block';
+            gameScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
             
             document.getElementById('final-score').textContent = score;
             document.getElementById('stat-right').textContent = rightCount;
@@ -356,10 +411,10 @@
             document.getElementById('stat-score').textContent = score;
             
             let title, msg;
-            if(score >= 80) {
+            if (score >= 80) {
                 title = "🏆 营销大师！";
                 msg = "你展现了出色的营销洞察力！对差异化营销策略了如指掌，完全具备带领企业走向成功的实力！";
-            } else if(score >= 50) {
+            } else if (score >= 50) {
                 title = "⭐ 策略高手";
                 msg = "你展现了一定的营销思维！对差异化策略有较好理解，稍加磨练必定成为营销高手！";
             } else {
@@ -371,9 +426,9 @@
             document.getElementById('result-msg').textContent = msg;
         }
         
-        function restartGame() {
-            startGame();
-        }
+        // 绑定事件
+        startBtn.onclick = startGame;
+        restartBtn.onclick = startGame;
     </script>
 </body>
 </html>
