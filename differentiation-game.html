@@ -394,18 +394,22 @@
             } else {
                 // 错误
                 options[index].classList.add('wrong');
-                // 禁用所有选项，防止再次点击
-                options.forEach(opt => opt.classList.add('disabled'));
                 
                 const optionsContainer = document.getElementById('options');
                 const retryBtn = document.createElement('div');
                 retryBtn.className = 'option';
                 retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9800, #ff5722); border-color: #ff9800; color: #fff; text-align: center; font-weight: bold; margin-top: 10px;';
                 retryBtn.textContent = '🔄 再试一次';
+                
+                // 先禁用所有选项（不包括retryBtn）
+                options.forEach(opt => {
+                    if (opt !== retryBtn) opt.classList.add('disabled');
+                });
+                
                 retryBtn.onclick = function(e) {
                     e.stopPropagation();
                     retryBtn.remove();
-                    options.forEach(opt => {
+                    document.querySelectorAll('.option').forEach(opt => {
                         opt.classList.remove('disabled', 'wrong', 'correct');
                     });
                 };
