@@ -46,8 +46,8 @@
         
         .result-box { display: none; padding: 20px; border-radius: 12px; margin-top: 15px; text-align: left; }
         .result-box.show { display: block; animation: fadeIn 0.3s; }
-        .result-correct { background: rgba(0,255,136,0.2); border: 2px solid #00ff88; color: #00ff88; }
-        .result-wrong { background: rgba(255,107,107,0.2); border: 2px solid #ff6b6b; color: #ff6b6b; }
+        .result-correct { background: #e8f5e9; border: 2px solid #4caf50; color: #2e7d32; }
+        .result-wrong { background: #ffebee; border: 2px solid #f44336; color: #c62828; }
         
         .continue-btn { display: none; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none; padding: 15px 40px; border-radius: 25px; font-weight: bold; margin-top: 20px; cursor: pointer; }
         .continue-btn.show { display: inline-block; }
@@ -125,7 +125,7 @@
                 task: "你首先应该了解什么信息？",
                 options: [
                     { text: "A. 找竞品员工聊天", cost: -500, best: false, result: "❌ 这是非法手段！违反商业道德，可能被开除！" },
-                    { text: "B. 搜索行业报告和新闻", cost: -100, best: true, result: "✅ 正确！搜索行业报告和新闻是了解市场概况的最快方式。" },
+                    { text: "B. 搜索行业报告和新闻", cost: 0, best: true, result: "✅ 正确！搜索行业报告和新闻是了解市场概况的最快方式。" },
                     { text: "C. 直接问老板要", cost: 0, best: false, result: "❌ 老板让你去了解，你怎么好意思再问老板？" },
                     { text: "D. 等客户告诉自己", cost: 0, best: false, result: "❌ 客户不会主动告诉你市场情况的。" }
                 ]
@@ -138,7 +138,7 @@
                 options: [
                     { text: "A. 搜索引擎搜索", cost: -50, best: false, result: "❌ 搜索引擎只能了解general信息，不够深入。" },
                     { text: "B. 街头问卷调查", cost: -300, best: false, result: "⚠️ 可以但效率低，年轻人不一定愿意街头填问卷。" },
-                    { text: "C. 线上问卷/用户访谈", cost: -200, best: true, result: "✅ 正确！线上问卷成本低，访谈更深入了解需求。" },
+                    { text: "C. 线上问卷/用户访谈", cost: 0, best: true, result: "✅ 正确！线上问卷成本低，访谈更深入了解需求。" },
                     { text: "D. 看别人怎么做", cost: 0, best: false, result: "❌ 看别人只能参考，不能替代自己调研。" }
                 ]
             },
@@ -161,7 +161,7 @@
                 task: "获取行业趋势信息，哪个途径最专业？",
                 options: [
                     { text: "A. 问朋友", cost: 0, best: false, result: "❌ 朋友不是行业专家，不够专业。" },
-                    { text: "B. 行业协会报告", cost: -500, best: true, result: "✅ 正确！行业协会报告最权威，最有参考价值。" },
+                    { text: "B. 行业协会报告", cost: 0, best: true, result: "✅ 正确！行业协会报告最权威，最有参考价值。" },
                     { text: "C. 短视频平台", cost: -100, best: false, result: "❌ 短视频娱乐为主，不适合获取专业趋势。" },
                     { text: "D. 自己猜", cost: 0, best: false, result: "❌ 凭感觉猜是不负责任的。" }
                 ]
