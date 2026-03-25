@@ -213,7 +213,7 @@
         
         function startGame() {
             // 打乱题目顺序
-            caseOrder = shuffle([...Array(allQuestions.length).keys()]);
+            caseOrder = shuffle([...Array(allCases.length).keys()]);
             currentIndex = 0;
             score = 0;
             rightCount = 0;
@@ -225,7 +225,7 @@
         }
         
         function showCase() {
-            const q = allQuestions[caseOrder[currentIndex]];
+            const q = allCases[caseOrder[currentIndex]];
             
             // 更新进度
             for(let i=1;i<=8;i++) {
@@ -237,10 +237,10 @@
             
             document.getElementById('phase-tag').textContent = '案件';
             document.getElementById('knowledge-tag').textContent = '竞店类型判断';
-            document.getElementById('scenario-title').textContent = c.caseTitle;
-            document.getElementById('scenario-text').textContent = c.caseText;
+            document.getElementById('scenario-title').textContent = q.caseName;
+            document.getElementById('scenario-text').textContent = q.caseText;
             document.getElementById('question-text').textContent = q.question;
-            document.getElementById('think-text').textContent = q.think;
+            document.getElementById('think-text').textContent = q.hint;
             
             // 重置解释框
             document.getElementById('explanation').classList.remove('show');
@@ -262,7 +262,7 @@
         }
         
         function selectAnswer(index, isRetry = false) {
-            const q = allQuestions[caseOrder[currentIndex]];
+            const q = allCases[caseOrder[currentIndex]];
             const options = document.querySelectorAll('.option');
             
             // 判断对错
@@ -310,7 +310,7 @@
         
         function nextCase() {
             currentIndex++;
-            if (currentIndex >= allQuestions.length) {
+            if (currentIndex >= allCases.length) {
                 showResult();
             } else {
                 showCase();
