@@ -49,9 +49,9 @@
         .think-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.9em; }
         .think-title { font-weight: bold; margin-bottom: 8px; }
         
-        .options { display: grid; gap: 12px; }
-        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; font-size: 0.95em; color: #333; }
-        .option:hover { border-color: #d4a574; background: #fff8f0; transform: translateX(5px); }
+        .options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 10px 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 0.8em; color: #333; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; }
+        .option:hover { border-color: #d4a574; background: #fff8f0; transform: translateY(-2px); }
         .option.correct { background: linear-gradient(135deg, #00ff88, #ffd700); border-color: #00ff88; color: #1a1510; }
         .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
         .option.disabled { pointer-events: none; opacity: 0.7; }
@@ -77,6 +77,15 @@
         .strategy-card { background: linear-gradient(135deg, #2d2318, #3d2e1a); border: 1px solid #ffd700; border-radius: 12px; padding: 15px; margin: 10px 0; text-align: left; }
         .strategy-name { color: #ffd700; font-weight: bold; margin-bottom: 8px; font-size: 1em; }
         .strategy-desc { color: #d4c4a8; font-size: 0.85em; line-height: 1.5; }
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            .options { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+            .option { padding: 8px 4px; font-size: 0.7em; min-height: 50px; }
+            .option span:first-child { font-size: 1.2em !important; margin-bottom: 2px !important; }
+            .title { font-size: 1.8em; }
+            .question-text { font-size: 0.95em; }
+            .scenario { padding: 12px; font-size: 0.9em; }
+        }
     </style>
 </head>
 <body>
@@ -345,7 +354,9 @@
             currentOptions.forEach((opt, index) => {
                 const btn = document.createElement('div');
                 btn.className = 'option';
-                btn.textContent = String.fromCharCode(65 + index) + ". " + opt.text;
+                // 简化显示，只保留emoji和类型
+                const typeText = opt.text.replace(/.*?\s+/, '');
+                btn.innerHTML = `<span style="font-size:1.4em;margin-bottom:4px;">${typeText.split(' ')[0]}</span><span>${typeText.split(' ').slice(1).join(' ')}</span>`;
                 btn.onclick = function() { selectAnswer(index); };
                 optionsContainer.appendChild(btn);
             });
