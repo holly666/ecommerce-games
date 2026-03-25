@@ -358,32 +358,12 @@
                 // 3秒后进入下一题
                 setTimeout(() => { nextQuestion(); }, 3000);
             } else {
-                // 答错了
+                // 答错了，不显示解析，直接进入下一题
                 options[index].classList.add('wrong');
                 
-                // 显示查看解析和下一题按钮
-                const explainDiv = document.createElement('div');
-                explainDiv.style.cssText = 'margin-top: 15px; display: flex; gap: 10px;';
-                const explainBtn = document.createElement('button');
-                explainBtn.className = 'explain-btn';
-                explainBtn.textContent = '📖 查看解析';
-                explainBtn.onclick = () => {
-                    document.getElementById('explanation-text').textContent = q.explanation;
-                    document.getElementById('explanation').classList.add('show');
-                    explainDiv.remove();
-                    
-                    const agencyTip = document.getElementById('agency-tip');
-                    document.getElementById('agency-tip-text').textContent = q.agencyTip;
-                    agencyTip.style.display = 'block';
-                };
-                const skipBtn = document.createElement('button');
-                skipBtn.className = 'option';
-                skipBtn.style.cssText = 'background: #666; color: #fff; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer;';
-                skipBtn.textContent = '⏭️ 下一题';
-                skipBtn.onclick = () => { nextQuestion(); };
-                explainDiv.appendChild(explainBtn);
-                explainDiv.appendChild(skipBtn);
-                document.getElementById('question-box').appendChild(explainDiv);
+                // 禁用所有选项，直接进入下一题
+                options.forEach(opt => opt.classList.add('disabled'));
+                setTimeout(() => { nextQuestion(); }, 1500);
             }
         }
         
