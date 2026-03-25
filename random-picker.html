@@ -3,208 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸运抽抽抽</title>
+    <title>随机抽人</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; 
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             padding: 20px;
-            overflow: hidden;
         }
         .container { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px);
-            border-radius: 30px; 
+            background: white; 
+            border-radius: 20px; 
             padding: 40px; 
             text-align: center; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
             width: 100%;
-            border: 1px solid rgba(255,255,255,0.2);
         }
-        .title { 
-            font-size: 2.5em; 
-            background: linear-gradient(135deg, #ffd700, #ff6b6b, #667eea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 5px;
-            text-shadow: 0 0 30px rgba(255,215,0,0.3);
-        }
-        .subtitle { 
-            color: rgba(255,255,255,0.6); 
-            margin-bottom: 25px; 
-            font-size: 0.9em;
-        }
+        .title { font-size: 2em; color: #333; margin-bottom: 5px; }
+        .subtitle { color: #666; margin-bottom: 25px; font-size: 0.9em; }
         .number-display { 
-            font-size: 10em; 
-            font-weight: 900; 
-            background: linear-gradient(135deg, #ffd700, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 20px 0;
-            min-height: 180px;
+            font-size: 8em; 
+            font-weight: bold; 
+            color: #667eea; 
+            margin: 30px 0;
+            min-height: 140px;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-shadow: 0 0 50px rgba(255,215,0,0.5);
-            animation: pulse 0.5s ease-in-out infinite alternate;
         }
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-        }
-        .lucky-text {
-            font-size: 1.8em;
-            margin: 10px 0;
-            min-height: 40px;
-        }
-        .lucky-emoji { font-size: 2.5em; }
-        .lucky-desc { color: #ffd700; font-size: 1em; }
-        
         .btn { 
-            background: linear-gradient(135deg, #ffd700, #ff6b6b); 
-            color: #1a1a2e; 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
             border: none; 
-            padding: 20px 60px; 
-            font-size: 1.4em; 
+            padding: 18px 50px; 
+            font-size: 1.2em; 
             border-radius: 50px; 
             cursor: pointer; 
             font-weight: bold;
             transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
         }
-        .btn:hover { 
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255,215,0,0.5);
-        }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(102,126,234,0.4); }
         
-        .settings { 
-            margin: 25px 0; 
-            padding: 20px; 
-            background: rgba(255,255,255,0.05); 
-            border-radius: 15px;
-        }
-        .settings-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-        .settings label { color: rgba(255,255,255,0.7); font-size: 0.9em; }
-        .settings input { 
-            width: 70px; 
-            padding: 10px; 
-            border: 2px solid rgba(255,255,255,0.2); 
-            border-radius: 10px; 
-            text-align: center;
-            font-size: 1.1em;
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
+        .settings { margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; }
+        .settings label { color: #666; font-size: 0.9em; }
+        .settings input { width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-size: 1em; margin: 0 5px; }
         
-        .history { 
-            margin-top: 25px; 
-            padding-top: 20px; 
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .history-title { 
-            color: rgba(255,255,255,0.5); 
-            font-size: 0.8em; 
-            margin-bottom: 10px;
-        }
-        .history-list { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 8px; 
-            justify-content: center;
-        }
-        .history-item { 
-            background: rgba(255,255,255,0.1); 
-            padding: 8px 15px; 
-            border-radius: 20px; 
-            font-size: 0.9em; 
-            color: rgba(255,255,255,0.7);
-            transition: all 0.3s;
-        }
-        .history-item.lucky { 
-            background: linear-gradient(135deg, #ffd700, #ff6b6b); 
-            color: #1a1a2e;
-            font-weight: bold;
-            animation: pop 0.3s ease-out;
-        }
-        @keyframes pop {
-            0% { transform: scale(0.5); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        
-        .particles {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .particle {
-            position: absolute;
-            font-size: 2em;
-            animation: fall 3s linear forwards;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-        
-        .result-animation {
-            animation: bounce 0.5s ease-out;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            25% { transform: scale(1.3); }
-            50% { transform: scale(0.9); }
-            75% { transform: scale(1.1); }
-        }
+        .history { margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
+        .history-title { color: #666; font-size: 0.85em; margin-bottom: 10px; }
+        .history-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .history-item { background: #f0f0f0; padding: 5px 12px; border-radius: 15px; font-size: 0.85em; color: #666; }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
     <div class="container">
-        <h1 class="title">🎯 幸运抽抽抽</h1>
-        <p class="subtitle">看看今天谁是幸运儿？</p>
+        <h1 class="title">🎲 随机抽人</h1>
+        <p class="subtitle">课堂随机点名工具</p>
         
         <div class="settings">
-            <div class="settings-row">
-                <label>学号范围：</label>
-                <input type="number" id="minNum" value="1" min="1">
-                <span>~</span>
-                <input type="number" id="maxNum" value="43" min="1">
-            </div>
-            <div class="settings-row">
-                <label>幸运数字（可选）：</label>
-                <input type="number" id="luckyNum" placeholder="如 8" min="1">
-            </div>
-        </div>
-        
-        <div class="lucky-text" id="luckyText">
-            <span class="lucky-emoji" id="luckyEmoji"></span>
-            <span class="lucky-desc" id="luckyDesc"></span>
+            <label>学号范围：</label>
+            <input type="number" id="minNum" value="1" min="1">
+            <span>~</span>
+            <input type="number" id="maxNum" value="43" min="1">
         </div>
         
         <div class="number-display" id="display">?</div>
         
-        <button class="btn" id="startBtn" onclick="start抽()">✨ 开始抽签 ✨</button>
+        <button class="btn" id="startBtn" onclick="start抽()">开始抽</button>
         
-        <div class="history" id="history">
-            <div class="history-title">今日好运榜</div>
+        <div class="history" id="history" style="display:none;">
+            <div class="history-title">已抽到：</div>
             <div class="history-list" id="historyList"></div>
         </div>
     </div>
@@ -214,23 +86,6 @@
         let is抽ing = false;
         let history = [];
         
-        const luckyMessages = [
-            { emoji: "🌟", text: "超级幸运儿！", color: "#ffd700" },
-            { emoji: "🎉", text: "今天运气爆棚！", color: "#ff6b6b" },
-            { emoji: "💫", text: "欧气满满！", color: "#667eea" },
-            { emoji: "🔥", text: "手气旺旺旺！", color: "#ff9800" },
-            { emoji: "⭐", text: "天选之子！", color: "#ffd700" },
-            { emoji: "🎊", text: "锦鲤附体！", color: "#ff6b6b" },
-            { emoji: "✨", text: "运气不错哦！", color: "#667eea" },
-            { emoji: "👑", text: "王者之气！", color: "#ffd700" },
-        ];
-        
-        const normalMessages = [
-            { emoji: "😊", text: "再接再厉！", color: "#888" },
-            { emoji: "👍", text: "明天会更好！", color: "#888" },
-            { emoji: "💪", text: "加油！", color: "#888" },
-        ];
-        
         function start抽() {
             if (is抽ing) {
                 stop抽();
@@ -239,7 +94,6 @@
             
             const min = parseInt(document.getElementById('minNum').value);
             const max = parseInt(document.getElementById('maxNum').value);
-            const luckyNum = parseInt(document.getElementById('luckyNum').value);
             
             if (min > max) {
                 alert('起始学号不能大于结束学号！');
@@ -247,22 +101,16 @@
             }
             
             is抽ing = true;
-            document.getElementById('startBtn').textContent = '🛑 停止';
-            document.getElementById('luckyEmoji').textContent = '';
-            document.getElementById('luckyDesc').textContent = '';
-            document.getElementById('display').style.animation = 'pulse 0.1s ease-in-out infinite alternate';
+            document.getElementById('startBtn').textContent = '停止';
             
-            // 快速滚动效果
-            let speed = 30;
+            let speed = 50;
             timer = setInterval(() => {
                 const num = Math.floor(Math.random() * (max - min + 1)) + min;
                 document.getElementById('display').textContent = num;
-                
                 speed = Math.min(speed * 1.15, 400);
-                
                 clearInterval(timer);
                 timer = setInterval(arguments.callee, speed);
-            }, speed);
+            }, 50);
         }
         
         function stop抽() {
@@ -271,70 +119,24 @@
             
             const min = parseInt(document.getElementById('minNum').value);
             const max = parseInt(document.getElementById('maxNum').value);
-            const luckyNumInput = document.getElementById('luckyNum').value;
-            const luckyNum = luckyNumInput ? parseInt(luckyNumInput) : null;
+            const result = Math.floor(Math.random() * (max - min + 1)) + min;
             
-            let result;
-            // 如果设置了幸运数字，20%概率触发
-            if (luckyNum && Math.random() < 0.2) {
-                result = luckyNum;
-            } else {
-                result = Math.floor(Math.random() * (max - min + 1)) + min;
-            }
+            document.getElementById('display').textContent = result;
+            document.getElementById('startBtn').textContent = '再抽一次';
             
-            const display = document.getElementById('display');
-            display.textContent = result;
-            display.style.animation = 'none';
-            
-            // 判断是否是幸运数字
-            const isLucky = result === luckyNum || (luckyNum && Math.random() < 0.15);
-            let msg;
-            if (isLucky) {
-                msg = luckyMessages[Math.floor(Math.random() * luckyMessages.length)];
-                createParticles();
-            } else {
-                msg = normalMessages[Math.floor(Math.random() * normalMessages.length)];
-            }
-            
-            document.getElementById('luckyEmoji').textContent = msg.emoji;
-            document.getElementById('luckyDesc').textContent = msg.text;
-            document.getElementById('luckyDesc').style.color = msg.color;
-            
-            document.getElementById('startBtn').textContent = '🔄 再抽一次';
-            
-            // 添加到历史
-            history.unshift({ num: result, lucky: isLucky });
-            if (history.length > 8) history.pop();
+            history.unshift(result);
+            if (history.length > 10) history.pop();
             updateHistory();
-            
-            // 添加动画效果
-            display.classList.add('result-animation');
-            setTimeout(() => display.classList.remove('result-animation'), 500);
-        }
-        
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const emojis = ['✨', '🌟', '⭐', '🎉', '💫', '🎊'];
-            
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDuration = (2 + Math.random() * 2) + 's';
-                    container.appendChild(particle);
-                    
-                    setTimeout(() => particle.remove(), 4000);
-                }, i * 100);
-            }
         }
         
         function updateHistory() {
+            const historyDiv = document.getElementById('history');
             const listDiv = document.getElementById('historyList');
-            listDiv.innerHTML = history.map((h, i) => 
-                `<span class="history-item ${h.lucky ? 'lucky' : ''}" ${i===0?'style="transform:scale(1.1)"':''}>${h.num}号</span>`
-            ).join('');
+            
+            if (history.length > 0) {
+                historyDiv.style.display = 'block';
+                listDiv.innerHTML = history.map(n => `<span class="history-item">${n}号</span>`).join('');
+            }
         }
     </script>
 </body>
