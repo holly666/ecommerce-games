@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奶茶店大亨 - 沙盘经营游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffd1ff 100%); min-height: 100vh; color: #333; }
+        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+        
+        #start-screen { text-align: center; padding: 30px 20px; }
+        .logo { font-size: 4em; margin-bottom: 10px; }
+        .title { font-size: 2.5em; color: #ff6b6b; margin-bottom: 5px; text-shadow: 2px 2px 0 #fff; }
+        .subtitle { font-size: 1.1em; color: #666; margin-bottom: 25px; }
+        .start-btn { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); color: white; border: none; padding: 18px 50px; font-size: 1.2em; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(255,107,107,0.4); }
+        
+        .stats-bar { display: flex; justify-content: space-around; background: white; border-radius: 15px; padding: 15px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
+        .stat-item { text-align: center; }
+        .stat-icon { font-size: 1.5em; }
+        .stat-value { font-size: 1.3em; font-weight: bold; color: #ff6b6b; }
+        .stat-label { font-size: 0.75em; color: #888; }
+        
+        .game-area { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .round-tag { display: inline-block; background: linear-gradient(135deg, #ff6b6b, #ff8e8e); color: white; padding: 8px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; }
+        
+        .story-box { background: linear-gradient(135deg, #fef9e7, #fdebd0); border-radius: 15px; padding: 20px; margin-bottom: 20px; border-left: 5px solid #f39c12; }
+        .story-title { color: #d35400; font-weight: bold; margin-bottom: 10px; }
+        .story-text { color: #666; line-height: 1.8; }
+        
+        .options { display: grid; gap: 12px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 15px; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+        .option:hover { border-color: #ff6b6b; background: #fff5f5; transform: translateX(5px); }
+        .option .title { font-size: 1em; color: #333; margin-bottom: 5px; }
+        .option .desc { font-size: 0.85em; color: #888; }
+        .option .effect { font-size: 0.8em; color: #ff6b6b; margin-top: 5px; }
+        .option.correct { background: linear-gradient(135deg, #00ff88, #00cc6a); border-color: #00ff88; color: white; }
+        .option.correct .title, .option.correct .desc, .option.correct .effect { color: white; }
+        .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: white; }
+        .option.wrong .title, .option.wrong .desc, .option.wrong .effect { color: white; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        
+        .result-box { display: none; padding: 15px; border-radius: 10px; margin-top: 15px; }
+        .result-box.show { display: block; animation: fadeIn 0.3s; }
+        .result-correct { background: #e8f5e9; border: 2px solid #4caf50; color: #2e7d32; }
+        .result-wrong { background: #ffebee; border: 2px solid #f44336; color: #c62828; }
+        
+        .continue-btn { display: none; background: linear-gradient(135deg, #ff6b6b, #ff8e8e); color: white; border: none; padding: 15px 40px; font-size: 1.1em; border-radius: 25px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .continue-btn.show { display: inline-block; }
+        
+        #result-screen { display: none; text-align: center; padding: 40px 20px; }
+        .final-logo { font-size: 5em; }
+        .final-title { font-size: 2em; color: #ff6b6b; margin: 20px 0; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 600px) { .stats-bar { gap: 15px; } .options { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <div class="logo">🧋</div>
+            <h1 class="title">奶茶店大亨</h1>
+            <p class="subtitle">沙盘经营模拟游戏</p>
+            <button class="start-btn" onclick="startGame()">🏪 开始创业</button>
+        </div>
+        
+        <div id="game-screen">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="money">50000</div>
+                    <div class="stat-label">资金(元)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value" id="reputation">0</div>
+                    <div class="stat-label">声望</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="customers">0</div>
+                    <div class="stat-label">日客流</div>
+                </div>
+            </div>
+            
+            <div class="game-area">
+                <div class="round-tag" id="round-tag">第1周</div>
+                
+                <div class="story-box">
+                    <div class="story-title" id="story-title">剧情</div>
+                    <div class="story-text" id="story-text"></div>
+                </div>
+                
+                <div class="options" id="options"></div>
+                
+                <div class="result-box" id="result-box">
+                    <div id="result-text"></div>
+                </div>
+                
+                <button class="continue-btn" id="continue-btn" onclick="nextRound()">下一周 →</button>
+            </div>
+        </div>
+        
+        <div id="result-screen">
+            <div class="final-logo" id="final-logo">🏆</div>
+            <h1 class="final-title" id="final-title">游戏结束</h1>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="final-money">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value" id="final-reputation">0</div>
+                </div>
+            </div>
+            <p class="subtitle" id="final-msg"></p>
+            <button class="start-btn" onclick="restartGame()">再创业一次</button>
+        </div>
+    </div>
+
+    <script>
+        const rounds = [
+            {
+                title: "第1周：选址问题",
+                story: "你租下了一个10平米的店面，准备卖奶茶。店开在哪里，决定了未来的命运。你有3个选择：",
+                options: [
+                    { title: "A. 大学城美食街", desc: "学生多，租金便宜，消费能力强", money: -5000, rep: 10, cust: 50, result: "✅ 不错的选择！大学生消费意愿强，奶茶需求大！" },
+                    { title: "B. 市中心写字楼", desc: "白领多消费高，租金很贵", money: -15000, rep: 20, cust: 80, result: "✅ 白领消费能力强，但租金太贵了！" },
+                    { title: "C. 小区门口", desc: "租金便宜，但人流量不确定", money: -3000, rep: 5, cust: 30, result: "⚠️ 人流量有点少，需要慢慢积累。" }
+                ]
+            },
+            {
+                title: "第2周：产品定位",
+                story: "店址选好了，现在要决定卖什么类型的奶茶。菜单定什么，决定了你的目标客群：",
+                options: [
+                    { title: "A. 低价走量款", desc: "主打10元以下，引流产品", money: -2000, rep: -5, cust: 100, result: "⚠️ 客流不错但利润低，难以盈利。" },
+                    { title: "B. 中高端鲜奶茶", desc: "15-25元，注重品质和口感", money: -5000, rep: 15, cust: 60, result: "✅ 正确！品质赢得口碑，利润也不错。" },
+                    { title: "C. 网红打卡款", desc: "25元以上，颜值高难制作", money: -8000, rep: 25, cust: 40, result: "⚠️ 利润高但受众窄，推广费用也高。" }
+                ]
+            },
+            {
+                title: "第3周：竞争对手",
+                story: "隔壁开了一家奶茶店，价格战一触即发。他们推出了"买一送一"活动，你怎么应对？",
+                options: [
+                    { title: "A. 跟进价格战", desc: "也搞促销，买一送一", money: -3000, rep: 5, cust: 120, result: "❌ 价格战两败俱伤，利润大幅下滑！" },
+                    { title: "B. 差异化竞争", desc: "强调品质，不打价格战", money: 0, rep: 10, cust: 60, result: "✅ 聪明！品质才是长久之计。" },
+                    { title: "C. 推出会员卡", desc: "充50送20，留住老客户", money: -2000, rep: 15, cust: 80, result: "✅ 不错！会员制能稳定客源。" }
+                ]
+            },
+            {
+                title: "第4周：推广方式",
+                story: "生意不温不火，需要推广获客。你想用哪种方式？",
+                options: [
+                    { title: "A. 发传单", desc: "传统方式，覆盖周边", money: -500, rep: 0, cust: 30, result: "⚠️ 效果一般，但成本低。" },
+                    { title: "B. 抖音小红书推广", desc: "找网红带货，快速曝光", money: -5000, rep: 20, cust: 100, result: "✅ 网红效应不错！年轻人都在网上种草。" },
+                    { title: "C. 霸王餐活动", desc: "免费送100杯引流量", money: -1500, rep: 15, cust: 150, result: "⚠️ 短期引流效果很好，但成本也高。" }
+                ]
+            },
+            {
+                title: "第5周：原料采购",
+                story: "原材料用完了，需要补货。供应商给你3个选择：",
+                options: [
+                    { title: "A. 便宜原料", desc: "降低成本，但口感变差", money: -1000, rep: -10, cust: -20, result: "❌ 便宜原料口感差，顾客都跑了！" },
+                    { title: "B. 品牌原料", desc: "品质有保障，价格适中", money: -3000, rep: 10, cust: 20, result: "✅ 品质稳定，顾客满意度高。" },
+                    { title: "C. 有机原料", desc: "主打健康概念，成本很高", money: -6000, rep: 20, cust: 10, result: "⚠️ 健康概念有市场，但成本太高了。" }
+                ]
+            },
+            {
+                title: "第6周：新品研发",
+                story: "季节交替，你想推出一款新产品来吸引顾客：",
+                options: [
+                    { title: "A. 跟随热点", desc: "别人做什么我做什么", money: -1000, rep: 0, cust: 20, result: "⚠️ 随大流没有特色。" },
+                    { title: "B. 自主研发特色款", desc: "原创口味，打造独家IP", money: -3000, rep: 15, cust: 40, result: "✅ 特色产品吸引回头客！" },
+                    { title: "C. 联名款", desc: "与其他品牌合作推出", money: -8000, rep: 30, cust: 80, result: "✅ 联名效果很好，但成本也高！" }
+                ]
+            },
+            {
+                title: "第7周：意外事件",
+                story: "有顾客在社交媒体上发帖子，说你们的奶茶喝完拉肚子。怎么处理？",
+                options: [
+                    { title: "A. 置之不理", desc: "清者自清，不回应", money: 0, rep: -30, cust: -50, result: "❌ 口碑崩塌！顾客都跑了！" },
+                    { title: "B. 真诚道歉+补偿", desc: "承认问题，公开致歉并赔偿", money: -5000, rep: 10, cust: 20, result: "✅ 真诚的态度赢得了理解。" },
+                    { title: "C. 起诉顾客", desc: "说是顾客造谣，要告他", money: 0, rep: -50, cust: -80, result: "❌ 霸王硬上弓，彻底凉凉！" }
+                ]
+            },
+            {
+                title: "第8周：扩张问题",
+                story: "第一家店盈利稳定，要不要开分店？",
+                options: [
+                    { title: "A. 开分店", desc: "投入资金开第二家店", money: -30000, rep: 20, cust: 100, result: "✅ 扩张成功！品牌影响力扩大。" },
+                    { title: "B. 稳扎稳打", desc: "先做好第一家再说", money: 0, rep: 10, cust: 20, result: "✅ 保守策略，稳步发展。" },
+                    { title: "C. 开放加盟", desc: "让其他人加盟你的品牌", money: 10000, rep: 15, cust: 50, result: "⚠️ 加盟费赚了一笔，但管理跟得上吗？" }
+                ]
+            }
+        ];
+        
+        let currentRound = 0;
+        let money = 50000;
+        let reputation = 0;
+        let customers = 50;
+        
+        function startGame() {
+            currentRound = 0;
+            money = 50000;
+            reputation = 0;
+            customers = 50;
+            
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            
+            showRound();
+        }
+        
+        function showRound() {
+            const round = rounds[currentRound];
+            document.getElementById('round-tag').textContent = round.title;
+            document.getElementById('story-title').textContent = "📋 情况";
+            document.getElementById('story-text').textContent = round.story;
+            document.getElementById('money').textContent = money;
+            document.getElementById('reputation').textContent = reputation;
+            document.getElementById('customers').textContent = customers;
+            
+            document.getElementById('result-box').classList.remove('show');
+            document.getElementById('continue-btn').classList.remove('show');
+            
+            const optsContainer = document.getElementById('options');
+            optsContainer.innerHTML = '';
+            
+            round.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.innerHTML = `<div class="title">${opt.title}</div><div class="desc">${opt.desc}</div>`;
+                btn.onclick = () => selectOption(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+        
+        function selectOption(idx) {
+            const round = rounds[currentRound];
+            const opt = round.options[idx];
+            const opts = document.querySelectorAll('.option');
+            
+            opts.forEach(o => o.classList.add('disabled'));
+            
+            // 检查选项是否正确（money变化>=0或-3000以内的是相对正确的选择）
+            const isCorrect = opt.money >= -3000;
+            
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-box').className = 'result-box show result-correct';
+            } else {
+                // 找出最佳选择
+                let bestIdx = 0;
+                let bestScore = -99999;
+                round.options.forEach((o, i) => {
+                    let score = o.money + o.rep * 100 + o.cust * 10;
+                    if (score > bestScore) { bestScore = score; bestIdx = i; }
+                });
+                opts[bestIdx].classList.add('correct');
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-box').className = 'result-box show result-wrong';
+            }
+            
+            // 更新数据
+            money += opt.money;
+            reputation += opt.rep;
+            customers += opt.cust;
+            if (money < 0) money = 0;
+            if (reputation < 0) reputation = 0;
+            if (customers < 0) customers = 0;
+            
+            document.getElementById('money').textContent = money;
+            document.getElementById('reputation').textContent = reputation;
+            document.getElementById('customers').textContent = customers;
+            
+            document.getElementById('result-text').textContent = opt.result;
+            document.getElementById('continue-btn').classList.add('show');
+        }
+        
+        function nextRound() {
+            currentRound++;
+            if (currentRound >= rounds.length) {
+                showResult();
+            } else {
+                showRound();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            document.getElementById('final-money').textContent = money;
+            document.getElementById('final-reputation').textContent = reputation;
+            
+            let logo, title, msg;
+            if (money >= 50000 && reputation >= 50) {
+                logo = "👑";
+                title = "奶茶大亨！";
+                msg = "你已经成为奶茶界的传奇人物！";
+            } else if (money >= 30000 && reputation >= 30) {
+                logo = "🏆";
+                title = "成功企业家！";
+                msg = "奶茶店经营得有声有色！";
+            } else if (money >= 10000) {
+                logo = "⭐";
+                title = "小有所成";
+                msg = "虽然不是大富大贵，但也算站稳脚跟。";
+            } else if (money > 0) {
+                logo = "😰";
+                title = "勉强维持";
+                msg = "再努努力，情况会好转的！";
+            } else {
+                logo = "💔";
+                title = "创业失败";
+                msg = "商场如战场，总结经验下次再来！";
+            }
+            
+            document.getElementById('final-logo').textContent = logo;
+            document.getElementById('final-title').textContent = title;
+            document.getElementById('final-msg').textContent = msg;
+        }
+        
+        function restartGame() {
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
