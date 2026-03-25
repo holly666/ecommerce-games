@@ -103,34 +103,34 @@
                 <p style="margin-top:15px;">🎯 <strong>游戏目标：</strong>在每个场景中做出最优决策，累计最高商业声望！</p>
             </div>
             <div class="tip-box">
-                <div class="tip-title">📋 策略卡片</div>
+                <div class="tip-title">📋 7种差异化策略</div>
                 <div class="strategy-card">
                     <div class="strategy-name">📦 商品差异化</div>
-                    <div class="strategy-desc">基于商品特征、功能、性能等差异来进行市场定位</div>
+                    <div class="strategy-desc">适用：当产品本身有独特功能、设计、技术优势时</div>
                 </div>
                 <div class="strategy-card">
                     <div class="strategy-name">💰 价格差异化</div>
-                    <div class="strategy-desc">通过高价/低价策略吸引不同消费群体</div>
+                    <div class="strategy-desc">适用：当市场存在不同消费能力的人群时</div>
                 </div>
                 <div class="strategy-card">
                     <div class="strategy-name">🛒 渠道差异化</div>
-                    <div class="strategy-desc">选择不同销售渠道和分销模式</div>
+                    <div class="strategy-desc">适用：当目标用户在哪里买产品成为问题时</div>
                 </div>
                 <div class="strategy-card">
                     <div class="strategy-name">👥 消费者差异化</div>
-                    <div class="strategy-desc">根据不同消费者需求提供个性化服务</div>
+                    <div class="strategy-desc">适用：当不同用户需要不同服务或产品时</div>
                 </div>
                 <div class="strategy-card">
                     <div class="strategy-name">🏷️ 品牌差异化</div>
-                    <div class="strategy-desc">建立独特的品牌形象和价值主张</div>
+                    <div class="strategy-desc">适用：当知名度/品牌认知成为销售障碍时</div>
                 </div>
                 <div class="strategy-card">
                     <div class="strategy-name">🤝 服务差异化</div>
-                    <div class="strategy-desc">提供与竞争对手不同的服务方式</div>
+                    <div class="strategy-desc">适用：当产品/价格/渠道无法差异化时</div>
                 </div>
                 <div class="strategy-card">
                     <div class="strategy-name">📢 推广差异化</div>
-                    <div class="strategy-desc">设计不同的推广方法组合进行营销</div>
+                    <div class="strategy-desc">适用：当预算有限需要靠创意获客时</div>
                 </div>
             </div>
         </div>
@@ -356,7 +356,7 @@
                 btn.className = 'option';
                 // 简化显示，只保留emoji和类型
                 const typeText = opt.text.replace(/.*?\s+/, '');
-                btn.innerHTML = `<span style="font-size:1.4em;margin-bottom:4px;">${typeText.split(' ')[0]}</span><span>${typeText.split(' ').slice(1).join(' ')}</span>`;
+                btn.innerHTML = `<span style="font-size:1.4em;margin-bottom:2px;">${typeText.split(' ')[0]}</span><span style="font-size:0.7em;display:block;">${typeText.split(' ').slice(1).join(' ')}</span>`;
                 btn.onclick = function() { selectAnswer(index); };
                 optionsContainer.appendChild(btn);
             });
