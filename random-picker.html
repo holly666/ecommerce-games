@@ -24,14 +24,22 @@
             max-width: 400px;
             width: 100%;
         }
-        .title { font-size: 2em; color: #333; margin-bottom: 5px; }
-        .subtitle { color: #666; margin-bottom: 25px; font-size: 0.9em; }
+        .title { 
+            font-size: 1.8em; 
+            color: #333; 
+            margin-bottom: 10px; 
+        }
+        .subtitle { 
+            color: #666; 
+            margin-bottom: 30px; 
+            font-size: 0.9em;
+        }
         .number-display { 
             font-size: 8em; 
             font-weight: bold; 
             color: #667eea; 
             margin: 30px 0;
-            min-height: 140px;
+            min-height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -47,16 +55,64 @@
             font-weight: bold;
             transition: all 0.3s;
         }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(102,126,234,0.4); }
-        
-        .settings { margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; }
-        .settings label { color: #666; font-size: 0.9em; }
-        .settings input { width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-size: 1em; margin: 0 5px; }
-        
-        .history { margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
-        .history-title { color: #666; font-size: 0.85em; margin-bottom: 10px; }
-        .history-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-        .history-item { background: #f0f0f0; padding: 5px 12px; border-radius: 15px; font-size: 0.85em; color: #666; }
+        .btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
+        .btn:disabled { 
+            opacity: 0.6; 
+            cursor: not-allowed;
+        }
+        .btn-stop { 
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            margin-top: 15px;
+        }
+        .history { 
+            margin-top: 30px; 
+            padding-top: 20px; 
+            border-top: 1px solid #eee;
+        }
+        .history-title { 
+            color: #666; 
+            font-size: 0.85em; 
+            margin-bottom: 10px;
+        }
+        .history-list { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            justify-content: center;
+        }
+        .history-item { 
+            background: #f0f0f0; 
+            padding: 5px 12px; 
+            border-radius: 15px; 
+            font-size: 0.85em; 
+            color: #666;
+        }
+        .history-item:last-child { 
+            background: #667eea; 
+            color: white;
+        }
+        .settings { 
+            margin-bottom: 20px; 
+            padding: 15px; 
+            background: #f8f9fa; 
+            border-radius: 10px;
+        }
+        .settings label { 
+            color: #666; 
+            font-size: 0.9em;
+        }
+        .settings input { 
+            width: 60px; 
+            padding: 8px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            text-align: center;
+            font-size: 1em;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -102,12 +158,18 @@
             
             is抽ing = true;
             document.getElementById('startBtn').textContent = '停止';
+            document.getElementById('startBtn').classList.add('btn-stop');
             
+            // 快速滚动效果
             let speed = 50;
             timer = setInterval(() => {
                 const num = Math.floor(Math.random() * (max - min + 1)) + min;
                 document.getElementById('display').textContent = num;
-                speed = Math.min(speed * 1.15, 400);
+                
+                // 逐渐减速
+                speed = speed * 1.1;
+                if (speed > 500) speed = 500;
+                
                 clearInterval(timer);
                 timer = setInterval(arguments.callee, speed);
             }, 50);
@@ -123,7 +185,9 @@
             
             document.getElementById('display').textContent = result;
             document.getElementById('startBtn').textContent = '再抽一次';
+            document.getElementById('startBtn').classList.remove('btn-stop');
             
+            // 添加到历史
             history.unshift(result);
             if (history.length > 10) history.pop();
             updateHistory();
@@ -135,7 +199,9 @@
             
             if (history.length > 0) {
                 historyDiv.style.display = 'block';
-                listDiv.innerHTML = history.map(n => `<span class="history-item">${n}号</span>`).join('');
+                listDiv.innerHTML = history.map((n, i) => 
+                    `<span class="history-item" ${i===0?'style="background:#667eea;color:white"':''}>${n}号</span>`
+                ).join('');
             }
         }
     </script>
