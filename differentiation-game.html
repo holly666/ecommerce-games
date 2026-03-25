@@ -377,7 +377,7 @@
                 score += 12;
                 document.getElementById('score').textContent = score;
                 
-                document.getElementById('explanation-text').textContent = q.explanation;
+                document.getElementById('explanation-text').innerHTML = q.explanation.replace(/\n/g, '<br>');
                 document.getElementById('explanation').classList.add('show');
                 
                 // 显示下一题按钮，移除自动跳转
