@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>竞品侦察兵 - 你是哪种竞品？</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        #start-screen { text-align: center; padding: 40px 20px; }
+        .title { font-size: 2.4em; color: #00d4ff; text-shadow: 0 0 30px rgba(0,212,255,0.5); margin-bottom: 10px; }
+        .subtitle { font-size: 1.2em; color: #7ec8e3; margin-bottom: 30px; }
+        .start-btn { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #fff; border: none; padding: 18px 50px; font-size: 1.3em; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 5px 20px rgba(0,212,255,0.4); }
+        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,212,255,0.6); }
+        
+        .story-box { background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin: 20px 0; border: 1px solid rgba(0,212,255,0.3); text-align: left; }
+        .story-title { color: #00d4ff; font-size: 1.2em; margin-bottom: 15px; font-weight: bold; }
+        .story-text { line-height: 1.8; color: #b8d4e3; }
+        
+        .tip-box { background: rgba(255,193,7,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid rgba(255,193,7,0.3); text-align: left; }
+        .tip-title { color: #ffc107; font-weight: bold; margin-bottom: 8px; }
+        .tip-text { font-size: 0.9em; color: #e8d5a3; line-height: 1.6; }
+        
+        #game-screen { display: none; }
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 25px; flex-wrap: wrap; gap: 8px; }
+        .step { display: flex; align-items: center; gap: 5px; font-size: 0.75em; color: #666; }
+        .step.active { color: #00d4ff; font-weight: bold; }
+        .step.completed { color: #00ff88; }
+        .step-num { width: 22px; height: 22px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 0.7em; }
+        .step.active .step-num { background: #00d4ff; color: #fff; }
+        .step.completed .step-num { background: #00ff88; color: #fff; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .score { font-size: 1.3em; color: #00d4ff; font-weight: bold; }
+        .phase-tag { background: linear-gradient(135deg, #00d4ff, #0099cc); padding: 6px 15px; border-radius: 20px; font-size: 0.8em; color: #fff; font-weight: bold; }
+        
+        .question-box { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .knowledge-tag { display: inline-block; background: linear-gradient(135deg, #ff6b6b, #ee5a5a); color: #fff; padding: 5px 12px; border-radius: 12px; font-size: 0.75em; margin-bottom: 15px; }
+        
+        .scenario { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 18px; text-align: left; }
+        .scenario-title { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; }
+        
+        .question-text { font-size: 1.05em; line-height: 1.7; color: #333; margin-bottom: 15px; font-weight: 500; }
+        
+        .think-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.9em; }
+        .think-title { font-weight: bold; margin-bottom: 8px; }
+        
+        .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 15px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 0.95em; color: #333; font-weight: 500; }
+        .option:hover { border-color: #00d4ff; background: #e8f4ff; transform: translateY(-2px); }
+        .option.correct { background: linear-gradient(135deg, #00ff88, #00cc6a); border-color: #00ff88; color: #fff; }
+        .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        
+        .explanation { background: #e8f5e9; padding: 18px; border-radius: 12px; margin-top: 18px; display: none; color: #2e7d32; border-left: 4px solid #4caf50; text-align: left; }
+        .explanation.show { display: block; animation: fadeIn 0.3s; }
+        .explanation-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #result-screen { display: none; text-align: center; padding: 40px 20px; }
+        .result-title { font-size: 2.5em; margin-bottom: 20px; }
+        .final-score { font-size: 4em; color: #00d4ff; margin: 20px 0; text-shadow: 0 0 30px rgba(0,212,255,0.5); }
+        .result-msg { font-size: 1.2em; color: #aaa; margin-bottom: 30px; line-height: 1.6; }
+        
+        .stats { display: flex; justify-content: center; gap: 20px; margin: 30px 0; flex-wrap: wrap; }
+        .stat { background: rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 15px; }
+        .stat-value { font-size: 1.5em; color: #00d4ff; font-weight: bold; }
+        .stat-label { font-size: 0.75em; color: #888; margin-top: 5px; }
+        
+        .restart-btn { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #fff; border: none; padding: 15px 40px; font-size: 1.1em; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        
+        .type-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #00d4ff; border-radius: 15px; padding: 20px; margin: 15px 0; text-align: left; }
+        .type-name { color: #00d4ff; font-weight: bold; font-size: 1.1em; margin-bottom: 8px; }
+        .type-desc { color: #b8d4e3; font-size: 0.9em; line-height: 1.5; }
+        .type-example { color: #ffc107; font-size: 0.85em; margin-top: 8px; }
+        
+        @media (max-width: 600px) {
+            .options { grid-template-columns: 1fr; }
+            .title { font-size: 1.8em; }
+            .question-text { font-size: 0.95em; }
+            .scenario { padding: 12px; font-size: 0.9em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <h1 class="title">🔍 竞品侦察兵</h1>
+            <p class="subtitle">商业视角大挑战</p>
+            <button class="start-btn" onclick="startGame()">🚀 开始挑战</button>
+            <div class="story-box">
+                <div class="story-title">📖 玩法说明</div>
+                <p class="story-text">你是一家公司的市场总监！面对8个商业场景，你需要判断两家公司是什么类型的竞品关系。</p>
+                <p style="margin-top:15px;">🎯 <strong>游戏目标：</strong>准确识别直接竞品、间接竞品、潜在竞品！</p>
+            </div>
+            <div class="tip-box">
+                <div class="tip-title">📋 竞品分类速查</div>
+                <div class="type-card">
+                    <div class="type-name">🎯 直接竞品</div>
+                    <div class="type-desc">功能相似、目标用户相同、市场定位一致，直接抢同一批客户</div>
+                    <div class="type-example">例：可口可乐 vs 百事可乐</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-name">🔗 间接竞品</div>
+                    <div class="type-desc">功能或用户有部分重叠，但不是完全竞争</div>
+                    <div class="type-example">例：可口可乐 vs 王老吉（都喝饮料，但场景不同）</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-name">🌊 潜在竞品</div>
+                    <div class="type-desc">现在还不是对手，但未来可能取代你</div>
+                    <div class="type-example">例：数码相机 vs 智能手机</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="game-screen">
+            <div class="progress-bar">
+                <div class="step active" id="step1"><span class="step-num">1</span></div>
+                <div class="step" id="step2"><span class="step-num">2</span></div>
+                <div class="step" id="step3"><span class="step-num">3</span></div>
+                <div class="step" id="step4"><span class="step-num">4</span></div>
+                <div class="step" id="step5"><span class="step-num">5</span></div>
+                <div class="step" id="step6"><span class="step-num">6</span></div>
+                <div class="step" id="step7"><span class="step-num">7</span></div>
+                <div class="step" id="step8"><span class="step-num">8</span></div>
+            </div>
+            <div class="header">
+                <div class="phase-tag" id="phase-tag">场景</div>
+                <div class="score">⭐ 得分: <span id="score">0</span></div>
+            </div>
+            <div class="question-box">
+                <span class="knowledge-tag" id="knowledge-tag">竞品判断</span>
+                <div class="scenario" id="scenario-box">
+                    <div class="scenario-title" id="scenario-title"></div>
+                    <p id="scenario-text"></p>
+                </div>
+                <p class="question-text" id="question-text"></p>
+                
+                <div class="think-box" id="think-box">
+                    <div class="think-title">💡 思考提示</div>
+                    <p id="think-text"></p>
+                </div>
+                
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title" id="explanation-title"></div>
+                    <p id="explanation-text"></p>
+                </div>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        
+        <div id="result-screen">
+            <h1 class="result-title" id="result-title">🎉 挑战完成!</h1>
+            <div class="final-score"><span id="final-score">0</span></div>
+            <p class="result-msg" id="result-msg"></p>
+            <div class="stats">
+                <div class="stat"><div class="stat-value" id="stat-right">0</div><div class="stat-label">正确</div></div>
+                <div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">错误</div></div>
+                <div class="stat"><div class="stat-value" id="stat-score">0</div><div class="stat-label">得分</div></div>
+            </div>
+            <button class="restart-btn" onclick="restartGame()">再玩一次</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const competitorTypes = [
+            { type: "direct", text: "🎯 直接竞品", desc: "功能、用户、定位完全相同，直接抢客户" },
+            { type: "indirect", text: "🔗 间接竞品", desc: "功能或用户有部分重叠，但不是完全竞争" },
+            { type: "potential", text: "🌊 潜在竞品", desc: "现在不是对手，未来可能取代你" }
+        ];
+        
+        window.allCases = [
+            {
+                caseName: "🥤 可口可乐 vs 百事可乐",
+                caseText: "A公司是可口可乐，B公司是百事可乐。\n\n【双方情况】\n- 都是碳酸饮料\n- 都主打年轻人市场\n- 定价相近（3-5元）\n- 在超市货架上并列销售\n- 市场份额此消彼长",
+                question: "可口可乐和百事可乐是什么关系？",
+                hint: "💡 思考：它们的产品的目标用户是不是同一群人？",
+                answer: "direct",
+                explanation: "✅ 直接竞品\n\n📌 判断依据：\n- 产品类型完全相同（都是碳酸饮料）\n- 目标用户完全相同（年轻人）\n- 市场定位相同（大众饮料）\n- 直接在同一渠道竞争\n\n❌ 为什么不是其他：\n- 间接竞品：它们的重叠度太高了，不是\"部分重叠\"\n- 潜在竞品：它们已经是竞争对手了，不是\"未来可能\""
+            },
+            {
+                caseName: "🥤 可口可乐 vs 王老吉",
+                caseText: "A公司是可口可乐（碳酸饮料），B公司是王老吉（凉茶）。\n\n【双方情况】\n- 可口可乐是碳酸饮料，王老吉是凉茶\n- 可口可乐定位\"快乐肥宅水\"，王老吉定位\"降火\"\n- 可口可乐主要场景是聚会吃饭，王老吉主要场景是上火时喝\n- 定价相近（3-6元）\n- 都在超市饮料区销售",
+                question: "可口可乐和王老吉是什么关系？",
+                hint: "💡 思考：消费者什么时候会选可口可乐，什么时候会选王老吉？",
+                answer: "indirect",
+                explanation: "✅ 间接竞品\n\n📌 判断依据：\n- 产品功能不同（碳酸饮料vs凉茶）\n- 消费场景不同（解渴娱乐vs降火）\n- 满足的需求不同（享受vs健康）\n- 有部分渠道重叠，但不是直接替代\n\n❌ 为什么不是其他：\n- 直接竞品：功能、场景、需求都不同\n- 潜在竞品：它们已经存在很久了，不是\"未来可能\""
+            },
+            {
+                caseName: "📷 数码相机 vs 智能手机",
+                caseText: "A公司是传统数码相机厂商，B公司是智能手机厂商。\n\n【双方情况】\n- 数码相机专注拍照，像素高、专业\n- 手机主要功能是通信，拍照是附加功能\n- 数码相机用户是摄影爱好者，手机用户是大众\n- 数码相机价格2000-10000元，手机价格1000-10000元\n- 5年前两者市场没有交集",
+                question: "数码相机和智能手机是什么关系？",
+                hint: "💡 思考：5年前谁是相机领域的霸主？现在呢？",
+                answer: "potential",
+                explanation: "✅ 潜在竞品\n\n📌 判断依据：\n- 5年前手机拍照还很渣，数码相机是霸主\n- 随着手机拍照技术进步，逐渐取代了低端数码相机\n- 现在手机已经成为大众拍照的首选设备\n- 这是一个\"今天不是对手，明天可能取代你\"的经典案例\n\n❌ 为什么不是其他：\n- 直接竞品：5年前它们的用户群体不同\n- 间接竞品：当时的交集确实很小"
+            },
+            {
+                caseName: "🐸 农夫山泉 vs 怡宝",
+                caseText: "A公司是农夫山泉，B公司是怡宝。\n\n【双方情况】\n- 都是瓶装饮用水\n- 定价都是2元左右\n- 都在便利店、超市、小卖部销售\n- 消费者买水时经常在两者之间选择\n- 都主打\"天然\"\"健康\"概念",
+                question: "农夫山泉和怡宝是什么关系？",
+                hint: "💡 思考：消费者买水时会不会在两者之间犹豫？",
+                answer: "direct",
+                explanation: "✅ 直接竞品\n\n📌 判断依据：\n- 产品完全相同（都是瓶装水）\n- 目标用户完全相同（所有需要瓶装水的人）\n- 定价相同，市场定位高度重叠\n- 销售渠道完全重合\n- 消费者经常在两者之间做选择\n\n❌ 为什么不是其他：\n- 间接竞品：它们太相似了\n- 潜在竞品：它们已经是直接竞争对手"
+            },
+            {
+                caseName: "🚗 电动汽车 vs 燃油汽车",
+                caseText: "A公司是新能源汽车品牌（如比亚迪），B公司是传统燃油车企（如大众）。\n\n【双方情况】\n- 都能满足出行需求\n- 新能源车主打智能化、用电便宜；燃油车加油方便、续航长\n- 新能源车售价15-30万，燃油车10-30万有重叠\n- 都在4S店和直营店销售\n- 现在市场份额此消彼长",
+                question: "新能源汽车和传统燃油汽车是什么关系？",
+                hint: "💡 思考：买车的消费者会不会在两者之间选择？",
+                answer: "direct",
+                explanation: "✅ 直接竞品\n\n📌 判断依据：\n- 都能满足同样的出行需求\n- 目标用户高度重叠（15-30万预算的购车者）\n- 市场份额正在互相蚕食\n- 销售渠道也在融合\n\n❌ 为什么不是其他：\n- 间接竞品：它们现在已经是直接竞争关系了\n- 潜在竞品：这个转变已经发生了"
+            },
+            {
+                caseName: "☕ 瑞幸咖啡 vs 库迪咖啡",
+                caseText: "A公司是瑞幸咖啡，B公司是库迪咖啡。\n\n【双方情况】\n- 都是连锁咖啡品牌\n- 都主打\"快咖啡\"模式（外带为主）\n- 定价都在8-15元区间\n- 都在写字楼、商圈开店\n- 创始人都是陆正耀系",
+                question: "瑞幸咖啡和库迪咖啡是什么关系？",
+                hint: "💡 思考：它们抢的是不是同一批用户？",
+                answer: "direct",
+                explanation: "✅ 直接竞品\n\n📌 判断依据：\n- 产品模式完全相同（快咖啡+外带）\n- 价格区间完全重叠\n- 目标用户完全相同（年轻白领）\n- 选址策略高度相似\n- 被称为\"瑞库大战\"\n\n❌ 为什么不是其他：\n- 间接竞品：它们太像了\n- 潜在竞品：已经是直接竞争"
+            },
+            {
+                caseName: "📺 电视 vs 投影仪",
+                caseText: "A公司是智能电视厂商，B公司是家用投影仪厂商。\n\n【双方情况】\n- 电视是传统家电，投影仪是新兴品类\n- 电视满足家庭观影需求，投影仪也满足\n- 电视价格1000-5000元，投影仪价格2000-8000元\n- 电视用户是中老年，投影仪用户是年轻人\n- 电视在苏宁国美卖，投影仪在网上卖",
+                question: "智能电视和家用投影仪是什么关系？",
+                hint: "💡 思考：它们的用户群体重叠吗？",
+                answer: "indirect",
+                explanation: "✅ 间接竞品\n\n📌 判断依据：\n- 产品功能有重叠（都能看电影）\n- 但用户群体差异大（电视是中老年，投影仪是年轻人家用）\n- 价格区间有部分重叠\n- 销售渠道不同\n\n❌ 为什么不是其他：\n- 直接竞品：用户群体差异较大\n- 潜在竞品：目前已经有部分交集"
+            },
+            {
+                caseName: "📱 iPhone vs 安卓手机",
+                caseText: "A公司是苹果，B公司是安卓手机厂商（如三星、小米）。\n\n【双方情况】\n- 都是智能手机\n- 都能满足通讯、拍照、娱乐需求\n- 苹果定价6000+，安卓1000-6000元\n- 苹果用户追求生态和流畅度，安卓用户追求性价比\n- 在全球市场激烈竞争",
+                question: "iPhone和安卓手机是什么关系？",
+                hint: "💡 思考：它们满足的需求是不是一样的？",
+                answer: "direct",
+                explanation: "✅ 直接竞品\n\n📌 判断依据：\n- 产品完全相同（都是智能手机）\n- 满足的需求完全相同\n- 市场高度重叠\n- 份额此消彼长\n\n❌ 为什么不是其他：\n- 间接竞品：虽然有价格差异，但需求完全相同\n- 潜在竞品：已经是直接竞争了"
+            }
+        ];
+        
+        // 游戏状态
+        window.caseOrder = [];
+        window.currentIndex = 0;
+        window.score = 0;
+        window.rightCount = 0;
+        window.wrongCount = 0;
+        window.currentOptions = [];
+        
+        // DOM元素
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        // 打乱数组
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        
+        // 生成选项
+        function generateOptions(correctType) {
+            let options = [];
+            const correct = competitorTypes.find(o => o.type === correctType);
+            options.push({ type: correct.type, text: correct.text, desc: correct.desc, correct: true });
+            const wrongTypes = competitorTypes.filter(o => o.type !== correctType);
+            shuffle(wrongTypes).forEach(o => {
+                options.push({ type: o.type, text: o.text, desc: o.desc, correct: false });
+            });
+            return shuffle(options);
+        }
+        
+        // 开始游戏
+        function startGame() {
+            window.caseOrder = shuffle([...Array(window.allCases.length).keys()]);
+            window.currentIndex = 0;
+            window.score = 0;
+            window.rightCount = 0;
+            window.wrongCount = 0;
+            
+            startScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+            resultScreen.style.display = 'none';
+            
+            showCase();
+        }
+        
+        // 显示题目
+        function showCase() {
+            const q = window.allCases[window.caseOrder[window.currentIndex]];
+            
+            // 更新进度
+            for (let i = 1; i <= 8; i++) {
+                const step = document.getElementById('step' + i);
+                step.className = 'step';
+                if (i - 1 < window.currentIndex) step.className = 'step completed';
+                if (i - 1 === window.currentIndex) step.className = 'step active';
+            }
+            
+            document.getElementById('phase-tag').textContent = '场景' + (window.currentIndex + 1);
+            document.getElementById('knowledge-tag').textContent = '竞品判断';
+            document.getElementById('scenario-title').textContent = q.caseName;
+            document.getElementById('scenario-text').innerHTML = q.caseText.replace(/\n/g, '<br>');
+            document.getElementById('question-text').textContent = q.question;
+            document.getElementById('think-text').textContent = q.hint;
+            
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('score').textContent = window.score;
+            
+            window.currentOptions = generateOptions(q.answer);
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            window.currentOptions.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.innerHTML = `<div style="font-size:1.2em;margin-bottom:5px;">${opt.text}</div><div style="font-size:0.75em;opacity:0.8;">${opt.desc}</div>`;
+                btn.onclick = function() { selectAnswer(index); };
+                optionsContainer.appendChild(btn);
+            });
+        }
+        
+        // 选择答案
+        function selectAnswer(index) {
+            const q = window.allCases[window.caseOrder[window.currentIndex]];
+            const options = document.querySelectorAll('.option');
+            
+            if (window.currentOptions[index].correct) {
+                options.forEach((opt, i) => {
+                    opt.classList.add('disabled');
+                    if (window.currentOptions[i].correct) opt.classList.add('correct');
+                });
+                window.rightCount++;
+                window.score += 12;
+                document.getElementById('score').textContent = window.score;
+                
+                document.getElementById('explanation-title').textContent = '✅ 回答正确！';
+                document.getElementById('explanation-text').innerHTML = q.explanation.replace(/\n/g, '<br>');
+                document.getElementById('explanation').classList.add('show');
+                
+                const optionsContainer = document.getElementById('options');
+                const nextBtn = document.createElement('div');
+                nextBtn.className = 'option';
+                nextBtn.style.cssText = 'background: linear-gradient(135deg, #667eea, #764ba2); border-color: #667eea; color: #fff; text-align: center; font-weight: bold; margin-top: 15px; grid-column: span 2;';
+                nextBtn.textContent = '➡️ 进入下一题';
+                nextBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    nextCase();
+                };
+                optionsContainer.appendChild(nextBtn);
+            } else {
+                options[index].classList.add('wrong');
+                
+                const optionsContainer = document.getElementById('options');
+                const retryBtn = document.createElement('div');
+                retryBtn.className = 'option';
+                retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9800, #ff5722); border-color: #ff9800; color: #fff; text-align: center; font-weight: bold; margin-top: 10px; grid-column: span 2;';
+                retryBtn.textContent = '🔄 再试一次';
+                
+                options.forEach(opt => {
+                    if (opt !== retryBtn) opt.classList.add('disabled');
+                });
+                
+                retryBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    retryBtn.remove();
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('disabled', 'wrong', 'correct');
+                    });
+                };
+                optionsContainer.appendChild(retryBtn);
+            }
+        }
+        
+        // 下一题
+        function nextCase() {
+            window.currentIndex++;
+            if (window.currentIndex >= window.allCases.length) {
+                showResult();
+            } else {
+                showCase();
+            }
+        }
+        
+        // 显示结果
+        function showResult() {
+            gameScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
+            
+            document.getElementById('final-score').textContent = window.score;
+            document.getElementById('stat-right').textContent = window.rightCount;
+            document.getElementById('stat-wrong').textContent = window.wrongCount;
+            document.getElementById('stat-score').textContent = window.score;
+            
+            let title, msg;
+            if(window.score >= 80) {
+                title = "🏆 竞品大师！";
+                msg = "你对竞品分类了如指掌！具备敏锐的市场洞察力！";
+            } else if(window.score >= 50) {
+                title = "⭐ 竞品高手";
+                msg = "你对竞品分类有较好理解，稍加磨练必定成为高手！";
+            } else {
+                title = "📚 需要进修";
+                msg = "竞品分类的学问很深奥！建议再学习理论知识！";
+            }
+            
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('result-msg').textContent = msg;
+        }
+        
+        // 重新开始
+        function restartGame() {
+            resultScreen.style.display = 'none';
+            startScreen.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
