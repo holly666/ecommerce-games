@@ -329,40 +329,56 @@
             });
         }
         
-        function selectAnswer(index) {
+        function selectAnswer(index, isRetry = false) {
             const q = allQuestions[questionOrder[currentIndex]];
             const options = document.querySelectorAll('.option');
             
-            // 禁用所有选项
-            options.forEach((opt, i) => {
-                opt.classList.add('disabled');
-                if (currentOptions[i].correct) opt.classList.add('correct');
-            });
-            
             // 判断对错
             if (currentOptions[index].correct) {
+                // 答对了
+                options.forEach((opt, i) => {
+                    opt.classList.add('disabled');
+                    if (currentOptions[i].correct) opt.classList.add('correct');
+                });
                 rightCount++;
                 score += 12;
+                document.getElementById('score').textContent = score;
+                
+                // 显示解释
+                document.getElementById('explanation-text').textContent = q.explanation;
+                const agencyTip = document.getElementById('agency-tip');
+                document.getElementById('agency-tip-text').textContent = q.agencyTip;
+                agencyTip.style.display = 'block';
+                document.getElementById('explanation').classList.add('show');
+                
+                // 3秒后进入下一题
+                setTimeout(() => { nextQuestion(); }, 3000);
             } else {
-                wrongCount++;
+                // 答错了
                 options[index].classList.add('wrong');
+                
+                // 显示解释，但不进入下一题
+                document.getElementById('explanation-text').textContent = q.explanation;
+                document.getElementById('explanation').classList.add('show');
+                
+                // 添加重试按钮
+                const optionsContainer = document.getElementById('options');
+                const retryBtn = document.createElement('div');
+                retryBtn.id = 'retry-btn';
+                retryBtn.className = 'option';
+                retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9800, #ffc107); border-color: #ff9800; color: #1a1a2e; text-align: center; font-weight: bold;';
+                retryBtn.textContent = '🔄 再试一次';
+                retryBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    // 移除解释和重试按钮，重新显示选项
+                    document.getElementById('explanation').classList.remove('show');
+                    retryBtn.remove();
+                    options.forEach(opt => {
+                        opt.classList.remove('disabled', 'wrong', 'correct');
+                    });
+                };
+                optionsContainer.appendChild(retryBtn);
             }
-            document.getElementById('score').textContent = score;
-            
-            // 显示解释
-            document.getElementById('explanation-text').textContent = q.explanation;
-            
-            // 显示Agency思考
-            const agencyTip = document.getElementById('agency-tip');
-            document.getElementById('agency-tip-text').textContent = q.agencyTip;
-            agencyTip.style.display = 'block';
-            
-            document.getElementById('explanation').classList.add('show');
-            
-            // 4秒后进入下一题
-            setTimeout(() => {
-                nextQuestion();
-            }, 4000);
         }
         
         function nextQuestion() {
