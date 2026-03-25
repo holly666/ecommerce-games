@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商业侦探事务所 - 竞店悬案</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        #start-screen { text-align: center; padding: 40px 20px; }
+        .title { font-size: 2.5em; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.5); margin-bottom: 10px; }
+        .subtitle { font-size: 1.2em; color: #aaa; margin-bottom: 30px; }
+        .start-btn { background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; border: none; padding: 18px 50px; font-size: 1.3em; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 5px 20px rgba(255,215,0,0.4); }
+        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(255,215,0,0.6); }
+        
+        .story-box { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; margin: 20px 0; border: 1px solid rgba(255,215,0,0.3); text-align: left; }
+        .story-title { color: #ffd700; font-size: 1.2em; margin-bottom: 15px; font-weight: bold; }
+        .story-text { line-height: 1.8; color: #ccc; }
+        
+        .intro-box { background: rgba(255,0,0,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid rgba(255,0,0,0.3); text-align: left; }
+        .intro-title { color: #ff6b6b; font-weight: bold; margin-bottom: 8px; }
+        .intro-text { font-size: 0.9em; color: #aaa; line-height: 1.6; }
+        
+        #game-screen { display: none; }
+        .case-header { background: rgba(255,215,0,0.1); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,215,0,0.3); }
+        .case-title { color: #ffd700; font-size: 1.1em; font-weight: bold; margin-bottom: 8px; }
+        .case-desc { color: #aaa; font-size: 0.85em; }
+        
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; }
+        .step { width: 20px; height: 20px; border-radius: 50%; background: #333; }
+        .step.active { background: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        .step.completed { background: #10b981; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .score { font-size: 1.4em; color: #ffd700; font-weight: bold; }
+        .case-num { background: rgba(255,215,0,0.2); color: #ffd700; padding: 8px 15px; border-radius: 20px; font-size: 0.9em; }
+        
+        .question-box { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .case-name { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 8px 15px; border-radius: 8px; font-size: 0.8em; margin-bottom: 15px; display: inline-block; }
+        
+        .case-text { background: #f5f5f5; padding: 20px; border-radius: 12px; margin-bottom: 18px; text-align: left; font-size: 0.95em; line-height: 1.8; color: #333; border-left: 4px solid #667eea; }
+        
+        .question-text { font-size: 1.05em; line-height: 1.7; color: #333; margin-bottom: 15px; font-weight: 500; }
+        
+        .options { display: grid; gap: 12px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; font-size: 0.95em; color: #333; }
+        .option:hover { border-color: #ffd700; background: #fffbf0; transform: translateX(5px); }
+        .option.correct { background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; color: #fff; }
+        .option.wrong { background: linear-gradient(135deg, #ef4444, #dc2626); border-color: #ef4444; color: #fff; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        
+        .explanation { background: #e8f5e9; padding: 18px; border-radius: 12px; margin-top: 18px; display: none; color: #2e7d32; border-left: 4px solid #4caf50; text-align: left; }
+        .explanation.show { display: block; animation: fadeIn 0.3s; }
+        .explanation-title { font-weight: bold; margin-bottom: 10px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #result-screen { display: none; text-align: center; padding: 40px 20px; }
+        .result-title { font-size: 2.5em; margin-bottom: 20px; }
+        .final-score { font-size: 4em; color: #ffd700; margin: 20px 0; text-shadow: 0 0 30px rgba(255,215,0,0.5); }
+        .result-msg { font-size: 1.25em; color: #aaa; margin-bottom: 30px; line-height: 1.6; }
+        
+        .stats { display: flex; justify-content: center; gap: 25px; margin: 30px 0; flex-wrap: wrap; }
+        .stat { background: rgba(255,255,255,0.05); padding: 18px 25px; border-radius: 15px; }
+        .stat-value { font-size: 1.6em; color: #ffd700; font-weight: bold; }
+        .stat-label { font-size: 0.8em; color: #888; margin-top: 5px; }
+        
+        .restart-btn { background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; border: none; padding: 16px 45px; font-size: 1.2em; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        
+        .retry-btn { background: linear-gradient(135deg, #ff9500, #ff6b00); color: #fff; border: none; padding: 12px 30px; font-size: 1em; border-radius: 25px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        
+        .hint-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.9em; }
+        .hint-title { font-weight: bold; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <h1 class="title">🔍 商业侦探事务所</h1>
+            <p class="subtitle">竞店悬案 · 真相只有一个</p>
+            <button class="start-btn" onclick="startGame()">🕵️ 开始探案</button>
+            <div class="story-box">
+                <div class="story-title">📁 案件背景</div>
+                <p class="story-text">你是商业侦探事务所的王牌侦探。最近商圈不太平，各店铺老板纷纷报案，称发现了神秘的"竞争对手"。</p>
+                <p style="margin-top:15px;">你的任务：根据线索判断这些"嫌疑人"属于哪种类型的竞争对手！</p>
+            </div>
+            <div class="intro-box">
+                <div class="intro-title">⚠️ 探案须知</div>
+                <p class="intro-text">答错不可怕，可怕的是错过真相！答错了不要紧，事务所给你机会重新调查。但只有答对真相才会公布完整推理过程！</p>
+            </div>
+        </div>
+        
+        <div id="game-screen">
+            <div class="case-header">
+                <div class="case-title">🔍 商业侦探事务所</div>
+                <div class="case-desc">今日待破案件：<span id="total-cases">8</span>件</div>
+            </div>
+            <div class="progress-bar" id="progress-bar"></div>
+            <div class="header">
+                <div class="case-num">案件 <span id="case-num">1</span>/8</div>
+                <div class="score">🕵️ 侦探经验: <span id="score">0</span></div>
+            </div>
+            <div class="question-box">
+                <div class="case-name" id="case-name">🆕 新案件</div>
+                <div class="case-text" id="case-text"></div>
+                <p class="question-text" id="question-text"></p>
+                
+                <div class="hint-box" id="hint-box" style="display:none;">
+                    <div class="hint-title">💡 侦探提示</div>
+                    <p id="hint-text"></p>
+                </div>
+                
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">🎯 真相大白</div>
+                    <p id="explanation-text"></p>
+                </div>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        
+        <div id="result-screen">
+            <h1 class="result-title" id="result-title">🎉 探案完成!</h1>
+            <div class="final-score"><span id="final-score">0</span></div>
+            <p class="result-msg" id="result-msg"></p>
+            <div class="stats">
+                <div class="stat"><div class="stat-value" id="stat-right">0</div><div class="stat-label">破案</div></div>
+                <div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">悬案</div></div>
+                <div class="stat"><div class="stat-value" id="stat-score">0</div><div class="stat-label">经验</div></div>
+            </div>
+            <button class="restart-btn" onclick="restartGame()">🔍 再次出山</button>
+        </div>
+    </div>
+
+    <script>
+        const typeOptions = [
+            { type: "direct", text: "🔴 直接竞店" },
+            { type: "indirect", text: "🟡 间接竞店" },
+            { type: "substitute", text: "🟠 替代品竞店" },
+            { type: "potential", text: "⚫ 潜在竞店" }
+        ];
+        
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        
+        function generateOptions(correctType) {
+            let options = [];
+            const correct = typeOptions.find(o => o.type === correctType);
+            options.push({ type: correct.type, text: correct.text, correct: true });
+            const wrongTypes = typeOptions.filter(o => o.type !== correctType);
+            shuffle(wrongTypes).forEach(o => {
+                options.push({ type: o.type, text: o.text, correct: false });
+            });
+            shuffle(options);
+            return options;
+        }
+        
+        const allCases = [
+            {
+                caseName: "🛒 运动鞋店的神秘对手",
+                caseText: "报案人：在淘宝卖运动鞋的老王\n\n案情：老王发现隔壁店铺也在卖运动鞋，两家店卖的产品一模一样，连模特图都差不多。老王的店月销1000双，对手月销800双，两家店的价格战打得火热。",
+                question: "根据线索，这位"神秘对手"属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：看看两家的商品、客群、价格是否高度相似？是否在抢同一批顾客？",
+                answer: "direct",
+                explanation: "🔴 【直接竞店】\n\n证据确凿！两家的商品完全相同（运动鞋）、目标客群相同（淘宝运动鞋买家）、价格战激烈——这 就是直接竞店的典型特征！在同一市场直接争夺份额。"
+            },
+            {
+                caseName: "🧋 奶茶店的新邻居",
+                caseText: "报案人：开奶茶店的小李\n\n案情：隔壁新开了一家奶茶店，虽然都是卖奶茶，但小李主打15元平价款，新店主打25元高端款。小李的顾客是学生，新店的顾客是白领。",
+                question: "根据线索，这位"新邻居"属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：同样是奶茶，但价格定位和目标客群有什么不同？",
+                answer: "indirect",
+                explanation: "🟡 【间接竞店】\n\n真相大白！虽然都是奶茶，但价格定位不同（平价vs高端）、目标客群不同（学生vs白领）——这是间接竞争，满足的是不同细分市场的需求。"
+            },
+            {
+                caseName: "✏️ 文具店的跨界杀手",
+                caseText: "报案人：文具店张老板\n\n案情：现在很多人不买笔和本子了，直接用iPad做笔记。什么Notion、印象笔记app火得不行店里营业额直线下降。",
+                question: "根据线索，这些"跨界杀手"属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：文具和App看起来不一样，但满足的是不是同一个需求？",
+                answer: "substitute",
+                explanation: "🟠 【替代品竞店】\n\n破案了！文具和App形态完全不同，但都能满足"记录"这个核心需求。这就是替代品竞争——不同形式满足相同需求，随时可能取代对方！"
+            },
+            {
+                caseName: "🚗 4S店的未来危机",
+                caseText: "报案人：传统4S店王总\n\n案情：现在新能源车太火了，特斯拉、比亚迪蔚来满大街跑。大家都说燃油车要完蛋了。王总感觉自己要失业了。",
+                question: "根据线索，这些"新能源车企"属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：都是车，但技术路线完全不同。这是什么类型的竞争？",
+                answer: "substitute",
+                explanation: "🟠 【替代品竞店】\n\n经典案例！传统燃油车和新能源车都满足"出行"需求，但技术方案完全不同。电动化趋势可能完全颠覆传统车企——这就是替代品竞争的可怕之处！"
+            },
+            {
+                caseName: "👗 女装店的汉服邻居",
+                caseText: "报案人：职场女装店刘姐\n\n案情：隔壁开了家汉服店，虽然都是卖衣服，但刘姐卖的是职场正装，汉服店卖的是传统服饰。刘姐的顾客是上班白领，汉服店的顾客是大学生和汉服爱好者。",
+                question: "根据线索，这位"汉服邻居"属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：同样都是卖衣服，但风格、客群定位有什么差异？",
+                answer: "indirect",
+                explanation: "🟡 【间接竞店】\n\n漂亮！虽然同属服装行业，但职场正装和汉服的目标客群完全不同，一个服务白领，一个服务汉服爱好者——这是典型的间接竞争！"
+            },
+            {
+                caseName: "🏫 培训机构的跨界阴谋",
+                caseText: "报案人：在线编程培训公司CEO老陈\n\n案情：某知名传统教育机构在全国有1000多家线下门店，最近听说他们在研发在线课程，但还没有上线。老陈寝食难安。",
+                question: "根据线索，这家"传统机构"目前属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：他们现在上线了吗？未来可能成为你的对手吗？",
+                answer: "potential",
+                explanation: "⚫ 【潜在竞店】\n\n侦破！他们虽然还没在线课程，但有这个实力和计划——这就是潜在竞店！现在不构成威胁，但未来可能成为强劲对手！"
+            },
+            {
+                caseName: "🏭 互联网巨头的野心",
+                caseText: "报案人：美妆电商小张\n\n案情：某大型互联网平台（你懂的）还没有做美妆业务，但他们用户量巨大，技术超强。业内人士都在猜测他们会不会进军美妆。",
+                question: "根据线索，这个"巨头"目前属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：他们现在做美妆吗？有没有可能随时进入？",
+                answer: "potential",
+                explanation: "⚫ 【潜在竞店】\n\n危险信号！虽然还没进入美妆领域，但具备入局能力——这就是潜在竞店！这种"看不见的对手"往往最具威胁性！"
+            },
+            {
+                caseName: "🍜 川菜馆的的健康威胁",
+                caseText: "报案人：川菜馆老板老孙\n\n案情：商圈里开了家轻食沙拉店，老孙的川菜店主打"重口味、麻辣"，轻食店主打"健康、低脂"。两家店位置差不多，但卖的东西完全不一样。",
+                question: "根据线索，这家"轻食店"属于哪种类型的竞争对手？",
+                hint: "🕵️ 侦探提示：同样是"吃饭"，但两家满足的是同一种需求吗？",
+                answer: "indirect",
+                explanation: "🟡 【间接竞店】\n\n精彩！川菜满足"口味刺激"需求，轻食满足"健康饮食"需求——虽然都在餐饮行业，但满足的是不同层次的马斯洛需求！"
+            }
+        ];
+        
+        let caseOrder = [];
+        let currentIndex = 0, score = 0, rightCount = 0, wrongCount = 0;
+        let currentOptions = [];
+        
+        function startGame() {
+            caseOrder = shuffle([...Array(allCases.length).keys()]);
+            currentIndex = 0;
+            score = 0;
+            rightCount = 0;
+            wrongCount = 0;
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            showCase();
+        }
+        
+        function showCase() {
+            const c = allCases[caseOrder[currentIndex]];
+            
+            // 更新进度
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.innerHTML = '';
+            for(let i=0; i<allCases.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'step';
+                if(i < currentIndex) dot.className = 'step completed';
+                if(i === currentIndex) dot.className = 'step active';
+                progressBar.appendChild(dot);
+            }
+            
+            document.getElementById('case-num').textContent = currentIndex + 1;
+            document.getElementById('case-name').textContent = c.caseName;
+            document.getElementById('case-text').textContent = c.caseText;
+            document.getElementById('question-text').textContent = c.question;
+            
+            // 显示提示
+            const hintBox = document.getElementById('hint-box');
+            document.getElementById('hint-text').textContent = c.hint;
+            hintBox.style.display = 'block';
+            
+            document.getElementById('explanation').classList.remove('show');
+            
+            currentOptions = generateOptions(c.answer);
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            currentOptions.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.textContent = opt.text;
+                btn.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+        
+        function selectAnswer(index) {
+            const c = allCases[caseOrder[currentIndex]];
+            const options = document.querySelectorAll('.option');
+            
+            if (currentOptions[index].correct) {
+                // 答对了
+                options.forEach((opt, i) => {
+                    opt.classList.add('disabled');
+                    if (currentOptions[i].correct) opt.classList.add('correct');
+                });
+                rightCount++;
+                score += 15;
+                document.getElementById('score').textContent = score;
+                
+                document.getElementById('explanation-text').textContent = c.explanation;
+                document.getElementById('explanation').classList.add('show');
+                
+                setTimeout(() => { nextCase(); }, 4000);
+            } else {
+                // 答错了
+                options[index].classList.add('wrong');
+                
+                const retryBtn = document.createElement('div');
+                retryBtn.className = 'option';
+                retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9500, #ff6b00); border-color: #ff9500; color: #fff; text-align: center; font-weight: bold; margin-top: 10px;';
+                retryBtn.textContent = '🔄 重新调查';
+                retryBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    retryBtn.remove();
+                    options.forEach(opt => opt.classList.remove('disabled', 'wrong'));
+                };
+                document.getElementById('options').appendChild(retryBtn);
+            }
+        }
+        
+        function nextCase() {
+            currentIndex++;
+            if (currentIndex >= allCases.length) {
+                showResult();
+            } else {
+                showCase();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('stat-right').textContent = rightCount;
+            document.getElementById('stat-wrong').textContent = wrongCount;
+            document.getElementById('stat-score').textContent = score;
+            
+            let title, msg;
+            if(score >= 100) {
+                title = "🕵️ 神探称号!";
+                msg = "太牛了！你就是商业界的福尔摩斯！8个案件全部侦破，无一错案！";
+            } else if(score >= 75) {
+                title = "🔍 名侦探!";
+                msg = "优秀！你的商业洞察力非常出色，大部分案件都判断正确！";
+            } else if(score >= 50) {
+                title = "🕵️ 探员级别";
+                msg = "还不错！继续磨练你的侦查能力，下次一定能成为神探！";
+            } else {
+                title = "🔎 见习侦探";
+                msg = "继续加油！商业竞争分析需要多观察、多思考。记住：真相往往藏在细节里！";
+            }
+            
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('result-msg').textContent = msg;
+        }
+        
+        function restartGame() {
+            startGame();
+        }
+    </script>
+</body>
+</html>
