@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>竞店分析大师 - 商业洞察力挑战</title>
+    <title>Competitor Analysis Master - Business Insight Challenge</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
@@ -24,31 +24,31 @@
         .tip-text { font-size: 0.9em; color: #aaa; line-height: 1.6; }
         
         #game-screen { display: none; }
-        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; }
-        .step { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: #666; }
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; flex-wrap: wrap; gap: 10px; }
+        .step { display: flex; align-items: center; gap: 8px; font-size: 0.8em; color: #666; }
         .step.active { color: #00d9ff; font-weight: bold; }
         .step.completed { color: #00ff88; }
-        .step-num { width: 28px; height: 28px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 0.85em; }
+        .step-num { width: 24px; height: 24px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 0.75em; }
         .step.active .step-num { background: #00d9ff; color: #1a1a2e; }
         .step.completed .step-num { background: #00ff88; color: #1a1a2e; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px; }
         .score { font-size: 1.4em; color: #ffd700; font-weight: bold; }
-        .phase-tag { background: linear-gradient(135deg, #00d9ff, #00ff88); padding: 8px 20px; border-radius: 20px; font-size: 0.9em; color: #1a1a2e; font-weight: bold; }
+        .phase-tag { background: linear-gradient(135deg, #00d9ff, #00ff88); padding: 8px 20px; border-radius: 20px; font-size: 0.85em; color: #1a1a2e; font-weight: bold; }
         
         .question-box { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-        .knowledge-tag { display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 6px 15px; border-radius: 15px; font-size: 0.8em; margin-bottom: 15px; }
+        .knowledge-tag { display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 6px 15px; border-radius: 15px; font-size: 0.75em; margin-bottom: 15px; }
         
         .scenario { background: linear-gradient(135deg, #11998e, #38ef7d); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 18px; text-align: left; }
-        .scenario-title { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; }
+        .scenario-title { font-size: 1.05em; font-weight: bold; margin-bottom: 10px; }
         
-        .question-text { font-size: 1.1em; line-height: 1.7; color: #333; margin-bottom: 15px; font-weight: 500; }
+        .question-text { font-size: 1.05em; line-height: 1.7; color: #333; margin-bottom: 15px; font-weight: 500; }
         
-        .think-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.95em; }
+        .think-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.9em; }
         .think-title { font-weight: bold; margin-bottom: 8px; }
         
         .options { display: grid; gap: 12px; }
-        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 18px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; font-size: 1em; color: #333; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; font-size: 0.95em; color: #333; }
         .option:hover { border-color: #00d9ff; background: #f0ffff; transform: translateX(5px); }
         .option.correct { background: linear-gradient(135deg, #00ff88, #00d9ff); border-color: #00ff88; color: #1a1a2e; }
         .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
@@ -63,55 +63,55 @@
         #result-screen { display: none; text-align: center; padding: 40px 20px; }
         .result-title { font-size: 2.5em; margin-bottom: 20px; }
         .final-score { font-size: 4em; color: #ffd700; margin: 20px 0; text-shadow: 0 0 30px rgba(255,215,0,0.5); }
-        .result-msg { font-size: 1.3em; color: #aaa; margin-bottom: 30px; line-height: 1.6; }
+        .result-msg { font-size: 1.25em; color: #aaa; margin-bottom: 30px; line-height: 1.6; }
         
-        .stats { display: flex; justify-content: center; gap: 30px; margin: 30px 0; flex-wrap: wrap; }
-        .stat { background: rgba(255,255,255,0.05); padding: 20px 30px; border-radius: 15px; }
-        .stat-value { font-size: 1.8em; color: #00d9ff; font-weight: bold; }
-        .stat-label { font-size: 0.85em; color: #888; margin-top: 5px; }
+        .stats { display: flex; justify-content: center; gap: 25px; margin: 30px 0; flex-wrap: wrap; }
+        .stat { background: rgba(255,255,255,0.05); padding: 18px 25px; border-radius: 15px; }
+        .stat-value { font-size: 1.6em; color: #00d9ff; font-weight: bold; }
+        .stat-label { font-size: 0.8em; color: #888; margin-top: 5px; }
         
         .restart-btn { background: linear-gradient(135deg, #00d9ff, #00ff88); color: #1a1a2e; border: none; padding: 16px 45px; font-size: 1.2em; border-radius: 50px; cursor: pointer; font-weight: bold; }
         
         .agency-tip { background: linear-gradient(135deg, #667eea, #764ba2); padding: 15px; border-radius: 10px; margin-top: 15px; text-align: left; }
-        .agency-tip-title { color: #fff; font-weight: bold; margin-bottom: 8px; font-size: 0.95em; }
-        .agency-tip-text { color: rgba(255,255,255,0.8); font-size: 0.85em; line-height: 1.5; }
+        .agency-tip-title { color: #fff; font-weight: bold; margin-bottom: 8px; font-size: 0.9em; }
+        .agency-tip-text { color: rgba(255,255,255,0.8); font-size: 0.8em; line-height: 1.5; }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="start-screen">
-            <h1 class="title">🎯 竞店分析大师</h1>
-            <p class="subtitle">商业洞察力挑战 - 培养市场判断力</p>
-            <button class="start-btn" onclick="startGame()">开始挑战</button>
+            <h1 class="title">🎯 Competitor Analysis Master</h1>
+            <p class="subtitle">Business Insight Challenge</p>
+            <button class="start-btn" onclick="startGame()">Start Challenge</button>
             <div class="story-box">
-                <div class="story-title">📖 故事背景</div>
-                <p class="story-text">你是一家电商公司的市场总监。公司要在激烈的市场竞争中脱颖而出，你需要准确识别各类竞争对手，制定正确的竞争策略。</p>
-                <p style="margin-top:15px;">AI时代，真正的能力不是记住概念，而是 <strong>能够准确判断、分析原因、承担责任</strong>！</p>
+                <div class="story-title">📖 Background</div>
+                <p class="story-text">You are the Marketing Director of an e-commerce company. In the fierce market competition, you need to accurately identify various competitors and develop the right strategies.</p>
+                <p style="margin-top:15px;">In the AI era, the real ability is not just remembering concepts, but <strong>accurately judging, analyzing reasons, and taking responsibility</strong>!</p>
             </div>
             <div class="tip-box">
-                <div class="tip-title">💡 学习目标</div>
+                <div class="tip-title">💡 Learning Objectives</div>
                 <p class="tip-text">
-                    1. 理解竞店的分类维度<br>
-                    2. 能够准确判断竞争关系类型<br>
-                    3. 学会分析竞争策略背后的逻辑<br>
-                    4. 培养商业洞察力和判断力
+                    1. Understand competitor classification dimensions<br>
+                    2. Accurately judge competitive relationship types<br>
+                    3. Analyze competitive strategies<br>
+                    4. Develop business insight and judgment
                 </p>
             </div>
         </div>
         
         <div id="game-screen">
             <div class="progress-bar">
-                <div class="step active" id="step1"><span class="step-num">1</span>直接竞争</div>
-                <div class="step" id="step2"><span class="step-num">2</span>间接竞争</div>
-                <div class="step" id="step3"><span class="step-num">3</span>替代品</div>
-                <div class="step" id="step4"><span class="step-num">4</span>潜在威胁</div>
+                <div class="step active" id="step1"><span class="step-num">1</span>Q1-2</div>
+                <div class="step" id="step2"><span class="step-num">2</span>Q3-4</div>
+                <div class="step" id="step3"><span class="step-num">3</span>Q5-6</div>
+                <div class="step" id="step4"><span class="step-num">4</span>Q7-8</div>
             </div>
             <div class="header">
-                <div class="phase-tag" id="phase-tag">阶段1: 直接竞店</div>
-                <div class="score">🏆 洞察力: <span id="score">0</span></div>
+                <div class="phase-tag" id="phase-tag">Stage 1</div>
+                <div class="score">🏆 Score: <span id="score">0</span></div>
             </div>
             <div class="question-box">
-                <span class="knowledge-tag" id="knowledge-tag">知识点</span>
+                <span class="knowledge-tag" id="knowledge-tag">Knowledge Point</span>
                 <div class="scenario" id="scenario-box">
                     <div class="scenario-title" id="scenario-title"></div>
                     <p id="scenario-text"></p>
@@ -119,16 +119,16 @@
                 <p class="question-text" id="question-text"></p>
                 
                 <div class="think-box" id="think-box">
-                    <div class="think-title">🤔 思考提示</div>
+                    <div class="think-title">🤔 Think About It</div>
                     <p id="think-text"></p>
                 </div>
                 
                 <div class="explanation" id="explanation">
-                    <div class="explanation-title">🎯 答案解析</div>
+                    <div class="explanation-title">🎯 Answer Analysis</div>
                     <p id="explanation-text"></p>
                     
                     <div class="agency-tip" id="agency-tip" style="display:none;">
-                        <div class="agency-tip-title">🌟 Agency 思考</div>
+                        <div class="agency-tip-title">🌟 Agency Thinking</div>
                         <p class="agency-tip-text" id="agency-tip-text"></p>
                     </div>
                 </div>
@@ -137,171 +137,167 @@
         </div>
         
         <div id="result-screen">
-            <h1 class="result-title" id="result-title">🎉 挑战完成!</h1>
+            <h1 class="result-title" id="result-title">🎉 Challenge Complete!</h1>
             <div class="final-score"><span id="final-score">0</span></div>
             <p class="result-msg" id="result-msg"></p>
             <div class="stats">
-                <div class="stat"><div class="stat-value" id="stat-right">0</div><div class="stat-label">答对</div></div>
-                <div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">答错</div></div>
-                <div class="stat"><div class="stat-value" id="stat-score">0</div><div class="stat-label">洞察力</div></div>
+                <div class="stat"><div class="stat-value" id="stat-right">0</div><div class="stat-label">Correct</div></div>
+                <div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">Wrong</div></div>
+                <div class="stat"><div class="stat-value" id="stat-score">0</div><div class="stat-label">Score</div></div>
             </div>
-            <button class="restart-btn" onclick="restartGame()">再闯一次</button>
+            <button class="restart-btn" onclick="restartGame()">Try Again</button>
         </div>
     </div>
 
     <script>
+        // 所有选项（按类型分组）
+        const allOptions = {
+            direct: [
+                "Stores selling similar products, targeting the same customers, directly competing for the same market share",
+                "Same product category, same price range, same target customers - direct competition in every aspect",
+                "Both sell sports shoes, competing head-on in style, price, promotions"
+            ],
+            indirect: [
+                "Same industry but different target customers and positioning",
+                "Different product styles, some customer overlap but completely different positioning",
+                "Same general category (food/clothing) but satisfying different needs and scenarios"
+            ],
+            substitute: [
+                "Completely different products but satisfying the same core need",
+                "Different industries but meeting the same fundamental need",
+                "New technology providing alternative solutions to the same problem"
+            ],
+            potential: [
+                "Not currently competing but may become a competitor in the future",
+                "Has the capability to enter the market but hasn't yet",
+                "Large company with resources that could enter your market"
+            ]
+        };
+        
+        // 打乱数组
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        
+        // 生成题目选项（随机顺序）
+        function generateOptions(correctType) {
+            const types = ['direct', 'indirect', 'substitute', 'potential'];
+            let options = [];
+            
+            // 正确答案
+            options.push({ text: allOptions[correctType][Math.floor(Math.random() * allOptions[correctType].length)], correct: true });
+            
+            // 其他三个错误选项
+            const wrongTypes = types.filter(t => t !== correctType);
+            shuffle(wrongTypes);
+            wrongTypes.forEach(t => {
+                options.push({ text: allOptions[t][Math.floor(Math.random() * allOptions[t].length)], correct: false });
+            });
+            
+            // 打乱选项顺序
+            shuffle(options);
+            
+            return options;
+        }
+        
         const questions = [
-            // ====== 直接竞店 ======
+            // Q1: 运动鞋店
             {
                 phase: 1,
-                phaseName: "直接竞店",
-                tag: "📊 竞争关系紧密程度",
-                scenarioTitle: "🏪 情景1：运动鞋店的直接竞争",
-                scenarioText: "你在淘宝经营一家运动鞋店，月销10万+。最近发现另一家同样卖运动鞋的店铺，无论款式、价格、目标客群都和你高度重叠，他们的爆款和你几乎一模一样。",
-                question: "这种竞争对手属于什么类型？",
-                think: "思考：他们的商品、功能、目标客群、市场定位与你有多重叠？是否直接争夺同一细分市场？",
-                options: [
-                    "A. 直接竞店 - 商品/客群/定位高度重叠，直接争夺同一市场",
-                    "B. 间接竞店 - 同一行业但目标客群有差异",
-                    "C. 替代品竞店 - 满足不同需求",
-                    "D. 潜在竞店 - 目前还没有竞争"
-                ],
-                answer: 0,
-                explanation: "直接竞店的特征：商品或服务与自身极为相似，在外观、功能、目标消费群体、销售渠道、市场定位等方面高度重叠，直接争夺同一细分市场份额。",
-                agencyTip: "判断力训练：不要只看表面相似度，要深入分析核心重叠点在哪里。"
+                scenarioTitle: "🏪 Scenario 1: Sports Shoe Store",
+                scenarioText: "You run a sports shoe store on Taobao, selling 100k+ per month. Another store sells the same type of sports shoes - similar styles, prices, and target customers. Their bestseller is almost identical to yours.",
+                question: "What type of competitor is this?",
+                think: "Think: How much overlap in products, functions, target customers, and market positioning?",
+                correctType: "direct",
+                explanation: "Direct competitors: Products, functions, target customers, sales channels, and market positioning are highly overlapping. They directly compete for the same market segment.",
+                agencyTip: "Judgment training: Don't just look at surface similarity - dig deeper into where the core overlap lies."
             },
+            // Q2: 奶茶店
             {
                 phase: 1,
-                phaseName: "直接竞店",
-                tag: "📊 竞争关系紧密程度",
-                scenarioTitle: "☕ 情景2：奶茶店的价格战",
-                scenarioText: "你开了一家奶茶店，主打15-20元价位的中端市场。隔壁新开了一家奶茶店，同样定位中端市场，产品线相似度达80%，经常做促销活动，价格战打的火热。",
-                question: "这家奶茶店属于什么竞争对手？",
-                think: "思考：同样是奶茶、中端定位、争夺相似客群——这种全方位重叠是什么类型？",
-                options: [
-                    "A. 直接竞店 - 定位、产品、客群全面重叠",
-                    "B. 间接竞店 - 有一定差异",
-                    "C. 替代品竞店 - 不同品类",
-                    "D. 潜在竞店 - 规模太小不构成威胁"
-                ],
-                answer: 0,
-                explanation: "直接竞争的核心特征是'全方位竞争'：同类产品、同一定位、同类客群，在同一市场进行正面争夺。",
-                agencyTip: "责任承担：如果是你，会如何应对这种直接竞争？制定策略需要承担什么后果？"
+                scenarioTitle: "🧋 Scenario 2: Bubble Tea Price War",
+                scenarioText: "You run a bubble tea store targeting the mid-range market (15-20 yuan). A new bubble tea store opened next door, also targeting mid-range, with 80% similar products, often doing promotions.",
+                question: "What type of competitor is this?",
+                think: "Think: Same category, same positioning, same customers - is this direct competition?",
+                correctType: "direct",
+                explanation: "Direct competition means 'all-round competition': Same product type, same positioning, same customer base, fighting head-on in the same market.",
+                agencyTip: "Responsibility: If it were you, how would you handle this direct competition? What consequences come with your strategy?"
             },
-            // ====== 间接竞店 ======
+            // Q3: 女装店
             {
                 phase: 2,
-                phaseName: "间接竞店",
-                tag: "🔍 目标群体部分重叠",
-                scenarioTitle: "👗 情景3：女装店的错位竞争",
-                scenarioText: "你经营一家主打职场正装的女装店，目标客群是25-35岁职场女性。附近一家汉服店虽然也是女装，但目标客群是18-30岁喜欢传统文化的年轻女性，设计风格、市场定位完全不同。",
-                question: "这家汉服店属于什么类型？",
-                think: "思考：都是女装，但风格、客群、定位完全不同——这算直接竞争吗？",
-                options: [
-                    "A. 直接竞店 - 都是女装，构成直接竞争",
-                    "B. 间接竞店 - 目标群体有部分重叠但定位完全不同",
-                    "C. 替代品竞店 - 满足不同场景需求",
-                    "D. 潜在竞店 - 太小众不足为虑"
-                ],
-                answer: 1,
-                explanation: "间接竞店：虽然处于同一行业，目标消费群体存在部分重叠，但商品或服务在核心功能、表现形式等方面存在明显差异，在某些场景下能满足相似需求。",
-                agencyTip: "问题定义能力：你能准确描述这两类店的差异点吗？这考验的是精准定义问题的能力。"
+                scenarioTitle: "👗 Scenario 3: Women's Clothing Positioning",
+                scenarioText: "You run a professional women's clothing store targeting 25-35 year old working women. A hanfu (traditional Chinese clothing) store opened nearby, also women's clothing but targeting 18-30 year olds who love traditional culture. Different style and market positioning.",
+                question: "What type of competitor is this?",
+                think: "Think: Both women's clothing, but completely different style and positioning - is this direct competition?",
+                correctType: "indirect",
+                explanation: "Indirect competitors: Same industry with some customer overlap, but clearly different in core functions, presentation, and can meet similar needs in certain scenarios.",
+                agencyTip: "Problem definition: Can you accurately describe the differences between these two types of stores? This tests precise problem definition."
             },
+            // Q4: 餐饮
             {
                 phase: 2,
-                phaseName: "间接竞店",
-                tag: "🔍 目标群体部分重叠",
-                scenarioTitle: "🍜 情景4：快餐与轻食的竞争",
-                scenarioText: "你开了一家川菜馆，目标是追求口味、刺激的年轻消费者。商圈里还有一家轻食沙拉店，目标是追求健康生活的白领。虽然都是餐饮，但产品定位、目标客群、消费场景都不同。",
-                question: "这家轻食店属于什么类型？",
-                think: "思考：都是'吃'的需求，但追求的方向完全不同——这是直接竞争吗？",
-                options: [
-                    "A. 直接竞店 - 都是民以食为天",
-                    "B. 间接竞店 - 满足不同场景和需求",
-                    "C. 替代品竞店 - 都能吃饱",
-                    "D. 潜在竞店 - 不构成威胁"
-                ],
-                answer: 1,
-                explanation: "间接竞争的关键是'部分重叠但核心差异大'：虽然都是满足'吃'的需求，但满足的是不同层次的马斯洛需求。",
-                agencyTip: "批判思维：不要被表面的'都是XX'误导，要看到本质需求差异。"
+                scenarioTitle: "🍜 Scenario 4: Sichuan Cuisine vs Salad",
+                scenarioText: "You run a Sichuan cuisine restaurant targeting young people who love spicy food. There's also a healthy salad shop in the same mall targeting health-conscious white collars. Different product positioning and target customers.",
+                question: "What type of competitor is this?",
+                think: "Think: Both satisfy 'eating' needs, but in completely different ways - is this direct competition?",
+                correctType: "indirect",
+                explanation: "Key to indirect competition is 'partial overlap but core difference': Both meet the 'eating' need but satisfy different levels of Maslow's hierarchy.",
+                agencyTip: "Critical thinking: Don't be misled by surface-level 'both are XX' - see the fundamental need differences."
             },
-            // ====== 替代品竞店 ======
+            // Q5: 文具店
             {
                 phase: 3,
-                phaseName: "替代品竞店",
-                tag: "🔄 商品可替代性",
-                scenarioTitle: "✏️ 情景5：文具店的新威胁",
-                scenarioText: "你经营一家实体文具店，卖各种笔、本子。现在越来越多人用iPad+Apple Pencil做笔记，还有各种笔记APP（如Notion、印象笔记）也火的不行。",
-                question: "这些数字笔记工具属于什么类型的竞争对手？",
-                think: "思考：它们和你的商品形态完全不同，但满足的是相似的'记录需求'——这叫什么？",
-                options: [
-                    "A. 直接竞店 - 都是卖文具的",
-                    "B. 间接竞店 - 都在同一个商圈",
-                    "C. 替代品竞店 - 满足相同核心需求的不同解决方案",
-                    "D. 潜在竞店 - 还没有实体店"
-                ],
-                answer: 2,
-                explanation: "替代品竞店：商品或服务与自身完全不同，甚至所属行业也不同，但能满足消费者相同或相似的核心需求，在功能上具备相互替代的可能性。",
-                agencyTip: "前瞻性思维：这些'看不见的对手'往往更具颠覆性。你能预判还有什么可能成为替代品吗？"
+                scenarioTitle: "✏️ Scenario 5: Stationery Store Threat",
+                scenarioText: "You run a physical stationery store selling pens and notebooks. More and more people use iPad + Apple Pencil for note-taking, and note-taking apps (like Notion, Evernote) are also booming.",
+                question: "What type of competitor are these digital tools?",
+                think: "Think: Their products look completely different from yours, but satisfy the same 'recording need' - what is this called?",
+                correctType: "substitute",
+                explanation: "Substitute competitors: Products/services are completely different from yours, even in different industries, but satisfy the same or similar core consumer need and can potentially replace each other functionally.",
+                agencyTip: "Forward thinking: These 'invisible competitors' are often more disruptive. Can you predict what else might become substitutes?"
             },
+            // Q6: 汽车
             {
                 phase: 3,
-                phaseName: "替代品竞店",
-                tag: "🔄 商品可替代性",
-                scenarioTitle: "🚗 情景6：汽车品牌的跨界竞争",
-                scenarioText: "你是一家传统汽车4S店。现在新能源车越来越火，尤其是特斯拉、蔚来等电动车品牌，它们的核心卖点是'智能出行'。而你还在卖传统燃油车。",
-                question: "这些新能源车企属于什么类型竞争对手？",
-                think: "思考：都是'车'，但新能源车在能源形式、技术架构、用户体验上完全颠覆——这改变了什么？",
-                options: [
-                    "A. 直接竞店 - 都是卖汽车的",
-                    "B. 间接竞店 - 定位不同",
-                    "C. 替代品竞店 - 满足相同出行需求但解决方案完全不同",
-                    "D. 潜在竞店 - 还没进入你的市场"
-                ],
-                answer: 2,
-                explanation: "替代品竞争的核心是'解决方案的颠覆'：虽然都满足同一需求，但新技术、新模式可能完全取代旧方案。",
-                agencyTip: "创新思维：面对这种颠覆性竞争，传统企业应该如何转型？"
+                scenarioTitle: "🚗 Scenario 6: Auto Industry Disruption",
+                scenarioText: "You run a traditional car 4S dealership. Now new energy vehicles are becoming more popular, especially Tesla, NIO and other EV brands with 'smart travel' as their core. You still sell traditional fuel cars.",
+                question: "What type of competitor are these EV companies?",
+                think: "Think: Both 'cars', but new energy vehicles completely disrupt energy form, technology, and user experience - what changes?",
+                correctType: "substitute",
+                explanation: "Core of substitute competition is 'solution disruption': Although satisfying the same need, new technology and models may completely replace old solutions.",
+                agencyTip: "Innovation thinking: How should traditional companies transform facing such disruptive competition?"
             },
-            // ====== 潜在竞店 ======
+            // Q7: 培训机构
             {
                 phase: 4,
-                phaseName: "潜在竞店",
-                tag: "🔮 未来潜在威胁",
-                scenarioTitle: "🏫 情景7：培训机构的跨界",
-                scenarioText: "你是一家在线编程培训平台，最近听说某知名传统教育巨头正在秘密研发在线编程课程，可能明年就会推出。他们有品牌优势、用户基础、资金实力都很强。",
-                question: "这家传统教育机构目前属于什么类型？",
-                think: "思考：他们现在和你直接竞争吗？但未来可能成为强劲对手——这叫什么？",
-                options: [
-                    "A. 直接竞店 - 都在做培训",
-                    "B. 间接竞店 - 模式不同",
-                    "C. 替代品竞店 - 满足不同需求",
-                    "D. 潜在竞店 - 目前不直接竞争，但未来可能成为对手"
-                ],
-                answer: 3,
-                explanation: "潜在竞店：目前并不直接与自身竞争，但有可能在未来进入市场或扩大商品线，从而成为竞争对手。",
-                agencyTip: "风险意识：识别潜在竞争对手需要前瞻性思维。现在就该思考：如何应对这种未来的威胁？"
+                scenarioTitle: "🏫 Scenario 7: Training Institution Expansion",
+                scenarioText: "You run an online programming training platform. You heard a famous traditional education giant is secretly developing online programming courses, may launch next year. They have brand advantages, user base, and strong financial backing.",
+                question: "What type of competitor is this education institution now?",
+                think: "Think: Are they competing with you now? But may become a strong rival in the future - what is this called?",
+                correctType: "potential",
+                explanation: "Potential competitors: Not currently competing directly, but may enter the market or expand product lines in the future, becoming competitors.",
+                agencyTip: "Risk awareness: Identifying potential competitors requires forward thinking. Should you think about how to deal with this future threat now?"
             },
+            // Q8: 巨头入局
             {
                 phase: 4,
-                phaseName: "潜在竞店",
-                tag: "🔮 未来潜在威胁",
-                scenarioTitle: "🏭 情景8：巨头的入局信号",
-                scenarioText: "你经营一家小而美的美妆电商店。某天你看到新闻，某大型互联网平台开始布局美妆直播电商，他们拥有海量用户、强大物流、成熟技术。",
-                question: "这个互联网平台目前属于什么类型？",
-                think: "思考：他们现在还没正式进入美妆赛道，但具备随时进入的能力——这意味着什么？",
-                options: [
-                    "A. 直接竞店 - 已经构成竞争",
-                    "B. 间接竞店 - 行业不同",
-                    "C. 替代品竞店 - 产品不同",
-                    "D. 潜在竞店 - 具备入局能力，随时可能成为竞争对手"
-                ],
-                answer: 3,
-                explanation: "识别潜在竞争对手的关键信号：1) 是否有入局能力 2) 是否有战略动向 3) 是否有资源储备",
-                agencyTip: "自我反思：你能识别出自己行业的'危险信号'吗？这需要持续关注行业动态。"
+                scenarioTitle: "🏭 Scenario 8: Tech Giant Signal",
+                scenarioText: "You run a small but successful beauty e-commerce store. One day you see news that a major internet platform is entering beauty live-stream e-commerce, with massive users, strong logistics, and mature technology.",
+                question: "What type of competitor is this internet platform now?",
+                think: "Think: They haven't officially entered the beauty market yet, but have the ability to enter anytime - what does this mean?",
+                correctType: "potential",
+                explanation: "Key signals for identifying potential competitors: 1) Capability to enter 2) Strategic moves 3) Resource reserves",
+                agencyTip: "Self-reflection: Can you identify 'danger signals' in your industry? This requires continuous monitoring of industry trends."
             }
         ];
         
         let currentQuestion = 0, score = 0, rightCount = 0, wrongCount = 0;
+        let currentOptions = [];
         
         function startGame() {
             document.getElementById('start-screen').style.display = 'none';
@@ -320,8 +316,9 @@
                 if(i === q.phase) step.className = 'step active';
             }
             
-            document.getElementById('phase-tag').textContent = '阶段'+q.phase+': '+q.phaseName;
-            document.getElementById('knowledge-tag').textContent = q.tag;
+            const stageNames = ["Stage 1", "Stage 2", "Stage 3", "Stage 4"];
+            document.getElementById('phase-tag').textContent = stageNames[q.phase-1];
+            document.getElementById('knowledge-tag').textContent = `Q${currentQuestion+1}`;
             document.getElementById('scenario-title').textContent = q.scenarioTitle;
             document.getElementById('scenario-text').textContent = q.scenarioText;
             document.getElementById('question-text').textContent = q.question;
@@ -331,13 +328,16 @@
             document.getElementById('explanation').classList.remove('show');
             document.getElementById('agency-tip').style.display = 'none';
             
+            // 生成随机选项
+            currentOptions = generateOptions(q.correctType);
+            
             // 生成选项
             const optionsContainer = document.getElementById('options');
             optionsContainer.innerHTML = '';
-            q.options.forEach((opt, index) => {
+            currentOptions.forEach((opt, index) => {
                 const btn = document.createElement('div');
                 btn.className = 'option';
-                btn.textContent = opt;
+                btn.textContent = String.fromCharCode(65 + index) + ". " + opt.text;
                 btn.onclick = () => selectAnswer(index);
                 optionsContainer.appendChild(btn);
             });
@@ -350,11 +350,11 @@
             // 禁用所有选项
             options.forEach((opt, i) => {
                 opt.classList.add('disabled');
-                if (i === q.answer) opt.classList.add('correct');
+                if (currentOptions[i].correct) opt.classList.add('correct');
             });
             
             // 判断对错
-            if (index === q.answer) {
+            if (currentOptions[index].correct) {
                 rightCount++;
                 score += 12;
             } else {
@@ -399,14 +399,14 @@
             
             let title, msg;
             if(score >= 80) {
-                title = "👑 商业洞察大师!";
-                msg = "你完美掌握了竞店分析能力！能准确识别各类竞争对手，并深入分析竞争逻辑。这种判断力在AI时代尤为珍贵！";
+                title = "👑 Business Insight Master!";
+                msg = "You perfectly mastered competitor analysis! This judgment ability is especially valuable in the AI era!";
             } else if(score >= 50) {
-                title = "⭐ 优秀分析师!";
-                msg = "你对竞店分类有较好理解，但判断还不够精准。多练习分析真实案例，培养商业洞察力！";
+                title = "⭐ Excellent Analyst!";
+                msg = "You have a good understanding of competitor classification. Practice more with real cases to develop business insight!";
             } else {
-                title = "💪 潜力无限!";
-                msg = "别灰心！竞店分析需要不断练习。建议：1)多关注真实商业案例 2)培养从多角度分析问题的习惯 3)学会承担判断的后果";
+                title = "💪 Unlimited Potential!";
+                msg: "Don't be discouraged! Competitor analysis requires practice. Suggestion: 1) Follow real business cases 2) Develop multi-angle analysis habits 3) Learn to take responsibility for judgments";
             }
             
             document.getElementById('result-title').textContent = title;
