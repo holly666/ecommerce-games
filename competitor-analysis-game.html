@@ -358,12 +358,25 @@
                 // 3秒后进入下一题
                 setTimeout(() => { nextQuestion(); }, 3000);
             } else {
-                // 答错了，不显示解析，直接进入下一题
+                // 答错了
                 options[index].classList.add('wrong');
                 
-                // 禁用所有选项，直接进入下一题
-                options.forEach(opt => opt.classList.add('disabled'));
-                setTimeout(() => { nextQuestion(); }, 1500);
+                // 添加重试按钮
+                const optionsContainer = document.getElementById('options');
+                const retryBtn = document.createElement('div');
+                retryBtn.id = 'retry-btn';
+                retryBtn.className = 'option';
+                retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9800, #ffc107); border-color: #ff9800; color: #1a1a2e; text-align: center; font-weight: bold; margin-top: 10px;';
+                retryBtn.textContent = '🔄 再试一次';
+                retryBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    // 移除重试按钮和错误样式，重新显示选项
+                    retryBtn.remove();
+                    options.forEach(opt => {
+                        opt.classList.remove('disabled', 'wrong');
+                    });
+                };
+                optionsContainer.appendChild(retryBtn);
             }
         }
         
