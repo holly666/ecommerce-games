@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>市场情报官 - 店铺生死战</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        /* 开始界面 */
+        #start-screen { text-align: center; padding: 40px 20px; }
+        .title { font-size: 2.8em; color: #e94560; text-shadow: 0 0 20px rgba(233,69,96,0.5); margin-bottom: 10px; }
+        .subtitle { font-size: 1.2em; color: #aaa; margin-bottom: 30px; }
+        .start-btn { background: linear-gradient(135deg, #e94560, #ff6b6b); color: #fff; border: none; padding: 18px 50px; font-size: 1.3em; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 5px 20px rgba(233,69,96,0.4); }
+        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(233,69,96,0.6); }
+        .story { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; text-align: left; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
+        .story h3 { color: #e94560; margin-bottom: 15px; }
+        .story p { line-height: 1.8; color: #ccc; }
+        
+        /* 游戏界面 */
+        #game-screen { display: none; }
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; }
+        .step { display: flex; align-items: center; gap: 8px; font-size: 0.9em; color: #666; }
+        .step.active { color: #e94560; font-weight: bold; }
+        .step.completed { color: #10b981; }
+        .step-num { width: 28px; height: 28px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 0.85em; }
+        .step.active .step-num { background: #e94560; }
+        .step.completed .step-num { background: #10b981; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .score { font-size: 1.4em; color: #ffd700; font-weight: bold; }
+        .phase-tag { background: linear-gradient(135deg, #e94560, #ff6b6b); padding: 8px 20px; border-radius: 20px; font-size: 0.95em; }
+        
+        .question-box { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .knowledge-tag { display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 6px 15px; border-radius: 15px; font-size: 0.85em; margin-bottom: 15px; }
+        .scenario-box { background: linear-gradient(135deg, #11998e, #38ef7d); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 18px; }
+        .scenario-title { font-size: 1.1em; font-weight: bold; margin-bottom: 8px; }
+        .question-text { font-size: 1.15em; line-height: 1.7; color: #333; margin-bottom: 15px; }
+        
+        .options { display: grid; gap: 12px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 18px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; font-size: 1.05em; color: #333; }
+        .option:hover { border-color: #e94560; background: #fff5f5; transform: translateX(5px); }
+        .option.correct { background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; color: #fff; }
+        .option.wrong { background: linear-gradient(135deg, #ef4444, #dc2626); border-color: #ef4444; color: #fff; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        
+        .explanation { background: #e8f5e9; padding: 18px; border-radius: 12px; margin-top: 18px; display: none; color: #2e7d32; border-left: 4px solid #4caf50; }
+        .explanation.show { display: block; animation: fadeIn 0.3s; }
+        .explanation-title { font-weight: bold; margin-bottom: 8px; font-size: 1.05em; }
+        
+        .tips { background: rgba(255,215,0,0.1); padding: 15px; border-radius: 10px; margin-top: 15px; border: 1px solid rgba(255,215,0,0.3); }
+        .tips-title { color: #ffd700; font-weight: bold; margin-bottom: 8px; font-size: 0.95em; }
+        .tips-content { font-size: 0.9em; color: #ccc; line-height: 1.6; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* 结果界面 */
+        #result-screen { display: none; text-align: center; padding: 40px 20px; }
+        .result-title { font-size: 2.5em; margin-bottom: 20px; }
+        .final-score { font-size: 4em; color: #ffd700; margin: 20px 0; text-shadow: 0 0 30px rgba(255,215,0,0.5); }
+        .result-msg { font-size: 1.3em; color: #aaa; margin-bottom: 30px; line-height: 1.6; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin: 30px 0; flex-wrap: wrap; }
+        .stat { background: rgba(255,255,255,0.05); padding: 20px 30px; border-radius: 15px; }
+        .stat-value { font-size: 1.8em; color: #e94560; font-weight: bold; }
+        .stat-label { font-size: 0.9em; color: #888; margin-top: 5px; }
+        
+        .restart-btn { background: linear-gradient(135deg, #e94560, #ff6b6b); color: #fff; border: none; padding: 16px 45px; font-size: 1.2em; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        
+        /* 阶段完成动画 */
+        .phase-complete { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 100; flex-direction: column; }
+        .phase-complete.show { display: flex; animation: fadeIn 0.5s; }
+        .phase-complete h2 { font-size: 2.5em; color: #10b981; margin-bottom: 20px; }
+        .phase-complete p { color: #ccc; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 开始界面 -->
+        <div id="start-screen">
+            <h1 class="title">🏪 市场情报官</h1>
+            <p class="subtitle">店铺生死战 - 市场信息处理流程</p>
+            <button class="start-btn" onclick="startGame()">开始挑战</button>
+            <div class="story">
+                <h3>📖 故事背景</h3>
+                <p>你接手了一家濒临倒闭的动漫手办店。供应商压货、库存积压、资金链紧张...你的每一次市场决策，都可能决定店铺的生死。</p>
+                <p style="margin-top:15px;">只有正确处理市场信息（采集→过滤→整理→分析），才能做出正确决策，让店铺起死回生！</p>
+            </div>
+        </div>
+        
+        <!-- 游戏界面 -->
+        <div id="game-screen">
+            <div class="progress-bar">
+                <div class="step active" id="step1"><span class="step-num">1</span>信息采集</div>
+                <div class="step" id="step2"><span class="step-num">2</span>信息过滤</div>
+                <div class="step" id="step3"><span class="step-num">3</span>信息整理</div>
+                <div class="step" id="step4"><span class="step-num">4</span>信息分析</div>
+            </div>
+            <div class="header">
+                <div class="phase-tag" id="phase-tag">阶段1: 信息采集</div>
+                <div class="score">💰 资金: <span id="score">100000</span>元</div>
+            </div>
+            <div class="question-box">
+                <span class="knowledge-tag" id="knowledge-tag">市场信息采集</span>
+                <div class="scenario-box">
+                    <div class="scenario-title" id="scenario-title">🌊 情景1</div>
+                    <p id="scenario-text">你的店铺资金紧张，只有500元预算。你想知道学生群体对手办价位的接受范围，你会选择哪种方式？</p>
+                </div>
+                <p class="question-text" id="question-text"></p>
+                
+                <div class="tips" id="tips-box" style="display:none;">
+                    <div class="tips-title">💡 知识点</div>
+                    <div class="tips-content" id="tips-content"></div>
+                </div>
+                
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">🎯 答案解析</div>
+                    <p id="explanation-text"></p>
+                </div>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        
+        <!-- 结果界面 -->
+        <div id="result-screen">
+            <h1 class="result-title" id="result-title">🎉 挑战完成!</h1>
+            <div class="final-score"><span id="final-score">100</span></div>
+            <p class="result-msg" id="result-msg"></p>
+            <div class="stats">
+                <div class="stat"><div class="stat-value" id="stat-right">0</div><div class="stat-label">答对</div></div>
+                <div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">答错</div></div>
+                <div class="stat"><div class="stat-value" id="stat-money">0</div><div class="stat-label">最终资金</div></div>
+            </div>
+            <button class="restart-btn" onclick="restartGame()">再闯一次</button>
+        </div>
+    </div>
+    
+    <!-- 阶段完成弹窗 -->
+    <div class="phase-complete" id="phase-complete">
+        <h2>✅ 阶段完成!</h2>
+        <p id="phase-msg">信息采集阶段通过!</p>
+    </div>
+
+    <script>
+        const questions = [
+            // ====== 信息采集阶段 ======
+            {
+                phase: 1,
+                phaseName: "信息采集",
+                tag: "📊 直接获取 vs 间接获取",
+                scenarioTitle: "💰 情景1：预算紧张",
+                scenarioText: "你的店铺资金紧张，只有500元预算。你想知道学生群体对手办价位的接受范围，你会选择哪种方式？",
+                question: "500元预算，想了解学生群体的价位接受范围，应该怎么做？",
+                knowledge: "市场信息采集可通过调查问卷、访谈等方式直接获取，也可通过行业报告、社交媒体间接获取。",
+                options: [
+                    "A. 购买行业报告（300元）- 获取行业大数据",
+                    "B. 问卷星发问卷（免费）- 直接面向学生收集数据",
+                    "C. 去竞争对手店铺观察（0元）- 间接获取价格信息"
+                ],
+                answer: 1,
+                explanation: "预算有限时，选择成本最低且能直接获取目标群体信息的方式。问卷星免费版就能发问卷收集数据!",
+                moneyChange: 10000,
+                wrongMoney: -20000
+            },
+            {
+                phase: 1,
+                phaseName: "信息采集",
+                tag: "📊 信息来源渠道",
+                scenarioTitle: "📱 情景2：想了解竞品",
+                scenarioText: "你发现另一家动漫店生意很好，想了解他们的畅销产品和定价策略。",
+                question: "想了解竞店的畅销产品和定价，应该怎么做？",
+                knowledge: "直接获取：实地观察、访谈顾客；间接获取：行业报告、社交媒体。",
+                options: [
+                    "A. 去对方店铺假装顾客，记录价格和热销产品",
+                    "B. 在门口发问卷调查他们的顾客",
+                    "C. 雇佣专业调研公司（预算5000元）"
+                ],
+                answer: 0,
+                explanation: "最直接的方式是实地观察，记录竞店的价格和热销产品，成本最低!",
+                moneyChange: 5000,
+                wrongMoney: -15000
+            },
+            // ====== 信息过滤阶段 ======
+            {
+                phase: 2,
+                phaseName: "信息过滤",
+                tag: "🔍 过滤四要点",
+                scenarioTitle: "📬 情景3：收到一堆信息",
+                scenarioText: "你通过问卷收集了500份回复，但里面有些是重复的，有些是乱填的，还有些信息已经过时了。",
+                question: "这些信息需要过滤，应该注意哪四个要点？",
+                knowledge: "信息过滤四要点：完整性判断、逻辑性筛查、时效阈值控制、唯一性识别。",
+                options: [
+                    "A. 看字数多少、是否表情包、是否VIP用户、是否带图",
+                    "B. 完整性判断、逻辑性筛查、时效性控制、唯一性识别",
+                    "C. 看是否本地用户、是否手机填写、是否夜间填写、是否推荐别人"
+                ],
+                answer: 1,
+                explanation: "信息过滤四要点：①完整性判断-填完整了吗？②逻辑性筛查-前后矛盾吗？③时效阈值控制-过期了吗？④唯一性识别-重复了吗？",
+                moneyChange: 15000,
+                wrongMoney: -10000
+            },
+            {
+                phase: 2,
+                phaseName: "信息过滤",
+                tag: "🔍 时效性判断",
+                scenarioTitle: "⏰ 情景4：信息过期了？",
+                scenarioText: "你找到了一份去年3月的市场报告，但现在已经是今年3月了。",
+                question: "这份报告还能用吗？应该怎么判断？",
+                knowledge: "信息过滤要注意时效阈值控制，过时的信息可能导致决策失误。",
+                options: [
+                    "A. 还能用，数据差不多",
+                    "B. 动漫市场变化快，1年前的数据可能过时，需要判断时效性",
+                    "C. 扔掉，买新的"
+                ],
+                answer: 1,
+                explanation: "时效性判断：动漫市场变化快，1年前的数据可能不准确。应该判断信息的时效性，决定是否使用或更新。",
+                moneyChange: 10000,
+                wrongMoney: -20000
+            },
+            // ====== 信息整理阶段 ======
+            {
+                phase: 3,
+                phaseName: "信息整理",
+                tag: "📋 分类整理方法",
+                scenarioTitle: "📊 情景5：数据乱糟糟",
+                scenarioText: "过滤后你得到了200条有效数据，但它们混在一起：不同产品、不同地区、不同时间...根本没法分析。",
+                question: "接下来应该怎么做？",
+                knowledge: "信息整理：根据信息的性质或用途进行分类；按商品类别、地区、时间等分类；按时间顺序、重要性等排序；整理成表格、图形等格式。",
+                options: [
+                    "A. 直接开始分析，越快越好",
+                    "B. 按商品类别、地区、时间分类，排序后整理成表格",
+                    "C. 复制粘贴到Word里"
+                ],
+                answer: 1,
+                explanation: "信息整理的步骤：①分类（按商品类别/地区/时间）②排序（按时间/重要性）③格式化（表格/图形）!",
+                moneyChange: 15000,
+                wrongMoney: -10000
+            },
+            {
+                phase: 3,
+                phaseName: "信息整理",
+                tag: "📋 整理格式选择",
+                scenarioTitle: "📈 情景6：想看趋势",
+                scenarioText: "你整理了12个月的销售数据，想看销量变化趋势。",
+                question: "用什么格式整理最合适？",
+                knowledge: "信息整理成表格、图形等形式，便于分析。",
+                options: [
+                    "A. 文字描述",
+                    "B. 表格 + 折线图",
+                    "C. 词云"
+                ],
+                answer: 1,
+                explanation: "看趋势变化，用表格+折线图最直观!",
+                moneyChange: 10000,
+                wrongMoney: -5000
+            },
+            // ====== 信息分析阶段 ======
+            {
+                phase: 4,
+                phaseName: "信息分析",
+                tag: "📈 分析方法选择",
+                scenarioTitle: "🎯 情景7：要做决策了",
+                scenarioText: "你整理了数据，现在要做决策：是主推低价位（50-80元）还是中高价位（150-200元）的手办？",
+                question: "你应该用什么方法分析？",
+                knowledge: "信息分析：运用统计学、经济学、营销学等理论和方法，通过定量分析、定性分析和SWOT分析等方法，揭示市场规律，预测市场趋势。",
+                options: [
+                    "A. 拍脑袋决定",
+                    "B. 定量分析（看数据占比）+ 定性分析（看用户评价）+ SWOT分析",
+                    "C. 掷骰子"
+                ],
+                answer: 1,
+                explanation: "正确的分析流程：①定量分析-数据占比②定性分析-用户评价③SWOT分析-综合评估!",
+                moneyChange: 30000,
+                wrongMoney: -30000
+            },
+            {
+                phase: 4,
+                phaseName: "信息分析",
+                tag: "📈 SWOT分析应用",
+                scenarioTitle: "⚔️ 情景8：竞品来了",
+                scenarioText: "附近新开了一家动漫店，正在打价格战。你需要分析优劣势。",
+                question: "用SWOT分析，应该考虑哪些方面？",
+                knowledge: "SWOT分析：Strengths（优势）、Weaknesses（劣势）、Opportunities（机会）、Threats（威胁）。",
+                options: [
+                    "A. 他们的店更大、装修更好",
+                    "B. S-优势：你的老顾客多；W-劣势：款式更新慢；O-机会：对方不了解老顾客需求；T-威胁：价格战利润下降",
+                    "C. 谁便宜谁赢"
+                ],
+                answer: 1,
+                explanation: "SWOT分析全面考虑：优势（内部）、劣势（内部）、机会（外部）、威胁（外部），做出综合决策!",
+                moneyChange: 25000,
+                wrongMoney: -25000
+            },
+            {
+                phase: 4,
+                phaseName: "信息分析",
+                tag: "📈 预测与决策",
+                scenarioTitle: "🔮 情景9：最后一次决策",
+                scenarioText: "根据分析，你发现：①学生偏爱50-80元价位 ②节假日销量翻倍 ③竞争对手主打高价。",
+                question: "综合以上信息，你应该主推什么策略？",
+                knowledge: "信息分析最终目的是形成结论，预测趋势，评估机会，为决策提供科学依据。",
+                options: [
+                    "A. 跟着竞争对手，卖高价",
+                    "B. 错位竞争，主推50-80元价位 + 节假日促销活动",
+                    "C. 什么都不做"
+                ],
+                answer: 1,
+                explanation: "综合分析后：①学生偏爱低价-主打50-80元②节假日销量好-做促销③竞品高价-错位竞争!",
+                moneyChange: 50000,
+                wrongMoney: -50000
+            }
+        ];
+        
+        let currentQuestion = 0, score = 0, money = 100000, rightCount = 0, wrongCount = 0;
+        
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            
+            // 更新阶段进度
+            for(let i=1;i<=4;i++) {
+                const step = document.getElementById('step'+i);
+                step.className = 'step';
+                if(i < q.phase) step.className = 'step completed';
+                if(i === q.phase) step.className = 'step active';
+            }
+            
+            document.getElementById('phase-tag').textContent = '阶段'+q.phase+': '+q.phaseName;
+            document.getElementById('knowledge-tag').textContent = q.tag;
+            document.getElementById('scenario-title').textContent = q.scenarioTitle;
+            document.getElementById('scenario-text').textContent = q.scenarioText;
+            document.getElementById('question-text').textContent = q.question;
+            
+            // 显示知识点
+            document.getElementById('tips-box').style.display = 'block';
+            document.getElementById('tips-content').textContent = q.knowledge;
+            
+            // 重置解释框
+            document.getElementById('explanation').classList.remove('show');
+            
+            // 生成选项
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.textContent = opt;
+                btn.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+        
+        function selectAnswer(index) {
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            // 禁用所有选项
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.answer) opt.classList.add('correct');
+            });
+            
+            // 判断对错
+            if (index === q.answer) {
+                rightCount++;
+                money += q.moneyChange;
+                document.getElementById('score').textContent = money;
+            } else {
+                wrongCount++;
+                money += q.wrongMoney;
+                document.getElementById('score').textContent = money;
+                options[index].classList.add('wrong');
+            }
+            
+            // 显示解释
+            document.getElementById('explanation-text').textContent = q.explanation;
+            document.getElementById('explanation').classList.add('show');
+            
+            // 3秒后进入下一题或结束
+            setTimeout(() => {
+                // 检查是否完成一个阶段
+                const nextQ = questions[currentQuestion + 1];
+                if(nextQ && nextQ.phase > q.phase) {
+                    showPhaseComplete(q.phaseName);
+                } else {
+                    nextQuestion();
+                }
+            }, 3500);
+        }
+        
+        function showPhaseComplete(phaseName) {
+            const popup = document.getElementById('phase-complete');
+            document.getElementById('phase-msg').textContent = phaseName + '阶段通过! 资金: ' + money + '元';
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+                nextQuestion();
+            }, 2000);
+        }
+        
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= questions.length) {
+                showResult();
+            } else {
+                showQuestion();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            const finalScore = Math.max(0, Math.round((money / 100000) * 100));
+            document.getElementById('final-score').textContent = finalScore;
+            document.getElementById('stat-right').textContent = rightCount;
+            document.getElementById('stat-wrong').textContent = wrongCount;
+            document.getElementById('stat-money').textContent = money;
+            
+            let title, msg;
+            if(money >= 200000) {
+                title = "👑 商业奇才!";
+                msg = "你完美掌握了市场信息处理流程，店铺起死回生，年收入百万不是梦!";
+            } else if(money >= 100000) {
+                title = "⭐ 优秀店长!";
+                msg = "你正确处理了市场信息，店铺经营状况良好，继续保持!";
+            } else if(money >= 50000) {
+                title = "👍 入门店主!";
+                msg = "你基本掌握了信息处理流程，但还有进步空间。多练习!";
+            } else {
+                title = "💪 再接再厉!";
+                msg = "店铺经营困难，但失败是成功之母!重新梳理知识点再来一次?";
+            }
+            
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('result-msg').textContent = msg;
+        }
+        
+        function restartGame() {
+            currentQuestion = 0;
+            score = 0;
+            money = 100000;
+            rightCount = 0;
+            wrongCount = 0;
+            document.getElementById('score').textContent = money;
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            showQuestion();
+        }
+    </script>
+</body>
+</html>
