@@ -81,9 +81,9 @@
 
         .footer { text-align: center; color: white; margin-top: 20px; font-size: 12px; opacity: 0.8; }
 
-        /* 打卡按钮 */
-        .checkin-section { text-align: center; margin-top: 10px; }
-        .checkin-hint { font-size: 12px; color: #999; margin-top: 8px; }
+        /* 喝水特殊样式 */
+        .water-amount { font-size: 9px; font-weight: bold; color: #4facfe; margin-top: 1px; }
+        .water-partial { background: #d0e8ff !important; }
 
         @media (max-width: 600px) {
             .stats { grid-template-columns: repeat(3, 1fr); }
@@ -111,7 +111,7 @@
                     <div class="stat-label">最长连续（泡脚）</div>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-number">29%</div>
+                    <div class="stat-number">21%</div>
                     <div class="stat-label">本周完成率</div>
                 </div>
             </div>
@@ -216,7 +216,11 @@
                     <div class="day-date">27</div>
                     <div class="week-habits">
                         <div class="habit-row"><div class="week-habit wh-done">🦶</div><div class="wh-label">泡脚</div></div>
-                        <div class="habit-row"><div class="week-habit wh-done">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row">
+                            <div class="week-habit wh-done water-partial">💧</div>
+                            <div class="water-amount">600ml</div>
+                            <div class="wh-label">喝水</div>
+                        </div>
                         <div class="habit-row"><div class="week-habit wh-done">💩</div><div class="wh-label">大便</div></div>
                         <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
                         <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
@@ -266,8 +270,8 @@
                 <div class="progress-bar"><div class="progress-fill fill-green" style="width: 40%"></div></div>
             </div>
             <div class="progress-item">
-                <div class="progress-label"><span>💧 喝水2000ml</span><span>20%（1/5天）</span></div>
-                <div class="progress-bar"><div class="progress-fill fill-blue" style="width: 20%"></div></div>
+                <div class="progress-label"><span>💧 喝水2000ml</span><span>30%（600/2000ml）</span></div>
+                <div class="progress-bar"><div class="progress-fill fill-blue" style="width: 30%"></div></div>
             </div>
             <div class="progress-item">
                 <div class="progress-label"><span>💩 大便</span><span>20%（1/5天）</span></div>
@@ -288,7 +292,8 @@
         </div>
 
         <div class="footer">
-            📅 数据更新于 2026-03-27 | 通过 Rich哥 追踪 | 坚持就是胜利！💪
+            📅 数据更新于 2026-03-27 | 通过 Rich哥 追踪 | 喝水显示实际ml数<br>
+            💡 每次喝水告诉我ml数 → 自动更新打卡记录
         </div>
     </div>
 </body>
