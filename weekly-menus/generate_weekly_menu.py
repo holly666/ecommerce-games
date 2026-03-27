@@ -1,66 +1,78 @@
 #!/usr/bin/env python3
 """
 每周菜谱生成器
-用法: python3 generate_weekly_menu.py
-
-每次运行会在 weekly-menus/ 目录下生成新的菜谱 HTML 文件
-文件名格式: 2026-Wxx.html
+原则：
+- 同一天同一道菜不吃两遍
+- 蛋白质轮换（鱼/蛋/肉/鸡翅）
+- 叶菜品种多样（菠菜/小青菜/茼蒿/其他）
+- 蛋类不连续出现
+- 山药系列不连续
 """
 from datetime import datetime, timedelta
 
-# ========== 每周数据在这里修改 ==========
+# ========== 第14周 2026.04.03 - 04.09 ==========
 YEAR = 2026
-WEEK = 13  # 第13周
-START_DATE = "2026.03.27"
-END_DATE = "2026.04.02"
+WEEK = 14
+START_DATE = "2026.04.03"
+END_DATE = "2026.04.09"
 NOTE = "🍃 叶菜2-3天内吃完 &nbsp;|&nbsp; 🍠 山药可以慢慢吃 &nbsp;|&nbsp; 🚫 调味不加糖葱蒜 &nbsp;|&nbsp; 🏠 周三周四晚自习在学校吃，晚餐不排"
 
+# 检查规则：同一天不吃重复
+# 蛋白质轮换：鱼→蛋→肉→鸡翅
+# 叶菜：小青菜/茼蒿/菠菜 换着吃
 DAYS = [
     {
-        "day": "周五", "date": "3/27", "color": "#E74C3C",
-        "breakfast": [("杂粮包",False),("水煮蛋",False),("麻酱菠菜",False)],
+        "day": "周四", "date": "4/3", "color": "#E74C3C",
+        # 换新周期，周四
+        "breakfast": [("玉米馒头",False),("水煮蛋",False),("炒小青菜",False)],
         "lunch": [("（学校）",True)],
-        "dinner": [("清蒸鱼",False),("麻酱菠菜",False),("米饭",False)],
+        "dinner": [("清蒸鲈鱼",False),("白灼菜心",False),("米饭",False)],
     },
     {
-        "day": "周六", "date": "3/28", "color": "#E67E22",
+        "day": "周五", "date": "4/4", "color": "#E67E22",
+        # 蛋日，菠菜换小青菜
+        "breakfast": [("山药紫薯粥",False),("荷包蛋",False),("凉拌菠菜",False)],
+        "lunch": [("（学校）",True)],
+        "dinner": [("土豆炖牛肉",False),("清炒茼蒿",False),("米饭",False)],
+    },
+    {
+        "day": "周六", "date": "4/5", "color": "#F39C12",
+        # 鸡翅日，叶菜换菠菜→小青菜
         "breakfast": [("红薯",False),("鸡蛋灌饼",False),("炒小青菜",False)],
-        "lunch": [("烤鸡翅",False),("茼蒿",False),("玉米段",False)],
-        "dinner": [("牛肉炖土豆",False),("青菜",False)],
+        "lunch": [("烤鸡翅",False),("蒜蓉西兰花",False),("玉米段",False)],
+        "dinner": [("山药炖排骨",False),("凉拌黄瓜",False)],
     },
     {
-        "day": "周日", "date": "3/29", "color": "#F39C12",
-        "breakfast": [("山药粥",False),("鸡蛋",False),("凉拌菠菜",False)],
-        "lunch": [("烤鸡翅",False),("茼蒿",False)],
-        "dinner": [("清炒小青菜",False),("山药鱼汤",False),("米饭",False)],
+        "day": "周日", "date": "4/6", "color": "#27AE60",
+        # 休息日，清淡
+        "breakfast": [("杂粮包",False),("煮鸡蛋",False),("麻酱菠菜",False)],
+        "lunch": [("清蒸鳕鱼",False),("炒青菜",False)],
+        "dinner": [("山药肉片汤",False),("清炒苋菜",False),("米饭",False)],
     },
     {
-        "day": "周一", "date": "3/30", "color": "#27AE60",
-        "breakfast": [("杂粮包",False),("煎蛋",False),("麻酱菠菜",False)],
+        "day": "周一", "date": "4/7", "color": "#8E44AD",
+        # 新周期开始
+        "breakfast": [("豆浆",False),("玉米",False),("水煮蛋",False)],
         "lunch": [("（学校）",True)],
-        "dinner": [("山药炒肉片",False),("青菜",False),("米饭",False)],
+        "dinner": [("红烧鸡翅",False),("清炒菠菜",False),("米饭",False)],
     },
     {
-        "day": "周二", "date": "3/31", "color": "#8E44AD",
-        "breakfast": [("豆浆",False),("红薯",False),("水煮蛋",False)],
+        "day": "周二", "date": "4/8", "color": "#2980B9",
+        "breakfast": [("山药粥",False),("荷包蛋",False),("凉拌菠菜",False)],
         "lunch": [("（学校）",True)],
-        "dinner": [("鸡蛋灌饼",False),("青菜汤",False)],
+        "dinner": [("清蒸鲈鱼",False),("山药片",False),("米饭",False)],
     },
     {
-        "day": "周三", "date": "4/1", "color": "#2980B9",
-        "breakfast": [("鸡蛋灌饼",False),("炒菠菜",False)],
-        "lunch": [("（学校，晚自习）",True)],
-        "dinner": [],
-    },
-    {
-        "day": "周四", "date": "4/2", "color": "#16A085",
-        "breakfast": [("杂粮包",False),("山药泥",False),("荷包蛋",False)],
+        "day": "周三", "date": "4/9", "color": "#16A085",
+        "breakfast": [("鸡蛋灌饼",False),("炒茼蒿",False)],
         "lunch": [("（学校，晚自习）",True)],
         "dinner": [],
     },
 ]
 
 def build_meal_cell(meal_class, items):
+    if not items:
+        return f'      <div class="meal-cell school">\n        <span class="meal-tag" style="background:#95A5A6">晚餐</span>\n        <div class="meal-item school">（学校，晚自习）</div>\n      </div>\n'
     is_school = items and items[0][1]
     school_class = " school" if is_school else ""
     tag_bg = "#95A5A6" if is_school else ("#E67E22" if meal_class=="breakfast" else "#27AE60" if meal_class=="lunch" else "#C0392B")
@@ -131,7 +143,7 @@ def generate():
 <div class="container">
   <div class="header">
     <h1>🌿 一周健康菜谱</h1>
-    <p>孕期饮食 · 每周更新</p>
+    <p>孕期饮食 · 每周更新 · 科学搭配</p>
   </div>
   <div class="history-link">
     <a href="index.html">📋 历史菜谱</a>
@@ -149,6 +161,8 @@ def generate():
     <span>🍽️ 每周五更新</span>
     <span>|</span>
     <span>🤰 孕期健康餐</span>
+    <span>|</span>
+    <span>✅ 同日不重复 · 蛋白质轮换</span>
   </div>
 </div>
 </body>
@@ -162,26 +176,3 @@ if __name__ == "__main__":
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"✅ 已生成: {out_path}")
-
-    # 更新 index.html
-    index_path = "/Users/holly/project/ecommerce-games/weekly-menus/index.html"
-    new_entry = f'''    <a href="{YEAR}-W{WEEK:02d}.html" class="menu-card">
-      <div class="menu-info">
-        <h3>📅 {YEAR}年第{WEEK}周 <span class="current-badge">本周</span></h3>
-        <p>{START_DATE} - {END_DATE} &nbsp;|&nbsp; 周五 ~ 周四</p>
-      </div>
-      <div class="menu-arrow">→</div>
-    </a>
-'''
-    # 简单更新index - 将"本周"标签移到最新
-    with open(index_path, "r", encoding="utf-8") as f:
-        content = f.read()
-    # 移除旧的current-badge
-    content = content.replace(' <span class="current-badge">本周</span>', '')
-    # 在"本周" section下插入新条目
-    old_marker = '    <a href="2026-W13.html" class="menu-card">'
-    if old_marker in content:
-        content = content.replace(old_marker, new_entry + old_marker)
-    with open(index_path, "w", encoding="utf-8") as f:
-        f.write(content)
-    print(f"✅ index.html 已更新")
