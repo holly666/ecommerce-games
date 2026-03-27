@@ -333,6 +333,7 @@ function renderHealth() {
     const today = getToday();
     const todayHealth = healthData['健康记录']?.[today] || {};
     const symptoms = [
+        { key: "黄体酮针", icon: "💉", name: "黄体酮硬结" },
         { key: '胀气', icon: '💭', name: '胀气/排气' },
         { key: '打嗝', icon: '嗝', name: '打嗝（嗙气）' },
         { key: '夜尿', icon: '🌙', name: '夜尿' },
@@ -348,6 +349,10 @@ function renderHealth() {
                 record = data['次数'] > 0 ? `${data['次数']}次${data['时间点'].join('、')}` : '无';
                 status = data['次数'] > 0 ? `${data['次数']}次` : '无';
                 statusClass = data['次数'] > 0 ? 'status-warn' : 'status-ok';
+            } else if (s.key === '黄体酮针') {
+                record = data['处理'] || '';
+                status = data['硬结'] ? '⚠️ 有硬结' : '无';
+                statusClass = data['硬结'] ? 'status-warn' : 'status-ok';
             } else if (s.key === '大便') {
                 record = data['形状'] || '';
                 status = data['形状'] ? '正常' : '—';
