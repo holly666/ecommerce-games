@@ -7,209 +7,99 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --green: #52c784;
-            --green-light: #e8f8f0;
-            --blue: #6c9ef8;
-            --blue-light: #eef4ff;
-            --pink: #f77eb8;
-            --pink-light: #fff0f7;
-            --orange: #f5a623;
-            --orange-light: #fff8ed;
-            --purple: #9b7ef8;
-            --purple-light: #f4f0ff;
-            --red: #ff6b6b;
-            --gray-light: #f5f6f8;
-            --gray: #9b9b9b;
-            --text: #333;
+            --green: #52c784; --green-light: #e8f8f0;
+            --blue: #6c9ef8; --blue-light: #eef4ff;
+            --pink: #f77eb8; --pink-light: #fff0f7;
+            --orange: #f5a623; --orange-light: #fff8ed;
+            --purple: #9b7ef8; --purple-light: #f4f0ff;
+            --red: #ff6b6b; --gray-light: #f5f6f8;
+            --gray: #9b9b9b; --text: #333;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: #f0f4f8;
-            min-height: 100vh;
-            padding: 0;
-            color: var(--text);
+            background: #f0f4f8; min-height: 100vh; padding: 0; color: var(--text);
         }
 
         /* 顶部 */
         .header {
             background: linear-gradient(135deg, #52c784 0%, #4facfe 100%);
-            padding: 28px 20px 40px;
-            text-align: center;
-            position: relative;
+            padding: 28px 20px 40px; text-align: center; position: relative;
         }
         .header h1 { color: white; font-size: 22px; font-weight: 600; }
-        .header .week-label {
-            color: rgba(255,255,255,0.85);
-            font-size: 13px;
-            margin-top: 4px;
-        }
+        .header .week-label { color: rgba(255,255,255,0.85); font-size: 13px; margin-top: 4px; }
         .header .date {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            padding: 6px 16px;
-            color: white;
-            font-size: 13px;
-            margin-top: 10px;
+            display: inline-block; background: rgba(255,255,255,0.2);
+            border-radius: 20px; padding: 6px 16px; color: white; font-size: 13px; margin-top: 10px;
         }
 
-        /* 今日打卡卡片 */
-        .today-card {
-            background: white;
-            border-radius: 20px 20px 0 0;
-            margin: -20px -16px 0;
-            padding: 24px 20px;
+        /* 卡片通用 */
+        .card {
+            background: white; border-radius: 20px 20px 0 0;
+            margin: -20px -16px 0; padding: 24px 20px;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
         }
-        .today-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .card-title {
+            font-size: 15px; font-weight: 600; color: #333; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 6px;
         }
-        .today-title .dot {
-            width: 8px; height: 8px;
-            background: var(--green);
-            border-radius: 50%;
+        .card-title .dot {
+            width: 8px; height: 8px; background: var(--green); border-radius: 50%;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* 习惯列表 */
         .habit-list { display: flex; flex-direction: column; gap: 10px; }
         .habit-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            border-radius: 14px;
-            background: var(--gray-light);
-            transition: all 0.2s;
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border-radius: 14px; background: var(--gray-light);
         }
         .habit-item.done { background: var(--green-light); }
         .habit-item.water-done { background: var(--blue-light); }
-        .habit-item.missed { background: #fff0f0; }
         .habit-icon {
-            width: 40px; height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
         }
         .habit-item:nth-child(1) .habit-icon { background: #e8f8f0; }
         .habit-item:nth-child(2) .habit-icon { background: #eef4ff; }
         .habit-item:nth-child(3) .habit-icon { background: #fff0f7; }
         .habit-item:nth-child(4) .habit-icon { background: #fff8ed; }
         .habit-item:nth-child(5) .habit-icon { background: #f4f0ff; }
-        .habit-item.done:nth-child(1) .habit-icon { background: #d4f0e4; }
-        .habit-item.done:nth-child(2) .habit-icon { background: #d8e7ff; }
-        .habit-item.done:nth-child(3) .habit-icon { background: #ffe0ef; }
-        .habit-item.done:nth-child(4) .habit-icon { background: #ffe8c8; }
-        .habit-item.done:nth-child(5) .habit-icon { background: #e8e0ff; }
-
         .habit-info { flex: 1; }
         .habit-name { font-size: 15px; font-weight: 500; color: #333; }
         .habit-target { font-size: 12px; color: #999; margin-top: 1px; }
-        .habit-extra {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--blue);
-        }
-        .habit-status {
-            font-size: 18px;
-            flex-shrink: 0;
-        }
+        .habit-extra { font-size: 12px; font-weight: 600; color: var(--blue); margin-top: 1px; }
+        .water-progress { height: 4px; background: rgba(108,158,248,0.2); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+        .water-progress-fill { height: 100%; background: var(--blue); border-radius: 2px; transition: width 0.5s ease; }
+        .habit-status { font-size: 18px; flex-shrink: 0; }
         .status-done { color: var(--green); }
-        .status-miss { color: var(--red); opacity: 0.5; }
         .status-empty { color: var(--gray); opacity: 0.4; }
 
-        /* 喝水进度条 */
-        .water-progress {
-            margin-top: 4px;
-            height: 4px;
-            background: rgba(108,158,248,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .water-progress-fill {
-            height: 100%;
-            background: var(--blue);
-            border-radius: 2px;
-            transition: width 0.5s ease;
-        }
-
         /* 本周总览 */
-        .week-overview {
-            background: white;
-            margin: 12px -16px;
-            padding: 20px;
-        }
-        .week-overview-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 14px;
-        }
-        .week-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-        }
+        .week-overview { background: white; margin: 12px -16px; padding: 20px; }
+        .week-title { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 14px; }
+        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .week-col { text-align: center; }
-        .week-col-header {
-            font-size: 11px;
-            color: #999;
-            margin-bottom: 6px;
-        }
+        .week-col-header { font-size: 11px; color: #999; margin-bottom: 6px; }
         .week-col.today .week-col-header { color: var(--green); font-weight: 600; }
-        .week-col.today { }
-        .week-date {
-            font-size: 12px;
-            font-weight: 500;
-            color: #666;
-            margin-bottom: 8px;
-        }
+        .week-date { font-size: 12px; font-weight: 500; color: #666; margin-bottom: 8px; }
         .week-col.today .week-date {
-            background: var(--green);
-            color: white;
-            border-radius: 50%;
-            width: 24px; height: 24px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 8px;
+            background: var(--green); color: white; border-radius: 50%;
+            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;
         }
         .week-icons { display: flex; flex-direction: column; gap: 4px; align-items: center; }
         .week-icon {
-            width: 22px; height: 22px;
-            border-radius: 6px;
-            font-size: 11px;
-            display: flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 6px;
+            font-size: 11px; display: flex; align-items: center; justify-content: center;
         }
         .wi-done { background: var(--green-light); }
         .wi-miss { background: #ffe8e8; }
         .wi-empty { background: var(--gray-light); }
         .wi-water { font-size: 9px; color: var(--blue); font-weight: 600; }
 
-        /* 底部统计 */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 12px -16px 0;
-            padding: 0 16px 24px;
-            background: white;
-        }
-        .stat-item {
-            text-align: center;
-            padding: 16px 8px;
-            border-radius: 14px;
-            background: var(--gray-light);
-        }
+        /* 统计 */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 -16px; padding: 0 16px 24px; background: white; }
+        .stat-item { text-align: center; padding: 16px 8px; border-radius: 14px; background: var(--gray-light); }
         .stat-item:nth-child(1) { background: var(--green-light); }
         .stat-item:nth-child(2) { background: var(--blue-light); }
         .stat-item:nth-child(3) { background: var(--orange-light); }
@@ -219,66 +109,42 @@
         .stat-item:nth-child(3) .stat-num { color: var(--orange); }
         .stat-label { font-size: 11px; color: #888; margin-top: 2px; }
 
-        /* 打卡记录说明 */
-
         /* 健康追踪 */
-        .health-card {
-            background: white;
-            margin: 12px -16px;
-            padding: 20px;
-            border-radius: 20px;
-        }
-        .health-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .health-card { background: white; margin: 12px -16px; padding: 20px; }
         .symptom-list { display: flex; flex-direction: column; gap: 10px; }
         .symptom-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            background: var(--gray-light);
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 12px; background: var(--gray-light);
         }
-        .symptom-icon { font-size: 18px; }
+        .symptom-icon { font-size: 18px; width: 28px; text-align: center; }
         .symptom-info { flex: 1; }
         .symptom-name { font-size: 14px; font-weight: 500; color: #333; }
         .symptom-record { font-size: 12px; color: #888; margin-top: 1px; }
         .symptom-status { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 10px; }
         .status-ok { background: var(--green-light); color: var(--green); }
         .status-warn { background: #fff3e0; color: var(--orange); }
-        .status-bad { background: #ffe8e8; color: var(--red); }
         .status-none { background: var(--gray-light); color: var(--gray); }
 
-        /* 健康历史 */
-        .health-history {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid #f0f0f0;
+        /* 健康历史 - 可折叠 */
+        .health-history { margin-top: 14px; padding-top: 14px; border-top: 1px solid #f0f0f0; }
+        .history-toggle {
+            font-size: 12px; color: #999; cursor: pointer;
+            display: flex; align-items: center; gap: 4px; user-select: none;
         }
-        .health-history-title { font-size: 12px; color: #999; margin-bottom: 8px; }
+        .history-toggle:hover { color: #666; }
+        .history-content { display: none; margin-top: 10px; }
+        .history-content.open { display: block; }
         .history-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
-        .history-item {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 12px;
-        }
-        .history-date { font-weight: 600; color: #666; }
-        .history-detail { color: #999; margin-top: 1px; }
+        .history-item { background: #f8f9fa; border-radius: 8px; padding: 8px 10px; }
+        .history-date { font-weight: 600; color: #666; font-size: 12px; }
+        .history-detail { color: #999; font-size: 11px; margin-top: 1px; }
 
         /* Desktop */
         @media (min-width: 600px) {
             body { padding: 20px; }
-            .header { border-radius: 20px; margin-bottom: 20px; }
-            .today-card { border-radius: 20px; margin: 0 0 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+            .card { border-radius: 20px; margin: 0 0 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
             .week-overview { border-radius: 20px; margin: 12px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+            .health-card { border-radius: 20px; margin: 12px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
             .stats-row { border-radius: 20px 20px 0 0; margin: 0; padding: 20px; }
         }
     </style>
@@ -286,233 +152,295 @@
 <body>
     <div class="header">
         <h1>🌿 每日习惯打卡</h1>
-        <div class="week-label">第13周 · 3月23日-3月29日</div>
-        <div class="date">📅 3月27日 周五</div>
+        <div class="week-label" id="weekLabel">第13周 · 3月23日-3月29日</div>
+        <div class="date" id="todayLabel">📅 3月27日 周五</div>
     </div>
 
     <!-- 今日打卡 -->
-    <div class="today-card">
-        <div class="today-title">
-            <div class="dot"></div>
-            今日打卡
-        </div>
-        <div class="habit-list">
-            <!-- 泡脚 -->
-            <div class="habit-item done">
-                <div class="habit-icon">🦶</div>
-                <div class="habit-info">
-                    <div class="habit-name">泡脚</div>
-                    <div class="habit-target">每日21:00</div>
-                </div>
-                <div class="habit-status status-done">✓</div>
-            </div>
-            <!-- 喝水 -->
-            <div class="habit-item water-done">
-                <div class="habit-icon">💧</div>
-                <div class="habit-info">
-                    <div class="habit-name">喝水</div>
-                    <div class="habit-target">目标 2000ml</div>
-                    <div class="habit-extra">800ml · 还差 1200ml</div>
-                    <div class="water-progress">
-                        <div class="water-progress-fill" style="width: 40%"></div>
-                    </div>
-                </div>
-                <div class="habit-status status-done">40%</div>
-            </div>
-            <!-- 大便 -->
-            <div class="habit-item done">
-                <div class="habit-icon">💩</div>
-                <div class="habit-info">
-                    <div class="habit-name">大便</div>
-                    <div class="habit-target">每日1次</div>
-                </div>
-                <div class="habit-status status-done">✓</div>
-            </div>
-            <!-- 锻炼 -->
-            <div class="habit-item done">
-                <div class="habit-icon">🏃</div>
-                <div class="habit-info">
-                    <div class="habit-name">锻炼</div>
-                    <div class="habit-target">每周3-4次</div>
-                    <div class="habit-extra">今日已散步 30 分钟</div>
-                </div>
-                <div class="habit-status status-done">✓</div>
-            </div>
-            <!-- 睡觉 -->
-            <div class="habit-item">
-                <div class="habit-icon">😴</div>
-                <div class="habit-info">
-                    <div class="habit-name">22点前睡觉</div>
-                    <div class="habit-target">每日</div>
-                </div>
-                <div class="habit-status status-empty">—</div>
-            </div>
-        </div>
+    <div class="card">
+        <div class="card-title"><div class="dot"></div>今日打卡</div>
+        <div class="habit-list" id="habitList"></div>
     </div>
 
     <!-- 本周总览 -->
     <div class="week-overview">
-        <div class="week-overview-title">📅 本周打卡总览</div>
-        <div class="week-grid">
-            <!-- 周一 3/23 -->
-            <div class="week-col">
-                <div class="week-col-header">周一</div>
-                <div class="week-date">23</div>
-                <div class="week-icons">
-                    <div class="week-icon wi-empty">🦶</div>
-                    <div class="week-icon wi-empty wi-water">💧</div>
-                    <div class="week-icon wi-empty">💩</div>
-                    <div class="week-icon wi-empty">🏃</div>
-                    <div class="week-icon wi-empty">😴</div>
-                </div>
-            </div>
-            <!-- 周二 3/24 -->
-            <div class="week-col">
-                <div class="week-col-header">周二</div>
-                <div class="week-date">24</div>
-                <div class="week-icons">
-                    <div class="week-icon wi-empty">🦶</div>
-                    <div class="week-icon wi-empty wi-water">💧</div>
-                    <div class="week-icon wi-empty">💩</div>
-                    <div class="week-icon wi-empty">🏃</div>
-                    <div class="week-icon wi-empty">😴</div>
-                </div>
-            </div>
-            <!-- 周三 3/25 -->
-            <div class="week-col">
-                <div class="week-col-header">周三</div>
-                <div class="week-date">25</div>
-                <div class="week-icons">
-                    <div class="week-icon wi-empty">🦶</div>
-                    <div class="week-icon wi-empty wi-water">💧</div>
-                    <div class="week-icon wi-empty">💩</div>
-                    <div class="week-icon wi-empty">🏃</div>
-                    <div class="week-icon wi-empty">😴</div>
-                </div>
-            </div>
-            <!-- 周四 3/26 -->
-            <div class="week-col">
-                <div class="week-col-header">周四</div>
-                <div class="week-date">26</div>
-                <div class="week-icons">
-                    <div class="week-icon wi-done">🦶</div>
-                    <div class="week-icon wi-empty wi-water">💧</div>
-                    <div class="week-icon wi-empty">💩</div>
-                    <div class="week-icon wi-empty">🏃</div>
-                    <div class="week-icon wi-empty">😴</div>
-                </div>
-            </div>
-            <!-- 周五 3/27 today -->
-            <div class="week-col today">
-                <div class="week-col-header">周五</div>
-                <div class="week-date">27</div>
-                <div class="week-icons">
-                    <div class="week-icon wi-done">🦶</div>
-                    <div class="week-icon wi-water" style="background:#d8e7ff">600</div>
-                    <div class="week-icon wi-done">💩</div>
-                    <div class="week-icon wi-empty">🏃</div>
-                    <div class="week-icon wi-empty">😴</div>
-                </div>
-            </div>
-            <!-- 周六 3/28 -->
-            <div class="week-col">
-                <div class="week-col-header">周六</div>
-                <div class="week-date">28</div>
-                <div class="week-icons">
-                    <div class="week-icon wi-empty">🦶</div>
-                    <div class="week-icon wi-empty wi-water">💧</div>
-                    <div class="week-icon wi-empty">💩</div>
-                    <div class="week-icon wi-empty">🏃</div>
-                    <div class="week-icon wi-empty">😴</div>
-                </div>
-            </div>
-            <!-- 周日 3/29 -->
-            <div class="week-col">
-                <div class="week-col-header">周日</div>
-                <div class="week-date">29</div>
-                <div class="week-icons">
-                    <div class="week-icon wi-empty">🦶</div>
-                    <div class="week-icon wi-empty wi-water">💧</div>
-                    <div class="week-icon wi-empty">💩</div>
-                    <div class="week-icon wi-empty">🏃</div>
-                    <div class="week-icon wi-empty">😴</div>
-                </div>
-            </div>
-        </div>
+        <div class="week-title">📅 本周打卡总览</div>
+        <div class="week-grid" id="weekGrid"></div>
     </div>
 
     <!-- 统计 -->
-    <div class="stats-row">
-        <div class="stat-item">
-            <div class="stat-num">2</div>
-            <div class="stat-label">今日完成</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-num">600ml</div>
-            <div class="stat-label">今日喝水</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-num">2天</div>
-            <div class="stat-label">泡脚连续</div>
-        </div>
-    </div>
+    <div class="stats-row" id="statsRow"></div>
 
     <!-- 健康追踪 -->
     <div class="health-card">
-        <div class="health-title">🏥 今日健康状况</div>
-        <div class="symptom-list">
-            <!-- 胀气 -->
-            <div class="symptom-item">
-                <div class="symptom-icon">💭</div>
-                <div class="symptom-info">
-                    <div class="symptom-name">胀气/排气</div>
-                    <div class="symptom-record">持续，肠道排气明显</div>
-                </div>
-                <div class="symptom-status status-warn">⚠️ 有</div>
-            </div>
-            <!-- 打嗝 -->
-            <div class="symptom-item">
-                <div class="symptom-icon">嗝</div>
-                <div class="symptom-info">
-                    <div class="symptom-name">打嗝（嗳气）</div>
-                    <div class="symptom-record">今天有</div>
-                </div>
-                <div class="symptom-status status-warn">⚠️ 有</div>
-            </div>
-            <!-- 夜尿 -->
-            <div class="symptom-item">
-                <div class="symptom-icon">🌙</div>
-                <div class="symptom-info">
-                    <div class="symptom-name">夜尿</div>
-                    <div class="symptom-record">暂无记录 / 3-4点起夜</div>
-                </div>
-                <div class="symptom-status status-none">—</div>
-            </div>
-            <!-- 大便 -->
-            <div class="symptom-item">
-                <div class="symptom-icon">💩</div>
-                <div class="symptom-info">
-                    <div class="symptom-name">大便情况</div>
-                    <div class="symptom-record">昨晚，正常</div>
-                </div>
-                <div class="symptom-status status-ok">正常</div>
-            </div>
-        </div>
-
-        <!-- 历史记录 -->
+        <div class="card-title">🏥 今日健康状况</div>
+        <div class="symptom-list" id="symptomList"></div>
         <div class="health-history">
-            <div class="health-history-title">📋 近两日记录</div>
-            <div class="history-grid">
-                <div class="history-item">
-                    <div class="history-date">03-27（今日）</div>
-                    <div class="history-detail">胀气⚠️ · 打嗝⚠️ · 夜尿—</div>
-                </div>
-                <div class="history-item">
-                    <div class="history-date">03-26（周四）</div>
-                    <div class="history-detail">胀气明显⚠️开车时</div>
-                </div>
+            <div class="history-toggle" id="historyToggle" onclick="toggleHistory()">
+                📋 历史记录（点击展开） ▾
+            </div>
+            <div class="history-content" id="historyContent">
+                <div class="history-grid" id="historyGrid"></div>
             </div>
         </div>
     </div>
+
+<script>
+// ============ 数据（内嵌，可被外链JSON覆盖）===========
+
+const HABITS = [
+    { id: "paojiao", icon: "🦶", name: "泡脚", target: "每日21:00" },
+    { id: "heshui",  icon: "💧", name: "喝水", target: "每日2000ml", isWater: true },
+    { id: "dabian",   icon: "💩", name: "大便", target: "每日1次" },
+    { id: "duanlian", icon: "🏃", name: "锻炼", target: "每周3-4次" },
+    { id: "shuijiao", icon: "😴", name: "22点前睡觉", target: "每日" }
+];
+
+const WATER_TARGET = 2000;
+
+let healthData = {};
+let habitData = {};
+
+// ============ 今日日期 ============
+function getToday() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+
+function formatDate(dateStr) {
+    const [y,m,d] = dateStr.split('-');
+    return `${parseInt(m)}-${parseInt(d)}`;
+}
+
+function getWeekday(dateStr) {
+    const d = new Date(dateStr);
+    const days = ['周日','周一','周二','周三','周四','周五','周六'];
+    return days[d.getDay()];
+}
+
+// ============ 渲染习惯打卡 ============
+function renderHabits() {
+    const today = getToday();
+    const record = habitData[today] || {};
+    const list = document.getElementById('habitList');
+    let doneCount = 0;
+
+    let html = '';
+    for (const h of HABITS) {
+        const val = record[h.id] || 0;
+        const isDone = h.id === 'heshui' ? val >= WATER_TARGET : val >= 1;
+        if (isDone) doneCount++;
+
+        const extraClass = isDone ? (h.isWater ? 'water-done' : 'done') : '';
+        let statusIcon = '—';
+        let extraHtml = '';
+
+        if (h.isWater) {
+            const pct = Math.min(100, Math.round(val / WATER_TARGET * 100));
+            extraHtml = `
+                <div class="habit-extra">${val}ml · 还差 ${Math.max(0, WATER_TARGET - val)}ml</div>
+                <div class="water-progress"><div class="water-progress-fill" style="width:${pct}%"></div></div>`;
+            statusIcon = pct + '%';
+        } else if (h.id === 'duanlian' && val > 0) {
+            extraHtml = `<div class="habit-extra">今日已运动 ${val} 分钟</div>`;
+            statusIcon = '✓';
+        } else if (isDone) {
+            statusIcon = '✓';
+        }
+
+        html += `
+        <div class="habit-item ${extraClass}">
+            <div class="habit-icon">${h.icon}</div>
+            <div class="habit-info">
+                <div class="habit-name">${h.name}</div>
+                <div class="habit-target">${h.target}</div>
+                ${extraHtml}
+            </div>
+            <div class="habit-status ${isDone ? 'status-done' : 'status-empty'}">${statusIcon}</div>
+        </div>`;
+    }
+    list.innerHTML = html;
+
+    // 统计
+    const waterVal = record['heshui'] || 0;
+    const streak = getStreak('paojiao');
+    document.getElementById('statsRow').innerHTML = `
+        <div class="stat-item"><div class="stat-num">${doneCount}</div><div class="stat-label">今日完成</div></div>
+        <div class="stat-item"><div class="stat-num">${waterVal}ml</div><div class="stat-label">今日喝水</div></div>
+        <div class="stat-item"><div class="stat-num">${streak}天</div><div class="stat-label">泡脚连续</div></div>
+    `;
+}
+
+function getStreak(habitId) {
+    const dates = Object.keys(habitData).sort().reverse();
+    let streak = 0;
+    for (const d of dates) {
+        const val = habitData[d][habitId] || 0;
+        if (habitId === 'heshui') {
+            if (val >= WATER_TARGET) streak++;
+            else break;
+        } else {
+            if (val >= 1) streak++;
+            else break;
+        }
+    }
+    return streak;
+}
+
+// ============ 渲染本周总览 ============
+function renderWeekView() {
+    const today = new Date();
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - today.getDay() + 1);
+
+    const weekDates = [];
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        weekDates.push(d.toISOString().split('T')[0]);
+    }
+
+    const dayNames = ['周一','周二','周三','周四','周五','周六','周日'];
+    let html = '';
+    for (let i = 0; i < 7; i++) {
+        const d = weekDates[i];
+        const isToday = d === getToday();
+        const record = habitData[d] || {};
+        const dateNum = parseInt(d.split('-')[2]);
+
+        const icons = HABITS.map(h => {
+            const val = record[h.id] || 0;
+            const isDone = h.id === 'heshui' ? val >= WATER_TARGET : val >= 1;
+            if (h.id === 'heshui') {
+                if (val > 0) return `<div class="week-icon wi-water" style="background:#d8e7ff">${val}</div>`;
+                return `<div class="week-icon wi-empty wi-water">💧</div>`;
+            }
+            return `<div class="week-icon ${isDone ? 'wi-done' : 'wi-empty'}">${h.icon}</div>`;
+        }).join('');
+
+        html += `
+        <div class="week-col ${isToday ? 'today' : ''}">
+            <div class="week-col-header">${dayNames[i]}</div>
+            <div class="week-date">${isToday ? '' : dateNum}</div>
+            <div class="week-icons">${icons}</div>
+        </div>`;
+    }
+    document.getElementById('weekGrid').innerHTML = html;
+}
+
+// ============ 渲染健康追踪 ============
+function renderHealth() {
+    const today = getToday();
+    const todayHealth = healthData['健康记录']?.[today] || {};
+    const symptoms = [
+        { key: '胀气', icon: '💭', name: '胀气/排气' },
+        { key: '打嗝', icon: '嗝', name: '打嗝（嗙气）' },
+        { key: '夜尿', icon: '🌙', name: '夜尿' },
+        { key: '大便', icon: '💩', name: '大便情况' }
+    ];
+
+    let html = '';
+    for (const s of symptoms) {
+        const data = todayHealth[s.key];
+        let status = '—', statusClass = 'status-none', record = '';
+        if (data !== undefined) {
+            if (s.key === '夜尿') {
+                record = data['次数'] > 0 ? `${data['次数']}次${data['时间点'].join('、')}` : '无';
+                status = data['次数'] > 0 ? `${data['次数']}次` : '无';
+                statusClass = data['次数'] > 0 ? 'status-warn' : 'status-ok';
+            } else if (s.key === '大便') {
+                record = data['形状'] || '';
+                status = data['形状'] ? '正常' : '—';
+                statusClass = data['形状'] ? 'status-ok' : 'status-none';
+            } else {
+                record = data['详情'] || '';
+                status = data['有'] ? '⚠️ 有' : '无';
+                statusClass = data['有'] ? 'status-warn' : 'status-ok';
+            }
+        }
+        html += `
+        <div class="symptom-item">
+            <div class="symptom-icon">${s.icon}</div>
+            <div class="symptom-info">
+                <div class="symptom-name">${s.name}</div>
+                <div class="symptom-record">${record || '暂无记录'}</div>
+            </div>
+            <div class="symptom-status ${statusClass}">${status}</div>
+        </div>`;
+    }
+    document.getElementById('symptomList').innerHTML = html;
+
+    // 历史记录
+    renderHealthHistory();
+}
+
+function renderHealthHistory() {
+    const records = healthData['健康记录'] || {};
+    const dates = Object.keys(records).sort().reverse().slice(0, 14); // 最近14天
+    const today = getToday();
+
+    let html = '';
+    for (const d of dates) {
+        if (d === today) continue; // 今日不重复显示
+        const r = records[d];
+        const parts = [];
+        if (r['胀气']?.['有']) parts.push('胀气⚠️');
+        if (r['打嗝']?.['有']) parts.push('打嗝⚠️');
+        if (r['夜尿']?.['次数'] > 0) parts.push(`夜尿${r['夜尿']['次数']}次`);
+        if (r['大便']?.['形状']) parts.push('大便✅');
+
+        if (parts.length === 0) continue;
+        html += `
+        <div class="history-item">
+            <div class="history-date">${formatDate(d)}（${getWeekday(d)}）</div>
+            <div class="history-detail">${parts.join(' · ')}</div>
+        </div>`;
+    }
+
+    if (!html) {
+        html = '<div class="history-item"><div class="history-date">暂无历史</div></div>';
+    }
+    document.getElementById('historyGrid').innerHTML = html;
+}
+
+function toggleHistory() {
+    document.getElementById('historyContent').classList.toggle('open');
+    const toggle = document.getElementById('historyToggle');
+    const isOpen = document.getElementById('historyContent').classList.contains('open');
+    toggle.innerHTML = isOpen
+        ? '📋 历史记录（点击收起） ▴'
+        : '📋 历史记录（点击展开） ▾';
+}
+
+// ============ 加载数据 ============
+async function loadData() {
+    try {
+        const [healthRes, habitRes] = await Promise.all([
+            fetch('health-data.json'),
+            fetch('habit-data.json')
+        ]);
+        if (healthRes.ok) healthData = await healthRes.json();
+        if (habitRes.ok) habitData = await habitRes.json();
+    } catch(e) {
+        console.log('Using embedded data (fetch failed or running locally)');
+    }
+    renderAll();
+}
+
+function renderAll() {
+    renderHabits();
+    renderWeekView();
+    renderHealth();
+
+    // 更新顶部日期
+    const today = new Date();
+    const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+    document.getElementById('todayLabel').textContent =
+        `📅 ${today.getMonth()+1}月${today.getDate()}日 ${weekdays[today.getDay()]}`;
+}
+
+// 启动
+loadData();
+</script>
 </body>
 </html>
