@@ -26,7 +26,7 @@ DAYS = [
         # 换新周期，周四
         "breakfast": [("玉米馒头",False),("水煮蛋",False),("炒小青菜",False)],
         "lunch": [("（学校）",True)],
-        "dinner": [("清蒸鲈鱼",False),("清炒苋菜",False),("米饭",False)],
+        "dinner": [("清蒸鲈鱼",False),("清炒青菜",False),("米饭",False)],
     },
     {
         "day": "周五", "date": "4/4", "color": "#E67E22",
@@ -47,7 +47,7 @@ DAYS = [
         # 休息日，清淡
         "breakfast": [("杂粮包",False),("煮鸡蛋",False),("麻酱菠菜",False)],
         "lunch": [("清蒸鳕鱼",False),("炒青菜",False)],
-        "dinner": [("山药肉片汤",False),("清炒苋菜",False),("米饭",False)],
+        "dinner": [("山药肉片汤",False),("清炒青菜",False),("米饭",False)],
     },
     {
         "day": "周一", "date": "4/7", "color": "#8E44AD",
