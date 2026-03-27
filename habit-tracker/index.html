@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 习惯打卡追踪 - 第13周</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: white; text-align: center; margin-bottom: 8px; font-size: 28px; }
+        .subtitle { color: rgba(255,255,255,0.8); text-align: center; margin-bottom: 30px; font-size: 14px; }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .card h2 { color: #333; margin-bottom: 15px; font-size: 18px; }
+
+        /* 统计卡片 */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .stat-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        .stat-box:nth-child(2) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stat-box:nth-child(3) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .stat-number { font-size: 36px; font-weight: bold; }
+        .stat-label { font-size: 14px; opacity: 0.9; }
+
+        /* 连续打卡 */
+        .streak-card { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .streak-item { background: #f8f9fa; border-radius: 15px; padding: 18px; text-align: center; }
+        .streak-icon { font-size: 28px; margin-bottom: 8px; }
+        .streak-count { font-size: 24px; font-weight: bold; color: #333; }
+        .streak-label { font-size: 11px; color: #666; margin-top: 4px; }
+
+        /* 周视图 */
+        .week-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .week-day { background: #f8f9fa; border-radius: 12px; padding: 12px 6px; text-align: center; }
+        .week-day.is-today { background: #e8f4fd; border: 2px solid #4facfe; }
+        .day-name { font-size: 11px; color: #666; margin-bottom: 6px; }
+        .day-date { font-size: 13px; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .week-habits { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+        .week-habit {
+            width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 13px;
+        }
+        .wh-done { background: #43e97b; }
+        .wh-missed { background: #ff6b6b; }
+        .wh-empty { background: #eee; }
+        .wh-label { font-size: 9px; color: #999; margin-top: 1px; }
+        .habit-row { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+
+        /* 进度条 */
+        .progress-item { margin-bottom: 14px; }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; }
+        .progress-bar { height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
+        .fill-green { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        .fill-blue { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .fill-purple { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .fill-orange { background: linear-gradient(90deg, #fa709a, #fee140); }
+        .fill-pink { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .fill-teal { background: linear-gradient(90deg, #38f9d7, #4facfe); }
+
+        /* Legend */
+        .legend { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 12px; color: #666; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        .footer { text-align: center; color: white; margin-top: 20px; font-size: 12px; opacity: 0.8; }
+
+        /* 打卡按钮 */
+        .checkin-section { text-align: center; margin-top: 10px; }
+        .checkin-hint { font-size: 12px; color: #999; margin-top: 8px; }
+
+        @media (max-width: 600px) {
+            .stats { grid-template-columns: repeat(3, 1fr); }
+            .streak-card { grid-template-columns: repeat(3, 1fr); }
+            .week-view { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+            .week-day { padding: 10px 3px; }
+            .week-habit { width: 22px; height: 22px; font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 习惯打卡追踪</h1>
+        <p class="subtitle">2026年第13周（3月23日 - 3月29日）</p>
+
+        <!-- 本周统计 -->
+        <div class="card">
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">当前习惯数</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">2天</div>
+                    <div class="stat-label">最长连续（泡脚）</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">29%</div>
+                    <div class="stat-label">本周完成率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 连续打卡 -->
+        <div class="card">
+            <h2>🔥 各习惯连续打卡</h2>
+            <div class="streak-card">
+                <div class="streak-item">
+                    <div class="streak-icon">🦶</div>
+                    <div class="streak-count">2天</div>
+                    <div class="streak-label">泡脚</div>
+                </div>
+                <div class="streak-item">
+                    <div class="streak-icon">💧</div>
+                    <div class="streak-count">1天</div>
+                    <div class="streak-label">喝水</div>
+                </div>
+                <div class="streak-item">
+                    <div class="streak-icon">💩</div>
+                    <div class="streak-count">1天</div>
+                    <div class="streak-label">大便</div>
+                </div>
+                <div class="streak-item">
+                    <div class="streak-icon">🏃</div>
+                    <div class="streak-count">0天</div>
+                    <div class="streak-label">锻炼</div>
+                </div>
+                <div class="streak-item">
+                    <div class="streak-icon">😴</div>
+                    <div class="streak-count">0天</div>
+                    <div class="streak-label">22点前睡</div>
+                </div>
+                <div class="streak-item">
+                    <div class="streak-icon">🌙</div>
+                    <div class="streak-count">0天</div>
+                    <div class="streak-label">夜尿</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 本周打卡日历 -->
+        <div class="card">
+            <h2>📅 本周打卡情况</h2>
+            <div class="week-view">
+                <!-- 周一 3/23 -->
+                <div class="week-day">
+                    <div class="day-name">周一</div>
+                    <div class="day-date">23</div>
+                    <div class="week-habits">
+                        <div class="habit-row"><div class="week-habit wh-empty">🦶</div><div class="wh-label">泡脚</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💩</div><div class="wh-label">大便</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🌙</div><div class="wh-label">夜尿</div></div>
+                    </div>
+                </div>
+                <!-- 周二 3/24 -->
+                <div class="week-day">
+                    <div class="day-name">周二</div>
+                    <div class="day-date">24</div>
+                    <div class="week-habits">
+                        <div class="habit-row"><div class="week-habit wh-empty">🦶</div><div class="wh-label">泡脚</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💩</div><div class="wh-label">大便</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🌙</div><div class="wh-label">夜尿</div></div>
+                    </div>
+                </div>
+                <!-- 周三 3/25 -->
+                <div class="week-day">
+                    <div class="day-name">周三</div>
+                    <div class="day-date">25</div>
+                    <div class="week-habits">
+                        <div class="habit-row"><div class="week-habit wh-empty">🦶</div><div class="wh-label">泡脚</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💩</div><div class="wh-label">大便</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🌙</div><div class="wh-label">夜尿</div></div>
+                    </div>
+                </div>
+                <!-- 周四 3/26 -->
+                <div class="week-day">
+                    <div class="day-name">周四</div>
+                    <div class="day-date">26</div>
+                    <div class="week-habits">
+                        <div class="habit-row"><div class="week-habit wh-done">🦶</div><div class="wh-label">泡脚</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💩</div><div class="wh-label">大便</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🌙</div><div class="wh-label">夜尿</div></div>
+                    </div>
+                </div>
+                <!-- 周五 3/27 -->
+                <div class="week-day is-today">
+                    <div class="day-name">周五</div>
+                    <div class="day-date">27</div>
+                    <div class="week-habits">
+                        <div class="habit-row"><div class="week-habit wh-done">🦶</div><div class="wh-label">泡脚</div></div>
+                        <div class="habit-row"><div class="week-habit wh-done">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row"><div class="week-habit wh-done">💩</div><div class="wh-label">大便</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🌙</div><div class="wh-label">夜尿</div></div>
+                    </div>
+                </div>
+                <!-- 周六 3/28 -->
+                <div class="week-day">
+                    <div class="day-name">周六</div>
+                    <div class="day-date">28</div>
+                    <div class="week-habits">
+                        <div class="habit-row"><div class="week-habit wh-empty">🦶</div><div class="wh-label">泡脚</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💩</div><div class="wh-label">大便</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🌙</div><div class="wh-label">夜尿</div></div>
+                    </div>
+                </div>
+                <!-- 周日 3/29 -->
+                <div class="week-day">
+                    <div class="day-name">周日</div>
+                    <div class="day-date">29</div>
+                    <div class="week-habits">
+                        <div class="habit-row"><div class="week-habit wh-empty">🦶</div><div class="wh-label">泡脚</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💧</div><div class="wh-label">喝水</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">💩</div><div class="wh-label">大便</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🏃</div><div class="wh-label">锻炼</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">😴</div><div class="wh-label">睡觉</div></div>
+                        <div class="habit-row"><div class="week-habit wh-empty">🌙</div><div class="wh-label">夜尿</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#43e97b"></div> 已完成</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> 未完成</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#eee"></div> 未记录</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#4facfe;outline:2px solid #4facfe;outline-offset:2px"></div> 今天</div>
+            </div>
+        </div>
+
+        <!-- 各习惯本周进度 -->
+        <div class="card">
+            <h2>📈 各习惯本周进度</h2>
+            <div class="progress-item">
+                <div class="progress-label"><span>🦶 泡脚</span><span>40%（2/5天）</span></div>
+                <div class="progress-bar"><div class="progress-fill fill-green" style="width: 40%"></div></div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label"><span>💧 喝水2000ml</span><span>20%（1/5天）</span></div>
+                <div class="progress-bar"><div class="progress-fill fill-blue" style="width: 20%"></div></div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label"><span>💩 大便</span><span>20%（1/5天）</span></div>
+                <div class="progress-bar"><div class="progress-fill fill-pink" style="width: 20%"></div></div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label"><span>🏃 锻炼</span><span>0%（0/5天）</span></div>
+                <div class="progress-bar"><div class="progress-fill fill-purple" style="width: 0%"></div></div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label"><span>😴 22点前睡觉</span><span>0%（0/5天）</span></div>
+                <div class="progress-bar"><div class="progress-fill fill-orange" style="width: 0%"></div></div>
+            </div>
+            <div class="progress-item" style="margin-bottom: 0">
+                <div class="progress-label"><span>🌙 夜尿记录</span><span>0%（0/5天）</span></div>
+                <div class="progress-bar"><div class="progress-fill fill-teal" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            📅 数据更新于 2026-03-27 | 通过 Rich哥 追踪 | 坚持就是胜利！💪
+        </div>
+    </div>
+</body>
+</html>
