@@ -39,7 +39,7 @@ DAYS = [
         "day": "周六", "date": "4/5", "color": "#F39C12",
         # 鸡翅日，叶菜换菠菜→小青菜
         "breakfast": [("红薯",False),("鸡蛋灌饼",False),("炒小青菜",False)],
-        "lunch": [("烤鸡翅",False),("蒜蓉西兰花",False),("玉米段",False)],
+        "lunch": [("烤鸡翅",False),("蒜蓉花菜",False),("玉米段",False)],
         "dinner": [("山药炖排骨",False),("凉拌黄瓜",False)],
     },
     {
