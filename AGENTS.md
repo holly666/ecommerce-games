@@ -47,6 +47,29 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - When you make a mistake → document it so future-you doesn't repeat it
 - **Text > Brain** 📝
 
+## 任务执行规范
+
+### 任务完成后必须完成的四个问题
+
+每次任务交付时，不只是"做完"，要同时想清楚：
+
+1. **核心问题是什么** → 想清楚，不一定显式记录
+2. **用什么方法/框架** → 有复用价值的沉淀到 AGENTS.md 或 skill 文件
+3. **方法能否复用** → 能复用的写成通用方法论
+4. **任务闭环检查**：
+   - [ ] 收尾工作处理完毕（不留给用户决定）
+   - [ ] 输出已过滤无效条目
+   - [ ] 方法论已沉淀
+
+### 反思工作流（强制）
+
+每次被纠正或遇到问题时：
+
+1. 分析问题 → 根本原因是什么
+2. 总结教训 → 以后怎么避免
+3. **立即写纠错记录** → corrections.md（不得跳过此步）
+4. 更新统计 → 同类错误3次自动升级到硬规则
+
 ## Safety
 
 - Don't exfiltrate private data. Ever.

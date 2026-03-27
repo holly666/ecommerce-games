@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机抽人</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px;
+        }
+        .container { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 40px; 
+            text-align: center; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+        .title { 
+            font-size: 1.8em; 
+            color: #333; 
+            margin-bottom: 10px; 
+        }
+        .subtitle { 
+            color: #666; 
+            margin-bottom: 30px; 
+            font-size: 0.9em;
+        }
+        .number-display { 
+            font-size: 8em; 
+            font-weight: bold; 
+            color: #667eea; 
+            margin: 30px 0;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn { 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
+            border: none; 
+            padding: 18px 50px; 
+            font-size: 1.2em; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
+        .btn:disabled { 
+            opacity: 0.6; 
+            cursor: not-allowed;
+        }
+        .btn-stop { 
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            margin-top: 15px;
+        }
+        .history { 
+            margin-top: 30px; 
+            padding-top: 20px; 
+            border-top: 1px solid #eee;
+        }
+        .history-title { 
+            color: #666; 
+            font-size: 0.85em; 
+            margin-bottom: 10px;
+        }
+        .history-list { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            justify-content: center;
+        }
+        .history-item { 
+            background: #f0f0f0; 
+            padding: 5px 12px; 
+            border-radius: 15px; 
+            font-size: 0.85em; 
+            color: #666;
+        }
+        .history-item:last-child { 
+            background: #667eea; 
+            color: white;
+        }
+        .settings { 
+            margin-bottom: 20px; 
+            padding: 15px; 
+            background: #f8f9fa; 
+            border-radius: 10px;
+        }
+        .settings label { 
+            color: #666; 
+            font-size: 0.9em;
+        }
+        .settings input { 
+            width: 60px; 
+            padding: 8px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            text-align: center;
+            font-size: 1em;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🎲 随机抽人</h1>
+        <p class="subtitle">课堂随机点名工具</p>
+        
+        <div class="settings">
+            <label>学号范围：</label>
+            <input type="number" id="minNum" value="1" min="1">
+            <span>~</span>
+            <input type="number" id="maxNum" value="43" min="1">
+        </div>
+        
+        <div class="number-display" id="display">?</div>
+        
+        <button class="btn" id="startBtn" onclick="start抽()">开始抽</button>
+        
+        <div class="history" id="history" style="display:none;">
+            <div class="history-title">已抽到：</div>
+            <div class="history-list" id="historyList"></div>
+        </div>
+    </div>
+
+    <script>
+        let timer = null;
+        let is抽ing = false;
+        let history = [];
+        
+        function start抽() {
+            if (is抽ing) {
+                stop抽();
+                return;
+            }
+            
+            const min = parseInt(document.getElementById('minNum').value);
+            const max = parseInt(document.getElementById('maxNum').value);
+            
+            if (min > max) {
+                alert('起始学号不能大于结束学号！');
+                return;
+            }
+            
+            is抽ing = true;
+            document.getElementById('startBtn').textContent = '停止';
+            document.getElementById('startBtn').classList.add('btn-stop');
+            
+            // 快速滚动效果
+            let speed = 50;
+            timer = setInterval(() => {
+                const num = Math.floor(Math.random() * (max - min + 1)) + min;
+                document.getElementById('display').textContent = num;
+                
+                // 逐渐减速
+                speed = speed * 1.1;
+                if (speed > 500) speed = 500;
+                
+                clearInterval(timer);
+                timer = setInterval(arguments.callee, speed);
+            }, 50);
+        }
+        
+        function stop抽() {
+            clearInterval(timer);
+            is抽ing = false;
+            
+            const min = parseInt(document.getElementById('minNum').value);
+            const max = parseInt(document.getElementById('maxNum').value);
+            const result = Math.floor(Math.random() * (max - min + 1)) + min;
+            
+            document.getElementById('display').textContent = result;
+            document.getElementById('startBtn').textContent = '再抽一次';
+            document.getElementById('startBtn').classList.remove('btn-stop');
+            
+            // 添加到历史
+            history.unshift(result);
+            if (history.length > 10) history.pop();
+            updateHistory();
+        }
+        
+        function updateHistory() {
+            const historyDiv = document.getElementById('history');
+            const listDiv = document.getElementById('historyList');
+            
+            if (history.length > 0) {
+                historyDiv.style.display = 'block';
+                listDiv.innerHTML = history.map((n, i) => 
+                    `<span class="history-item" ${i===0?'style="background:#667eea;color:white"':''}>${n}号</span>`
+                ).join('');
+            }
+        }
+    </script>
+</body>
+</html>

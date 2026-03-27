@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: 600px; height: 500px; overflow: hidden; }
+svg { width: 600px; height: 500px; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500">
+  <defs>
+    <radialGradient id="sky" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#87CEEB"/>
+      <stop offset="60%" stop-color="#E0F4FF"/>
+      <stop offset="100%" stop-color="#B8E4FF"/>
+    </radialGradient>
+    <linearGradient id="cloud" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#D4EAF7"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="500" fill="url(#sky)"/>
+
+  <g fill="url(#cloud)" opacity="0.9">
+    <ellipse cx="80" cy="120" rx="55" ry="30"/>
+    <ellipse cx="120" cy="105" rx="40" ry="25"/>
+    <ellipse cx="50" cy="110" rx="35" ry="22"/>
+    
+    <ellipse cx="480" cy="180" rx="50" ry="28"/>
+    <ellipse cx="520" cy="165" rx="38" ry="22"/>
+    <ellipse cx="450" cy="172" rx="32" ry="20"/>
+
+    <ellipse cx="300" cy="80" rx="45" ry="25"/>
+    <ellipse cx="340" cy="68" rx="35" ry="20"/>
+    <ellipse cx="265" cy="75" rx="30" ry="18"/>
+  </g>
+
+  <g fill="#FFE87C" opacity="0.6">
+    <circle cx="500" cy="60" r="30"/>
+  </g>
+
+  <g stroke="#555" stroke-width="2" fill="none" opacity="0.5">
+    <path d="M150 200 Q155 195 160 200 Q165 195 170 200"/>
+    <path d="M200 170 Q204 166 208 170 Q212 166 216 170"/>
+    <path d="M400 140 Q404 136 408 140 Q412 136 416 140"/>
+  </g>
+
+  <g transform="translate(300, 280)">
+    <ellipse cx="-55" cy="-10" rx="20" ry="8" fill="#C4956A" transform="rotate(-30 -55 -10)"/>
+    
+    <ellipse cx="-35" cy="35" rx="18" ry="12" fill="#E8C49A" transform="rotate(20 -35 35)"/>
+    <ellipse cx="-45" cy="25" rx="18" ry="12" fill="#E8C49A" transform="rotate(-10 -45 25)"/>
+    
+    <ellipse cx="0" cy="0" rx="55" ry="38" fill="#E8C49A"/>
+    <ellipse cx="0" cy="5" rx="45" ry="28" fill="#F5DEB3"/>
+    
+    <ellipse cx="5" cy="10" rx="25" ry="18" fill="#FFF8E7"/>
+    
+    <ellipse cx="50" cy="-15" rx="18" ry="10" fill="#E8C49A" transform="rotate(-30 50 -15)"/>
+    <ellipse cx="55" cy="-5" rx="18" ry="10" fill="#E8C49A" transform="rotate(-10 55 -5)"/>
+    
+    <circle cx="60" cy="-35" r="38" fill="#E8C49A"/>
+    
+    <ellipse cx="30" cy="-70" rx="18" ry="30" fill="#C4956A" transform="rotate(30 30 -70)"/>
+    <ellipse cx="30" cy="-68" rx="12" ry="22" fill="#E8C49A" transform="rotate(30 30 -68)"/>
+    <ellipse cx="80" cy="-65" rx="18" ry="28" fill="#C4956A" transform="rotate(-20 80 -65)"/>
+    <ellipse cx="82" cy="-63" rx="12" ry="20" fill="#E8C49A" transform="rotate(-20 82 -63)"/>
+    
+    <ellipse cx="88" cy="-30" rx="18" ry="15" fill="#F5DEB3"/>
+    <ellipse cx="95" cy="-32" rx="10" ry="8" fill="#E8C49A"/>
+    
+    <ellipse cx="100" cy="-32" rx="7" ry="6" fill="#4A3728"/>
+    <ellipse cx="98" cy="-34" rx="2" ry="1.5" fill="#7A5A45" opacity="0.6"/>
+    
+    <circle cx="50" cy="-45" r="10" fill="#4A3728"/>
+    <circle cx="72" cy="-45" r="10" fill="#4A3728"/>
+    <circle cx="52" cy="-47" r="4" fill="white"/>
+    <circle cx="74" cy="-47" r="4" fill="white"/>
+    
+    <path d="M40 -58 Q50 -62 60 -58" stroke="#8B6914" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M62 -58 Q72 -62 82 -58" stroke="#8B6914" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <path d="M88 -22 Q95 -15 102 -22" stroke="#4A3728" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M95 -15 L95 -8" stroke="#4A3728" stroke-width="2" fill="none" stroke-linecap="round"/>
+    
+    <ellipse cx="95" cy="-3" rx="7" ry="9" fill="#FF8CAD"/>
+    <path d="M91 -6 Q95 -2 99 -6" stroke="#E57373" stroke-width="1.5" fill="none"/>
+    
+    <ellipse cx="40" cy="-30" rx="8" ry="5" fill="#FFB6C1" opacity="0.5"/>
+    <ellipse cx="85" cy="-30" rx="8" ry="5" fill="#FFB6C1" opacity="0.5"/>
+    
+    <rect x="35" y="-8" width="40" height="10" rx="5" fill="#FF6B6B"/>
+    <circle cx="55" cy="8" r="8" fill="#FFD700"/>
+    <text x="55" y="11" text-anchor="middle" font-size="8" fill="#4A3728" font-family="Arial">♥</text>
+  </g>
+
+  <g stroke="#A8D8EA" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M150 300 Q200 290 220 300"/>
+    <path d="M130 320 Q180 310 200 320"/>
+    <path d="M160 340 Q210 330 230 340"/>
+    <path d="M400 380 Q450 370 470 380"/>
+    <path d="M420 400 Q470 390 490 400"/>
+  </g>
+
+  <g fill="#FFD700">
+    <polygon points="180,220 183,228 191,228 185,233 187,241 180,236 173,241 175,233 169,228 177,228" opacity="0.8"/>
+    <polygon points="420,250 422,255 427,255 423,258 424,263 420,260 416,263 417,258 413,255 418,255" opacity="0.7" transform="scale(0.8)"/>
+    <polygon points="250,150 252,155 257,155 253,158 254,163 250,160 246,163 247,158 243,155 248,155" opacity="0.7"/>
+  </g>
+</svg>
+</body>
+</html>

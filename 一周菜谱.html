@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一周健康菜谱 2026.03.27-04.02</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #FFFBF0;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #FFF8F0;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(93,64,55,0.15);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #8B6914 0%, #5D4037 100%);
+    color: white;
+    padding: 30px 40px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 2.2em;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  .header .subtitle {
+    margin-top: 8px;
+    font-size: 1em;
+    color: #D7CCC8;
+  }
+  .note-bar {
+    background: #EFEBE9;
+    padding: 12px 30px;
+    text-align: center;
+    color: #795548;
+    font-size: 0.9em;
+    border-bottom: 2px solid #D7CCC8;
+  }
+  .days-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .day-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 1fr;
+    border-bottom: 1px solid #E8D5C4;
+    min-height: 130px;
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-label {
+    background: var(--day-color, #8B6914);
+    color: white;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .day-label .day-name { font-size: 1.3em; font-weight: bold; }
+  .day-label .day-date { font-size: 0.85em; opacity: 0.85; }
+  .meal-cell {
+    padding: 12px 16px;
+    border-right: 1px solid #F0E0D0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+  .meal-cell:last-child { border-right: none; }
+  .meal-cell.breakfast { background: #FEF9E7; }
+  .meal-cell.lunch { background: #E8F8F0; }
+  .meal-cell.dinner { background: #FDEFEF; }
+  .meal-cell.school { background: #F5F5F5; }
+  .meal-label {
+    font-size: 0.75em;
+    font-weight: bold;
+    padding: 2px 10px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+  .breakfast .meal-label { background: #E67E22; color: white; }
+  .lunch .meal-label { background: #27AE60; color: white; }
+  .dinner .meal-label { background: #C0392B; color: white; }
+  .meal-item {
+    font-size: 0.88em;
+    color: #3E2723;
+    line-height: 1.5;
+  }
+  .meal-item.school { color: #BDBDBD; font-style: italic; }
+  .footer {
+    background: #EFEBE9;
+    padding: 16px 30px;
+    text-align: center;
+    color: #8D6E63;
+    font-size: 0.88em;
+    border-top: 2px solid #D7CCC8;
+  }
+  .footer span { margin: 0 8px; }
+  @media (max-width: 700px) {
+    .day-row { grid-template-columns: 80px 1fr 1fr 1fr; min-height: 110px; }
+    .day-label .day-name { font-size: 1.1em; }
+    .meal-item { font-size: 0.78em; }
+    .header h1 { font-size: 1.6em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🌿 一周健康菜谱</h1>
+    <div class="subtitle">2026.03.27 - 04.02</div>
+  </div>
+  <div class="note-bar">
+    🍃 叶菜2-3天内吃完 &nbsp;|&nbsp; 🍠 山药可以慢慢吃 &nbsp;|&nbsp; 🚫 调味不加糖葱蒜
+  </div>
+  <div class="days-grid">
+
+    <div class="day-row" style="--day-color: #E74C3C">
+      <div class="day-label">
+        <span class="day-name">周五</span>
+        <span class="day-date">3/27</span>
+      </div>
+      <div class="meal-cell breakfast">
+        <span class="meal-label">早餐</span>
+        <div class="meal-item">杂粮包</div>
+        <div class="meal-item">水煮蛋</div>
+        <div class="meal-item">麻酱菠菜</div>
+      </div>
+      <div class="meal-cell school">
+        <span class="meal-label">午餐</span>
+        <div class="meal-item school">（学校）</div>
+      </div>
+      <div class="meal-cell dinner">
+        <span class="meal-label">晚餐</span>
+        <div class="meal-item">清蒸鱼</div>
+        <div class="meal-item">麻酱菠菜</div>
+        <div class="meal-item">米饭</div>
+      </div>
+    </div>
+
+    <div class="day-row" style="--day-color: #E67E22">
+      <div class="day-label">
+        <span class="day-name">周六</span>
+        <span class="day-date">3/28</span>
+      </div>
+      <div class="meal-cell breakfast">
+        <span class="meal-label">早餐</span>
+        <div class="meal-item">红薯</div>
+        <div class="meal-item">鸡蛋灌饼</div>
+        <div class="meal-item">炒小青菜</div>
+      </div>
+      <div class="meal-cell lunch">
+        <span class="meal-label">午餐</span>
+        <div class="meal-item">烤鸡翅</div>
+        <div class="meal-item">茼蒿</div>
+        <div class="meal-item">玉米段</div>
+      </div>
+      <div class="meal-cell dinner">
+        <span class="meal-label">晚餐</span>
+        <div class="meal-item">牛肉炖土豆</div>
+        <div class="meal-item">青菜</div>
+      </div>
+    </div>
+
+    <div class="day-row" style="--day-color: #F39C12">
+      <div class="day-label">
+        <span class="day-name">周日</span>
+        <span class="day-date">3/29</span>
+      </div>
+      <div class="meal-cell breakfast">
+        <span class="meal-label">早餐</span>
+        <div class="meal-item">山药粥</div>
+        <div class="meal-item">鸡蛋</div>
+        <div class="meal-item">凉拌菠菜</div>
+      </div>
+      <div class="meal-cell lunch">
+        <span class="meal-label">午餐</span>
+        <div class="meal-item">烤鸡翅</div>
+        <div class="meal-item">茼蒿</div>
+      </div>
+      <div class="meal-cell dinner">
+        <span class="meal-label">晚餐</span>
+        <div class="meal-item">清炒小青菜</div>
+        <div class="meal-item">山药鱼汤</div>
+        <div class="meal-item">米饭</div>
+      </div>
+    </div>
+
+    <div class="day-row" style="--day-color: #27AE60">
+      <div class="day-label">
+        <span class="day-name">周一</span>
+        <span class="day-date">3/30</span>
+      </div>
+      <div class="meal-cell breakfast">
+        <span class="meal-label">早餐</span>
+        <div class="meal-item">杂粮包</div>
+        <div class="meal-item">煎蛋</div>
+        <div class="meal-item">麻酱菠菜</div>
+      </div>
+      <div class="meal-cell school">
+        <span class="meal-label">午餐</span>
+        <div class="meal-item school">（学校）</div>
+      </div>
+      <div class="meal-cell dinner">
+        <span class="meal-label">晚餐</span>
+        <div class="meal-item">山药炒肉片</div>
+        <div class="meal-item">青菜</div>
+        <div class="meal-item">米饭</div>
+      </div>
+    </div>
+
+    <div class="day-row" style="--day-color: #8E44AD">
+      <div class="day-label">
+        <span class="day-name">周二</span>
+        <span class="day-date">3/31</span>
+      </div>
+      <div class="meal-cell breakfast">
+        <span class="meal-label">早餐</span>
+        <div class="meal-item">豆浆</div>
+        <div class="meal-item">红薯</div>
+        <div class="meal-item">水煮蛋</div>
+      </div>
+      <div class="meal-cell school">
+        <span class="meal-label">午餐</span>
+        <div class="meal-item school">（学校）</div>
+      </div>
+      <div class="meal-cell dinner">
+        <span class="meal-label">晚餐</span>
+        <div class="meal-item">鸡蛋灌饼</div>
+        <div class="meal-item">青菜汤</div>
+      </div>
+    </div>
+
+    <div class="day-row" style="--day-color: #2980B9">
+      <div class="day-label">
+        <span class="day-name">周三</span>
+        <span class="day-date">4/1</span>
+      </div>
+      <div class="meal-cell breakfast">
+        <span class="meal-label">早餐</span>
+        <div class="meal-item">鸡蛋灌饼</div>
+        <div class="meal-item">炒菠菜</div>
+      </div>
+      <div class="meal-cell school">
+        <span class="meal-label">午餐</span>
+        <div class="meal-item school">（学校，晚自习）</div>
+      </div>
+      <div class="meal-cell dinner">
+        <span class="meal-label">晚餐</span>
+        <div class="meal-item">山药块</div>
+        <div class="meal-item">煎蛋</div>
+        <div class="meal-item school">（简单吃）</div>
+      </div>
+    </div>
+
+    <div class="day-row" style="--day-color: #16A085">
+      <div class="day-label">
+        <span class="day-name">周四</span>
+        <span class="day-date">4/2</span>
+      </div>
+      <div class="meal-cell breakfast">
+        <span class="meal-label">早餐</span>
+        <div class="meal-item">杂粮包</div>
+        <div class="meal-item">山药泥</div>
+        <div class="meal-item">荷包蛋</div>
+      </div>
+      <div class="meal-cell school">
+        <span class="meal-label">午餐</span>
+        <div class="meal-item school">（学校，晚自习）</div>
+      </div>
+      <div class="meal-cell dinner">
+        <span class="meal-label">晚餐</span>
+        <div class="meal-item">清蒸鱼</div>
+        <div class="meal-item">青菜</div>
+        <div class="meal-item school">（简单吃）</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer">
+    <span>🍽️ 每周更新</span>
+    <span>|</span>
+    <span>📅 2026.03.27 - 04.02</span>
+    <span>|</span>
+    <span>🤰 孕期健康餐</span>
+  </div>
+</div>
+</body>
+</html>

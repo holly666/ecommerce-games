@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>市场部实习生 - 模拟成长游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+        
+        /* 开始界面 */
+        #start-screen { text-align: center; padding: 30px 20px; }
+        .title { font-size: 2.5em; color: #ffd700; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+        .subtitle { font-size: 1.1em; color: #7ec8e3; margin-bottom: 25px; }
+        .avatar { width: 100px; height: 100px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3em; }
+        
+        .start-btn { background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; border: none; padding: 18px 50px; font-size: 1.2em; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 20px rgba(255,215,0,0.4); }
+        
+        .intro-box { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left; }
+        .intro-title { color: #ffd700; font-size: 1.1em; margin-bottom: 10px; }
+        .intro-text { color: #b8d4e3; font-size: 0.95em; line-height: 1.8; }
+        
+        /* 游戏界面 */
+        #game-screen { display: none; }
+        .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .level-tag { background: linear-gradient(135deg, #ffd700, #ff9500); color: #1a1a2e; padding: 8px 20px; border-radius: 20px; font-weight: bold; }
+        .money { background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 20px; color: #ffd700; font-weight: bold; }
+        
+        .story-box { background: linear-gradient(135deg, #2d1b4e, #1a1a2e); border: 2px solid #667eea; border-radius: 15px; padding: 25px; margin-bottom: 20px; text-align: left; }
+        .story-title { color: #ffd700; font-size: 1.2em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .story-text { color: #e0d4f7; font-size: 1em; line-height: 1.8; }
+        
+        .task-box { background: #fff; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .task-title { color: #333; font-size: 1.1em; margin-bottom: 10px; font-weight: bold; }
+        .task-desc { color: #666; font-size: 0.95em; line-height: 1.6; margin-bottom: 15px; }
+        
+        .options { display: grid; gap: 10px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 15px; border-radius: 12px; cursor: pointer; color: #333; font-size: 0.95em; transition: all 0.2s; text-align: left; }
+        .option:hover { border-color: #667eea; background: #e8f4ff; }
+        .option .cost { float: right; color: #ff6b6b; font-size: 0.85em; }
+        .option .best { color: #00ff88; font-size: 0.85em; }
+        .option.correct { background: linear-gradient(135deg, #00ff88, #00cc6a); border-color: #00ff88; color: #fff; }
+        .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        
+        .result-box { display: none; padding: 20px; border-radius: 12px; margin-top: 15px; text-align: left; }
+        .result-box.show { display: block; animation: fadeIn 0.3s; }
+        .result-correct { background: #e8f5e9; border: 2px solid #4caf50; color: #2e7d32; }
+        .result-wrong { background: #ffebee; border: 2px solid #f44336; color: #c62828; }
+        
+        .continue-btn { display: none; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none; padding: 15px 40px; border-radius: 25px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .continue-btn.show { display: inline-block; }
+        
+        /* 结果界面 */
+        #result-screen { display: none; text-align: center; padding: 40px 20px; }
+        .final-title { font-size: 2.5em; margin-bottom: 20px; }
+        .final-avatar { font-size: 5em; margin: 20px 0; }
+        .final-score { font-size: 3em; color: #ffd700; margin: 20px 0; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 600px) { .title { font-size: 2em; } .options { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-screen">
+            <div class="avatar">👤</div>
+            <h1 class="title">市场部实习生</h1>
+            <p class="subtitle">模拟成长游戏</p>
+            <button class="start-btn" onclick="startGame()">🎮 开始游戏</button>
+            
+            <div class="intro-box">
+                <div class="intro-title">📖 游戏说明</div>
+                <div class="intro-text">
+                    你是一名市场部实习生，需要完成老板交代的各种任务。<br><br>
+                    🎯 每个任务都有不同的信息收集方法<br>
+                    💰 预算有限，选错方法会扣钱！<br>
+                    📈 完成任务获得经验，晋升主管！<br><br>
+                    共5关，难度递增，快来挑战吧！
+                </div>
+            </div>
+        </div>
+        
+        <div id="game-screen">
+            <div class="status-bar">
+                <div class="level-tag" id="level-tag">🌱 实习生</div>
+                <div class="money">💰 预算: <span id="budget">5000</span>元</div>
+            </div>
+            
+            <div class="story-box">
+                <div class="story-title" id="story-title">📋 第一关</div>
+                <div class="story-text" id="story-text"></div>
+            </div>
+            
+            <div class="task-box">
+                <div class="task-title" id="task-title">任务描述</div>
+                <div class="task-desc" id="task-desc"></div>
+                
+                <div class="options" id="options"></div>
+                
+                <div class="result-box" id="result-box">
+                    <div id="result-text"></div>
+                </div>
+                
+                <button class="continue-btn" id="continue-btn" onclick="nextLevel()">下一关 →</button>
+            </div>
+        </div>
+        
+        <div id="result-screen">
+            <div class="final-avatar" id="final-avatar">🏆</div>
+            <h1 class="final-title" id="final-title">游戏结束</h1>
+            <div class="final-score" id="final-score">0</div>
+            <p class="subtitle" id="final-msg"></p>
+            <button class="start-btn" onclick="restartGame()">再玩一次</button>
+        </div>
+    </div>
+
+    <script>
+        const levels = [
+            {
+                level: "🌱 实习生",
+                title: "第一关：了解市场",
+                story: "今天是你上班第一天，老板让你了解一下今年新能源汽车市场的情况，说下周开会要用。你需要收集一些基础信息...",
+                task: "你首先应该了解什么信息？",
+                options: [
+                    { text: "A. 找竞品员工聊天", cost: -500, best: false, result: "❌ 这是非法手段！违反商业道德，可能被开除！" },
+                    { text: "B. 搜索行业报告和新闻", cost: 0, best: true, result: "✅ 正确！搜索行业报告和新闻是了解市场概况的最快方式。" },
+                    { text: "C. 直接问老板要", cost: 0, best: false, result: "❌ 老板让你去了解，你怎么好意思再问老板？" },
+                    { text: "D. 等客户告诉自己", cost: 0, best: false, result: "❌ 客户不会主动告诉你市场情况的。" }
+                ]
+            },
+            {
+                level: "🌱 实习生",
+                title: "第二关：用户是谁？",
+                story: "老板说下个月要推出一款针对年轻人的手机，让你了解一下目标用户的需求。你需要知道年轻人买手机最看重什么...",
+                task: "你要用什么方式了解用户需求？",
+                options: [
+                    { text: "A. 搜索引擎搜索", cost: -50, best: false, result: "❌ 搜索引擎只能了解general信息，不够深入。" },
+                    { text: "B. 街头问卷调查", cost: -300, best: false, result: "⚠️ 可以但效率低，年轻人不一定愿意街头填问卷。" },
+                    { text: "C. 线上问卷/用户访谈", cost: 0, best: true, result: "✅ 正确！线上问卷成本低，访谈更深入了解需求。" },
+                    { text: "D. 看别人怎么做", cost: 0, best: false, result: "❌ 看别人只能参考，不能替代自己调研。" }
+                ]
+            },
+            {
+                level: "🌱 实习生",
+                title: "第三关：数据哪里找？",
+                story: "老板让你分析一下自家网店的运营情况，需要数据支撑。你要去哪里找这些数据？",
+                task: "获取店铺数据最有效的方式是？",
+                options: [
+                    { text: "A. 问同事", cost: 0, best: false, result: "❌ 同事不一定有完整数据，可能不准确。" },
+                    { text: "B. 百度搜索", cost: -50, best: false, result: "❌ 百度搜不到你店铺的私密数据。" },
+                    { text: "C. 店铺后台数据", cost: 0, best: true, result: "✅ 正确！店铺后台有完整的销售、流量、用户数据。" },
+                    { text: "D. 算命预测", cost: 0, best: false, result: "❌ 这...不太靠谱吧？" }
+                ]
+            },
+            {
+                level: "⭐ 正式员工",
+                title: "第四关：趋势预测",
+                story: "你转正了！老板让你预测一下未来3年行业发展趋势，为公司战略做参考。这个任务很重要...",
+                task: "获取行业趋势信息，哪个途径最专业？",
+                options: [
+                    { text: "A. 问朋友", cost: 0, best: false, result: "❌ 朋友不是行业专家，不够专业。" },
+                    { text: "B. 行业协会报告", cost: 0, best: true, result: "✅ 正确！行业协会报告最权威，最有参考价值。" },
+                    { text: "C. 短视频平台", cost: -100, best: false, result: "❌ 短视频娱乐为主，不适合获取专业趋势。" },
+                    { text: "D. 自己猜", cost: 0, best: false, result: "❌ 凭感觉猜是不负责任的。" }
+                ]
+            },
+            {
+                level: "⭐ 正式员工",
+                title: "第五关：合法合规",
+                story: "老板让你收集竞品信息，有个员工说可以帮忙搞定竞品的内部资料，还能便宜...你该怎么做？",
+                task: "面对这种情况，你应该？",
+                options: [
+                    { text: "A. 同意感谢帮忙", cost: 0, best: false, result: "❌ 这是商业间谍行为，违法！" },
+                    { text: "B. 拒绝并举报", cost: 0, best: true, result: "✅ 正确！市场信息收集必须合法合规，偷窃商业机密是违法的！" },
+                    { text: "C. 先试试看", cost: -1000, best: false, result: "❌ 一旦违法，不仅丢工作，还可能承担法律责任！" },
+                    { text: "D. 当没听见", cost: 0, best: false, result: "⚠️ 拒绝是正确的，但应该明确表示反对这种行为。" }
+                ]
+            }
+        ];
+        
+        let currentLevel = 0;
+        let budget = 5000;
+        
+        function startGame() {
+            currentLevel = 0;
+            budget = 5000;
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            showLevel();
+        }
+        
+        function showLevel() {
+            const level = levels[currentLevel];
+            document.getElementById('level-tag').textContent = level.level;
+            document.getElementById('budget').textContent = budget;
+            document.getElementById('story-title').textContent = level.title;
+            document.getElementById('story-text').textContent = level.story;
+            document.getElementById('task-title').textContent = "📌 任务";
+            document.getElementById('task-desc').textContent = level.task;
+            document.getElementById('result-box').classList.remove('show');
+            document.getElementById('continue-btn').classList.remove('show');
+            
+            const optsContainer = document.getElementById('options');
+            optsContainer.innerHTML = '';
+            
+            level.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                let costText = opt.cost === 0 ? "" : `💸 花费${Math.abs(opt.cost)}元`;
+                if (opt.cost < 0) costText = `💸 花费${Math.abs(opt.cost)}元`;
+                btn.innerHTML = `${opt.text} <span class="cost">${costText}</span>`;
+                btn.onclick = () => selectOption(idx);
+                optsContainer.appendChild(btn);
+            });
+        }
+        
+        function selectOption(idx) {
+            const level = levels[currentLevel];
+            const opt = level.options[idx];
+            const opts = document.querySelectorAll('.option');
+            
+            opts.forEach(o => o.classList.add('disabled'));
+            
+            if (opt.best) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-box').className = 'result-box show result-correct';
+            } else {
+                opts[idx].classList.add('wrong');
+                opts[level.options.findIndex(o => o.best)].classList.add('correct');
+                budget += opt.cost;
+                document.getElementById('budget').textContent = budget;
+                document.getElementById('result-box').className = 'result-box show result-wrong';
+            }
+            
+            document.getElementById('result-text').textContent = opt.result;
+            document.getElementById('continue-btn').classList.add('show');
+        }
+        
+        function nextLevel() {
+            currentLevel++;
+            if (currentLevel >= levels.length) {
+                showResult();
+            } else {
+                showLevel();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            
+            let avatar, title, msg;
+            if (budget >= 4800) {
+                avatar = "👑";
+                title = "超级员工！";
+                msg = "预算控制完美，你就是公司未来的市场总监！";
+            } else if (budget >= 4000) {
+                avatar = "⭐";
+                title = "优秀员工！";
+                msg = "表现很好，继续努力有望晋升管理层！";
+            } else if (budget >= 3000) {
+                avatar = "💼";
+                title = "及格员工";
+                msg = "虽然预算超支，但任务完成了，继续加油！";
+            } else {
+                avatar = "😰";
+                title = "实习重修";
+                msg = "预算严重超支，下次要注意方法啊！";
+            }
+            
+            document.getElementById('final-avatar').textContent = avatar;
+            document.getElementById('final-title').textContent = title;
+            document.getElementById('final-score').textContent = "💰 剩余预算: " + budget + "元";
+            document.getElementById('final-msg').textContent = msg;
+        }
+        
+        function restartGame() {
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

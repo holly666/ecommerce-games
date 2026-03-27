@@ -36,6 +36,12 @@
 - 用 Whisper（本地离线）
 - 中文识别：加 --language Chinese
 
+## MiniMax 生图
+- 端点：`POST https://api.minimax.chat/v1/image_generation`
+- Header：`Authorization: Bearer sk-cp-CfNXLXppoSdwVqdo2M8SX7vV3txeDHtezQtEyw4n6Up9y46bApU8tBoMtMiaW1d-YsrqPes2w4CEaAFyJWKg6u21Qd7b2S71sdVEVJAt3785OWyR1o_x1V4`
+- Body: `{"model": "image-01", "prompt": "描述", "aspect_ratio": "1:1"}`
+- 返回：`data.image_urls[0]` 是图片URL，下载后发送
+
 ## 搜索
 - 默认：tavily_search（通用搜索）
 - 金融：eastmoney_search / eastmoney_data / eastmoney_select
@@ -51,3 +57,6 @@
 ## 笔记
 - 默认笔记软件：**Obsidian**（非Apple Notes）
 - Obsidian库路径：`~/Documents/Holly工作生活笔记/`
+
+## 文件发送
+- 发文件给用户：先把文件复制到 `~/.openclaw/workspace/` 再用 `filePath` 发送

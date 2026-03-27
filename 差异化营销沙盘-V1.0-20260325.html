@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>差异化营销策略 - 沙盘模拟器</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1510 0%, #2d2318 50%, #3d2e1a 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        #start-screen { text-align: center; padding: 40px 20px; }
+        .title { font-size: 2.4em; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.5), 2px 2px 0 #8b4513; margin-bottom: 10px; letter-spacing: 3px; }
+        .subtitle { font-size: 1.2em; color: #d4a574; margin-bottom: 30px; letter-spacing: 2px; }
+        .start-btn { background: linear-gradient(135deg, #d4a574, #8b4513); color: #1a1510; border: 2px solid #ffd700; padding: 18px 50px; font-size: 1.3em; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 5px 20px rgba(212,165,116,0.4); letter-spacing: 3px; }
+        .start-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(212,165,116,0.6); background: linear-gradient(135deg, #ffd700, #d4a574); }
+        
+        .decor-line { width: 200px; height: 3px; background: linear-gradient(90deg, transparent, #ffd700, transparent); margin: 20px auto; }
+        
+        .story-box { background: rgba(139,69,19,0.3); padding: 25px; border-radius: 8px; margin: 20px 0; border: 1px solid rgba(255,215,0,0.3); text-align: left; border-left: 4px solid #ffd700; }
+        .story-title { color: #ffd700; font-size: 1.1em; margin-bottom: 15px; font-weight: bold; }
+        .story-text { line-height: 1.8; color: #d4c4a8; }
+        
+        .tip-box { background: rgba(255,215,0,0.1); padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid rgba(255,215,0,0.3); text-align: left; }
+        .tip-title { color: #ffd700; font-weight: bold; margin-bottom: 8px; }
+        .tip-text { font-size: 0.9em; color: #d4c4a8; line-height: 1.6; }
+        
+        #game-screen { display: none; }
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; flex-wrap: wrap; gap: 10px; }
+        .step { display: flex; align-items: center; gap: 8px; font-size: 0.8em; color: #666; }
+        .step.active { color: #ffd700; font-weight: bold; }
+        .step.completed { color: #00ff88; }
+        .step-num { width: 24px; height: 24px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 0.75em; }
+        .step.active .step-num { background: #ffd700; color: #1a1510; }
+        .step.completed .step-num { background: #00ff88; color: #1a1510; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px; }
+        .score { font-size: 1.4em; color: #ffd700; font-weight: bold; }
+        .phase-tag { background: linear-gradient(135deg, #d4a574, #8b4513); padding: 8px 20px; border-radius: 20px; font-size: 0.85em; color: #1a1510; font-weight: bold; border: 1px solid #ffd700; }
+        
+        .question-box { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .knowledge-tag { display: inline-block; background: linear-gradient(135deg, #d4a574, #8b4513); color: #fff; padding: 6px 15px; border-radius: 15px; font-size: 0.75em; margin-bottom: 15px; border: 1px solid #ffd700; }
+        
+        .scenario { background: linear-gradient(135deg, #8b4513, #d4a574); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 18px; text-align: left; }
+        .scenario-title { font-size: 1.05em; font-weight: bold; margin-bottom: 10px; }
+        
+        .question-text { font-size: 1.05em; line-height: 1.7; color: #333; margin-bottom: 15px; font-weight: 500; }
+        
+        .think-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.9em; }
+        .think-title { font-weight: bold; margin-bottom: 8px; }
+        
+        .options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 10px 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 0.8em; color: #333; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; }
+        .option:hover { border-color: #d4a574; background: #fff8f0; transform: translateY(-2px); }
+        .option.correct { background: linear-gradient(135deg, #00ff88, #ffd700); border-color: #00ff88; color: #1a1510; }
+        .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        
+        .explanation { background: #e8f5e9; padding: 18px; border-radius: 12px; margin-top: 18px; display: none; color: #2e7d32; border-left: 4px solid #4caf50; text-align: left; }
+        .explanation.show { display: block; animation: fadeIn 0.3s; }
+        .explanation-title { font-weight: bold; margin-bottom: 10px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #result-screen { display: none; text-align: center; padding: 40px 20px; }
+        .result-title { font-size: 2.5em; margin-bottom: 20px; }
+        .final-score { font-size: 4em; color: #ffd700; margin: 20px 0; text-shadow: 0 0 30px rgba(255,215,0,0.5); }
+        .result-msg { font-size: 1.25em; color: #aaa; margin-bottom: 30px; line-height: 1.6; }
+        
+        .stats { display: flex; justify-content: center; gap: 25px; margin: 30px 0; flex-wrap: wrap; }
+        .stat { background: rgba(255,255,255,0.05); padding: 18px 25px; border-radius: 15px; }
+        .stat-value { font-size: 1.6em; color: #ffd700; font-weight: bold; }
+        .stat-label { font-size: 0.8em; color: #888; margin-top: 5px; }
+        
+        .restart-btn { background: linear-gradient(135deg, #d4a574, #8b4513); color: #1a1510; border: 2px solid #ffd700; border: none; padding: 16px 45px; font-size: 1.2em; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .strategy-card { background: linear-gradient(135deg, #2d2318, #3d2e1a); border: 1px solid #ffd700; border-radius: 12px; padding: 15px; margin: 10px 0; text-align: left; }
+        .strategy-name { color: #ffd700; font-weight: bold; margin-bottom: 8px; font-size: 1em; }
+        .strategy-desc { color: #d4c4a8; font-size: 0.85em; line-height: 1.5; }
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            .options { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+            .option { padding: 8px 4px; font-size: 0.7em; min-height: 50px; }
+            .option span:first-child { font-size: 1.2em !important; margin-bottom: 2px !important; }
+            .title { font-size: 1.8em; }
+            .question-text { font-size: 0.95em; }
+            .scenario { padding: 12px; font-size: 0.9em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 开始界面 -->
+        <div id="start-screen">
+            <div class="decor-line"></div>
+            <h1 class="title">🎯 差异化营销沙盘</h1>
+            <p class="subtitle">📊 营销策略模拟器</p>
+            <div class="decor-line"></div>
+            <button id="start-btn" class="start-btn" onclick="startGame()">🚀 开始模拟</button>
+            <div class="story-box">
+                <div class="story-title">📖 沙盘简介</div>
+                <p class="story-text">你是一家新兴企业的营销总监。面对8个不同的商业场景，你需要分析市场情况，选择最合适的差异化营销策略，带领企业走向成功！</p>
+                <p style="margin-top:15px;">🎯 <strong>游戏目标：</strong>在每个场景中做出最优决策，累计最高商业声望！</p>
+            </div>
+            <div class="tip-box">
+                <div class="tip-title">📋 7种差异化策略</div>
+                <div class="strategy-card">
+                    <div class="strategy-name">📦 商品差异化</div>
+                    <div class="strategy-desc">适用：当产品本身有独特功能、设计、技术优势时</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-name">💰 价格差异化</div>
+                    <div class="strategy-desc">适用：当市场存在不同消费能力的人群时</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-name">🛒 渠道差异化</div>
+                    <div class="strategy-desc">适用：当目标用户在哪里买产品成为问题时</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-name">👥 消费者差异化</div>
+                    <div class="strategy-desc">适用：当不同用户需要不同服务或产品时</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-name">🏷️ 品牌差异化</div>
+                    <div class="strategy-desc">适用：当知名度/品牌认知成为销售障碍时</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-name">🤝 服务差异化</div>
+                    <div class="strategy-desc">适用：当产品/价格/渠道无法差异化时</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-name">📢 推广差异化</div>
+                    <div class="strategy-desc">适用：当预算有限需要靠创意获客时</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 游戏界面 -->
+        <div id="game-screen">
+            <div class="progress-bar">
+                <div class="step" id="step1"><span class="step-num">1</span></div>
+                <div class="step" id="step2"><span class="step-num">2</span></div>
+                <div class="step" id="step3"><span class="step-num">3</span></div>
+                <div class="step" id="step4"><span class="step-num">4</span></div>
+                <div class="step" id="step5"><span class="step-num">5</span></div>
+                <div class="step" id="step6"><span class="step-num">6</span></div>
+                <div class="step" id="step7"><span class="step-num">7</span></div>
+                <div class="step" id="step8"><span class="step-num">8</span></div>
+            </div>
+            <div class="header">
+                <div class="phase-tag" id="phase-tag">场景</div>
+                <div class="score">🏆 商业声望: <span id="score">0</span></div>
+            </div>
+            <div class="question-box">
+                <span class="knowledge-tag" id="knowledge-tag">策略选择</span>
+                <div class="scenario" id="scenario-box">
+                    <div class="scenario-title" id="scenario-title"></div>
+                    <p id="scenario-text"></p>
+                </div>
+                <p class="question-text" id="question-text"></p>
+                
+                <div class="think-box" id="think-box">
+                    <div class="think-title">💡 决策提示</div>
+                    <p id="think-text"></p>
+                </div>
+                
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">🎯 策略解析</div>
+                    <p id="explanation-text"></p>
+                </div>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        
+        <!-- 结果界面 -->
+        <div id="result-screen">
+            <h1 class="result-title" id="result-title">🎉 模拟结束!</h1>
+            <div class="final-score"><span id="final-score">0</span></div>
+            <p class="result-msg" id="result-msg"></p>
+            <div class="stats">
+                <div class="stat"><div class="stat-value" id="stat-right">0</div><div class="stat-label">正确决策</div></div>
+                <div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">决策失误</div></div>
+                <div class="stat"><div class="stat-value" id="stat-score">0</div><div class="stat-label">商业声望</div></div>
+            </div>
+            <button class="restart-btn" id="restart-btn" onclick="restartGame()">再玩一次</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const strategyOptions = [
+            { type: "product", text: "📦 商品差异化策略", desc: "基于商品特征、功能、性能等差异" },
+            { type: "price", text: "💰 价格差异化策略", desc: "通过价格策略差异化吸引不同消费者" },
+            { type: "channel", text: "🛒 渠道差异化策略", desc: "选择不同销售渠道和分销模式" },
+            { type: "customer", text: "👥 消费者差异化策略", desc: "根据消费者需求提供个性化服务" },
+            { type: "brand", text: "🏷️ 品牌差异化策略", desc: "建立独特的品牌形象和价值主张" },
+            { type: "service", text: "🤝 服务差异化策略", desc: "提供与竞争对手不同的服务方式" },
+            { type: "promotion", text: "📢 推广差异化策略", desc: "设计不同的推广方法组合" }
+        ];
+        
+        const allCases = [
+            {
+                caseName: "📱 手机新品上市",
+                caseText: "你是一家手机公司的营销总监。公司刚刚研发了一款具有独特拍照功能的智能手机，拍照效果远超竞争对手。\n\n【你的产品】\n- 自研「星光影像系统」，夜景拍摄效果是iPhone的2倍\n- 前置3200万像素，专为直播和短视频设计\n- 重量仅168克，手感轻薄\n\n【市场情况】\n- 华米OV占据80%市场份额，旗舰机价格战激烈\n- 竞品同质化严重，都在卷配置参数\n- 年轻用户追求拍照发朋友圈，对性价比敏感",
+                question: "面对这款新品，你认为最合适的差异化营销策略是什么？",
+                hint: "💡 思考：这款手机的核心竞争力来自哪里？是产品本身还是其他方面？",
+                answer: "product",
+                explanation: "✅ 【商品差异化策略】\n\n📌 选这个的理由：\n这款手机的核心卖点是「星光影像系统」——产品本身的功能创新，这是与其他手机最本质的区别。\n\n❌ 为什么不是其他：\n- 价格：还没定价，价格策略是后面的事\n- 渠道：线上线下都能卖，不是核心问题\n- 品牌：新品上市根本没知名度\n- 推广：产品本身够硬才是根本"
+            },
+            {
+                caseName: "☕ 咖啡店定价",
+                caseText: "你是一家精品咖啡店的老板。店铺位于写字楼商圈，附近有瑞幸、Manner、库迪三家连锁店。\n\n【你的店铺】\n- 咖啡师曾获2024年咖啡师大赛亚军\n- 单品咖啡豆来自埃塞俄比亚耶加雪菲精品庄园\n- 设备是全套La Marzocco意式咖啡机\n- 店铺装修精致，适合商务洽谈\n\n【顾客反馈】\n- 白领小王：\"环境好，但38元一杯太贵了\"\n- 创业者李总：\"价格不是问题，关键是咖啡要好喝\"\n- 学生小陈：\"14元的库迪就很香，还要啥自行车\"",
+                question: "为了吸引不同消费群体，你应该采用哪种差异化策略？",
+                hint: "💡 思考：如何让嫌贵的人愿意来，让有钱人觉得值？",
+                answer: "price",
+                explanation: "✅ 【价格差异化策略】\n\n📌 选这个的理由：\n顾客反馈已经明确展示了三种不同的价格敏感度——有人觉得38元太贵，有人完全不在乎价格。推出不同价位产品线就能通吃。\n\n❌ 为什么不是其他：\n- 商品：咖啡品质已经很好，不是问题\n- 渠道：写字楼地段位置不错\n- 消费者：不是目标人群问题，是价格问题\n- 品牌/推广：都不是解决价格敏感度的办法"
+            },
+            {
+                caseName: "👶 母婴用品渠道",
+                caseText: "你是一家母婴用品公司的营销总监。公司主打高端婴儿推车和安全座椅，定位于高收入年轻父母。\n\n【你的产品】\n- 婴儿推车售价2999-5999元，安全座椅1999-3999元\n- 获得欧盟ECE和中国3C双重认证\n- 设计获得红点设计奖\n\n【困境】\n- 目前主要在天猫店销售，月销2000台\n- 线下母婴店渠道被好孩子、bugaboo占据\n- 目标用户反馈：\"想试坐一下再决定，但找不到线下门店\"\n- 竞品在线下有5000+销售网点",
+                question: "为了更好地触达目标用户，应该采用哪种策略？",
+                hint: "💡 思考：高端母婴用品的目标用户购买决策前最需要什么？",
+                answer: "channel",
+                explanation: "✅ 【渠道差异化策略】\n\n📌 选这个的理由：\n用户反馈很明确：「想试坐一下再决定，但找不到线下门店」。高端母婴用品必须在线下试坐体验，这是刚需。\n\n❌ 为什么不是其他：\n- 商品：产品已经很好，有认证有奖项\n- 价格：高端定价没问题，不是价格问题\n- 消费者：目标用户已经明确\n- 品牌：不是知名度问题，是买不到的问题"
+            },
+            {
+                caseName: "💼 高端健身房",
+                caseText: "你是一家健身房的营销负责人。健身房位于高端住宅区，附近有超级猩猩、乐刻两家连锁健身房。\n\n【你的优势】\n- 场地面积800平米，器械区、团课区、私教室分区明确\n- 拥有4名ACE认证私人教练\n- 提供免费体测、营养咨询、康复指导\n\n【市场情况】\n- 超级猩猩按次付费，月卡299元\n- 乐刻24小时自助，月卡199元\n- 你发现：部分高收入业主愿意花5000元/年办理私教会员，但需要专属服务",
+                question: "针对这部分高端用户，应该采用哪种差异化策略？",
+                hint: "💡 思考：高端客户需要的是标准化服务还是定制化服务？",
+                answer: "customer",
+                explanation: "✅ 【消费者差异化策略】\n\n📌 选这个的理由：\n关键词是「专属服务」——高端业主需要的是针对他个人情况的定制化健身方案，而不是标准化月卡。这是按用户需求细分。\n\n❌ 为什么不是其他：\n- 价格：高端定价已有，不是问题\n- 服务：这里的专属私教本身就是服务，但核心是「按人定价」\n- 渠道：高端用户在哪买不是问题\n- 品牌：不是知名度问题"
+            },
+            {
+                caseName: "👜 奢侈品包包",
+                caseText: "你是一家新兴皮具品牌的创始人。品牌创立2年，主打手工皮包。\n\n【你的产品】\n- 选用意大利头层牛皮，每只包由10年经验的工匠手工制作\n- 平均售价3000-8000元\n- 品质完全不输LV、Gucci同等价位产品\n\n【困境】\n- 消费者提到奢侈品只知道LV、Gucci、Hermès\n- 你的品牌在社交媒体上几乎没有声量\n- 竞品每年砸几亿做广告请明星代言\n- 你的年营销预算只有50万",
+                question: "面对强势的品牌竞争，你应该如何突围？",
+                hint: "💡 思考：知名度拼不过大牌，但你可以拼什么？",
+                answer: "brand",
+                explanation: "✅ 【品牌差异化策略】\n\n📌 选这个的理由：\n关键词是「知名度低」+「品质好」——你需要让消费者知道你的品牌。「10年经验工匠手工」就是你的品牌故事，是大牌给不了的。\n\n❌ 为什么不是其他：\n- 价格：3000-8000元已经是奢侈品定价\n- 商品：品质已经是优势，不是问题\n- 推广：50万预算根本不够打广告\n- 渠道：不是买不到的问题，是不知道的问题"
+            },
+            {
+                caseName: "🚗 汽车4S店",
+                caseText: "你是一家汽车4S店的销售经理。品牌是大众foxconn，车型和隔壁3家4S店完全相同。\n\n【市场情况】\n- 汽车价格透明化，客户比价很容易\n- 你店优惠2万，隔壁店优惠2.2万，客户转身就走\n- 客户进店后抱怨：\"你们服务态度一般试驾也不积极\"\n- 售后客户流失率高达40%",
+                question: "在产品无法差异化的情况下，如何吸引更多客户？",
+                hint: "💡 思考：客户买车后，服务才刚开始还是结束了？",
+                answer: "service",
+                explanation: "✅ 【服务差异化策略】\n\n📌 选这个的理由：\n车型相同、价格透明，客户选你而不是隔壁店的唯一理由就是服务。客户已经抱怨服务态度差了。\n\n❌ 为什么不是其他：\n- 商品：车型完全相同，无法差异化\n- 价格：优惠2000还是2200，客户永远选更便宜的\n- 渠道：4S店模式一样\n- 品牌：大众品牌无法改变"
+            },
+            {
+                caseName: "🎮 游戏推广",
+                caseText: "你是一款新游戏的营销负责人。游戏是仙侠类MMORPG，定档暑期上线。\n\n【你的游戏】\n- 首创「AI队友」系统，NPC有情感会吃醋\n- 研发耗时3年，投资5000万\n- 测试阶段玩家留存率70%（行业平均45%）\n\n【困境】\n- 游戏市场仙侠类泛滥，每年上线200+款\n- 玩家提到仙侠只知道《逆水寒》《天涯明月刀》\n- 你的营销预算只有200万，不及大厂的1%\n- 找不到知名主播愿意推广新游戏",
+                question: "面对资源有限的情况，应该采用哪种差异化策略来推广？",
+                hint: "💡 思考：钱拼不过大厂，但可以拼什么？",
+                answer: "promotion",
+                explanation: "✅ 【推广差异化策略】\n\n📌 选这个的理由：\n关键词是「预算有限」+「知名度低」——钱不够打广告，只能靠创意。「AI队友会吃醋」这个话题本身就很适合病毒式传播。\n\n❌ 为什么不是其他：\n- 商品：游戏品质已经很好，留存率70%证明一切\n- 价格：游戏不存在定价问题\n- 渠道：游戏都是线上分发\n- 品牌：新品没有知名度，但200万也砸不出品牌"
+            },
+            {
+                caseName: "🍵 新中式茶饮",
+                caseText: "你是一家新中式茶饮品牌的创始人。品牌主打「药食同源」养生茶饮。\n\n【你的产品】\n- 推出「熬夜恢复茶」「气血双补茶」「祛湿美颜茶」等养生系列\n- 选用同仁堂同款原料供应商\n- 定价18-28元，介于蜜雪冰城和喜茶之间\n\n【困境】\n- 茶饮市场极度内卷：蜜雪冰城8元/杯，喜茶30元/杯\n- 消费者对「养生茶饮」认知模糊\n- 你的品牌知名度几乎为零\n- 选址在商场B1层，客流被喜茶、霸王茶姬抢走",
+                question: "为了在竞争中脱颖而出，应该采用哪种策略？",
+                hint: "💡 思考：消费者为什么要选择你而不是喜茶？",
+                answer: "brand",
+                explanation: "✅ 【品牌差异化策略】\n\n📌 选这个的理由：\n关键词是「认知模糊」+「知名度低」——你需要让消费者知道「养生茶饮」这个品类等于你的品牌。这是品牌定位问题。\n\n❌ 为什么不是其他：\n- 价格：18-28元卡在中间，不是主打\n- 商品：产品有特色，但需要让人知道\n- 渠道：已经在商场，问题不是渠道\n- 推广：推广只能短期引流，解决不了认知问题"
+            }
+        ];
+        
+        // 游戏状态
+        window.caseOrder = [];
+        window.currentIndex = 0;
+        window.score = 0;
+        window.rightCount = 0;
+        window.wrongCount = 0;
+        window.currentOptions = [];
+        
+        // DOM元素
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // 打乱数组
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        
+        // 生成选项
+        function generateOptions(correctType) {
+            let options = [];
+            
+            // 正确答案
+            const correct = strategyOptions.find(o => o.type === correctType);
+            options.push({ type: correct.type, text: correct.text, correct: true });
+            
+            // 错误选项
+            const wrongTypes = strategyOptions.filter(o => o.type !== correctType);
+            shuffle(wrongTypes).forEach(o => {
+                options.push({ type: o.type, text: o.text, correct: false });
+            });
+            
+            return shuffle(options);
+        }
+        
+        // 开始游戏
+        function startGame() {
+            caseOrder = shuffle([...Array(allCases.length).keys()]);
+            currentIndex = 0;
+            score = 0;
+            rightCount = 0;
+            wrongCount = 0;
+            
+            startScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+            resultScreen.style.display = 'none';
+            
+            showCase();
+        }
+        
+        // 显示题目
+        function showCase() {
+            const q = allCases[caseOrder[currentIndex]];
+            
+            // 更新进度
+            for (let i = 1; i <= 8; i++) {
+                const step = document.getElementById('step' + i);
+                step.className = 'step';
+                if (i - 1 < currentIndex) step.className = 'step completed';
+                if (i - 1 === currentIndex) step.className = 'step active';
+            }
+            
+            document.getElementById('phase-tag').textContent = '场景' + (currentIndex + 1);
+            document.getElementById('knowledge-tag').textContent = '策略选择';
+            document.getElementById('scenario-title').textContent = q.caseName;
+            document.getElementById('scenario-text').innerHTML = q.caseText.replace(/\n/g, '<br>');
+            document.getElementById('question-text').textContent = q.question;
+            document.getElementById('think-text').textContent = q.hint;
+            
+            // 重置
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('score').textContent = score;
+            
+            // 生成选项
+            currentOptions = generateOptions(q.answer);
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            currentOptions.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                // 简化显示，只保留emoji和类型
+                const typeText = opt.text.replace(/.*?\s+/, '');
+                btn.innerHTML = `<span style="font-size:1.4em;margin-bottom:2px;">${typeText.split(' ')[0]}</span><span style="font-size:0.7em;display:block;">${typeText.split(' ').slice(1).join(' ')}</span>`;
+                btn.onclick = function() { selectAnswer(index); };
+                optionsContainer.appendChild(btn);
+            });
+        }
+        
+        // 选择答案
+        function selectAnswer(index) {
+            const q = allCases[caseOrder[currentIndex]];
+            const options = document.querySelectorAll('.option');
+            
+            if (currentOptions[index].correct) {
+                // 正确
+                options.forEach((opt, i) => {
+                    opt.classList.add('disabled');
+                    if (currentOptions[i].correct) opt.classList.add('correct');
+                });
+                rightCount++;
+                score += 12;
+                document.getElementById('score').textContent = score;
+                
+                document.getElementById('explanation-text').innerHTML = q.explanation.replace(/\n/g, '<br>');
+                document.getElementById('explanation').classList.add('show');
+                
+                // 显示下一题按钮，移除自动跳转
+                const optionsContainer = document.getElementById('options');
+                const nextBtn = document.createElement('div');
+                nextBtn.className = 'option';
+                nextBtn.style.cssText = 'background: linear-gradient(135deg, #667eea, #764ba2); border-color: #667eea; color: #fff; text-align: center; font-weight: bold; margin-top: 15px; grid-column: span 4;';
+                nextBtn.textContent = '➡️ 进入下一题';
+                nextBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    nextCase();
+                };
+                optionsContainer.appendChild(nextBtn);
+            } else {
+                // 错误
+                options[index].classList.add('wrong');
+                
+                const optionsContainer = document.getElementById('options');
+                const retryBtn = document.createElement('div');
+                retryBtn.className = 'option';
+                retryBtn.style.cssText = 'background: linear-gradient(135deg, #ff9800, #ff5722); border-color: #ff9800; color: #fff; text-align: center; font-weight: bold; margin-top: 10px;';
+                retryBtn.textContent = '🔄 再试一次';
+                
+                // 先禁用所有选项（不包括retryBtn）
+                options.forEach(opt => {
+                    if (opt !== retryBtn) opt.classList.add('disabled');
+                });
+                
+                retryBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    retryBtn.remove();
+                    document.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('disabled', 'wrong', 'correct');
+                    });
+                };
+                optionsContainer.appendChild(retryBtn);
+            }
+        }
+        
+        // 下一题
+        function nextCase() {
+            currentIndex++;
+            if (currentIndex >= allCases.length) {
+                showResult();
+            } else {
+                showCase();
+            }
+        }
+        
+        // 显示结果
+        function showResult() {
+            gameScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
+            
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('stat-right').textContent = rightCount;
+            document.getElementById('stat-wrong').textContent = wrongCount;
+            document.getElementById('stat-score').textContent = score;
+            
+            let title, msg;
+            if (score >= 80) {
+                title = "🏆 营销大师！";
+                msg = "你展现了出色的营销洞察力！对差异化营销策略了如指掌，完全具备带领企业走向成功的实力！";
+            } else if (score >= 50) {
+                title = "⭐ 策略高手";
+                msg = "你展现了一定的营销思维！对差异化策略有较好理解，稍加磨练必定成为营销高手！";
+            } else {
+                title = "📚 需要进修";
+                msg = "差异化营销的学问很深奥！建议再学习理论知识，在实践中加深理解！";
+            }
+            
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('result-msg').textContent = msg;
+        }
+        
+        // 重新开始
+        function restartGame() {
+            resultScreen.style.display = 'none';
+            startScreen.style.display = 'block';
+        }
+        
+        // 绑定事件
+        startBtn.onclick = startGame;
+        restartBtn.onclick = restartGame;
+    </script>
+</body>
+</html>
