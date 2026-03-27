@@ -13,7 +13,7 @@ YEAR = 2026
 WEEK = 13  # 第13周
 START_DATE = "2026.03.27"
 END_DATE = "2026.04.02"
-NOTE = "🍃 叶菜2-3天内吃完 &nbsp;|&nbsp; 🍠 山药可以慢慢吃 &nbsp;|&nbsp; 🚫 调味不加糖葱蒜 &nbsp;|&nbsp; 🏠 周三周四晚自习，学校简单吃"
+NOTE = "🍃 叶菜2-3天内吃完 &nbsp;|&nbsp; 🍠 山药可以慢慢吃 &nbsp;|&nbsp; 🚫 调味不加糖葱蒜 &nbsp;|&nbsp; 🏠 周三周四晚自习在学校吃，晚餐不排"
 
 DAYS = [
     {
@@ -50,13 +50,13 @@ DAYS = [
         "day": "周三", "date": "4/1", "color": "#2980B9",
         "breakfast": [("鸡蛋灌饼",False),("炒菠菜",False)],
         "lunch": [("（学校，晚自习）",True)],
-        "dinner": [("山药块",False),("煎蛋",False),("（简单吃）",True)],
+        "dinner": [],
     },
     {
         "day": "周四", "date": "4/2", "color": "#16A085",
         "breakfast": [("杂粮包",False),("山药泥",False),("荷包蛋",False)],
         "lunch": [("（学校，晚自习）",True)],
-        "dinner": [("清蒸鱼",False),("青菜",False),("（简单吃）",True)],
+        "dinner": [],
     },
 ]
 
