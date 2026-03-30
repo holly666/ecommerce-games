@@ -389,6 +389,10 @@ function loadRound(roundIndex) {
   const round = gameData.rounds[roundIndex];
   gamePhase = 'choice';
   
+  // 清理上一轮可能残留的额外按钮（retry时）
+  const existingNextBtn = document.getElementById('nextRoundExtraBtn');
+  if (existingNextBtn) existingNextBtn.remove();
+  
   const indicator = document.getElementById('stepIndicator');
   indicator.innerHTML = gameData.rounds.map((_, i) => 
     `<div class="step-dot ${i < roundIndex ? 'done' : i === roundIndex ? 'active' : ''}"></div>`
@@ -463,7 +467,18 @@ function confirmChoice() {
 
   const btn = document.getElementById('actionBtn');
   btn.disabled = false;
-  if (currentRound < gameData.rounds.length - 1) {
+  if (selectedOption !== 'correct' && currentRound < gameData.rounds.length - 1) {
+    // 选错了：显示重试按钮
+    btn.textContent = '🔄 重试本关';
+    btn.onclick = () => { gamePhase = 'choice'; loadRound(currentRound); };
+    const retryBtn = document.createElement('button');
+    retryBtn.className = 'action-btn';
+    retryBtn.style.marginLeft = '12px';
+    retryBtn.textContent = '下一关 →';
+    retryBtn.id = 'nextRoundExtraBtn';
+    retryBtn.onclick = goNextRound;
+    btn.parentElement.appendChild(retryBtn);
+  } else if (currentRound < gameData.rounds.length - 1) {
     btn.textContent = '下一关 →';
     btn.onclick = goNextRound;
   } else {
