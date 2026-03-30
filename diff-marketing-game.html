@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>奶茶店突围战 - 差异化营销策略</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+/* 开始页面 */
+#start-screen { text-align: center; padding-top: 60px; }
+.title { font-size: 2.2em; color: #ffd700; margin-bottom: 10px; }
+.subtitle { font-size: 1.1em; color: #aaa; margin-bottom: 40px; line-height: 1.8; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 16px 48px; font-size: 1.2em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.start-btn:hover { transform: scale(1.05); }
+.game-desc { background: #16213e; border-radius: 16px; padding: 24px; margin-top: 30px; text-align: left; }
+.game-desc h3 { color: #ffd700; margin-bottom: 12px; }
+.game-desc p { color: #ccc; line-height: 1.8; font-size: 0.95em; margin-bottom: 8px; }
+
+/* 游戏页面 */
+#game-screen { display: none; }
+.situation-box { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.situation-title { color: #ffd700; font-size: 1.1em; margin-bottom: 12px; }
+.situation-text { color: #ddd; line-height: 1.9; font-size: 1em; }
+.data-panel { background: #0f3460; border-radius: 12px; padding: 16px; margin: 16px 0; }
+.data-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.95em; }
+.data-row:last-child { border-bottom: none; }
+.data-label { color: #aaa; }
+.data-value { color: #ffd700; font-weight: bold; }
+.data-value.bad { color: #ff6b6b; }
+.data-value.good { color: #51cf66; }
+
+.question { font-size: 1.1em; color: #fff; margin-bottom: 20px; line-height: 1.7; }
+.think-hint { background: rgba(255, 215, 0, 0.1); border-left: 3px solid #ffd700; padding: 10px 14px; margin-bottom: 20px; font-size: 0.9em; color: #ffd700; border-radius: 0 8px 8px 0; }
+
+.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; transition: all 0.2s; line-height: 1.6; }
+.option-btn:hover { border-color: #667eea; background: #1a237e; color: #fff; }
+.option-btn.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.15); color: #ffd700; }
+.option-btn.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+.option-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 20px; }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* 结果页面 */
+#result-screen { display: none; text-align: center; padding-top: 40px; }
+.result-title { font-size: 1.8em; color: #ffd700; margin-bottom: 16px; }
+.result-score { font-size: 1.2em; color: #aaa; margin-bottom: 30px; }
+.result-detail { background: #16213e; border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; }
+.result-detail h4 { color: #ffd700; margin-bottom: 12px; }
+.result-detail p { color: #ccc; line-height: 1.8; margin-bottom: 8px; font-size: 0.95em; }
+.round-result { background: #0f3460; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.round-result .round-title { color: #667eea; font-size: 0.9em; margin-bottom: 8px; }
+.round-result .choice { color: #ffd700; margin-bottom: 4px; }
+.round-result .outcome { color: #aaa; font-size: 0.9em; }
+
+.step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.step-dot { width: 10px; height: 10px; border-radius: 50%; background: #334; }
+.step-dot.active { background: #ffd700; }
+.step-dot.done { background: #51cf66; }
+
+/* 隐藏 */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 开始页面 -->
+<div id="start-screen">
+  <div class="title">🏪 奶茶店突围战</div>
+  <div class="subtitle">差异化营销策略 · 沉浸式决策游戏</div>
+  <button class="start-btn" onclick="startGame()">开始挑战</button>
+  <div class="game-desc">
+    <h3>📋 游戏说明</h3>
+    <p>你是新开业的奶茶店老板。周围已有3家竞争对手，其中一家正在打价格战。</p>
+    <p>你需要分析市场情况，选择合适的差异化营销策略来突围。</p>
+    <p>⚠️ 选错策略会有真实后果——亏损、顾客流失、口碑下滑。</p>
+    <p>💡 每一步决策后，你会看到数据反馈，再决定下一步怎么走。</p>
+  </div>
+</div>
+
+<!-- 游戏页面 -->
+<div id="game-screen">
+  <div class="step-indicator" id="stepIndicator"></div>
+  
+  <div class="situation-box">
+    <div class="situation-title" id="situationTitle"></div>
+    <div class="situation-text" id="situationText"></div>
+    <div class="data-panel" id="dataPanel"></div>
+  </div>
+
+  <div class="question" id="questionText"></div>
+  <div class="think-hint" id="thinkHint">🤔 思考提示：这个困境的关键问题是什么？选策略时主要看什么？</div>
+
+  <div class="options" id="optionsContainer"></div>
+  
+  <div style="text-align:center;">
+    <button class="action-btn" id="nextBtn" onclick="confirmChoice()" disabled>确认策略</button>
+  </div>
+</div>
+
+<!-- 结果页面 -->
+<div id="result-screen">
+  <div class="result-title" id="resultTitle">挑战完成！</div>
+  <div class="result-score" id="resultScore"></div>
+  <div class="result-detail" id="resultDetail"></div>
+  <button class="start-btn" onclick="restartGame()">再玩一次</button>
+</div>
+
+</div>
+
+<script>
+// ===== 游戏数据 =====
+const gameData = {
+  name: "奶茶店突围战",
+  rounds: [
+    {
+      id: 1,
+      situationTitle: "📍 第一周 · 开局困境",
+      situationText: "你的奶茶店「茶主张」开业了。<br>对手「平价王」最近全场5折促销，你的店开业一周，只卖出了23杯，几乎没有回头客。<br>老板很焦虑，来找你商量对策。",
+      data: [
+        { label: "本周销售额", value: "¥460", type: "bad" },
+        { label: "日均客流", value: "23人", type: "bad" },
+        { label: "平价王同类产品", value: "¥8/杯", type: "" },
+        { label: "你的同类产品", value: "¥18/杯", type: "" },
+        { label: "顾客反馈（抽样）", value: "\"太贵了，跟平价王差不多为什么要买你家的\"", type: "" }
+      ],
+      question: "面对平价王的价格战，你打算采用哪种差异化策略来吸引顾客？",
+      options: [
+        { text: "🚩 跟它打价格战 — 全场降价到¥10以下，用价格换客流", key: "wrong" },
+        { text: "🍵 商品差异化 — 主打低糖低脂健康鲜奶茶，区别于平价王的传统奶茶", key: "correct" },
+        { text: "🎁 买一送一促销 — 变相降价但不公开说打折", key: "neutral" },
+        { text: "😔 什么都不做 — 等对手促销结束再说", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略奏效",
+          text: "健康鲜奶茶的概念吸引了一批在意品质的年轻女性顾客。虽然价格仍然是¥18+，但她们愿意为\"低糖低脂\"买单。周转率开始上升。"
+        },
+        wrong: {
+          title: "❌ 陷入价格战泥潭",
+          text: "降价确实引来了客流，但利润被压缩到几乎为零。而且顾客形成了\"便宜才买\"的预期，一旦恢复原价立刻流失。"
+        },
+        neutral: {
+          title: "⚠️ 效果有限",
+          text: "买一送一带来了一些客流，但没有解决核心问题——顾客对你的店没有清晰认知。促销结束后，客流恢复原状。"
+        }
+      }
+    },
+    {
+      id: 2,
+      situationTitle: "📍 第三周 · 新挑战",
+      situationText: "健康奶茶策略执行了2周，效果不错——有了稳定的回头客。<br>但新问题出现了：另一家竞品「网红潮茶」正在小红书、抖音上疯狂种草，主打\"潮酷\"人设，吸引了大批年轻学生。",
+      data: [
+        { label: "本周销售额", value: "¥1,200", type: "good" },
+        { label: "新增顾客年龄分布", value: "25-35岁女性为主", type: "" },
+        { label: "网红潮茶抖音粉丝", value: "8.2万", type: "" },
+        { label: "你的线上曝光", value: "几乎为0", type: "bad" },
+        { label: "学生群体进店率", value: "↓ 12%", type: "bad" }
+      ],
+      question: "面对竞品线上流量碾压，你决定用什么方式突围？",
+      options: [
+        { text: "📱 线下事件营销 — 在店门口办\"甩糖挑战赛\"，现场互动吸引路人", key: "neutral" },
+        { text: "🎯 精准渠道差异化 — 主攻学生社群和校园代理，不跟网红潮茶抢抖音", key: "correct" },
+        { text: "💰 继续降价 — 推出学生专属折扣¥12/杯", key: "wrong" },
+        { text: "🤝 找美食博主探店 — 花5000元请本地美食KOL来推荐", key: "neutral" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略精准",
+          text: "你绕开了网红潮茶的抖音主阵地，专注做校园代理和班级群推广。推出\"第二杯半价+送货到校\"服务，学生不用出门就能下单，一周内订单量上涨65%。"
+        },
+        wrong: {
+          title: "❌ 价格战再陷泥潭",
+          text: "降价确实吸引了学生，但你的利润率被压到了5%以下。而且家长圈传开了\"这家店总是打折，是不是要倒了\"的传言。"
+        },
+        neutral: {
+          title: "⚠️ 有效果但不持续",
+          text: "美食博主探店带来了一波流量，但转化率很低——粉丝来了发现产品和网红潮茶差不多，没有非买不可的理由。"
+        }
+      }
+    },
+    {
+      id: 3,
+      situationTitle: "📍 第五周 · 新的对手",
+      situationText: "精准渠道策略让店里的学生客群稳定在30%左右。<br>但又冒出了新的竞争对手「茶茶日记」——主打文创风格，店里装修很文艺，小红书打卡热度直线上升。",
+      data: [
+        { label: "本周销售额", value: "¥1,800", type: "good" },
+        { label: "学生客群占比", value: "30%", type: "" },
+        { label: "茶茶日记小红书笔记", value: "篇均500+赞", type: "" },
+        { label: "你的社交媒体声量", value: "基本为0", type: "bad" },
+        { label: "老顾客复购率", value: "58%", type: "good" }
+      ],
+      question: "面对文创风格的新竞品，你决定怎么应对？",
+      options: [
+        { text: "🏆 品牌差异化 — 明确\"健康奶茶\"品牌定位，主打专业营养概念，与文创风格形成互补而非竞争", key: "correct" },
+        { text: "🎨 模仿跟进 — 也做文创风格，请设计师重新装修店面", key: "wrong" },
+        { text: "📍 开分店 — 在茶茶日记附近也开一家，抢同一批客流", key: "wrong" },
+        { text: "📉 收缩战线 — 减少产品线，专注做爆款", key: "neutral" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 品牌定位清晰，护城河形成",
+          text: "\"要健康，选茶主张\"这个定位在目标客群中逐渐传开。你和一些健身房、瑜伽馆做了异业合作，顾客觉得买这家的奶茶是有品位的健康管理方式。茶茶日记的客群来过一次就不来了——\"太文艺了，不是我这种运动女孩的风格\"。"
+        },
+        wrong: {
+          title: "❌ 盲目跟风，失去方向",
+          text: "装修花了3万元，但改完后老顾客说\"不知道你们家现在做什么定位了\"。更糟糕的是，茶茶日记的顾客也没来——\"你们抄得不像啊\"。"
+        },
+        neutral: {
+          title: "⚠️ 保守但稳定",
+          text: "收缩产品线确实让出品更稳定，但也错过了扩大客群的机会。一个月后，茶茶日记的扩张让你店里的客流又下滑了8%。"
+        }
+      }
+    }
+  ]
+};
+
+// ===== 游戏状态 =====
+let currentRound = 0;
+let selectedOption = null;
+let roundResults = [];
+
+// ===== 工具函数 =====
+// 随机打乱选项
+function shuffleArray(arr) {
+  const newArr = [...arr];
+  for (let i = newArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
+}
+
+// ===== 游戏逻辑 =====
+function startGame() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').style.display = 'block';
+  currentRound = 0;
+  roundResults = [];
+  loadRound(currentRound);
+}
+
+function loadRound(roundIndex) {
+  const round = gameData.rounds[roundIndex];
+  
+  // 更新步骤指示器
+  const indicator = document.getElementById('stepIndicator');
+  indicator.innerHTML = gameData.rounds.map((_, i) => 
+    `<div class="step-dot ${i < roundIndex ? 'done' : i === roundIndex ? 'active' : ''}"></div>`
+  ).join('');
+
+  // 情境
+  document.getElementById('situationTitle').textContent = round.situationTitle;
+  document.getElementById('situationText').innerHTML = round.situationText;
+  
+  // 数据面板
+  const dataPanel = document.getElementById('dataPanel');
+  dataPanel.innerHTML = round.data.map(d => 
+    `<div class="data-row">
+      <span class="data-label">${d.label}</span>
+      <span class="data-value ${d.type === 'bad' ? 'bad' : d.type === 'good' ? 'good' : ''}">${d.value}</span>
+    </div>`
+  ).join('');
+
+  // 问题
+  document.getElementById('questionText').textContent = round.question;
+  document.getElementById('thinkHint').textContent = '🤔 思考提示：这个困境的关键问题是什么？选策略时主要看什么？';
+
+  // 选项（随机顺序）
+  const shuffledOptions = shuffleArray(round.options.map((opt, i) => ({...opt, originalIndex: i})));
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = shuffledOptions.map((opt, i) => 
+    `<button class="option-btn" onclick="selectOption(${i}, '${opt.key}', this)" data-key="${opt.key}">${opt.text}</button>`
+  ).join('');
+  
+  // 隐藏数据面板中敏感信息不要在答题前暴露答案
+  document.querySelector('.data-panel .data-row:last-child .data-value').style.opacity = '0.3';
+
+  selectedOption = null;
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = '请先选择一个策略';
+}
+
+function selectOption(index, key, btn) {
+  // 清除之前的选中状态
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.style.borderColor = '';
+    b.style.background = '';
+    b.style.color = '';
+  });
+  
+  btn.classList.add('selected');
+  selectedOption = { index, key, btn };
+  
+  document.getElementById('nextBtn').disabled = false;
+  document.getElementById('nextBtn').textContent = '确认策略';
+}
+
+function confirmChoice() {
+  if (!selectedOption) return;
+  
+  const round = gameData.rounds[currentRound];
+  const feedback = round.feedback[selectedOption.key];
+  
+  // 禁用所有按钮
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.key === 'correct') {
+      b.classList.add('correct');
+    } else if (b === selectedOption.btn && selectedOption.key !== 'correct') {
+      b.classList.add('wrong');
+    }
+  });
+
+  // 记录结果
+  roundResults.push({
+    round: currentRound + 1,
+    choice: selectedOption.key,
+    feedback: feedback
+  });
+
+  // 显示反馈（替代选项显示）
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = `
+    <div style="grid-column: 1/-1; background: ${selectedOption.key === 'correct' ? 'rgba(81,207,102,0.1)' : selectedOption.key === 'wrong' ? 'rgba(255,107,107,0.1)' : 'rgba(255,215,0,0.1)'}; border-radius: 12px; padding: 20px; border: 2px solid ${selectedOption.key === 'correct' ? '#51cf66' : selectedOption.key === 'wrong' ? '#ff6b6b' : '#ffd700'}">
+      <div style="color: ${selectedOption.key === 'correct' ? '#51cf66' : selectedOption.key === 'wrong' ? '#ff6b6b' : '#ffd700'}; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">${feedback.title}</div>
+      <div style="color: #ccc; line-height: 1.8; font-size: 0.95em;">${feedback.text}</div>
+    </div>
+  `;
+
+  // 恢复数据面板的备注显示
+  document.querySelector('.data-panel .data-row:last-child .data-value').style.opacity = '1';
+
+  // 下一题或结束
+  const nextBtn = document.getElementById('nextBtn');
+  if (currentRound < gameData.rounds.length - 1) {
+    nextBtn.textContent = '下一周挑战 →';
+    nextBtn.disabled = false;
+    nextBtn.onclick = () => {
+      currentRound++;
+      nextBtn.onclick = confirmChoice;
+      loadRound(currentRound);
+    };
+  } else {
+    nextBtn.textContent = '查看战报';
+    nextBtn.disabled = false;
+    nextBtn.onclick = showResult;
+  }
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const correctCount = roundResults.filter(r => r.choice === 'correct').length;
+  const total = roundResults.length;
+  
+  // 计算最终评价
+  let finalScore = correctCount;
+  let title = '';
+  let summary = '';
+  
+  if (correctCount === 3) {
+    title = '🏆 营销大师！';
+    summary = '你已经熟练掌握了差异化营销策略的核心：不是跟对手拼价格，而是找到自己的独特价值，在目标客群心中建立不可替代的位置。';
+  } else if (correctCount === 2) {
+    title = '🌟 潜力新星';
+    summary = '你对差异化营销有基本的理解，但在复杂情境中偶尔会被表面因素（如促销、降价）带走方向。继续练习，你会越来越敏锐。';
+  } else if (correctCount === 1) {
+    title = '📚 仍有进步空间';
+    summary = '差异化营销的核心是\"找到自己最强的点，而不是补对手的弱点\"。你在策略选择上容易陷入跟对手正面对比的思维。';
+  } else {
+    title = '💡 需要再学习';
+    summary = '建议重温差异化营销的7种策略类型：商品、价格、渠道、消费者、品牌、服务、推广。理解每种策略适用的场景是第一步。';
+  }
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = `策略正确率：${correctCount}/${total}`;
+  
+  const detail = document.getElementById('resultDetail');
+  detail.innerHTML = `
+    <h4>📊 各周决策回顾</h4>
+    ${roundResults.map((r, i) => `
+      <div class="round-result">
+        <div class="round-title">第${i+1}周</div>
+        <div class="choice">决策：${r.choice === 'correct' ? '✅ 正确' : r.choice === 'wrong' ? '❌ 有误' : '⚠️ 欠佳'}</div>
+        <div class="outcome">${r.feedback.title.replace(/^[✅❌⚠️]/, '')}</div>
+      </div>
+    `).join('')}
+    
+    <h4 style="margin-top: 20px;">💡 核心收获</h4>
+    <p>${summary}</p>
+    <p style="margin-top: 10px;"><strong style="color:#ffd700;">差异化的本质：</strong>不是比对手便宜，而是让特定人群觉得"这家店就是为我开的"。</p>
+    <p style="margin-top: 6px;"><strong style="color:#ffd700;">常见误区：</strong>①跟价格战正面PK ②盲目模仿对手风格 ③促销=策略</p>
+  `;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
