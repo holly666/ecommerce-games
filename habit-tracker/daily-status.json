@@ -1,0 +1,69 @@
+{
+  "date": "2026-04-01",
+  "display": "4月1日（周三）",
+  "medication": {
+    "treatment_day": 6,
+    "progesterone": true,
+    "aspirin": true,
+    "heparin": true,
+    "vitamin_d": true,
+    "cyclosporine": true
+  },
+  "habits": [
+    {
+      "id": "paojiao",
+      "name": "泡脚",
+      "icon": "🦶",
+      "done": false,
+      "value": 0,
+      "streak": 2
+    },
+    {
+      "id": "heshui",
+      "name": "每日液体",
+      "icon": "💧",
+      "done": false,
+      "value": 0,
+      "streak": 3
+    },
+    {
+      "id": "duanlian",
+      "name": "锻炼",
+      "icon": "🏃",
+      "done": false,
+      "value": 0,
+      "streak": 0
+    },
+    {
+      "id": "shuijiao",
+      "name": "22点前睡觉",
+      "icon": "😴",
+      "done": false,
+      "value": 0,
+      "streak": 1
+    },
+    {
+      "id": "dabian",
+      "name": "大便",
+      "icon": "💩",
+      "done": false,
+      "value": 0,
+      "streak": 1
+    },
+    {
+      "id": "chiyao",
+      "name": "吃药",
+      "icon": "💊",
+      "done": false,
+      "value": 0,
+      "streak": 0
+    }
+  ],
+  "health": {
+    "胀气": "",
+    "打嗝": "",
+    "夜尿次数": 0,
+    "夜尿时间": [],
+    "大便": ""
+  }
+}
