@@ -9,377 +9,178 @@
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            min-height: 100vh; padding: 20px;
         }
         .container { max-width: 900px; margin: 0 auto; }
         h1 { color: white; text-align: center; margin-bottom: 30px; font-size: 28px; }
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
+        .card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .card h2 { color: #333; margin-bottom: 15px; font-size: 18px; }
-        
-        /* 服药卡片 */
         .med-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .med-item {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px 12px;
-            text-align: center;
-        }
+        .med-item { background: #f8f9fa; border-radius: 12px; padding: 15px 12px; text-align: center; }
         .med-item.yes { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
         .med-icon { font-size: 28px; margin-bottom: 6px; }
         .med-name { font-size: 13px; font-weight: 600; }
         .med-status { font-size: 11px; opacity: 0.8; margin-top: 4px; }
-        .med-day { 
-            background: #f0f0f0; border-radius: 20px; padding: 6px 16px;
-            text-align: center; font-size: 12px; color: #666; margin-bottom: 12px;
-        }
-        
-        /* 统计卡片 */
+        .med-day { background: #f0f0f0; border-radius: 20px; padding: 6px 16px; text-align: center; font-size: 12px; color: #666; margin-bottom: 12px; }
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stat-box {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            color: white;
-        }
+        .stat-box { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; padding: 20px; text-align: center; color: white; }
         .stat-box:nth-child(2) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
         .stat-box:nth-child(3) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
         .stat-number { font-size: 36px; font-weight: bold; }
         .stat-label { font-size: 14px; opacity: 0.9; }
-        
-        /* 连续打卡 */
-        .streak-card {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-        .streak-item {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-        }
+        .streak-card { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .streak-item { background: #f8f9fa; border-radius: 15px; padding: 20px; text-align: center; }
         .streak-icon { font-size: 32px; margin-bottom: 10px; }
         .streak-count { font-size: 28px; font-weight: bold; color: #333; }
         .streak-label { font-size: 12px; color: #666; margin-top: 5px; }
-        .streak-item.done { background: linear-gradient(135deg, #43e97b20, #38f9d720); border: 2px solid #43e97b; }
-        .streak-item.done .streak-count { color: #43e97b; }
-        
-        /* 健康追踪 */
         .health-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .health-item {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-        }
+        .health-item { background: #f8f9fa; border-radius: 12px; padding: 15px; }
         .health-item.has-symptom { background: #fff3e0; border: 1px solid #ff9800; }
         .health-label { font-size: 12px; color: #666; margin-bottom: 6px; }
         .health-value { font-size: 16px; font-weight: 600; color: #333; }
         .health-value.alert { color: #e64a19; }
-        .health-detail { font-size: 11px; color: #888; margin-top: 3px; }
-        
-        /* 周视图 */
         .week-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-        .week-day {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 12px 6px;
-            text-align: center;
-        }
+        .week-day { background: #f8f9fa; border-radius: 12px; padding: 12px 6px; text-align: center; }
         .week-day.today { background: #e8f0fe; border: 2px solid #667eea; }
         .week-day .day-name { font-size: 11px; color: #666; margin-bottom: 4px; }
         .week-day .day-date { font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px; }
         .week-habits { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-        .week-habit { 
-            width: 24px; height: 24px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; font-size: 12px;
-        }
+        .week-habit { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
         .wh-done { background: #43e97b; }
         .wh-missed { background: #ff6b6b; }
         .wh-empty { background: #eee; }
-        
-        /* 进度条 */
         .progress-item { margin-bottom: 15px; }
         .progress-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; }
-        .progress-bar {
-            height: 12px;
-            background: #eee;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.5s ease;
-        }
+        .progress-bar { height: 12px; background: #eee; border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
         .fill-green { background: linear-gradient(90deg, #43e97b, #38f9d7); }
         .fill-blue { background: linear-gradient(90deg, #4facfe, #00f2fe); }
         .fill-purple { background: linear-gradient(90deg, #667eea, #764ba2); }
         .fill-orange { background: linear-gradient(90deg, #fa709a, #fee140); }
-        
         .footer { text-align: center; color: white; margin-top: 20px; font-size: 12px; opacity: 0.8; }
-        .loading { text-align: center; color: white; padding: 40px; }
-        .error { text-align: center; color: #ff6b6b; padding: 40px; background: white; border-radius: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🌟 习惯打卡追踪</h1>
-        <div id="content">
-            <div class="loading">加载中...</div>
-        </div>
-    </div>
-
-    <script>
-    async function loadDailyStatus() {
-        try {
-            const [statusRes, habitRes, healthRes] = await Promise.all([
-                fetch('daily-status.json'),
-                fetch('habit-data.json'),
-                fetch('health-data.json')
-            ]);
-            
-            const status = await statusRes.json();
-            const habitData = await habitRes.json();
-            const healthData = await healthRes.json();
-            
-            renderAll(status, habitData, healthData);
-        } catch (e) {
-            document.getElementById('content').innerHTML = 
-                `<div class="error">加载失败: ${e.message}</div>`;
-        }
-    }
-
-    function renderAll(status, habitData, habitJson) {
-        const today = status.date;
-        const todayObj = new Date(today);
-        const weekday = todayObj.getDay();
-        const isWeekend = weekday === 0 || weekday === 6;
-        
-        // 计算本周开始（周一）
-        const dayOfWeek = todayObj.getDay();
-        const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        const weekStart = new Date(todayObj);
-        weekStart.setDate(todayObj.getDate() + mondayOffset);
-        
-        // 生成周视图的7天
-        const weekDays = [];
-        for (let i = 0; i < 7; i++) {
-            const d = new Date(weekStart);
-            d.setDate(weekStart.getDate() + i);
-            weekDays.push(d.toISOString().split('T')[0]);
-        }
-        
-        // 获取本周打卡数据
-        const weekRecords = {};
-        (habitJson.打卡记录 || []).forEach(r => {
-            if (weekDays.includes(r.日期)) {
-                weekRecords[r.日期] = r;
-            }
-        });
-        
-        // 统计
-        const totalHabits = status.habits.length;
-        const doneToday = status.habits.filter(h => h.done).length;
-        const totalStreaks = status.habits.reduce((sum, h) => sum + h.streak, 0);
-        
-        let weekDoneCount = 0;
-        weekDays.forEach(d => {
-            const r = weekRecords[d];
-            if (r) {
-                if (r.paojiao > 0) weekDoneCount++;
-                if (r.heshui >= 2000) weekDoneCount++;
-                if (r.duanlian >= 30) weekDoneCount++;
-                if (r.shuijiao > 0) weekDoneCount++;
-            }
-        });
-        const weekRate = Math.round((weekDoneCount / (totalHabits * 7)) * 100);
-        
-        // 渲染
-        let html = '';
-        
-        // === 服药卡片 ===
-        html += `
         <div class="card">
-            <h2>💊 今日服药（治疗第${status.medication.treatment_day}天）</h2>
-            <div class="med-day">4月1日（周三）</div>
+            <h2>💊 今日服药（治疗第6天）</h2>
+            <div class="med-day">4月1日（Wednesday）</div>
             <div class="med-grid">
-                <div class="med-item ${status.medication.progesterone ? 'yes' : ''}">
+                
+                <div class="med-item yes">
                     <div class="med-icon">💉</div>
                     <div class="med-name">黄体酮针</div>
-                    <div class="med-status">${status.medication.progesterone ? '✅ 今天打' : '❌ 今天不打'}</div>
+                    <div class="med-status">✅ 打" if yes else f"❌ 打</div>
                 </div>
-                <div class="med-item ${status.medication.aspirin ? 'yes' : ''}">
+                <div class="med-item yes">
                     <div class="med-icon">💊</div>
                     <div class="med-name">阿司匹林</div>
-                    <div class="med-status">${status.medication.aspirin ? '✅ 今天吃' : '❌ 今天不吃'}</div>
+                    <div class="med-status">✅ 吃" if yes else f"❌ 吃</div>
                 </div>
                 <div class="med-item yes">
                     <div class="med-icon">💉</div>
                     <div class="med-name">肝素针</div>
-                    <div class="med-status">✅ 每天打</div>
+                    <div class="med-status">✅ 每天打" if yes else f"❌ 每天打</div>
                 </div>
-                <div class="med-item ${status.medication.vitamin_d ? 'yes' : ''}">
+                <div class="med-item yes">
                     <div class="med-icon">💊</div>
                     <div class="med-name">维生素D</div>
-                    <div class="med-status">${status.medication.vitamin_d ? '✅ 今天吃' : '❌ 今天不吃'}</div>
+                    <div class="med-status">✅ 吃" if yes else f"❌ 吃</div>
                 </div>
                 <div class="med-item yes">
                     <div class="med-icon">💊</div>
                     <div class="med-name">环孢素</div>
-                    <div class="med-status">✅ 早2颗</div>
+                    <div class="med-status">✅ 早2颗" if yes else f"❌ 早2颗</div>
                 </div>
                 <div class="med-item yes">
                     <div class="med-icon">🍵</div>
                     <div class="med-name">中药</div>
-                    <div class="med-status">✅ 早晚各1袋</div>
+                    <div class="med-status">✅ 早晚各1袋" if yes else f"❌ 早晚各1袋</div>
                 </div>
             </div>
-        </div>`;
-        
-        // === 统计 ===
-        html += `
+        </div>
         <div class="card">
             <div class="stats">
-                <div class="stat-box">
-                    <div class="stat-number">${totalHabits}</div>
-                    <div class="stat-label">当前习惯数</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number">${totalStreaks}天</div>
-                    <div class="stat-label">累计连续</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number">${weekRate}%</div>
-                    <div class="stat-label">本周完成率</div>
-                </div>
+                <div class="stat-box"><div class="stat-number">0</div><div class="stat-label">当前习惯数</div></div>
+                <div class="stat-box"><div class="stat-number">0天</div><div class="stat-label">累计连续</div></div>
+                <div class="stat-box"><div class="stat-number">0%</div><div class="stat-label">本周完成率</div></div>
             </div>
-        </div>`;
-        
-        // === 今日习惯 ===
-        html += `<div class="card"><h2>📅 今日习惯</h2><div class="streak-card">`;
-        status.habits.forEach(h => {
-            html += `
-            <div class="streak-item ${h.done ? 'done' : ''}">
-                <div class="streak-icon">${h.icon}</div>
-                <div class="streak-count">${h.streak}天</div>
-                <div class="streak-label">${h.name}</div>
-            </div>`;
-        });
-        html += `</div></div>`;
-        
-        // === 健康追踪 ===
-        const h = status.health;
-        const hasBloating = h.胀气 && h.胀气 !== '';
-        const hasBurp = h.打嗝 && h.打嗝 !== '';
-        const hasNightUrge = h.夜尿次数 > 0;
-        html += `
+        </div>
+        <div class="card">
+            <h2>📅 今日习惯</h2>
+            <div class="streak-card">
+                
+            </div>
+        </div>
         <div class="card">
             <h2>🏥 健康追踪</h2>
             <div class="health-grid">
-                <div class="health-item ${hasBloating ? 'has-symptom' : ''}">
+                
+                <div class="health-item">
                     <div class="health-label">胀气</div>
-                    <div class="health-value ${hasBloating ? 'alert' : ''}">${hasBloating ? '有' : '无'}</div>
-                    ${hasBloating ? `<div class="health-detail">${h.胀气}</div>` : ''}
+                    <div class="health-value">无</div>
                 </div>
-                <div class="health-item ${hasBurp ? 'has-symptom' : ''}">
+                <div class="health-item">
                     <div class="health-label">打嗝</div>
-                    <div class="health-value ${hasBurp ? 'alert' : ''}">${hasBurp ? '有' : '无'}</div>
-                    ${hasBurp ? `<div class="health-detail">${h.打嗝}</div>` : ''}
+                    <div class="health-value">无</div>
                 </div>
-                <div class="health-item ${hasNightUrge ? 'has-symptom' : ''}">
+                <div class="health-item">
                     <div class="health-label">夜尿</div>
-                    <div class="health-value ${hasNightUrge ? 'alert' : ''}">${hasNightUrge ? h.夜尿次数 + '次' : '无'}</div>
-                    ${hasNightUrge && h.夜尿时间.length ? `<div class="health-detail">${h.夜尿时间.join(', ')}</div>` : ''}
+                    <div class="health-value">无</div>
                 </div>
-                <div class="health-item ${h.大便 ? 'has-symptom' : ''}">
+                <div class="health-item">
                     <div class="health-label">大便</div>
-                    <div class="health-value">${h.大便 || '未记录'}</div>
+                    <div class="health-value">无</div>
                 </div>
             </div>
-        </div>`;
-        
-        // === 本周视图 ===
-        const dayNames = ['周日','周一','周二','周三','周四','周五','周六'];
-        html += `<div class="card"><h2>📆 本周视图</h2><div class="week-view">`;
-        weekDays.forEach((d, i) => {
-            const dd = new Date(d);
-            const isToday = d === today;
-            const dayName = dayNames[dd.getDay()];
-            const dayDate = `${dd.getMonth()+1}/${dd.getDate()}`;
-            const rec = weekRecords[d] || {};
-            
-            const habits4 = [
-                {key: 'paojiao', icon: '🦶'},
-                {key: 'heshui', icon: '💧'},
-                {key: 'duanlian', icon: '🏃'},
-                {key: 'shuijiao', icon: '😴'},
-            ];
-            
-            html += `<div class="week-day ${isToday ? 'today' : ''}">
-                <div class="day-name">${dayName}</div>
-                <div class="day-date">${dayDate}</div>
-                <div class="week-habits">`;
-            habits4.forEach(h4 => {
-                let cls = 'wh-empty';
-                let val = rec[h4.key];
-                if (val !== undefined) {
-                    if (h4.key === 'heshui') cls = val >= 2000 ? 'wh-done' : 'wh-missed';
-                    else if (h4.key === 'duanlian') cls = val >= 30 ? 'wh-done' : 'wh-missed';
-                    else cls = val > 0 ? 'wh-done' : 'wh-missed';
-                }
-                html += `<div class="week-habit ${cls}" title="${h4.key}">${h4.icon}</div>`;
-            });
-            html += `</div></div>`;
-        });
-        html += `</div></div>`;
-        
-        // === 进度 ===
-        const habitProgress = status.habits.map(h => {
-            let pct = 0;
-            let label = '';
-            if (h.id === 'heshui') {
-                pct = Math.min(100, Math.round((h.value / 2000) * 100));
-                label = `${h.value}ml / 2000ml`;
-            } else if (h.id === 'duanlian') {
-                pct = Math.min(100, Math.round((h.value / 30) * 100));
-                label = `${h.value}分钟 / 30分钟`;
-            } else {
-                pct = h.done ? 100 : 0;
-                label = h.done ? '已完成' : '未完成';
-            }
-            return { ...h, pct, label };
-        });
-        
-        const colors = ['fill-green','fill-blue','fill-purple','fill-orange','fill-green','fill-blue'];
-        html += `<div class="card"><h2>📈 今日进度</h2>`;
-        habitProgress.forEach((h, i) => {
-            html += `
-            <div class="progress-item">
-                <div class="progress-label">
-                    <span>${h.icon} ${h.name}</span>
-                    <span>${h.label}</span>
+        </div>
+        <div class="card">
+            <h2>📆 本周视图</h2>
+            <div class="week-view">
+                
+                <div class="week-day ">
+                    <div class="day-name">周日</div>
+                    <div class="day-date">3/30</div>
+                    <div class="week-habits"><div class="week-habit wh-empty">🦶</div><div class="week-habit wh-empty">💧</div><div class="week-habit wh-empty">🏃</div><div class="week-habit wh-empty">😴</div></div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill ${colors[i % colors.length]}" style="width: ${h.pct}%"></div>
+                <div class="week-day ">
+                    <div class="day-name">周一</div>
+                    <div class="day-date">3/31</div>
+                    <div class="week-habits"><div class="week-habit wh-empty">🦶</div><div class="week-habit wh-empty">💧</div><div class="week-habit wh-empty">🏃</div><div class="week-habit wh-empty">😴</div></div>
                 </div>
-            </div>`;
-        });
-        html += `</div>`;
-        
-        html += `<div class="footer">数据更新于 ${status.display}</div>`;
-        
-        document.getElementById('content').innerHTML = html;
-    }
-
-    loadDailyStatus();
-    </script>
+                <div class="week-day today">
+                    <div class="day-name">周二</div>
+                    <div class="day-date">4/1</div>
+                    <div class="week-habits"><div class="week-habit wh-empty">🦶</div><div class="week-habit wh-empty">💧</div><div class="week-habit wh-empty">🏃</div><div class="week-habit wh-empty">😴</div></div>
+                </div>
+                <div class="week-day ">
+                    <div class="day-name">周三</div>
+                    <div class="day-date">4/2</div>
+                    <div class="week-habits"><div class="week-habit wh-empty">🦶</div><div class="week-habit wh-empty">💧</div><div class="week-habit wh-empty">🏃</div><div class="week-habit wh-empty">😴</div></div>
+                </div>
+                <div class="week-day ">
+                    <div class="day-name">周四</div>
+                    <div class="day-date">4/3</div>
+                    <div class="week-habits"><div class="week-habit wh-empty">🦶</div><div class="week-habit wh-empty">💧</div><div class="week-habit wh-empty">🏃</div><div class="week-habit wh-empty">😴</div></div>
+                </div>
+                <div class="week-day ">
+                    <div class="day-name">周五</div>
+                    <div class="day-date">4/4</div>
+                    <div class="week-habits"><div class="week-habit wh-empty">🦶</div><div class="week-habit wh-empty">💧</div><div class="week-habit wh-empty">🏃</div><div class="week-habit wh-empty">😴</div></div>
+                </div>
+                <div class="week-day ">
+                    <div class="day-name">周六</div>
+                    <div class="day-date">4/5</div>
+                    <div class="week-habits"><div class="week-habit wh-empty">🦶</div><div class="week-habit wh-empty">💧</div><div class="week-habit wh-empty">🏃</div><div class="week-habit wh-empty">😴</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h2>📈 今日进度</h2>
+            
+        </div>
+        <div class="footer">数据更新于 2026-04-01 07:06</div>
+    </div>
 </body>
 </html>
