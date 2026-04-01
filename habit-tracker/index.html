@@ -190,7 +190,11 @@
     
     function getRecord(dateStr) {
         if (!habitData) return null;
-        return habitData.打卡记录.find(r => r.日期 === dateStr);
+        // 支持两种格式：打卡记录数组 或 日期做key的对象
+        if (habitData.打卡记录) {
+            return habitData.打卡记录.find(r => r.日期 === dateStr);
+        }
+        return habitData[dateStr] || null;
     }
     
     function getHealth(dateStr) {
@@ -213,14 +217,13 @@
     
     function calcStreak(habitId, dateStr) {
         if (!habitData) return 0;
-        const records = habitData.打卡记录 || [];
         let streak = 0;
         const d = new Date(dateStr + 'T12:00:00');
         for (let i = 0; i < 365; i++) {
             const check = new Date(d);
             check.setDate(check.getDate() - i);
             const ds = check.toISOString().split('T')[0];
-            const rec = records.find(r => r.日期 === ds);
+            const rec = habitData[ds] || null;
             const val = rec ? rec[habitId] : 0;
             let done = val > 0;
             if (habitId === 'heshui') done = val >= 2000;
