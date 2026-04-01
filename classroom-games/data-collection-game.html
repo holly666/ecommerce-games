@@ -379,14 +379,7 @@ function confirmChoice() {
     document.getElementById('retryBtn').style.display = 'none';
   } else {
     selectedBtn.classList.add('wrong');
-    // Show the correct answer
-    btns.forEach(btn => {
-      const key = btn.dataset.key;
-      const opt = round.options.find(o => o.key === key);
-      if (opt && opt.feedback.correct) {
-        btn.classList.add('correct');
-      }
-    });
+    // Do NOT show correct answer - let student retry
     roundResults.push({ id: round.id, title: round.title, correct: false, yourAnswer: selectedKey, correctAnswer: round.options.find(o => o.feedback.correct)?.key });
     document.getElementById('feedbackTitle').textContent = optionFeedback.title;
     document.getElementById('feedbackType').innerHTML = '';
