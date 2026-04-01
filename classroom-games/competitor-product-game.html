@@ -9,12 +9,11 @@
 body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
 .container { max-width: 800px; margin: 0 auto; padding: 20px; }
 
-/* 开始页面 */
 #start-screen { text-align: center; padding: 40px 20px; }
 .title { font-size: 2.4em; color: #00d4ff; text-shadow: 0 0 30px rgba(0,212,255,0.5); margin-bottom: 10px; }
 .subtitle { font-size: 1.2em; color: #7ec8e3; margin-bottom: 30px; }
 .start-btn { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #fff; border: none; padding: 18px 50px; font-size: 1.3em; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 5px 20px rgba(0,212,255,0.4); }
-.start-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,212,255,0.6); }
+.start-btn:hover { transform: translateY(-3px); }
 .story-box { background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin: 20px 0; border: 1px solid rgba(0,212,255,0.3); text-align: left; }
 .story-title { color: #00d4ff; font-size: 1.2em; margin-bottom: 15px; font-weight: bold; }
 .story-text { line-height: 1.8; color: #b8d4e3; }
@@ -24,7 +23,6 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
 .type-desc { color: #b8d4e3; font-size: 0.9em; line-height: 1.5; }
 .type-example { color: #ffc107; font-size: 0.85em; margin-top: 8px; }
 
-/* 游戏页面 */
 #game-screen { display: none; }
 .step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
 .step-dot { width: 10px; height: 10px; border-radius: 50%; background: #334; }
@@ -53,14 +51,11 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
 .feedback-type { display: inline-block; background: #51cf66; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; margin-bottom: 8px; }
 .feedback-text { line-height: 1.7; font-size: 0.95em; }
 .retry-btn { background: #ff9800; border: none; color: #fff; padding: 10px 24px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin-top: 12px; }
-.retry-btn:hover { background: #f57c00; }
 .next-btn { background: #51cf66; border: none; color: #fff; padding: 10px 24px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin-top: 12px; margin-left: 8px; }
-.next-btn:hover { background: #43a047; }
 
 .action-btn { background: linear-gradient(135deg, #00d4ff, #0099cc); border: none; color: #fff; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 8px; }
 .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* 结果页面 */
 #result-screen { display: none; text-align: center; padding: 40px 20px; }
 .result-title { font-size: 2.5em; margin-bottom: 20px; }
 .final-score { font-size: 4em; color: #ffd700; margin: 20px 0; text-shadow: 0 0 30px rgba(255,215,0,0.5); }
@@ -71,7 +66,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
 .stat-label { font-size: 0.75em; color: #888; margin-top: 5px; }
 .result-detail { background: #16213e; border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; }
 .result-round { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.result-round:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.result-round:last-child { border-bottom: none; }
 .result-round-title { font-weight: bold; margin-bottom: 4px; }
 .result-correct { color: #51cf66; font-size: 0.9em; }
 .result-wrong { color: #ff6b6b; font-size: 0.9em; }
@@ -98,17 +93,17 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
     <div class="type-card">
       <div class="type-name">🎯 直接竞品</div>
       <div class="type-desc">产品相似、目标用户相同、市场定位一致，直接抢同一批客户</div>
-      <div class="type-example">例：淘宝同类女装店抢同一批年轻女性</div>
+      <div class="type-example">例：淘宝两家同类女装店</div>
     </div>
     <div class="type-card">
       <div class="type-name">🔗 间接竞品</div>
       <div class="type-desc">产品或用户有部分重叠，但不是完全竞争</div>
-      <div class="type-example">例：奶茶店 vs 咖啡店（不同细分客群）</div>
+      <div class="type-example">例：奶茶店 vs 咖啡店</div>
     </div>
     <div class="type-card">
       <div class="type-name">🌊 潜在竞品</div>
       <div class="type-desc">现在还不是对手，但未来可能取代你</div>
-      <div class="type-example">例：抖音入局外卖 → 某团潜在竞品</div>
+      <div class="type-example">例：抖音入局外卖</div>
     </div>
   </div>
 </div>
@@ -158,9 +153,9 @@ const gameData = {
   rounds: [
     {
       id: 1,
-      title: "🛒 淘宝女装店的正面交锋",
-      caseText: "报案人：淘宝店主小雅\n\n【案情】小雅店铺专做韩风女装（150-300元），发现同平台另一家店铺也在卖同类女装，风格相似定价相近（120-280元），目标客群都是18-25岁年轻女性。两家被买家经常拿来比较。",
-      question: "根据线索，这两家淘宝店铺是什么类型的竞品？",
+      title: "🛒 两家淘宝女装店",
+      caseText: "报案人：淘宝店主小雅\n\n【案情】两家淘宝店铺都卖同类女装（150-300元），风格相似，客群都是18-25岁年轻女性，买家常拿两家比较。",
+      question: "根据线索，这两家店铺是什么类型的竞品？",
       hint: "🕵️ 侦探提示：同样是卖女装，价格差不多，风格也一样——它们在抢同一批顾客吗？",
       options: [
         { text: "A. 直接竞品", key: "direct" },
@@ -169,50 +164,16 @@ const gameData = {
       ],
       correctKey: "direct",
       feedback: {
-        correct: { title: "✅ 正确！", type: "直接竞品", text: "证据确凿！两者产品相似（同类女装）、价格重叠、风格相同、目标客群完全一致——在电商平台上直接争夺同一批年轻女性消费者，这就是直接竞品！" },
-        wrong: { title: "❌ 错误", text: "再仔细看：两家都是卖女装的，价格相近，风格相似，目标客群都是年轻女性。在同一平台上争夺相同用户——这是直接竞争关系。" }
-      }
-    },
-    {
-      id: 2,
-      title: "🥤 奶茶店与咖啡店的选择",
-      caseText: "报案人：商场餐饮老板老周\n\n【案情】商场里开了家奶茶店（15-25元），隔壁又开了家咖啡店（20-35元）。奶茶主要吸引学生和年轻女性，咖啡主要吸引上班族。两者都在下午茶时段生意最好。",
-      question: "根据线索，这家奶茶店和咖啡店是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：虽然都是饮品，但它们的顾客群体和消费场景有什么差异？",
-      options: [
-        { text: "A. 直接竞品", key: "direct" },
-        { text: "B. 间接竞品", key: "indirect" },
-        { text: "C. 潜在竞品", key: "potential" }
-      ],
-      correctKey: "indirect",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是饮品，都需要下午茶场景，但主要顾客不同：奶茶是学生和年轻女性，咖啡是上班族。满足的是不同细分市场的需求——间接竞争！" },
-        wrong: { title: "❌ 错误", text: "奶茶和咖啡虽然都在饮品赛道，但主要顾客群体不同（学生女性vs上班族），消费动机也有差异。这是满足不同细分市场的间接竞争。" }
-      }
-    },
-    {
-      id: 3,
-      title: "🛒 淘宝韩风女装的困境",
-      caseText: "报案人：淘宝店主小雅\n\n【案情】小雅卖韩版女装（150-300元），隔壁店铺也卖女装（150-300元），风格都是韩风，目标客群都是18-30岁年轻女性。两家经常被买家拿来比较。",
-      question: "根据线索，这两家淘宝店铺是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：同样是卖女装，价格差不多，风格也一样——它们在抢同一批顾客吗？",
-      options: [
-        { text: "A. 直接竞品", key: "direct" },
-        { text: "B. 间接竞品", key: "indirect" },
-        { text: "C. 潜在竞品", key: "potential" }
-      ],
-      correctKey: "direct",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "直接竞品", text: "两家产品相似（同类女装）、价格重叠、风格相同、目标客群一致——在电商平台上直接争夺同一批年轻女性消费者，这就是直接竞品！" },
+        correct: { title: "✅ 正确！", type: "直接竞品", text: "两者产品相似、价格重叠、风格相同、目标客群完全一致——在电商平台上直接争夺同一批年轻女性消费者，这就是直接竞品！" },
         wrong: { title: "❌ 错误", text: "两家都是卖女装的，价格相近，风格相似，目标客群都是年轻女性。在同一平台上争夺相同用户——这是直接竞争关系。" }
       }
     },
     {
-      id: 4,
-      title: "🥤 奶茶与咖啡的选择",
-      caseText: "报案人：商场餐饮老板老周\n\n【案情】商场里开了家奶茶店（15-25元），隔壁又开了家咖啡店（20-35元）。奶茶主要吸引学生和年轻女性，咖啡主要吸引上班族。两者都在下午茶时段生意最好。",
-      question: "根据线索，这家奶茶店和咖啡店是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：虽然都是饮品，但它们的顾客群体和消费场景有什么差异？",
+      id: 2,
+      title: "🥤 奶茶店 vs 咖啡店",
+      caseText: "报案人：商场餐饮老板老周\n\n【案情】奶茶店（15-25元）主要吸引学生女性，咖啡店（20-35元）主要吸引上班族。两者都在下午茶时段生意最好。",
+      question: "根据线索，这两家店是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：虽然都是饮品，但它们的顾客群体有什么差异？",
       options: [
         { text: "A. 直接竞品", key: "direct" },
         { text: "B. 间接竞品", key: "indirect" },
@@ -220,48 +181,14 @@ const gameData = {
       ],
       correctKey: "indirect",
       feedback: {
-        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是饮品，都需要下午茶场景，但主要顾客不同：奶茶是学生和年轻女性，咖啡是上班族。满足的是不同细分市场的需求——间接竞争！" },
-        wrong: { title: "❌ 错误", text: "奶茶和咖啡虽然都在饮品赛道，但主要顾客群体不同（学生女性vs上班族），消费动机也有差异。这是满足不同细分市场的间接竞争。" }
+        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是饮品，但主要顾客不同：奶茶是学生女性，咖啡是上班族。满足的是不同细分市场的需求——间接竞争！" },
+        wrong: { title: "❌ 错误", text: "奶茶和咖啡虽然都在饮品赛道，但主要顾客群体不同，消费动机也有差异。这是满足不同细分市场的间接竞争。" }
       }
     },
     {
-      id: 5,
-      title: "📱 抖音小程序的威胁",
-      caseText: "报案人：某宝店主阿强\n\n【案情】阿强在淘宝卖服装多年，最近发现抖音在测试购物功能，用户可以直接在抖音下单买衣服。但抖音目前还没有完全开放电商闭环。",
-      question: "根据线索，抖音购物对阿强来说是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：抖音现在有没有在抢阿强的顾客？但未来会不会？",
-      options: [
-        { text: "A. 直接竞品", key: "direct" },
-        { text: "B. 间接竞品", key: "indirect" },
-        { text: "C. 潜在竞品", key: "potential" }
-      ],
-      correctKey: "potential",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "潜在竞品", text: "抖音目前还没完全开放电商功能，没有直接抢阿强的顾客。但抖音用户量巨大，一旦开放电商，就可能成为强劲对手——这就是潜在竞品！" },
-        wrong: { title: "❌ 错误", text: "抖音目前还没有完全开放电商，还没有直接抢阿强的顾客。但抖音有巨大的用户基础，未来如果开放电商就会成为威胁——这是潜在竞品。" }
-      }
-    },
-    {
-      id: 6,
-      title: "🏪 便利店与自习室的结合",
-      caseText: "报案人：便利店老板老张\n\n【案情】老张开了一家24小时便利店，旁边开了一家付费自习室。便利店卖零食饮料，自习室提供安静的学习环境和茶水。两者都在居民区，主要顾客都是年轻人。",
-      question: "根据线索，这家便利店和自习室是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：它们满足的是同一种需求吗？",
-      options: [
-        { text: "A. 直接竞品", key: "direct" },
-        { text: "B. 间接竞品", key: "indirect" },
-        { text: "C. 潜在竞品", key: "potential" }
-      ],
-      correctKey: "indirect",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "间接竞品", text: "便利店满足\"购物便利\"需求，自习室满足\"学习安静\"需求。虽然都在居民区，主要顾客都是年轻人，但满足的核心需求不同——间接竞争！" },
-        wrong: { title: "❌ 错误", text: "便利店卖商品，自习室提供服务，满足的需求完全不同。虽然都在居民区，顾客都是年轻人，但核心需求不同——这是间接竞争。" }
-      }
-    },
-    {
-      id: 7,
-      title: "☕ 瑞幸与库迪的对决",
-      caseText: "报案人：写字楼白领小林\n\n【案情】瑞幸咖啡和库迪咖啡都在写字楼附近开店，都主打\"快咖啡\"模式（外带为主），定价都在8-15元。消费者买咖啡时经常在两家之间选择。",
+      id: 3,
+      title: "☕ 瑞幸 vs 库迪",
+      caseText: "报案人：写字楼白领小林\n\n【案情】瑞幸和库迪都在写字楼附近开店，都主打快咖啡模式，定价都在8-15元，消费者经常在两家之间选择。",
       question: "根据线索，瑞幸和库迪是什么类型的竞品？",
       hint: "🕵️ 侦探提示：它们的产品、定价、目标用户有什么共同点？",
       options: [
@@ -271,14 +198,48 @@ const gameData = {
       ],
       correctKey: "direct",
       feedback: {
-        correct: { title: "✅ 正确！", type: "直接竞品", text: "两家都是连锁咖啡品牌，模式相同（快咖啡+外带），价格区间重叠，目标用户都是年轻白领。被称为\"瑞库大战\"——直接竞争关系！" },
-        wrong: { title: "❌ 错误", text: "瑞幸和库迪都是咖啡连锁，模式一样（快咖啡外带），价格重叠，用户群体相同。在同一赛道上直接争夺顾客——这是直接竞品。" }
+        correct: { title: "✅ 正确！", type: "直接竞品", text: "两家都是连锁咖啡品牌，模式相同（快咖啡+外带），价格区间重叠，目标用户都是年轻白领。被称为"瑞库大战"——直接竞争关系！" },
+        wrong: { title: "❌ 错误", text: "瑞幸和库迪都是咖啡连锁，模式一样，价格重叠，用户群体相同。在同一赛道上直接争夺顾客——这是直接竞品。" }
       }
     },
     {
-      id: 8,
-      title: "🥗 外卖平台的新玩家",
-      caseText: "报案人：某团外卖商家老王\n\n【案情】老王在美团开店多年，最近听说某音要全面开放本地生活服务，包括外卖功能。某音用户量巨大，但目前还没有正式上线外卖。",
+      id: 4,
+      title: "🏪 便利店 vs 自习室",
+      caseText: "报案人：便利店老板老张\n\n【案情】便利店卖零食饮料，自习室提供安静的学习环境和茶水。两者都在居民区，主要顾客都是年轻人。",
+      question: "根据线索，这两家店是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：它们满足的是同一种需求吗？",
+      options: [
+        { text: "A. 直接竞品", key: "direct" },
+        { text: "B. 间接竞品", key: "indirect" },
+        { text: "C. 潜在竞品", key: "potential" }
+      ],
+      correctKey: "indirect",
+      feedback: {
+        correct: { title: "✅ 正确！", type: "间接竞品", text: "便利店满足"购物便利"需求，自习室满足"学习安静"需求。虽然都在居民区，顾客都是年轻人，但满足的核心需求不同——间接竞争！" },
+        wrong: { title: "❌ 错误", text: "便利店卖商品，自习室提供服务，满足的需求完全不同。虽然都在居民区，顾客都是年轻人，但核心需求不同——这是间接竞争。" }
+      }
+    },
+    {
+      id: 5,
+      title: "📱 抖音测试购物功能",
+      caseText: "报案人：淘宝店主阿强\n\n【案情】阿强在淘宝卖服装多年，最近发现抖音在测试购物功能，用户可以直接在抖音下单买衣服。但抖音目前还没有完全开放电商闭环。",
+      question: "根据线索，抖音购物对阿强来说是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：抖音现在有没有在抢阿强的顾客？但未来会不会？",
+      options: [
+        { text: "A. 直接竞品", key: "direct" },
+        { text: "B. 间接竞品", key: "indirect" },
+        { text: "C. 潜在竞品", key: "potential" }
+      ],
+      correctKey: "potential",
+      feedback: {
+        correct: { title: "✅ 正确！", type: "潜在竞品", text: "抖音目前还没完全开放电商，没有直接抢阿强的顾客。但抖音用户量巨大，一旦开放电商，就可能成为强劲对手——这就是潜在竞品！" },
+        wrong: { title: "❌ 错误", text: "抖音目前还没有完全开放电商，还没有直接抢阿强的顾客。但抖音有巨大的用户基础，未来如果开放电商就会成为威胁——这是潜在竞品。" }
+      }
+    },
+    {
+      id: 6,
+      title: "🥗 某音要入局外卖",
+      caseText: "报案人：美团外卖商家老王\n\n【案情】老王在美团开店多年，最近听说某音要全面开放本地生活服务，包括外卖功能。某音用户量巨大，但目前还没有正式上线外卖。",
       question: "根据线索，某音外卖对老王来说是什么类型的竞品？",
       hint: "🕵️ 侦探提示：某音现在有没有在抢老王的订单？未来会不会？",
       options: [
@@ -288,20 +249,52 @@ const gameData = {
       ],
       correctKey: "potential",
       feedback: {
-        correct: { title: "✅ 正确！", type: "潜在竞品", text: "某音目前还没有正式外卖功能，没有直接抢老王的订单。但某音用户量巨大、流量充沛，一旦正式上线，就可能成为美团外卖的强劲对手——潜在竞品！" },
+        correct: { title: "✅ 正确！", type: "潜在竞品", text: "某音目前还没有正式外卖功能，没有直接抢老王的订单。但某音用户量巨大、流量充沛，一旦正式上线，就可能成为强劲对手——潜在竞品！" },
         wrong: { title: "❌ 错误", text: "某音目前还没有正式开放外卖，还没有直接抢老王的订单。但某音有巨大的流量优势，未来一旦入局就会构成威胁——这是潜在竞品。" }
+      }
+    },
+    {
+      id: 7,
+      title: "🧋 奶茶店 vs 甜品店",
+      caseText: "报案人：商场餐饮老板小林\n\n【案情】奶茶店（15-25元）主要吸引学生女性，隔壁甜品店（20-40元）也受年轻人欢迎。两者都在下午茶时段生意最好。",
+      question: "根据线索，这两家店是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：虽然都是甜食，但它们的产品形态和消费场景有什么差异？",
+      options: [
+        { text: "A. 直接竞品", key: "direct" },
+        { text: "B. 间接竞品", key: "indirect" },
+        { text: "C. 潜在竞品", key: "potential" }
+      ],
+      correctKey: "indirect",
+      feedback: {
+        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是甜食，但奶茶是解渴饮品，甜品是糕点零食。消费场景和满足的需求有差异——间接竞争！" },
+        wrong: { title: "❌ 错误", text: "奶茶和甜品虽然都在甜食赛道，但产品形态不同，消费场景也有差异。这是满足不同需求的间接竞争。" }
+      }
+    },
+    {
+      id: 8,
+      title: "🛒 淘宝 vs 拼多多",
+      caseText: "报案人：电商运营小陈\n\n【案情】淘宝和拼多多都是电商平台。淘宝主打品质用户，拼多多主打低价下沉市场。淘宝商家抱怨被拼多多抢了流量。",
+      question: "根据线索，淘宝和拼多多是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：同样是电商平台，但它们的定位和目标用户有什么不同？",
+      options: [
+        { text: "A. 直接竞品", key: "direct" },
+        { text: "B. 间接竞品", key: "indirect" },
+        { text: "C. 潜在竞品", key: "potential" }
+      ],
+      correctKey: "indirect",
+      feedback: {
+        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是电商平台，但定位不同：淘宝主打品质用户，拼多多主打低价下沉市场。满足的是不同层次消费者的购物需求——间接竞争！" },
+        wrong: { title: "❌ 错误", text: "淘宝和拼多多虽然都是电商平台，但目标用户和定位有差异（品质vs低价）。满足的是不同层次消费者的需求——这是间接竞争。" }
       }
     }
   ]
 };
 
-// 游戏状态
 let currentRound = 0;
 let selectedIndex = -1;
 let score = 0;
 let roundResults = [];
 
-// 随机打乱
 function shuffle(array) {
   let arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -325,7 +318,6 @@ function loadRound() {
   selectedIndex = -1;
   const round = gameData.rounds[currentRound];
   
-  // 更新进度点
   const indicator = document.getElementById('stepIndicator');
   indicator.innerHTML = gameData.rounds.map((_, i) => 
     `<div class="step-dot ${i < currentRound ? 'done' : i === currentRound ? 'active' : ''}"></div>`
@@ -336,35 +328,27 @@ function loadRound() {
   document.getElementById('questionText').textContent = round.question;
   document.getElementById('thinkText').textContent = round.hint;
   
-  // 随机打乱选项
   const shuffledOptions = shuffle(round.options.map((opt, i) => ({ ...opt, originalIndex: i })));
   
-  // 生成选项
   const container = document.getElementById('optionsContainer');
   container.innerHTML = shuffledOptions.map((opt, i) => 
     `<div class="option-btn" data-index="${i}" data-key="${opt.key}" onclick="selectOption(${i})">${opt.text}</div>`
   ).join('');
   
-  // 隐藏反馈
   document.getElementById('feedbackBox').classList.remove('show');
   document.getElementById('retryBtn').style.display = 'none';
   document.getElementById('nextBtn').style.display = 'none';
-  
-  // 禁用按钮
   document.getElementById('actionBtn').disabled = true;
   document.getElementById('actionBtn').textContent = '请先选择一种竞品类型';
 }
 
 function selectOption(index) {
   if (document.getElementById('feedbackBox').classList.contains('show')) return;
-  
   document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
   document.querySelectorAll('.option-btn')[index].classList.add('selected');
   selectedIndex = index;
-  
-  const btn = document.getElementById('actionBtn');
-  btn.disabled = false;
-  btn.textContent = '确认侦查结果';
+  document.getElementById('actionBtn').disabled = false;
+  document.getElementById('actionBtn').textContent = '确认侦查结果';
 }
 
 function confirmChoice() {
