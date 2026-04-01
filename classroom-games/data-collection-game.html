@@ -85,8 +85,8 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
 
 <div id="start-screen">
   <h1 class="title">📊 运营总监的一周</h1>
-  <p class="subtitle">竞品情报收集大挑战</p>
-  <button class="start-btn" id="startBtn">🔍 开始调查</button>
+  <p class="subtitle">电商数据收集实战</p>
+  <button class="start-btn" id="startBtn">📊 开始任务</button>
   <div class="story-box">
     <div class="story-title">📖 任务说明</div>
     <p class="story-text">你是某宝店铺的运营总监！周一到周五每天都有不同的数据收集任务。</p>
@@ -164,154 +164,106 @@ const gameData = {
     {
       id: 1,
       title: "周一 · 竞品情报",
-      caseText: "任务：了解竞品A公司的产品线、价格体系、公司动态。\n\n提示：官网、新闻、社交媒体都是公开信息。",
-      question: "要获取以上信息，最合适的途径是？",
-      hint: "💡",
+      caseText: "老板问：最近竞品A做了什么动作？",
+      question: "要获取竞品动态，最合适的方式是？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "public",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "公开渠道", text: "产品信息、价格体系、公司动态都可以通过官网、新闻、社交媒体等公开渠道获取，不需要花钱找第三方。" },
-        wrong: { title: "⚠️ 后果", text: "实地调研只能看到1-2家店的表面情况（装修、陈列），看不到竞品的线上推广、新品发布、价格策略。效率低、成本高，无法全面掌握动态。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: true, title: "✅ 正确！", type: "公开渠道", text: "竞品动态看官网、新闻、社交媒体就够了，不用花钱找第三方。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "花钱找第三方没必要，竞品动态都是公开信息，自己查又快又省钱。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "只能看到1-2家店的表面装修，看不到竞品的新品发布、线上推广、价格策略。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "工具适合持续追踪，一次性任务用公开搜索就够了，不用工具。" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，查竞品动态用内部信息没用，方向完全不对。" } }
+      ]
     },
     {
       id: 2,
-      title: "周二 · 客户调研",
-      caseText: "任务：了解竞品B线下门店的服务态度、产品实际体验、客流情况。\n\n提示：这些信息必须亲自去现场才能感受到。",
-      question: "要获取以上信息，最合适的途径是？",
-      hint: "💡",
+      title: "周二 · 客户流失",
+      caseText: "VIP客户突然不续费了，想知道为什么。",
+      question: "要了解客户流失的真正原因，应该？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "field",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "实地调研", text: "服务态度、产品实际体验、客流情况必须亲自去现场才能感受到，这是网络无法替代的。" },
-        wrong: { title: "⚠️ 后果", text: "公开渠道（网上的评价、评论）可能有水军、恶意差评，不一定是客户真实想法。你想了解「为什么流失」，必须直接问客户本人。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "网上的评价有水军、有恶意差评，不一定是客户真实想法，你想了解「为什么流失」必须直接问本人。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告是通用数据，解决不了「这个客户为什么不续费」这个具体问题。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "直接联系客户、做访谈或问卷，才能知道真实原因。公开数据解决不了个性化问题。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "监测工具适合追踪竞品或市场动态，查单个客户流失原因用不上。" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部数据能看到流失事实（订单减少），但看不到原因（为什么减少）。" } }
+      ]
     },
     {
       id: 3,
-      title: "周三 · 竞品体验",
-      caseText: "任务：了解整个行业的市场规模、发展趋势、增长率。\n\n提示：这些专业数据通常只有专业机构才有系统报告。",
-      question: "要获取以上信息，最合适的途径是？",
-      hint: "💡",
+      title: "周三 · 门店体验",
+      caseText: "想知道竞品B的门店产品体验和服务态度。",
+      question: "要了解门店真实体验，合适的方式是？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "third",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "第三方渠道", text: "行业市场规模、发展趋势需要专业机构的研究报告，这些数据由行业协会、咨询公司掌握。" },
-        wrong: { title: "⚠️ 后果", text: "网络监测只能看到网上能搜到的信息（图文、评价），看不到门店真实体验：产品手感、服务态度、现场氛围。这些必须亲自去感受。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "网上能看到装修风格、货架陈列，但看不到产品手感、服务态度、现场氛围。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告主要做数据分析，现场体验必须自己感受，报告给不了。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "亲自去竞品门店，感受产品、服务、氛围，这是网上无法替代的。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "网络只能看图文评价，现场体验（手感、态度、氛围）必须亲自去。" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，查竞品门店体验用内部信息没用。" } }
+      ]
     },
     {
       id: 4,
       title: "周四 · 行业数据",
-      caseText: "任务：实时监测竞品C公司在微博、抖音、小红书上的营销动态和用户口碑。\n\n提示：需要持续追踪，比人工搜索更高效的方式。",
-      question: "要高效获取以上信息，最合适的途径是？",
-      hint: "💡",
+      caseText: "老板要做季度规划，需要行业市场规模和趋势。",
+      question: "要获取行业数据报告，最合适的方式是？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "online",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "网络监测", text: "社交媒体动态需要持续监测，专业工具可以实时追踪多个平台，比人工搜索高效得多。" },
-        wrong: { title: "⚠️ 后果", text: "市场规模、发展趋势、行业报告——这些是专业机构研究整理的，普通人搜不到系统数据。公开搜出来的是碎片，无法支撑决策。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "市场规模、发展趋势是专业机构研究整理的，公开搜索只能找到碎片，无法支撑决策。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: true, title: "✅ 正确！", type: "第三方渠道", text: "行业报告由咨询公司、行业协会、研究机构整理，花钱买报告才能获得系统数据。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "实地调研适合看具体门店，不适合了解整个行业的规模和发展趋势。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "工具适合追踪实时动态，行业报告是阶段性研究成果，工具给不了。" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，行业规模是外部市场的宏观数据，内部没有。" } }
+      ]
     },
     {
       id: 5,
       title: "周五 · 销售复盘",
-      caseText: "任务：了解已有客户对竞品D公司的评价，以及他们为什么选择竞品。\n\n提示：这些敏感信息需要直接问客户才能知道。",
-      question: "要获取以上信息，最合适的途径是？",
-      hint: "💡",
+      caseText: "月底了，想分析自家店铺的销售数据做复盘。",
+      question: "自家销售数据应该从哪里获取？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "field",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "实地调研", text: "客户对竞品的真实评价、选择原因需要通过直接访谈或问卷来获取，公开评价可能不真实。" },
-        wrong: { title: "⚠️ 后果", text: "自家店铺的销售数据（订单量、转化率、复购率）就在后台，实地调研别人的店有什么用？方向完全不对。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "公开渠道查的是竞品或市场信息，自家销售数据在后台，公开渠道查不到。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方是查外部数据的，自家数据在后台，不需要花钱找第三方。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "自家销售数据是后台数字，实地调研别人的店看不出自家店的销售情况。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "网络监测是查外部动态的，自家销售数据在后台，监测工具用不上。" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: true, title: "✅ 正确！", type: "内部信息源", text: "自家销售数据在后台，登录后台即可查看订单、转化率、复购率等。" } }
+      ]
     },
     {
       id: 6,
-      title: "周六 · 社交监测",
-      caseText: "任务：分析公司近一年的销售数据，了解哪些产品卖得好、客户复购率如何。\n\n提示：这些数据在公司内部系统里。",
-      question: "要获取以上信息，最合适的途径是？",
-      hint: "💡",
+      title: "周六 · 社媒监测",
+      caseText: "想实时监测竞品C的社交媒体动态和用户口碑。",
+      question: "要持续追踪多个平台的竞品动态，最高效的方式是？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "internal",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "内部信息源", text: "销售数据、客户购买行为都是公司内部数据，从自家系统查看即可，不需要外部渠道。" },
-        wrong: { title: "⚠️ 后果", text: "手动去各平台刷动态，效率极低，而且是一次性操作，无法「持续监测」。你需要的是工具自动追踪，不是人工苦力。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "手动去各平台刷，一次性操作，无法「持续监测」。每天刷一遍累死还漏消息。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告是定期发布的，不适合需要实时追踪的社交媒体监测场景。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "实地调研适合看线下门店，社交媒体在线上，调研方式完全不对路。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: true, title: "✅ 正确！", type: "网络监测", text: "用专业工具自动追踪多个平台，设定关键词告警，比人工刷高效一百倍。" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，竞品动态属于外部信息，内部信息查不到。" } }
+      ]
     },
     {
       id: 7,
       title: "周日 · 展会情报",
-      caseText: "任务：了解竞品E公司的技术实力、研发方向、专利布局。\n\n提示：专利信息可以通过国家知识产权局官网公开查询。",
-      question: "要获取以上信息，最合适的途径是？",
-      hint: "💡",
+      caseText: "下周有行业展会，想提前了解竞品动态和行业趋势。",
+      question: "参加展会的核心价值是什么？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "public",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "公开渠道", text: "专利信息可以通过国家知识产权局官网公开查询，产品发布会也是公开信息，不需要花钱。" },
-        wrong: { title: "⚠️ 后果", text: "展会是一次性获取行业一手信息的机会，可以同时了解多家竞品动态、新技术、新趋势。窝在家里查内部资料，等于放弃了最好的情报来源。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "展会是一手信息，窝在家里查网上二手信息，等于放弃了最好的情报来源。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "展会本身就是第三方渠道，你已经在这个渠道里了，不需要再找别的第三方。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "展会一次能看行业趋势、竞品动态、新技术，效率极高，比网上查资料价值高得多。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "展会是线下活动，网络监测是线上工具，两码事。去展会还监测啥？" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "展会是获取外部信息的场景，内部信息在这个时候完全没用。" } }
+      ]
     },
     {
       id: 8,
       title: "额外 · 专利查询",
-      caseText: "任务：了解竞品F公司最近参加了哪些行业展会，有什么新产品发布。\n\n提示：参加展会可以一次性了解行业趋势、竞品动态、新技术。",
-      question: "要获取以上信息，最合适的途径是？",
-      hint: "💡",
+      caseText: "想查竞品的技术专利和研发方向。",
+      question: "查专利的正确方式是？",
       options: [
-        { text: "A. 公开渠道", key: "public" },
-        { text: "B. 第三方渠道", key: "third" },
-        { text: "C. 实地调研", key: "field" },
-        { text: "D. 网络监测", key: "online" },
-        { text: "E. 内部信息源", key: "internal" }
-      ],
-      correctKey: "third",
-      feedback: {
-        correct: { title: "✅ 正确！", type: "第三方渠道", text: "参加行业展会可以一次性了解行业趋势、竞品动态、新技术，是非常高效的信息获取方式。" },
-        wrong: { title: "⚠️ 后果", text: "查专利不用花钱！国家知识产权局官网免费公开，花钱找第三方是浪费。你完全可以自己动手，5分钟搞定。" }
-      }
+        { text: "A. 公开渠道", key: "public", feedback: { correct: true, title: "✅ 正确！", type: "公开渠道", text: "专利在国家知识产权局官网免费查，完全公开，不需要花钱找第三方。" } },
+        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "查专利完全免费！花钱找第三方是被坑，自己动手5分钟搞定。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "专利是文档信息，不是门店体验，实地调研完全用不上。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "专利数据库是特定网站，网络监测工具不适合查专利这种定向信息。" } },
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "专利是竞品的技术资料，属于外部信息，内部信息里不可能有。" } }
+      ]
     }
   ]
 };
@@ -382,7 +334,7 @@ function selectOption(index) {
   document.querySelectorAll('.option-btn')[index].classList.add('selected');
   selectedIndex = index;
   document.getElementById('actionBtn').disabled = false;
-  document.getElementById('actionBtn').textContent = '确认调查方向';
+  document.getElementById('actionBtn').textContent = '确认收集方式';
 }
 
 function confirmChoice() {
@@ -392,25 +344,45 @@ function confirmChoice() {
   const btns = document.querySelectorAll('.option-btn');
   const selectedBtn = btns[selectedIndex];
   const selectedKey = selectedBtn.dataset.key;
-  const isCorrect = selectedKey === round.correctKey;
+  
+  // Find the selected option and its feedback
+  const selectedOption = round.options.find(o => o.key === selectedKey);
+  const optionFeedback = selectedOption ? selectedOption.feedback : null;
+  const isCorrect = optionFeedback ? optionFeedback.correct : false;
   
   btns.forEach(btn => btn.classList.add('disabled'));
   
   if (isCorrect) {
     selectedBtn.classList.add('correct');
+    // Show correct answer for all options
+    btns.forEach(btn => {
+      const key = btn.dataset.key;
+      const opt = round.options.find(o => o.key === key);
+      if (opt && opt.feedback.correct) {
+        btn.classList.add('correct');
+      }
+    });
     score += 12;
     roundResults.push({ id: round.id, title: round.title, correct: true });
-    document.getElementById('feedbackTitle').textContent = round.feedback.correct.title;
-    document.getElementById('feedbackType').innerHTML = `<span class="feedback-type">🏷️ ${round.feedback.correct.type}</span>`;
-    document.getElementById('feedbackText').textContent = round.feedback.correct.text;
+    document.getElementById('feedbackTitle').textContent = optionFeedback.title;
+    document.getElementById('feedbackType').innerHTML = `<span class="feedback-type">🏷️ ${optionFeedback.type}</span>`;
+    document.getElementById('feedbackText').textContent = optionFeedback.text;
     document.getElementById('nextBtn').style.display = 'inline-block';
     document.getElementById('retryBtn').style.display = 'none';
   } else {
     selectedBtn.classList.add('wrong');
-    roundResults.push({ id: round.id, title: round.title, correct: false, yourAnswer: selectedKey, correctAnswer: round.correctKey });
-    document.getElementById('feedbackTitle').textContent = round.feedback.wrong.title;
+    // Show the correct answer
+    btns.forEach(btn => {
+      const key = btn.dataset.key;
+      const opt = round.options.find(o => o.key === key);
+      if (opt && opt.feedback.correct) {
+        btn.classList.add('correct');
+      }
+    });
+    roundResults.push({ id: round.id, title: round.title, correct: false, yourAnswer: selectedKey, correctAnswer: round.options.find(o => o.feedback.correct)?.key });
+    document.getElementById('feedbackTitle').textContent = optionFeedback.title;
     document.getElementById('feedbackType').innerHTML = '';
-    document.getElementById('feedbackText').textContent = round.feedback.wrong.text;
+    document.getElementById('feedbackText').textContent = optionFeedback.text;
     document.getElementById('retryBtn').style.display = 'inline-block';
     document.getElementById('nextBtn').style.display = currentRound < gameData.rounds.length - 1 ? 'inline-block' : 'none';
   }
@@ -449,13 +421,13 @@ function showResult() {
   
   let title, msg;
   if (correctCount === total) {
-    title = "🏆 顶级侦探！";
-    msg = "你对数据收集途径了如指掌！是情报收集的高手！";
+    title = "🏆 数据大师！";
+    msg = "你对数据收集方法了如指掌！是运营高手！";
   } else if (correctCount >= total * 0.7) {
-    title = "⭐ 资深侦探";
+    title = "⭐ 运营熟手";
     msg = "你对数据收集途径有较好理解，继续加油！";
   } else {
-    title = "📚 实习侦探";
+    title = "📚 运营新手";
     msg = "数据收集的学问很深奥！建议再学习理论知识！";
   }
   
@@ -464,7 +436,7 @@ function showResult() {
   
   document.getElementById('resultDetail').innerHTML = roundResults.map(r => {
     const round = gameData.rounds.find(g => g.id === r.id);
-    const correctText = round.options.find(o => o.key === round.correctKey).text;
+    const correctOption = round.options.find(o => o.feedback.correct); const correctText = correctOption ? correctOption.text : "未知";
     if (r.correct) {
       return `<div class="result-round"><div class="result-round-title">任务${r.id} ${r.title}</div><div class="result-correct">✅ 正确</div></div>`;
     } else {
