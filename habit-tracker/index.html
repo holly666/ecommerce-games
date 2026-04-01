@@ -62,14 +62,21 @@
         }
         .card h2 { color: #333; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
         
-        /* 服药 */
+        /* 服药 - 优化：清晰区分"今日计划"vs"已完成" */
         .med-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .med-item { background: #f0f0f0; border-radius: 12px; padding: 12px 8px; text-align: center; }
-        .med-item.yes { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
-        .med-item.no { background: #e0e0e0; opacity: 0.7; color: #666; }
+        /* 今日计划 - 要做 */
+        .med-item.plan-yes { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        /* 今日计划 - 不用做 */
+        .med-item.plan-no { background: #e8e8e8; color: #999; }
+        /* 已完成 */
+        .med-item.done { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+        /* 未完成 */
+        .med-item.miss { background: #ffebee; color: #e53935; }
         .med-icon { font-size: 24px; margin-bottom: 4px; }
         .med-name { font-size: 12px; font-weight: 600; }
         .med-status { font-size: 11px; opacity: 0.85; margin-top: 3px; }
+        .med-label { font-size: 9px; opacity: 0.7; margin-top: 2px; }
         
         /* 统计 */
         .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -287,20 +294,20 @@
         
         // 服药卡片
         const medItems = [
-            ['💉','黄体酮针', isEven, '✅ 打', '今日不打'],
-            ['💊','阿司匹林', isEven, '✅ 吃', '今日不吃'],
-            ['💉','肝素针', true, '✅ 每天打', ''],
-            ['💊','维生素D', vdToday, '✅ 吃', '今日不吃'],
-            ['💊','环孢素', true, '✅ 早2颗', ''],
-            ['🍵','中药', true, '✅ 早晚各1袋', ''],
+            ['💉','黄体酮针', isEven, '今天要打', '今天不打'],
+            ['💊','阿司匹林', isEven, '今天要吃', '今天不吃'],
+            ['💉','肝素针', true, '今天要打', ''],
+            ['💊','维生素D', vdToday, '今天要吃', '今天不吃'],
+            ['💊','环孢素', true, '早2颗', ''],
+            ['🍵','中药', true, '早晚各1袋', ''],
         ];
         
         html += `<div class="card">
-            <h2>💊 服药（治疗第${daysSinceStart}天）</h2>
-            <div style="text-align:center;font-size:12px;color:#888;margin-bottom:10px;">${dateDisplay}</div>
+            <h2>💊 服药提醒（治疗第${daysSinceStart}天）</h2>
+            <div style="text-align:center;font-size:11px;color:#888;margin-bottom:8px;">💡 蓝色=今日计划 | 灰色=今日不用做</div>
             <div class="med-grid">`;
         medItems.forEach(([icon, name, cond, yesS, noS]) => {
-            const cls = cond ? 'yes' : (noS ? 'no' : '');
+            const cls = cond ? 'plan-yes' : (noS ? 'plan-no' : '');
             const status = cond ? yesS : (noS || '—');
             html += `<div class="med-item ${cls}">
                 <div class="med-icon">${icon}</div>
