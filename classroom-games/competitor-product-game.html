@@ -94,12 +94,12 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
     <div class="type-card">
       <div class="type-name">🎯 直接竞品</div>
       <div class="type-desc">产品相似、目标用户相同、市场定位一致，直接抢同一批客户</div>
-      <div class="type-example">例：淘宝两家同类女装店</div>
+      <div class="type-example">例：可口可乐 vs 百事可乐</div>
     </div>
     <div class="type-card">
       <div class="type-name">🔗 间接竞品</div>
       <div class="type-desc">产品或用户有部分重叠，但不是完全竞争</div>
-      <div class="type-example">例：奶茶店 vs 咖啡店</div>
+      <div class="type-example">例：可口可乐 vs 王老吉</div>
     </div>
     <div class="type-card">
       <div class="type-name">🌊 潜在竞品</div>
@@ -256,27 +256,27 @@ const gameData = {
     },
     {
       id: 7,
-      title: "🧋 奶茶店 vs 甜品店",
-      caseText: "报案人：商场餐饮老板小林\n\n【案情】奶茶店（15-25元）主要吸引学生女性，隔壁甜品店（20-40元）也受年轻人欢迎。两者都在下午茶时段生意最好。",
-      question: "根据线索，这两家店是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：虽然都是甜食，但它们的产品形态和消费场景有什么差异？",
+      title: "🥤 可口可乐 vs 百事可乐",
+      caseText: "报案人：超市采购经理老陈\n\n【案情】可口可乐和百事可乐都在超市饮料区销售，都是碳酸饮料，定价都在3-5元，货架紧挨着。消费者买饮料时经常在两者之间犹豫。",
+      question: "根据线索，可口可乐和百事可乐是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：它们的产品、定价、目标用户有什么共同点？",
       options: [
         { text: "A. 直接竞品", key: "direct" },
         { text: "B. 间接竞品", key: "indirect" },
         { text: "C. 潜在竞品", key: "potential" }
       ],
-      correctKey: "indirect",
+      correctKey: "direct",
       feedback: {
-        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是甜食，但奶茶是解渴饮品，甜品是糕点零食。消费场景和满足的需求有差异——间接竞争！" },
-        wrong: { title: "❌ 错误", text: "奶茶和甜品虽然都在甜食赛道，但产品形态不同，消费场景也有差异。这是满足不同需求的间接竞争。" }
+        correct: { title: "✅ 正确！", type: "直接竞品", text: "两者都是碳酸饮料，定价相近，摆在相邻货架，消费者经常在两者之间选择。直接争夺同一批消费者——直接竞品！" },
+        wrong: { title: "❌ 错误", text: "两者都是碳酸饮料，定价相近，摆在相邻货架，消费者经常在两者之间选择。这属于直接争夺同一市场的竞争。" }
       }
     },
     {
       id: 8,
-      title: "🛒 淘宝 vs 拼多多",
-      caseText: "报案人：电商运营小陈\n\n【案情】淘宝和拼多多都是电商平台。淘宝主打品质用户，拼多多主打低价下沉市场。淘宝商家抱怨被拼多多抢了流量。",
-      question: "根据线索，淘宝和拼多多是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：同样是电商平台，但它们的定位和目标用户有什么不同？",
+      title: "🍵 可口可乐 vs 王老吉",
+      caseText: "报案人：便利店老板老李\n\n【案情】可口可乐和，王老吉都在饮料区销售。可口可乐4元主打'快乐'，王老吉6元主打'降火'。消费者口渴时选可乐，熬夜时选王老吉。",
+      question: "根据线索，可口可乐和王老吉是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：消费者在不同场景下会选不同的产品，这说明什么？",
       options: [
         { text: "A. 直接竞品", key: "direct" },
         { text: "B. 间接竞品", key: "indirect" },
@@ -284,8 +284,8 @@ const gameData = {
       ],
       correctKey: "indirect",
       feedback: {
-        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是电商平台，但定位不同：淘宝主打品质用户，拼多多主打低价下沉市场。满足的是不同层次消费者的购物需求——间接竞争！" },
-        wrong: { title: "❌ 错误", text: "淘宝和拼多多虽然都是电商平台，但目标用户和定位有差异（品质vs低价）。满足的是不同层次消费者的需求——这是间接竞争。" }
+        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都在饮料区，但满足的需求不同：可乐满足'享受解渴'，王老吉满足'降火保健'。消费场景不同、用户动机不同——间接竞争！" },
+        wrong: { title: "❌ 错误", text: "可乐是碳酸饮料主打快乐，王老吉是凉茶主打降火。满足的需求和消费场景都不同，属于间接竞争。" }
       }
     }
   ]
