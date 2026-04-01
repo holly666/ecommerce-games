@@ -41,6 +41,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
 .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
 .option-btn { background: #f8f9fa; border: 2px solid #e9ecef; padding: 12px 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 0.95em; color: #333; font-weight: 500; min-height: 60px; display: flex; align-items: center; justify-content: center; }
 .option-btn:hover { border-color: #00d4ff; background: #e8f4ff; transform: translateY(-2px); }
+.option-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); color: #ffd700; font-weight: bold; }
 .option-btn.correct { background: linear-gradient(135deg, #00ff88, #00cc6a); border-color: #00ff88; color: #fff; }
 .option-btn.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
 .option-btn.disabled { opacity: 0.7; cursor: not-allowed; }
