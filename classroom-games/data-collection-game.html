@@ -153,7 +153,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
     <div class="stat"><div class="stat-value" id="statWrong">0</div><div class="stat-label">错误</div></div>
   </div>
   <div class="result-detail" id="resultDetail"></div>
-  <button class="start-btn" onclick="restartGame()">再来一周</button>
+  <button id="restartBtn" class="start-btn" onclick="restartGame()">再来一周</button>
 </div>
 
 </div>
@@ -195,7 +195,7 @@ const gameData = {
       correctKey: "field",
       feedback: {
         correct: { title: "✅ 正确！", type: "实地调研", text: "服务态度、产品实际体验、客流情况必须亲自去现场才能感受到，这是网络无法替代的。" },
-        wrong: { title: "⚠️ 后果", text: "公开渠道（网上的评价、评论）可能有水军、恶意差评，不一定是客户真实想法。你想了解"为什么流失"，必须直接问客户本人。" }
+        wrong: { title: "⚠️ 后果", text: "公开渠道（网上的评价、评论）可能有水军、恶意差评，不一定是客户真实想法。你想了解「为什么流失」，必须直接问客户本人。" }
       }
     },
     {
@@ -271,7 +271,7 @@ const gameData = {
       correctKey: "internal",
       feedback: {
         correct: { title: "✅ 正确！", type: "内部信息源", text: "销售数据、客户购买行为都是公司内部数据，从自家系统查看即可，不需要外部渠道。" },
-        wrong: { title: "⚠️ 后果", text: "手动去各平台刷动态，效率极低，而且是一次性操作，无法"持续监测"。你需要的是工具自动追踪，不是人工苦力。" }
+        wrong: { title: "⚠️ 后果", text: "手动去各平台刷动态，效率极低，而且是一次性操作，无法「持续监测」。你需要的是工具自动追踪，不是人工苦力。" }
       }
     },
     {
