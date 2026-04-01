@@ -16,7 +16,7 @@
       "icon": "🦶",
       "done": false,
       "value": 0,
-      "streak": 2
+      "streak": 0
     },
     {
       "id": "heshui",
@@ -24,7 +24,7 @@
       "icon": "💧",
       "done": false,
       "value": 900,
-      "streak": 3
+      "streak": 1
     },
     {
       "id": "duanlian",
@@ -40,14 +40,14 @@
       "icon": "😴",
       "done": false,
       "value": 0,
-      "streak": 1
+      "streak": 0
     },
     {
       "id": "dabian",
       "name": "大便",
       "icon": "💩",
-      "done": false,
-      "value": 0,
+      "done": true,
+      "value": 1,
       "streak": 1
     },
     {
