@@ -76,12 +76,12 @@ def generate_html():
     vd_today = days_since_start % 3 == 0
 
     med_items = [
-        ("💉", "黄体酮针", is_even, "打" if is_even else "不打"),
-        ("💊", "阿司匹林", is_even, "吃" if is_even else "不吃"),
-        ("💉", "肝素针", True, "每天打"),
-        ("💊", "维生素D", vd_today, "吃" if vd_today else "不吃"),
-        ("💊", "环孢素", True, "早2颗"),
-        ("🍵", "中药", True, "早晚各1袋"),
+        ("💉", "黄体酮针", is_even, "✅ 打", "❌ 不打"),
+        ("💊", "阿司匹林", is_even, "✅ 吃", "❌ 不吃"),
+        ("💉", "肝素针", True, "✅ 每天打", ""),
+        ("💊", "维生素D", vd_today, "✅ 吃", "❌ 不吃"),
+        ("💊", "环孢素", True, "✅ 早2颗", ""),
+        ("🍵", "中药", True, "✅ 早晚各1袋", ""),
     ]
 
     # 健康数据
@@ -95,13 +95,14 @@ def generate_html():
 
     # 渲染
     med_grid_html = ""
-    for icon, name, yes, status in med_items:
+    for icon, name, yes, yes_status, no_status in med_items:
         cls = "yes" if yes else ""
+        status = yes_status if yes else no_status
         med_grid_html += f"""
                 <div class="med-item {cls}">
                     <div class="med-icon">{icon}</div>
                     <div class="med-name">{name}</div>
-                    <div class="med-status">✅ {status}" if yes else f"❌ {status}</div>
+                    <div class="med-status">{status}</div>
                 </div>"""
 
     health_grid_html = ""
