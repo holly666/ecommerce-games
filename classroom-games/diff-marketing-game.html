@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二次元小店突围战 - 差异化营销策略</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+#start-screen { text-align: center; padding-top: 40px; }
+.title { font-size: 2.2em; color: #ffd700; margin-bottom: 10px; }
+.subtitle { font-size: 1.1em; color: #aaa; margin-bottom: 30px; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 16px 48px; font-size: 1.2em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.start-btn:hover { transform: scale(1.05); }
+.game-desc { background: #16213e; border-radius: 16px; padding: 24px; margin-top: 30px; text-align: left; }
+.game-desc h3 { color: #ffd700; margin-bottom: 12px; }
+.game-desc p { color: #ccc; line-height: 1.8; font-size: 0.95em; margin-bottom: 8px; }
+
+#game-screen { display: none; }
+.situation-box { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.situation-title { color: #ffd700; font-size: 1.1em; margin-bottom: 12px; }
+.situation-text { color: #ddd; line-height: 1.9; font-size: 1em; }
+.data-panel { background: #0f3460; border-radius: 12px; padding: 16px; margin-top: 16px; }
+.data-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.95em; }
+.data-row:last-child { border-bottom: none; }
+.data-label { color: #aaa; }
+.data-value { color: #ffd700; font-weight: bold; }
+.data-value.bad { color: #ff6b6b; }
+.data-value.good { color: #51cf66; }
+
+.question { font-size: 1.1em; color: #fff; margin-bottom: 16px; line-height: 1.7; }
+.think-hint { background: rgba(255, 215, 0, 0.1); border-left: 3px solid #ffd700; padding: 10px 14px; margin-bottom: 16px; font-size: 0.9em; color: #ffd700; border-radius: 0 8px 8px 0; }
+
+.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; transition: all 0.2s; line-height: 1.5; min-height: 60px; display: flex; align-items: center; }
+.option-btn:hover { border-color: #667eea; background: #1a237e; color: #fff; }
+.option-btn.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.15); color: #ffd700; }
+.option-btn.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+.option-btn.neutral { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); color: #ffd700; }
+.option-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 20px; }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+#result-screen { display: none; text-align: center; padding-top: 40px; }
+.result-title { font-size: 1.8em; color: #ffd700; margin-bottom: 16px; }
+.result-score { font-size: 1.2em; color: #aaa; margin-bottom: 30px; }
+.result-detail { background: #16213e; border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; }
+.result-detail h4 { color: #ffd700; margin-bottom: 12px; }
+.result-detail p { color: #ccc; line-height: 1.8; margin-bottom: 8px; font-size: 0.95em; }
+.round-result { background: #0f3460; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.round-result .round-title { color: #667eea; font-size: 0.9em; margin-bottom: 8px; }
+.round-result .choice { color: #ffd700; margin-bottom: 4px; }
+.round-result .outcome { color: #aaa; font-size: 0.9em; }
+
+.step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.step-dot { width: 10px; height: 10px; border-radius: 50%; background: #334; }
+.step-dot.active { background: #ffd700; }
+.step-dot.done { background: #51cf66; }
+
+.strategy-tags { background: #0f3460; border-radius: 12px; padding: 16px; margin-top: 16px; }
+.strategy-tag { display: inline-block; background: rgba(102,126,234,0.2); color: #667eea; padding: 4px 10px; border-radius: 20px; font-size: 0.85em; margin: 3px; }
+
+.hidden { display: none !important; }
+@media (max-width: 600px) { .options { grid-template-columns: 1fr; } .title { font-size: 1.6em; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="start-screen">
+  <div class="title">🎮 二次元小店突围战</div>
+  <div class="subtitle">差异化营销策略 · 沉浸式决策游戏</div>
+  <button class="start-btn" id="startBtn">开始挑战</button>
+  <div class="game-desc">
+    <h3>📋 游戏说明</h3>
+    <p>你是「次元杂货铺」淘宝店的掌柜，主营二次元周边。<br>同类店铺竞争激烈，你需要做出正确的经营决策。</p>
+    <p>⚠️ 每个决策都会影响店铺数据——选错策略会导致亏损、流量下滑。</p>
+    <p>💡 这个游戏考察的是你对<strong style="color:#ffd700">营销策略</strong>的理解，不是背知识点。</p>
+  </div>
+  <div class="strategy-tags">
+    <div style="color:#aaa;font-size:0.9em;margin-bottom:8px;">📚 游戏中你会用到7种营销策略（题目不会提示是哪种）：</div>
+    <span class="strategy-tag">策略类型1</span>
+    <span class="strategy-tag">策略类型2</span>
+    <span class="strategy-tag">策略类型3</span>
+    <span class="strategy-tag">策略类型4</span>
+    <span class="strategy-tag">策略类型5</span>
+    <span class="strategy-tag">策略类型6</span>
+    <span class="strategy-tag">策略类型7</span>
+  </div>
+</div>
+
+<div id="game-screen">
+  <div class="step-indicator" id="stepIndicator"></div>  
+  <div class="situation-box">
+    <div class="situation-title" id="situationTitle"></div>
+    <div class="situation-text" id="situationText"></div>
+    <div class="data-panel" id="dataPanel"></div>
+  </div>
+  <div class="question" id="questionText"></div>
+  <div class="think-hint" id="thinkHint">🤔 思考提示：仔细看数据，想清楚这个问题的关键是什么。</div>
+  <div class="options" id="optionsContainer"></div>
+  <div style="text-align:center;">
+    <button class="action-btn" id="actionBtn" disabled>请先选择一个策略</button>
+  </div>
+</div>
+
+<div id="result-screen">
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-score" id="resultScore"></div>
+  <div class="result-detail" id="resultDetail"></div>
+  <button class="start-btn" onclick="restartGame()">再玩一次</button>
+</div>
+
+</div>
+
+<script>
+const gameData = {
+  rounds: [
+    {
+      id: 1,
+      situationTitle: "🗓️ 第一关 · 开局就被打",
+      situationText: "「次元杂货铺」淘宝店开业了，主营二次元手办、周边。<br>竞店「模玩城」正在全场打8折，月销量是你的6倍。你店里几乎没流量。",
+      data: [
+        { label: "你的店铺月销量", value: "120件", type: "bad" },
+        { label: "模玩城月销量", value: "720件", type: "bad" },
+        { label: "同类商品均价", value: "¥150" },
+        { label: "模玩城同类价格", value: "¥120", type: "bad" },
+        { label: "你的同类价格", value: "¥148" }
+      ],
+      question: "面对价格战，你打算怎么应对？",
+      options: [
+        { text: "跟着打折——他们8折，我7折，用价格抢客流", key: "wrong" },
+        { text: "不做大而全——只卖手办，专注单品类做深", key: "correct" },
+        { text: "买手办送明信片——变相促销", key: "neutral" },
+        { text: "等他们促销结束——先观望", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "商品差异化策略",
+          text: "你没有跟风打价格战，而是把手办做成精品专区。二次元用户其实不只看价格——他们更在意\"这家店专不专业\"。一个月后，虽然件数不多，但好评率和复购率都起来了。"
+        },
+        wrong: {
+          title: "❌ 价格战拖垮了你",
+          text: "跟模玩城比价格是最差的选择——他们体量大，拿货成本比你低，你降价只会亏本。而且吸引来的都是价格敏感用户，一旦恢复原价立刻流失。"
+        },
+        neutral: {
+          title: "⚠️ 有一定效果，但不解决根本问题",
+          text: "送明信片确实能促使用户下单，但没有改变用户对你的认知——\"这是一家跟模玩城差不多的店\"。活动结束后，流量恢复原状。"
+        }
+      }
+    },
+    {
+      id: 2,
+      strategy: "渠道差异化策略",
+      situationTitle: "🗓️ 第二关 · 流量从哪来",
+      situationText: "手办专区做起来后，店里有了些稳定客流，但量太小。<br>你发现一个现象：模玩城的流量主要靠直播间——他们请了二次元主播带货，一场顶你一个月。",
+      data: [
+        { label: "你的月流量", value: "600", type: "bad" },
+        { label: "模玩城月流量", value: "8万", type: "bad" },
+        { label: "直播渠道占比", value: "65%", type: "bad" },
+        { label: "你做过直播", value: "0场" },
+        { label: "你的推广预算", value: "极低" }
+      ],
+      question: "流量被头部店铺垄断，你资金又有限，你打算怎么做？",
+      options: [
+        { text: "找二次元大V带货——花5000元请头部主播试一次", key: "wrong" },
+        { text: "在B站和微博发内容——不做直播，专做圈子里的口碑", key: "correct" },
+        { text: "花钱投直通车——在淘宝内部买广告位", key: "neutral" },
+        { text: "地推——去漫展摆摊", key: "neutral" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "渠道差异化策略",
+          text: "你绕开了直播这个烧钱赛道，选择在B站、微博做二次元内容。发了一些\"开箱测评\"和\"手办选购指南\"，自然吸引了一批同好。半年后，B站带来了40%的流量，而且这些用户天然就信任你。"
+        },
+        wrong: {
+          title: "❌ 烧钱打水漂",
+          text: "花5000请大V，但大V的粉丝和你目标用户重合度不高。直播一停，流量立刻跌回原形。而且你承担了巨大的资金风险。"
+        },
+        neutral: {
+          title: "⚠️ 有一定效果",
+          text: "直通车和地推都能带来一些流量，但效率很低。漫展是一锤子买卖，不能持续给店里引流。"
+        }
+      }
+    },
+    {
+      id: 3,
+      strategy: "消费者差异化策略",
+      situationTitle: "🗓️ 第三关 · 用户是谁",
+      situationText: "内容渠道带来了流量，但你发现一个问题：吸引来的用户很杂——有追新番的学生，有收藏级玩家，有买来送人的。需求完全不同，你的货越进越乱。",
+      data: [
+        { label: "用户构成", value: "学生45%/玩家35%/送礼20%" },
+        { label: "用户复购率", value: "15%", type: "bad" },
+        { label: "仓储周转", value: "极慢", type: "bad" },
+        { label: "用户满意度", value: "3.6", type: "bad" },
+        { label: "问题根源", value: "定位不清，什么都想卖" }
+      ],
+      question: "用户太杂导致运营效率很低，你打算怎么办？",
+      options: [
+        { text: "扩大品类——学生要便宜的，玩家要高端的，都卖", key: "wrong" },
+        { text: "专注学生市场——主打平价国产二次元周边，砍掉高端线", key: "correct" },
+        { text: "先做个大调研——问用户想要什么再决定", key: "neutral" },
+        { text: "降价清仓——把混乱的库存处理掉", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "消费者差异化策略",
+          text: "你锁定了\"学生党\"这个群体——他们喜欢追新番、消费频次高、而且周边是刚需。专注这个群体后，你的产品线清晰了，话术也更有针对性：\"开学期末考完奖励自己一个手办\"。"
+        },
+        wrong: {
+          title: "❌ 扩张导致全面崩盘",
+          text: "大而全的结果是每类用户都觉得你\"不够专\"。仓储混乱，客服不懂产品，用户体验极差。半年后，学生觉得你像杂货铺，玩家觉得你档次太低。"
+        },
+        neutral: {
+          title: "⚠️ 调研是对的，但决策更重要",
+          text: "调研本身没错，但调研结果需要落地到\"聚焦哪类用户\"。光调研不决策，三个月过去了，问题还在。"
+        }
+      }
+    },
+    {
+      id: 4,
+      strategy: "品牌差异化策略",
+      situationTitle: "🗓️ 第四关 · 用户记不住你",
+      situationText: "专注学生市场后，你发现有另一个问题：另一家店「萌二次元」也在打学生市场，而且他们开得比你早3年。用户会说\"你们两家有什么区别？\"",
+      data: [
+        { label: "萌二次元月销", value: "2万", type: "bad" },
+        { label: "你月销", value: "3000", type: "bad" },
+        { label: "用户对两家的印象", value: "\"都差不多吧\"", type: "bad" },
+        { label: "萌二次元特色", value: "新番快、全" }
+      ],
+      question: "用户记不住你，跟竞店比也没有明显优势，你怎么办？",
+      options: [
+        { text: "跟萌二次元比新番速度——他们进什么你进什么", key: "wrong" },
+        { text: "不做大路货——专门卖\"有故事的限定款\"，每一款都有IP背景介绍", key: "correct" },
+        { text: "降价抢客——用价格逼走萌二次元", key: "wrong" },
+        { text: "多平台开店——抖音、咸鱼都上", key: "neutral" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "品牌差异化策略",
+          text: "你选择了\"限定款+故事\"路线——每款手办都有IP世界观介绍、角色背景、收藏价值分析。学生买的不只是手办，是\"懂这个IP\"的认同感。这个定位是萌二次元没有的，用户开始记住你了。"
+        },
+        wrong: {
+          title: "❌ 价格战和模仿都是死路",
+          text: "跟大店比新番速度是找死——他们体量大，拿货比你快。降价就更蠢了——你体量小，亏得比他们更快。"
+        },
+        neutral: {
+          title: "⚠️ 多平台是扩展，不是解法",
+          text: "多平台开店确实能增加曝光，但没有解决\"用户为什么选你\"这个问题。"
+        }
+      }
+    },
+    {
+      id: 5,
+      strategy: "服务差异化策略",
+      situationTitle: "🗓️ 第五关 · 差评来袭",
+      situationText: "品牌定位有了，流量和转化都在涨。但最近中差评多了起来——\"手办包装太差破损了\"、\"客服回答很慢\"。DSR评分从4.6跌到了4.2。",
+      data: [
+        { label: "DSR动态评分", value: "4.2", type: "bad" },
+        { label: "差评TOP1", value: "包装破损" },
+        { label: "差评TOP2", value: "客服响应慢" },
+        { label: "行业平均DSR", value: "4.5" }
+      ],
+      question: "中差评影响搜索权重，你打算怎么解决这个问题？",
+      options: [
+        { text: "花大钱重新设计包装——用高级礼盒", key: "neutral" },
+        { text: "客服增加人手——多雇两个兼职客服", key: "wrong" },
+        { text: "推出\"开箱保障\"——到手破损免费换新，响应速度承诺2小时内", key: "correct" },
+        { text: "给好评返现5元——用利益换好评", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "服务差异化策略",
+          text: "\"到手破损免费换新\"这个承诺直接解决了用户的最大顾虑——二次元用户买手办最怕的就是到手发现压盒。配合2小时响应承诺，三个月后DSR回升到4.7，好评率92%。"
+        },
+        wrong: {
+          title: "❌ 客服人数多不等于服务好",
+          text: "多雇客服但不培训，只会增加出错概率。给好评返现更蠢——引来的是职业薅羊毛的，中差评不减反增。"
+        },
+        neutral: {
+          title: "⚠️ 包装升级是对的，但效果有限",
+          text: "高级包装能减少破损，但不能解决客服问题。用户更在意的是\"出了问题能不能解决\"。"
+        }
+      }
+    },
+    {
+      id: 6,
+      strategy: "推广差异化策略",
+      situationTitle: "🗓️ 第六关 · 推广预算怎么花",
+      situationText: "服务和口碑稳定了。现在要考虑推广——模玩城的月推广预算50万，你只有3000元。钱不多，要花在刀刃上。",
+      data: [
+        { label: "你的月推广预算", value: "¥3000" },
+        { label: "模玩城月推广预算", value: "¥50万", type: "bad" },
+        { label: "目标用户特征", value: "学生党、追新番、收藏爱好者" },
+        { label: "用户获取成本行业均值", value: "¥80/人", type: "bad" }
+      ],
+      question: "预算极其有限，你打算怎么推广？",
+      options: [
+        { text: "集中投抖Y——找头部二次元网红带货", key: "wrong" },
+        { text: "做学生社群——跟学校动漫社合作，让KOC带真实口碑", key: "correct" },
+        { text: "3000全买直通车——在淘宝内买广告位", key: "neutral" },
+        { text: "不推广了——靠自然流量慢慢积累", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "推广差异化策略",
+          text: "你选择了\"动漫社KOC\"路线——社团里的学长学姐推荐的东西，学弟学妹天然信任。而且他们的粉丝全都是目标用户。3000元带动了200多个精准用户，用户获取成本只有¥15。"
+        },
+        wrong: {
+          title: "❌ 3000元烧网红连水花都没有",
+          text: "头部二次元网红一条推广至少1万。你3000元只能找小透明，发完就没人看了。自然流量？在淘宝这个封闭平台里，不推广基本等于等死。"
+        },
+        neutral: {
+          title: "⚠️ 直通车效率太低",
+          text: "3000元买直通车，在模玩城面前连个水花都没有。你的店铺销量和评价都太少，广告费全打了水漂。"
+        }
+      }
+    },
+    {
+      id: 7,
+      strategy: "差异化思维（综合）",
+      situationTitle: "🗓️ 第七关 · 终极复盘",
+      situationText: "经过6轮决策，你的店铺已经形成了独特风格，回头看第一关的选择，你有什么感悟？",
+      data: [
+        { label: "店铺月销", value: "1.2万", type: "good" },
+        { label: "用户复购率", value: "48%", type: "good" },
+        { label: "DSR评分", value: "4.7", type: "good" },
+        { label: "用户对你的认知", value: "\"专业的学生党周边店\"", type: "good" }
+      ],
+      question: "回顾整个过程，你认为第一关面对价格战时，最正确的做法是什么？",
+      options: [
+        { text: "跟着打折——先用低价把用户拉过来再说", key: "wrong" },
+        { text: "找到自己最强的点——不是跟对手比价格，是让用户觉得\"这家店不一样\"", key: "correct" },
+        { text: "观望等待——让对手先打，等促销结束再说", key: "wrong" },
+        { text: "降价不如送赠品——用小恩小惠吸引用户", key: "neutral" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 你已经理解了差异化营销的精髓！",
+          strategy: "差异化思维（综合）",
+          text: "营销的本质不是\"我比对手便宜\"，而是\"我在对手没有的方向建立优势\"。价格战是最低效的竞争方式——因为永远有人比你便宜。找到自己最强的点，让用户因为\"不一样\"而选择你，这才是可持续的商业模式。"
+        },
+        wrong: {
+          title: "❌ 价格战没有赢家",
+          text: "价格战的结果是全行业利润崩塌。你打价格战，对手也打，最后谁都不赚钱。用户只记住\"谁便宜\"，不记住\"谁好\"。"
+        },
+        neutral: {
+          title: "⚠️ 赠品是辅助手段，不是核心竞争力",
+          text: "赠品可以短期促单，但用户记住的是\"赠品\"，不是\"这家店\"。没有差异化支撑的赠品，只是变相降价。"
+        }
+      }
+    }
+  ]
+};
+
+let currentRound = 0;
+let selectedOption = null;
+let roundResults = [];
+let gamePhase = 'choice';
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').style.display = 'block';
+  currentRound = 0;
+  roundResults = [];
+  loadRound(currentRound);
+}
+
+function loadRound(roundIndex) {
+  const round = gameData.rounds[roundIndex];
+  gamePhase = 'choice';
+  
+  // 清理上一轮可能残留的额外按钮（retry时）
+  const existingNextBtn = document.getElementById('nextRoundExtraBtn');
+  if (existingNextBtn) existingNextBtn.remove();
+  
+  const indicator = document.getElementById('stepIndicator');
+  indicator.innerHTML = gameData.rounds.map((_, i) => 
+    `<div class="step-dot ${i < roundIndex ? 'done' : i === roundIndex ? 'active' : ''}"></div>`
+  ).join('');
+
+  document.getElementById('situationTitle').textContent = round.situationTitle;
+  document.getElementById('situationText').innerHTML = round.situationText;
+  
+  const dataPanel = document.getElementById('dataPanel');
+  dataPanel.innerHTML = round.data.map(d => 
+    `<div class="data-row">
+      <span class="data-label">${d.label}</span>
+      <span class="data-value ${d.type === 'bad' ? 'bad' : d.type === 'good' ? 'good' : ''}">${d.value}</span>
+    </div>`
+  ).join('');
+
+  document.getElementById('questionText').textContent = round.question;
+  document.getElementById('thinkHint').textContent = '🤔 思考提示：仔细看数据，想清楚这个问题的关键是什么。';
+
+  const shuffledOpts = shuffle(round.options.map((opt, i) => ({...opt, idx: i})));
+  const letters = ['A', 'B', 'C', 'D'];
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = shuffledOpts.map((opt, i) => 
+    `<button class="option-btn" onclick="selectOption('${opt.key}', this)"><span style="font-weight:bold;color:#ffd700;margin-right:10px;font-size:1.1em;">${letters[i]}</span>${opt.text}</button>`
+  ).join('');
+  
+  selectedOption = null;
+  const btn = document.getElementById('actionBtn');
+  btn.disabled = true;
+  btn.textContent = '请先选择一个策略';
+  btn.onclick = null;
+}
+
+function selectOption(key, btn) {
+  if (gamePhase !== 'choice') return;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedOption = key;
+  const btnEl = document.getElementById('actionBtn');
+  btnEl.disabled = false;
+  btnEl.textContent = '确认策略';
+  btnEl.onclick = confirmChoice;
+}
+
+function confirmChoice() {
+  if (!selectedOption || gamePhase !== 'choice') return;
+  const round = gameData.rounds[currentRound];
+  const feedback = round.feedback[selectedOption];
+  gamePhase = 'feedback';
+  
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    if (b.classList.contains('selected')) {
+      if (selectedOption === 'correct') b.classList.add('correct');
+      else b.classList.add('wrong');
+    }
+  });
+
+  const container = document.getElementById('optionsContainer');
+  const fc = selectedOption === 'correct' ? '#51cf66' : selectedOption === 'wrong' ? '#ff6b6b' : '#ffd700';
+  const fb = selectedOption === 'correct' ? 'rgba(81,207,102,0.1)' : selectedOption === 'wrong' ? 'rgba(255,107,107,0.1)' : 'rgba(255,215,0,0.1)';
+  const strategyBadge = selectedOption === 'correct' && feedback.strategy
+    ? `<div style="display:inline-block; background:rgba(81,207,102,0.2); color:#51cf66; padding:4px 12px; border-radius:20px; font-size:0.85em; margin-bottom:10px;">🏷️ ${feedback.strategy}</div>` : '';
+  container.innerHTML = `
+    <div style="grid-column: 1/-1; background: ${fb}; border-radius: 12px; padding: 20px; border: 2px solid ${fc}">
+      <div style="color: ${fc}; font-size: 1.1em; font-weight: bold; margin-bottom: 8px;">${feedback.title}</div>
+      ${strategyBadge}
+      <div style="color: #ccc; line-height: 1.8; font-size: 0.95em;">${feedback.text}</div>
+    </div>
+  `;
+
+  roundResults.push({ round: currentRound + 1, strategy: feedback.strategy || round.strategy || '', choice: selectedOption, feedback: feedback });
+
+  const btn = document.getElementById('actionBtn');
+  btn.disabled = false;
+  if (selectedOption !== 'correct' && currentRound < gameData.rounds.length - 1) {
+    // 选错了：显示重试按钮
+    btn.textContent = '🔄 重试本关';
+    btn.onclick = () => { gamePhase = 'choice'; loadRound(currentRound); };
+    const retryBtn = document.createElement('button');
+    retryBtn.className = 'action-btn';
+    retryBtn.style.marginLeft = '12px';
+    retryBtn.textContent = '下一关 →';
+    retryBtn.id = 'nextRoundExtraBtn';
+    retryBtn.onclick = goNextRound;
+    btn.parentElement.appendChild(retryBtn);
+  } else if (currentRound < gameData.rounds.length - 1) {
+    btn.textContent = '下一关 →';
+    btn.onclick = goNextRound;
+  } else {
+    btn.textContent = '查看战报';
+    btn.onclick = showResult;
+  }
+}
+
+function goNextRound() {
+  currentRound++;
+  loadRound(currentRound);
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const correctCount = roundResults.filter(r => r.choice === 'correct').length;
+  const total = roundResults.length;
+  
+  let title = '';
+  if (correctCount === 7) title = '🏆 营销天才！';
+  else if (correctCount >= 5) title = '🌟 优秀掌柜！';
+  else if (correctCount >= 3) title = '📚 潜力无限';
+  else title = '💡 继续学习';
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = `策略正确率：${correctCount}/${total}`;
+  
+  const detail = document.getElementById('resultDetail');
+  detail.innerHTML = `
+    <h4>📊 各关决策回顾</h4>
+    ${roundResults.map((r, i) => `
+      <div class="round-result">
+        <div class="round-title">第${i+1}关${r.strategy ? ' · ' + r.strategy : ''}</div>
+        <div class="choice">${r.choice === 'correct' ? '✅ 正确' : r.choice === 'wrong' ? '❌ 有误' : '⚠️ 欠佳'}</div>
+        <div class="outcome">${r.feedback.title.replace(/^[✅❌⚠️]/, '')}</div>
+      </div>
+    `).join('')}
+    
+    <h4 style="margin-top: 20px;">💡 核心感悟</h4>
+    <p>营销的本质不是"我比对手便宜"，而是"我在对手没有的方向建立优势"。</p>
+    <p style="margin-top:6px;">面对竞争，首先想的是：<strong style="color:#ffd700">"我能做对手做不到的哪一点"</strong>，而不是"我怎么降价跟他抢"。</p>
+  `;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+
+document.getElementById('startBtn').onclick = startGame;
+</script>
+</body>
+</html>
