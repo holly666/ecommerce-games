@@ -22,10 +22,10 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .situation-box { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
 .situation-title { color: #ffd700; font-size: 1.1em; margin-bottom: 12px; }
 .situation-text { color: #ddd; line-height: 1.9; font-size: 1em; }
-.data-panel { background: #0f3460; border-radius: 12px; padding: 16px; margin-top: 16px; }
-.data-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.95em; }
-.data-row:last-child { border-bottom: none; }
-.data-label { color: #aaa; }
+.data-panel { background: #0f3460; border-radius: 12px; padding: 16px; margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.data-row { display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9em; }
+.data-item { display: flex; flex-direction: column; gap: 2px; }
+.data-label { color: #aaa; font-size: 0.85em; }
 .data-value { color: #ffd700; font-weight: bold; }
 .data-value.bad { color: #ff6b6b; }
 .data-value.good { color: #51cf66; }
@@ -402,12 +402,11 @@ function loadRound(roundIndex) {
   document.getElementById('situationText').innerHTML = round.situationText;
   
   const dataPanel = document.getElementById('dataPanel');
-  dataPanel.innerHTML = round.data.map(d => 
-    `<div class="data-row">
-      <span class="data-label">${d.label}</span>
-      <span class="data-value ${d.type === 'bad' ? 'bad' : d.type === 'good' ? 'good' : ''}">${d.value}</span>
-    </div>`
-  ).join('');
+  const mid = Math.ceil(round.data.length / 2);
+  const row1 = round.data.slice(0, mid);
+  const row2 = round.data.slice(mid);
+  dataPanel.innerHTML = `<div class="data-row">${row1.map(d => `<span class="data-item"><span class="data-label">${d.label}</span><span class="data-value ${d.type === 'bad' ? 'bad' : d.type === 'good' ? 'good' : ''}">${d.value}</span></span>`).join('')}</div>
+  <div class="data-row">${row2.map(d => `<span class="data-item"><span class="data-label">${d.label}</span><span class="data-value ${d.type === 'bad' ? 'bad' : d.type === 'good' ? 'good' : ''}">${d.value}</span></span>`).join('')}</div>`;
 
   document.getElementById('questionText').textContent = round.question;
   document.getElementById('thinkHint').textContent = '🤔 思考提示：仔细看数据，想清楚这个问题的关键是什么。';
