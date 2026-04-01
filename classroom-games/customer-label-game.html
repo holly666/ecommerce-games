@@ -292,13 +292,14 @@ function startGame() {
   loadRound(currentRound);
 }
 
+let currentHint = '';
 function toggleHint() {
   const hint = document.getElementById('thinkHint');
   if (hint.textContent.includes('点我看')) {
-    hint.textContent = hint.textContent.replace('点我看提示', '点击收起');
+    hint.innerHTML = currentHint + '<br><small style="color:#aaa">(点击收起)</small>';
     hint.style.background = 'rgba(255, 215, 0, 0.25)';
   } else {
-    hint.textContent = hint.textContent.replace('点击收起', '点我看提示');
+    hint.innerHTML = '📋 点我看提示';
     hint.style.background = 'rgba(255, 215, 0, 0.1)';
   }
 }
@@ -325,6 +326,7 @@ function loadRound(roundIndex) {
   ).join('');
 
   document.getElementById('questionText').textContent = round.question;
+  currentHint = round.hint;
   document.getElementById('thinkHint').innerHTML = '📋 点我看提示';
   document.getElementById('thinkHint').style.background = 'rgba(255, 215, 0, 0.1)';
 
