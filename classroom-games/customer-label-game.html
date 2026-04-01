@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新手店长特训 - 客户标签</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+#start-screen { text-align: center; padding-top: 40px; }
+.title { font-size: 2.2em; color: #ffd700; margin-bottom: 10px; }
+.subtitle { font-size: 1.1em; color: #aaa; margin-bottom: 30px; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 16px 48px; font-size: 1.2em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.start-btn:hover { transform: scale(1.05); }
+.game-desc { background: #16213e; border-radius: 16px; padding: 24px; margin-top: 30px; text-align: left; }
+.game-desc h3 { color: #ffd700; margin-bottom: 12px; }
+.game-desc p { color: #ccc; line-height: 1.8; font-size: 0.95em; margin-bottom: 8px; }
+
+#game-screen { display: none; }
+.situation-box { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.situation-title { color: #ffd700; font-size: 1.1em; margin-bottom: 12px; }
+.scenario-text { color: #ddd; line-height: 1.9; font-size: 1em; }
+.data-panel { background: #0f3460; border-radius: 12px; padding: 16px; margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; }
+.data-item { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px 14px; min-width: 120px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.data-label { color: #aaa; font-size: 0.85em; white-space: nowrap; }
+.data-value { color: #ffd700; font-weight: bold; font-size: 0.95em; white-space: nowrap; }
+.data-value.bad { color: #ff6b6b; }
+.data-value.good { color: #51cf66; }
+
+.question { font-size: 1.1em; color: #fff; margin-bottom: 16px; line-height: 1.7; }
+.think-hint { background: rgba(255, 215, 0, 0.1); border-left: 3px solid #ffd700; padding: 10px 14px; margin-bottom: 16px; font-size: 0.9em; color: #ffd700; border-radius: 0 8px 8px 0; cursor: pointer; }
+.think-hint:hover { background: rgba(255, 215, 0, 0.2); }
+
+.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; transition: all 0.2s; line-height: 1.5; min-height: 60px; display: flex; align-items: center; }
+.option-btn:hover { border-color: #667eea; background: #1a237e; color: #fff; }
+.option-btn.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.15); color: #ffd700; }
+.option-btn.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+.option-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 20px; }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+#result-screen { display: none; text-align: center; padding-top: 40px; }
+.result-title { font-size: 1.8em; color: #ffd700; margin-bottom: 16px; }
+.result-score { font-size: 1.2em; color: #aaa; margin-bottom: 30px; }
+.result-detail { background: #16213e; border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; }
+.round-result { background: #0f3460; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.round-result .round-title { color: #667eea; font-size: 0.9em; margin-bottom: 8px; }
+.round-result .choice { color: #ffd700; margin-bottom: 4px; }
+.round-result .outcome { color: #aaa; font-size: 0.9em; }
+
+.step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.step-dot { width: 10px; height: 10px; border-radius: 50%; background: #334; }
+.step-dot.active { background: #ffd700; }
+.step-dot.done { background: #51cf66; }
+
+.strategy-tags { background: #0f3460; border-radius: 12px; padding: 16px; margin-top: 16px; }
+.strategy-tag { display: inline-block; background: rgba(102,126,234,0.2); color: #667eea; padding: 4px 10px; border-radius: 20px; font-size: 0.85em; margin: 3px; }
+
+.hidden { display: none !important; }
+@media (max-width: 600px) { .options { grid-template-columns: 1fr; } .title { font-size: 1.6em; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="start-screen">
+  <div class="title">🏪 新手店长特训</div>
+  <div class="subtitle">客户标签识别 · 精准营销基础</div>
+  <button class="start-btn" id="startBtn">开始训练</button>
+  <div class="game-desc">
+    <h3>📋 训练说明</h3>
+    <p>你是「潮牌杂货铺」淘宝店的店长。</p>
+    <p>每天会遇到不同的客户，TA们的特征都不一样。</p>
+    <p>你的任务是：根据客户特征，选择正确的标签类型。</p>
+    <p>⚠️ 选错标签会导致推广方向错误，白花钱还没效果！</p>
+  </div>
+  <div class="strategy-tags">
+    <div style="color:#aaa;font-size:0.9em;margin-bottom:8px;">📚 6种客户标签类型：</div>
+    <span class="strategy-tag">基础信息类</span>
+    <span class="strategy-tag">行为特征类</span>
+    <span class="strategy-tag">偏好特征类</span>
+    <span class="strategy-tag">价值类</span>
+    <span class="strategy-tag">社交类</span>
+    <span class="strategy-tag">反馈类</span>
+  </div>
+</div>
+
+<div id="game-screen">
+  <div class="step-indicator" id="stepIndicator"></div>  
+  <div class="situation-box">
+    <div class="situation-title" id="situationTitle"></div>
+    <div class="scenario-text" id="scenarioText"></div>
+    <div class="data-panel" id="dataPanel"></div>
+  </div>
+  <div class="question" id="questionText"></div>
+  <div class="think-hint" id="thinkHint" onclick="toggleHint()">📋 点我看提示</div>
+  <div class="options" id="optionsContainer"></div>
+  <div style="text-align:center;">
+    <button class="action-btn" id="actionBtn" disabled>请先选择标签类型</button>
+  </div>
+</div>
+
+<div id="result-screen">
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-score" id="resultScore"></div>
+  <div class="result-detail" id="resultDetail"></div>
+  <button class="start-btn" onclick="restartGame()">再训练一次</button>
+</div>
+
+</div>
+
+<script>
+const gameData = {
+  rounds: [
+    {
+      id: 1,
+      title: "客户特征识别",
+      caseText: "店里来了一位新客户，资料卡显示：女，28岁，上海浦东，本科毕业，在互联网公司做产品经理。",
+      question: "这些信息属于哪种标签类型？",
+      data: [
+        { label: "性别", value: "女" },
+        { label: "年龄", value: "28岁" },
+        { label: "地域", value: "上海浦东" },
+        { label: "职业", value: "产品经理" }
+      ],
+      hint: "💡 性别、年龄、地域、职业——这些是什么类型的信息？",
+      options: [
+        { text: "A. 基础信息类标签", key: "basic", feedback: { correct: true, title: "✅ 正确！", type: "基础信息类", text: "性别、年龄、地域、职业都是客户的基本属性，属于基础信息类标签。这类标签描述的是「是谁」的问题。" } },
+        { text: "B. 行为特征类标签", key: "behavior", feedback: { correct: false, title: "⚠️ 后果", text: "行为特征类标签描述的是「做了什么」，比如购买频率、浏览记录等。性别、年龄不是行为，是静态属性。" } },
+        { text: "C. 偏好特征类标签", key: "preference", feedback: { correct: false, title: "⚠️ 后果", text: "偏好特征类标签描述的是「喜欢什么」，比如品牌偏好、品类偏好。职业不是偏好，是基本属性。" } },
+        { text: "D. 价值类标签", key: "value", feedback: { correct: false, title: "⚠️ 后果", text: "价值类标签描述的是客户「值多少钱」，比如消费金额、忠诚度等。职业跟客户价值没有直接关系。" } }
+      ]
+    },
+    {
+      id: 2,
+      title: "购买行为分析",
+      caseText: "后台数据显示：客户小王每月在店里消费2-3次，单笔金额在300-500元之间，一直用花呗支付，最近浏览了3次运动鞋。",
+      question: "这些信息应该打什么标签？",
+      data: [
+        { label: "月均购买频次", value: "2-3次", type: "good" },
+        { label: "单笔金额", value: "300-500元" },
+        { label: "支付方式", value: "花呗" },
+        { label: "最近浏览", value: "运动鞋3次" }
+      ],
+      hint: "💡 这些都是客户「做了什么」的信息，描述的是行为模式",
+      options: [
+        { text: "A. 基础信息类标签", key: "basic", feedback: { correct: false, title: "⚠️ 后果", text: "基础信息是静态属性（性别、年龄），这些是动态行为数据（购买频率、支付方式）。性质完全不同。" } },
+        { text: "B. 行为特征类标签", key: "behavior", feedback: { correct: true, title: "✅ 正确！", type: "行为特征类", text: "购买频率、购买金额、支付方式、最近浏览记录都是行为数据。描述的是客户「做了什么」，属于行为特征类标签。" } },
+        { text: "C. 偏好特征类标签", key: "preference", feedback: { correct: false, title: "⚠️ 后果", text: "偏好是兴趣倾向（喜欢什么品牌、品类），这些是行为记录（买了什么、付了多少）。浏览3次运动鞋不等于喜欢运动鞋。" } },
+        { text: "D. 社交类标签", key: "social", feedback: { correct: false, title: "⚠️ 后果", text: "社交类标签描述的是客户的社交特征（朋友圈、社交影响力等），购买行为跟社交网络无关。" } }
+      ]
+    },
+    {
+      id: 3,
+      title: "客户需求洞察",
+      caseText: "客户留言反馈：「希望多上一些运动品牌的联名款」「价格能再便宜点就好了」「功能简单的就好，太复杂用不来」",
+      question: "这些反馈体现了客户什么特征？",
+      data: [
+        { label: "品类偏好", value: "运动品牌联名款" },
+        { label: "价格敏感度", value: "希望便宜" },
+        { label: "功能偏好", value: "简单实用" }
+      ],
+      hint: "💡 客户说了「希望」「想要」「喜欢」——这是偏好的表达",
+      options: [
+        { text: "A. 行为特征类标签", key: "behavior", feedback: { correct: false, title: "⚠️ 后果", text: "行为特征是「做了什么」（买了什么、付了多少钱），这些是客户「想要什么」——偏好，不是行为。" } },
+        { text: "B. 偏好特征类标签", key: "preference", feedback: { correct: true, title: "✅ 正确！", type: "偏好特征类", text: "品类偏好（运动联名款）、价格偏好（希望便宜）、功能偏好（简单实用）都是客户的兴趣和偏好，属于偏好特征类标签。" } },
+        { text: "C. 基础信息类标签", key: "basic", feedback: { correct: false, title: "⚠️ 后果", text: "基础信息是客观属性（性别、年龄、职业），客户的愿望和偏好不是基础信息，是主观倾向。" } },
+        { text: "D. 反馈类标签", key: "feedback", feedback: { correct: false, title: "⚠️ 后果", text: "反馈类标签是客户对「已购买商品或服务」的评价（如质量好不好、物流快不快）。这些是客户的需求愿望，不是对已购商品的反馈。" } }
+      ]
+    },
+    {
+      id: 4,
+      title: "高价值客户识别",
+      caseText: "大促期间，客户李老板一次性下单5万元，全额付款，入会2年，累计消费20万，带了3个新客户来。这是店铺VIP。",
+      question: "应该给这个客户打什么标签？",
+      data: [
+        { label: "大促消费", value: "5万元", type: "good" },
+        { label: "累计消费", value: "20万元", type: "good" },
+        { label: "会员年限", value: "2年" },
+        { label: "老客拉新", value: "3人" }
+      ],
+      hint: "💡 消费金额、忠诚度、复购能力——这些衡量客户对店铺的「价值」",
+      options: [
+        { text: "A. 基础信息类标签", key: "basic", feedback: { correct: false, title: "⚠️ 后果", text: "基础信息是静态属性（性别、年龄、地区），消费金额不是基础信息，是衡量客户价值的指标。" } },
+        { text: "B. 行为特征类标签", key: "behavior", feedback: { correct: false, title: "⚠️ 后果", text: "行为特征是记录「做了什么」（买了什么频次、浏览了什么），这个客户的数据不只是行为，而是衡量其对店铺的贡献价值。" } },
+        { text: "C. 偏好特征类标签", key: "preference", feedback: { correct: false, title: "⚠️ 后果", text: "偏好特征是「喜欢什么」（品类偏好、品牌偏好），消费金额跟偏好无关，是价值指标。" } },
+        { text: "D. 价值类标签", key: "value", feedback: { correct: true, title: "✅ 正确！", type: "价值类", text: "累计消费20万、大促豪掷5万、2年老会员、积极拉新——这些都是衡量客户对店铺价值的核心指标，属于价值类标签。「VIP」就是基于价值类标签打出来的。" } }
+      ]
+    },
+    {
+      id: 5,
+      title: "社交影响力评估",
+      caseText: "客户小美是某红书博主，有5万粉丝，经常发笔记带品牌话题，评论区很多粉丝问在哪里买。她建了个粉丝群，专门讨论你的品牌。",
+      question: "这个客户属于什么标签类型？",
+      data: [
+        { label: "粉丝数", value: "5万" },
+        { label: "平台属性", value: "小红书博主" },
+        { label: "内容类型", value: "带品牌话题" },
+        { label: "粉丝互动", value: "粉丝群" }
+      ],
+      hint: "💡 粉丝数量、社交影响力、口碑传播——这些是社交特征",
+      options: [
+        { text: "A. 行为特征类标签", key: "behavior", feedback: { correct: false, title: "⚠️ 后果", text: "行为特征是购买行为（买了什么、频次如何），这些是社交网络特征，不是购买行为。" } },
+        { text: "B. 偏好特征类标签", key: "preference", feedback: { correct: false, title: "⚠️ 后果", text: "偏好是喜欢什么品牌、品类，小美的价值在于她的传播能力，不在于她自己的偏好。" } },
+        { text: "C. 社交类标签", key: "social", feedback: { correct: true, title: "✅ 正确！", type: "社交类", text: "粉丝数量、社交影响力、话题传播力、口碑带动能力——这些是客户的社交属性。5万粉丝能带来多少曝光？值得重点维护的KOC（关键意见消费者）。" } },
+        { text: "D. 价值类标签", key: "value", feedback: { correct: false, title: "⚠️ 后果", text: "价值类是衡量客户消费贡献（花了多少钱），小美的主要价值是传播能力，不是消费能力。这两者要区分开。" } }
+      ]
+    },
+    {
+      id: 6,
+      title: "售后反馈处理",
+      caseText: "客户张先生收到货后给了差评：「包装破损，商品有划痕」「等了7天才到」「客服回复很慢，态度一般」",
+      question: "这些反馈应该打什么标签？",
+      data: [
+        { label: "商品质量反馈", value: "包装破损/划痕" },
+        { label: "物流服务反馈", value: "等7天" },
+        { label: "客服服务反馈", value: "回复慢/态度一般" }
+      ],
+      hint: "💡 这些是对「商品和服务」的评价，属于反馈类标签",
+      options: [
+        { text: "A. 行为特征类标签", key: "behavior", feedback: { correct: false, title: "⚠️ 后果", text: "行为特征是客户「做了什么」（购买、浏览、收藏），差评是对商品和服务的评价，不是行为记录。" } },
+        { text: "B. 偏好特征类标签", key: "preference", feedback: { correct: false, title: "⚠️ 后果", text: "偏好是客户「喜欢什么」，差评是客户「不满意什么」，性质相反。偏好用来营销，反馈用来改进服务。" } },
+        { text: "C. 反馈类标签", key: "feedback", feedback: { correct: true, title: "✅ 正确！", type: "反馈类", text: "商品质量反馈（包装破损）、物流服务反馈（等7天）、客服服务反馈（态度一般）——这些都是客户对已购商品或服务的评价，属于反馈类标签。需要重点改进包装和客服。" } },
+        { text: "D. 价值类标签", key: "value", feedback: { correct: false, title: "⚠️ 后果", text: "价值类标签衡量客户「值多少钱」，差评是客户对服务的评价，跟客户价值是两回事。" } }
+      ]
+    },
+    {
+      id: 7,
+      title: "标签综合应用",
+      caseText: "店铺要进行一次大促推广，需要选目标人群。已知：客户A消费30万但已3个月没来；客户B月消费500但月月复购；客户C浏览频繁但从不下单；客户D是博主有1万粉丝。",
+      question: "如果要推「高客单价商品」，应该优先选谁？",
+      data: [
+        { label: "客户A", value: "累计高但已沉睡" },
+        { label: "客户B", value: "金额低但活跃" },
+        { label: "客户C", value: "浏览多但不买" },
+        { label: "客户D", value: "有粉丝影响力" }
+      ],
+      hint: "💡 高客单价商品需要「买得起」且「会买」的人",
+      options: [
+        { text: "A. 沉睡VIP客户A", key: "a", feedback: { correct: false, title: "⚠️ 后果", text: "A虽然累计消费高，但已3个月没来——可能是流失了，也可能是需求变了。沉睡客户需要先唤醒，再推高客单，成功率低。" } },
+        { text: "B. 活跃小客客户B", key: "b", feedback: { correct: false, title: "⚠️ 后果", text: "B虽然月月复购，但月消费只有500——消费能力有限，推高客单价商品成功转化率低。" } },
+        { text: "C. 活跃观望客户C", key: "c", feedback: { correct: false, title: "⚠️ 后果", text: "C浏览频繁但从不下单——明显对价格或产品有顾虑，需要先解决信任问题，不是推高客单的好时机。" } },
+        { text: "D. 博主客户D", key: "d", feedback: { correct: true, title: "✅ 正确！", type: "综合策略", text: "博主有1万粉丝，有传播影响力。她买，不仅自己能消费，还能带动粉丝买。高客单价商品需要「有购买力+有影响力」的人，D最合适。" } }
+      ]
+    },
+    {
+      id: 8,
+      title: "终极测试",
+      caseText: "总结一下：一位32岁女性客户，月均消费2000元，喜欢韩系美妆，每月购买2次，使用花呗支付，曾给过差评说物流太慢，在小红书有2000粉丝。你要给她打标签。",
+      question: "「32岁女性」应该打什么标签？",
+      data: [
+        { label: "基础属性", value: "32岁/女性" },
+        { label: "消费能力", value: "月2000元" },
+        { label: "平台偏好", value: "韩系美妆" },
+        { label: "购买频次", value: "每月2次" }
+      ],
+      hint: "💡 年龄和性别是最基本的信息，这类客观属性叫什么？",
+      options: [
+        { text: "A. 基础信息类标签", key: "basic", feedback: { correct: true, title: "✅ 正确！", type: "基础信息类", text: "年龄、性别是客户最基本的客观属性，不随行为变化，是所有标签中最稳定的基础信息。基础信息类标签是所有分析和营销的基石。" } },
+        { text: "B. 行为特征类标签", key: "behavior", feedback: { correct: false, title: "⚠️ 后果", text: "行为特征是动态的「做了什么」（购买、浏览），32岁和性别不是行为，是静态客观属性。" } },
+        { text: "C. 偏好特征类标签", key: "preference", feedback: { correct: false, title: "⚠️ 后果", text: "偏好是主观的「喜欢什么」（韩系美妆是偏好），年龄和性别不是偏好，是客观事实。" } },
+        { text: "D. 价值类标签", key: "value", feedback: { correct: false, title: "⚠️ 后果", text: "价值类标签衡量客户的消费贡献（花了多少钱），年龄和性别跟消费金额没有必然关系。" } }
+      ]
+    }
+  ]
+};
+
+let currentRound = 0;
+let selectedIndex = -1;
+let roundResults = [];
+let gamePhase = 'choice';
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').style.display = 'block';
+  currentRound = 0;
+  roundResults = [];
+  loadRound(currentRound);
+}
+
+function toggleHint() {
+  const hint = document.getElementById('thinkHint');
+  if (hint.textContent.includes('点我看')) {
+    hint.textContent = hint.textContent.replace('点我看提示', '点击收起');
+    hint.style.background = 'rgba(255, 215, 0, 0.25)';
+  } else {
+    hint.textContent = hint.textContent.replace('点击收起', '点我看提示');
+    hint.style.background = 'rgba(255, 215, 0, 0.1)';
+  }
+}
+
+function loadRound(roundIndex) {
+  const round = gameData.rounds[roundIndex];
+  gamePhase = 'choice';
+  selectedIndex = -1;
+  
+  const indicator = document.getElementById('stepIndicator');
+  indicator.innerHTML = gameData.rounds.map((_, i) => 
+    `<div class="step-dot ${i < roundIndex ? 'done' : i === roundIndex ? 'active' : ''}"></div>`
+  ).join('');
+
+  document.getElementById('situationTitle').textContent = `📦 第${round.id}关 · ${round.title}`;
+  document.getElementById('scenarioText').textContent = round.caseText;
+  
+  const dataPanel = document.getElementById('dataPanel');
+  dataPanel.innerHTML = round.data.map(d => 
+    `<div class="data-item">
+      <span class="data-label">${d.label}</span>
+      <span class="data-value ${d.type === 'bad' ? 'bad' : d.type === 'good' ? 'good' : ''}">${d.value}</span>
+    </div>`
+  ).join('');
+
+  document.getElementById('questionText').textContent = round.question;
+  document.getElementById('thinkHint').innerHTML = '📋 点我看提示';
+  document.getElementById('thinkHint').style.background = 'rgba(255, 215, 0, 0.1)';
+
+  const shuffledOpts = shuffle(round.options.map((opt, i) => ({...opt, originalIndex: i})));
+  const letters = ['A', 'B', 'C', 'D'];
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = shuffledOpts.map((opt, i) => 
+    `<button class="option-btn" data-index="${i}" data-key="${opt.key}" onclick="selectOption(${i}, this)">${opt.text}</button>`
+  ).join('');
+  
+  const btn = document.getElementById('actionBtn');
+  btn.disabled = true;
+  btn.textContent = '请先选择标签类型';
+  btn.onclick = null;
+}
+
+function selectOption(index, btn) {
+  if (gamePhase !== 'choice') return;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedIndex = index;
+  const btnEl = document.getElementById('actionBtn');
+  btnEl.disabled = false;
+  btnEl.textContent = '确认标签';
+  btnEl.onclick = confirmChoice;
+}
+
+function confirmChoice() {
+  if (selectedIndex < 0 || gamePhase !== 'choice') return;
+  const round = gameData.rounds[currentRound];
+  const btns = document.querySelectorAll('.option-btn');
+  const selectedBtn = btns[selectedIndex];
+  const selectedKey = selectedBtn.dataset.key;
+  
+  // Find selected option's feedback
+  const selectedOption = round.options.find(o => o.key === selectedKey);
+  const optionFeedback = selectedOption ? selectedOption.feedback : null;
+  const isCorrect = optionFeedback ? optionFeedback.correct : false;
+  
+  gamePhase = 'feedback';
+  btns.forEach(btn => btn.disabled = true);
+  
+  if (isCorrect) {
+    selectedBtn.classList.add('correct');
+    roundResults.push({ id: round.id, title: round.title, correct: true, type: optionFeedback.type });
+    const fbDiv = document.getElementById('optionsContainer');
+    fbDiv.innerHTML = `
+      <div style="grid-column: 1/-1; background: rgba(81,207,102,0.1); border-radius: 12px; padding: 20px; border: 2px solid #51cf66;">
+        <div style="color: #51cf66; font-size: 1.1em; font-weight: bold; margin-bottom: 8px;">${optionFeedback.title}</div>
+        <div style="display:inline-block; background:rgba(81,207,102,0.2); color:#51cf66; padding:4px 12px; border-radius:20px; font-size:0.85em; margin-bottom:10px;">🏷️ ${optionFeedback.type}</div>
+        <div style="color: #ccc; line-height: 1.8; font-size: 0.95em;">${optionFeedback.text}</div>
+      </div>
+    `;
+    const btn = document.getElementById('actionBtn');
+    btn.disabled = false;
+    if (currentRound < gameData.rounds.length - 1) {
+      btn.textContent = '下一关 →';
+      btn.onclick = goNextRound;
+    } else {
+      btn.textContent = '查看成绩';
+      btn.onclick = showResult;
+    }
+  } else {
+    selectedBtn.classList.add('wrong');
+    roundResults.push({ id: round.id, title: round.title, correct: false });
+    const fbDiv = document.getElementById('optionsContainer');
+    fbDiv.innerHTML = `
+      <div style="grid-column: 1/-1; background: rgba(255,107,107,0.1); border-radius: 12px; padding: 20px; border: 2px solid #ff6b6b;">
+        <div style="color: #ff6b6b; font-size: 1.1em; font-weight: bold; margin-bottom: 8px;">${optionFeedback.title}</div>
+        <div style="color: #ccc; line-height: 1.8; font-size: 0.95em;">${optionFeedback.text}</div>
+      </div>
+    `;
+    const btn = document.getElementById('actionBtn');
+    btn.disabled = false;
+    btn.textContent = '🔄 重试本关';
+    btn.onclick = () => { gamePhase = 'choice'; loadRound(currentRound); };
+    if (currentRound < gameData.rounds.length - 1) {
+      const skipBtn = document.createElement('button');
+      skipBtn.className = 'action-btn';
+      skipBtn.style.marginLeft = '12px';
+      skipBtn.textContent = '下一关 →';
+      skipBtn.onclick = goNextRound;
+      btn.parentElement.appendChild(skipBtn);
+    }
+  }
+}
+
+function goNextRound() {
+  currentRound++;
+  loadRound(currentRound);
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const correctCount = roundResults.filter(r => r.correct).length;
+  const total = roundResults.length;
+  
+  let title = '';
+  if (correctCount === total) title = '🏆 标签大师！';
+  else if (correctCount >= 6) title = '🌟 优秀店长！';
+  else if (correctCount >= 4) title = '📚 潜力无限';
+  else title = '💡 继续学习';
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = `标签识别正确率：${correctCount}/${total}`;
+  
+  const detail = document.getElementById('resultDetail');
+  detail.innerHTML = `
+    <h4>📊 各关回顾</h4>
+    ${roundResults.map((r, i) => `
+      <div class="round-result">
+        <div class="round-title">第${i+1}关 · ${r.title}</div>
+        <div class="choice" style="color: ${r.correct ? '#51cf66' : '#ff6b6b'}">${r.correct ? '✅ 正确' : '❌ 错误'}</div>
+        ${r.correct ? `<div style="color:#aaa;font-size:0.9em;">标签类型：${r.type}</div>` : ''}
+      </div>
+    `).join('')}
+    
+    <h4 style="margin-top: 20px;">💡 核心要点</h4>
+    <p>1. <strong style="color:#ffd700">基础信息类</strong>：性别、年龄、职业、地域——「是谁」</p>
+    <p>2. <strong style="color:#ffd700">行为特征类</strong>：购买频次、金额、支付方式——「做了什么」</p>
+    <p>3. <strong style="color:#ffd700">偏好特征类</strong>：品类偏好、品牌偏好、功能偏好——「喜欢什么」</p>
+    <p>4. <strong style="color:#ffd700">价值类</strong>：客户价值、忠诚度、活跃度——「值多少」</p>
+    <p>5. <strong style="color:#ffd700">社交类</strong>：社交关系网络、影响力——「能影响谁」</p>
+    <p>6.    <p>6. <strong style="color:#ffd700">反馈类</strong>：商品质量、物流服务、客服态度——「哪里不满」</p>
+    <p style="margin-top:10px;">精准营销的前提是「标签打得对」——标签错了，推广就全废了。</p>
+  `;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+
+document.getElementById('startBtn').onclick = startGame;
+</script>
+</body>
+</html>
