@@ -166,6 +166,7 @@ const gameData = {
       title: "周一 · 竞品情报",
       caseText: "老板问：最近竞品A做了什么动作？",
       question: "要获取竞品动态，最合适的方式是？",
+      hint: "💡 产品信息、价格策略、公司动态——哪里查最全最快？",
       options: [
         { text: "A. 公开渠道", key: "public", feedback: { correct: true, title: "✅ 正确！", type: "公开渠道", text: "竞品动态看官网、新闻、社交媒体就够了，不用花钱找第三方。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "花钱找第三方没必要，竞品动态都是公开信息，自己查又快又省钱。" } },
@@ -179,12 +180,13 @@ const gameData = {
       title: "周二 · 客户流失",
       caseText: "VIP客户突然不续费了，想知道为什么。",
       question: "要了解客户流失的真正原因，应该？",
+      hint: "💡 客户为什么流失——谁最清楚？",
       options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "网上的评价有水军、有恶意差评，不一定是客户真实想法，你想了解「为什么流失」必须直接问本人。" } },
+        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "网上的评价有水军、有恶意差评，不一定是客户真实想法。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告是通用数据，解决不了「这个客户为什么不续费」这个具体问题。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "直接联系客户、做访谈或问卷，才能知道真实原因。公开数据解决不了个性化问题。" } },
+        { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "直接联系客户、做访谈或问卷，才能知道真实原因。" } },
         { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "监测工具适合追踪竞品或市场动态，查单个客户流失原因用不上。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部数据能看到流失事实（订单减少），但看不到原因（为什么减少）。" } }
+        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部数据能看到流失事实，但看不到原因。" } }
       ]
     },
     {
@@ -192,11 +194,12 @@ const gameData = {
       title: "周三 · 门店体验",
       caseText: "想知道竞品B的门店产品体验和服务态度。",
       question: "要了解门店真实体验，合适的方式是？",
+      hint: "💡 产品手感、服务态度——能网上感受吗？",
       options: [
         { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "网上能看到装修风格、货架陈列，但看不到产品手感、服务态度、现场氛围。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告主要做数据分析，现场体验必须自己感受，报告给不了。" } },
         { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "亲自去竞品门店，感受产品、服务、氛围，这是网上无法替代的。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "网络只能看图文评价，现场体验（手感、态度、氛围）必须亲自去。" } },
+        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "网络只能看图文评价，现场体验必须亲自去。" } },
         { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，查竞品门店体验用内部信息没用。" } }
       ]
     },
@@ -205,6 +208,7 @@ const gameData = {
       title: "周四 · 行业数据",
       caseText: "老板要做季度规划，需要行业市场规模和趋势。",
       question: "要获取行业数据报告，最合适的方式是？",
+      hint: "💡 市场规模、趋势——普通人能查到吗？",
       options: [
         { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "市场规模、发展趋势是专业机构研究整理的，公开搜索只能找到碎片，无法支撑决策。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: true, title: "✅ 正确！", type: "第三方渠道", text: "行业报告由咨询公司、行业协会、研究机构整理，花钱买报告才能获得系统数据。" } },
@@ -218,6 +222,7 @@ const gameData = {
       title: "周五 · 销售复盘",
       caseText: "月底了，想分析自家店铺的销售数据做复盘。",
       question: "自家销售数据应该从哪里获取？",
+      hint: "💡 销售数据、订单记录——从哪里查？",
       options: [
         { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "公开渠道查的是竞品或市场信息，自家销售数据在后台，公开渠道查不到。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方是查外部数据的，自家数据在后台，不需要花钱找第三方。" } },
@@ -231,6 +236,7 @@ const gameData = {
       title: "周六 · 社媒监测",
       caseText: "想实时监测竞品C的社交媒体动态和用户口碑。",
       question: "要持续追踪多个平台的竞品动态，最高效的方式是？",
+      hint: "💡 持续追踪多平台——手动刷还是用工具？",
       options: [
         { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "手动去各平台刷，一次性操作，无法「持续监测」。每天刷一遍累死还漏消息。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告是定期发布的，不适合需要实时追踪的社交媒体监测场景。" } },
@@ -244,6 +250,7 @@ const gameData = {
       title: "周日 · 展会情报",
       caseText: "下周有行业展会，想提前了解竞品动态和行业趋势。",
       question: "参加展会的核心价值是什么？",
+      hint: "💡 展会能同时了解哪些信息？",
       options: [
         { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "展会是一手信息，窝在家里查网上二手信息，等于放弃了最好的情报来源。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "展会本身就是第三方渠道，你已经在这个渠道里了，不需要再找别的第三方。" } },
@@ -257,6 +264,7 @@ const gameData = {
       title: "额外 · 专利查询",
       caseText: "想查竞品的技术专利和研发方向。",
       question: "查专利的正确方式是？",
+      hint: "💡 专利信息——收费还是免费？",
       options: [
         { text: "A. 公开渠道", key: "public", feedback: { correct: true, title: "✅ 正确！", type: "公开渠道", text: "专利在国家知识产权局官网免费查，完全公开，不需要花钱找第三方。" } },
         { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "查专利完全免费！花钱找第三方是被坑，自己动手5分钟搞定。" } },
