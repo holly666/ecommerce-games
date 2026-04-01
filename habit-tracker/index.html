@@ -199,7 +199,8 @@
     
     function getHealth(dateStr) {
         if (!healthData) return {};
-        return healthData.健康记录[dateStr] || {};
+        const records = healthData.健康记录 || healthData;
+        return records[dateStr] || {};
     }
     
     function getHabitList() {
