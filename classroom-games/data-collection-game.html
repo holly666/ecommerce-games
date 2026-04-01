@@ -35,6 +35,8 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
 .scenario-title { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; }
 .scenario-text { line-height: 1.7; font-size: 0.95em; white-space: pre-line; }
 .question-text { font-size: 1.05em; line-height: 1.7; color: #333; margin-bottom: 15px; font-weight: 500; }
+.hint-btn { background: #fff3cd; color: #856404; border: 1px solid #ffc107; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 15px; }
+
 .think-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.9em; }
 .think-title { font-weight: bold; margin-bottom: 8px; }
 
@@ -124,7 +126,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
       <div class="scenario-text" id="scenarioText"></div>
     </div>
     <div class="question-text" id="questionText"></div>
-    <div class="think-box">
+    <div class="think-box" id="thinkBox" style="display:none;">
       <div class="think-title">💡 思考提示</div>
       <div id="thinkText"></div>
     </div>
@@ -337,6 +339,12 @@ function startGame() {
   loadRound();
 }
 
+
+function showHint() {
+    document.getElementById('thinkBox').style.display = 'block';
+    document.getElementById('hintBtn').style.display = 'none';
+}
+
 function loadRound() {
   selectedIndex = -1;
   const round = gameData.rounds[currentRound];
@@ -359,6 +367,8 @@ function loadRound() {
   ).join('');
   
   document.getElementById('feedbackBox').classList.remove('show');
+  document.getElementById('thinkBox').style.display = 'none';
+  document.getElementById('hintBtn').style.display = 'block';
   document.getElementById('retryBtn').style.display = 'none';
   document.getElementById('nextBtn').style.display = 'none';
   document.getElementById('actionBtn').disabled = true;
@@ -411,6 +421,8 @@ function confirmChoice() {
 
 function retryRound() {
   document.getElementById('feedbackBox').classList.remove('show');
+  document.getElementById('thinkBox').style.display = 'none';
+  document.getElementById('hintBtn').style.display = 'block';
   loadRound();
 }
 
