@@ -401,14 +401,6 @@ function confirmChoice() {
     btn.disabled = false;
     btn.textContent = '🔄 重试本关';
     btn.onclick = () => { gamePhase = 'choice'; loadRound(currentRound); };
-    if (currentRound < gameData.rounds.length - 1) {
-      const skipBtn = document.createElement('button');
-      skipBtn.className = 'action-btn';
-      skipBtn.style.marginLeft = '12px';
-      skipBtn.textContent = '下一关 →';
-      skipBtn.onclick = goNextRound;
-      btn.parentElement.appendChild(skipBtn);
-    }
   }
 }
 
