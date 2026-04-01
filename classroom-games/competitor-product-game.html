@@ -98,17 +98,17 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: li
     <div class="type-card">
       <div class="type-name">🎯 直接竞品</div>
       <div class="type-desc">产品相似、目标用户相同、市场定位一致，直接抢同一批客户</div>
-      <div class="type-example">例：可口可乐 vs 百事可乐</div>
+      <div class="type-example">例：淘宝同类女装店抢同一批年轻女性</div>
     </div>
     <div class="type-card">
       <div class="type-name">🔗 间接竞品</div>
       <div class="type-desc">产品或用户有部分重叠，但不是完全竞争</div>
-      <div class="type-example">例：可口可乐 vs 王老吉</div>
+      <div class="type-example">例：奶茶店 vs 咖啡店（不同细分客群）</div>
     </div>
     <div class="type-card">
       <div class="type-name">🌊 潜在竞品</div>
       <div class="type-desc">现在还不是对手，但未来可能取代你</div>
-      <div class="type-example">例：数码相机 vs 智能手机</div>
+      <div class="type-example">例：抖音入局外卖 → 某团潜在竞品</div>
     </div>
   </div>
 </div>
@@ -158,10 +158,10 @@ const gameData = {
   rounds: [
     {
       id: 1,
-      title: "🥤 饮料货架前的对决",
-      caseText: "报案人：超市采购经理老陈\n\n【案情】可口可乐和百事可乐同时出现在超市饮料区，两者都是碳酸饮料，定价都在3-5元，货架紧挨着。消费者买饮料时经常在两者之间犹豫。两家市场份额此消彼长。",
-      question: "根据线索，可口可乐和百事可乐是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：它们的产品、目标用户、市场定位有什么共同点？",
+      title: "🛒 淘宝女装店的正面交锋",
+      caseText: "报案人：淘宝店主小雅\n\n【案情】小雅店铺专做韩风女装（150-300元），发现同平台另一家店铺也在卖同类女装，风格相似定价相近（120-280元），目标客群都是18-25岁年轻女性。两家被买家经常拿来比较。",
+      question: "根据线索，这两家淘宝店铺是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：同样是卖女装，价格差不多，风格也一样——它们在抢同一批顾客吗？",
       options: [
         { text: "A. 直接竞品", key: "direct" },
         { text: "B. 间接竞品", key: "indirect" },
@@ -169,16 +169,16 @@ const gameData = {
       ],
       correctKey: "direct",
       feedback: {
-        correct: { title: "✅ 正确！", type: "直接竞品", text: "证据确凿！两者产品完全相同（碳酸饮料）、目标用户完全相同（大众消费者）、市场定位高度重叠——直接争夺同一批顾客，这就是直接竞品！" },
-        wrong: { title: "❌ 错误", text: "再仔细看：两者都是碳酸饮料，定价相近，摆在相邻货架，消费者经常在两者之间选择。这属于直接争夺同一市场的竞争。" }
+        correct: { title: "✅ 正确！", type: "直接竞品", text: "证据确凿！两者产品相似（同类女装）、价格重叠、风格相同、目标客群完全一致——在电商平台上直接争夺同一批年轻女性消费者，这就是直接竞品！" },
+        wrong: { title: "❌ 错误", text: "再仔细看：两家都是卖女装的，价格相近，风格相似，目标客群都是年轻女性。在同一平台上争夺相同用户——这是直接竞争关系。" }
       }
     },
     {
       id: 2,
-      title: "🍵 凉茶专柜边的发现",
-      caseText: "报案人：便利店老板老李\n\n【案情】可口可乐（碳酸饮料）和王老吉（凉茶）都在饮料区销售。可口可乐定价4元，主打\"快乐\"；王老吉定价6元，主打\"降火\"。消费者口渴时选择可乐，熬夜加班时选择王老吉。",
-      question: "根据线索，可口可乐和王老吉是什么类型的竞品？",
-      hint: "🕵️ 侦探提示：消费者在不同场景下会选不同的产品，这说明什么？",
+      title: "🥤 奶茶店与咖啡店的选择",
+      caseText: "报案人：商场餐饮老板老周\n\n【案情】商场里开了家奶茶店（15-25元），隔壁又开了家咖啡店（20-35元）。奶茶主要吸引学生和年轻女性，咖啡主要吸引上班族。两者都在下午茶时段生意最好。",
+      question: "根据线索，这家奶茶店和咖啡店是什么类型的竞品？",
+      hint: "🕵️ 侦探提示：虽然都是饮品，但它们的顾客群体和消费场景有什么差异？",
       options: [
         { text: "A. 直接竞品", key: "direct" },
         { text: "B. 间接竞品", key: "indirect" },
@@ -186,8 +186,8 @@ const gameData = {
       ],
       correctKey: "indirect",
       feedback: {
-        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都在饮料区，但满足的需求不同：可乐满足\"享受解渴\"，王老吉满足\"降火保健\"。消费场景不同、用户动机不同——这是间接竞争！" },
-        wrong: { title: "❌ 错误", text: "注意两者的差异：可乐是碳酸饮料主打快乐，王老吉是凉茶主打降火。满足的需求和消费场景都不同，属于间接竞争。" }
+        correct: { title: "✅ 正确！", type: "间接竞品", text: "虽然都是饮品，都需要下午茶场景，但主要顾客不同：奶茶是学生和年轻女性，咖啡是上班族。满足的是不同细分市场的需求——间接竞争！" },
+        wrong: { title: "❌ 错误", text: "奶茶和咖啡虽然都在饮品赛道，但主要顾客群体不同（学生女性vs上班族），消费动机也有差异。这是满足不同细分市场的间接竞争。" }
       }
     },
     {
