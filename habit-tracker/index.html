@@ -342,6 +342,7 @@
         // 注意：heshui在数据里已经是所有液体的累计（=水+豆浆+牛奶+中药），不要重复相加
         const habitDisplayItems = [
             ['heshui', '💧', '液体合计', rec ? rec.heshui || 0 : 0, 'ml', 2000],
+            ['water', '💦', '白开水', rec ? rec.water || 0 : 0, 'ml', 500],
             ['doujiang', '🥛', '豆浆', rec ? rec.doujiang || 0 : 0, 'ml', 500],
             ['milk', '🥛', '牛奶', rec ? rec.milk || 0 : 0, 'ml', 200],
             ['zhongyao', '🍵', '中药', rec ? rec.zhongyao || 0 : 0, 'ml', 400],
