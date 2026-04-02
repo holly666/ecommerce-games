@@ -320,10 +320,8 @@ function loadRound() {
   document.getElementById('questionText').textContent = round.question;
   document.getElementById('thinkText').textContent = round.hint;
   
-  const shuffledOptions = shuffle(round.options.map((opt, i) => ({ ...opt, originalIndex: i })));
-  
   const container = document.getElementById('optionsContainer');
-  container.innerHTML = shuffledOptions.map((opt, i) => 
+  container.innerHTML = round.options.map((opt, i) => 
     `<div class="option-btn" data-index="${i}" data-key="${opt.key}" onclick="selectOption(${i})">${opt.text}</div>`
   ).join('');
   

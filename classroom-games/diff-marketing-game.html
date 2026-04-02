@@ -411,10 +411,9 @@ function loadRound(roundIndex) {
   document.getElementById('questionText').textContent = round.question;
   document.getElementById('thinkHint').textContent = '🤔 思考提示：仔细看数据，想清楚这个问题的关键是什么。';
 
-  const shuffledOpts = shuffle(round.options.map((opt, i) => ({...opt, idx: i})));
   const letters = ['A', 'B', 'C', 'D'];
   const container = document.getElementById('optionsContainer');
-  container.innerHTML = shuffledOpts.map((opt, i) => 
+  container.innerHTML = round.options.map((opt, i) => 
     `<button class="option-btn" onclick="selectOption('${opt.key}', this)"><span style="font-weight:bold;color:#ffd700;margin-right:10px;font-size:1.1em;">${letters[i]}</span>${opt.text}</button>`
   ).join('');
   
