@@ -54,9 +54,9 @@
       "id": "chiyao",
       "name": "吃药",
       "icon": "💊",
-      "done": false,
-      "value": 0,
-      "streak": 0
+      "done": true,
+      "value": 1,
+      "streak": 1
     },
     {
       "id": "heparin",
