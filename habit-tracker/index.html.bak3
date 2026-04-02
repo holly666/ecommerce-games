@@ -377,36 +377,14 @@
         });
         html += '</div>';
         
-        // 健康追踪（当日 + 近7日）
+        // 健康追踪
+        html += `<div class="card"><h2>🏥 健康 ${dateDisplay}</h2><div class="health-grid">`;
         const healthItems = [
             ['胀气', h.胀气 ? h.胀气.详情 : ''],
             ['打嗝', h.打嗝 ? h.打嗝.详情 : ''],
             ['夜尿', h.夜尿 ? `${h.夜尿.次数}次` : ''],
             ['大便', h.大便 ? h.大便.形状 : ''],
         ];
-        
-        // 近7日健康历史
-        const healthHistory = [];
-        const todayD = new Date(dateStr + 'T12:00:00');
-        for (let i = 0; i < 7; i++) {
-            const hd = new Date(todayD);
-            hd.setDate(hd.getDate() - i);
-            const hds = hd.toISOString().split('T')[0];
-            const hdRec = getHealth(hds);
-            if (Object.keys(hdRec).length > 0) {
-                const wd = ['周日','周一','周二','周三','周四','周五','周六'][hd.getDay()];
-                const items = [];
-                if (hdRec.胀气?.有) items.push(`胀${hdRec.胀气.详情 || '有'}`);
-                if (hdRec.打嗝?.有) items.push('打嗝');
-                if (hdRec.夜尿?.次数 > 0) items.push(`夜尿${hdRec.夜尿.次数}次${hdRec.夜尿.时间点?.length ? hdRec.夜尿.时间点.join(',') : ''}`);
-                if (hdRec.大便?.形状) items.push(`💩${hdRec.大便.形状}`);
-                if (items.length > 0) {
-                    healthHistory.push({date: `${hd.getMonth()+1}/${hd.getDate()}(${wd})`, items: items.join(' ')});
-                }
-            }
-        }
-        
-        html += `<div class="card"><h2>🏥 健康 ${dateDisplay}</h2><div class="health-grid">`;
         healthItems.forEach(([label, val]) => {
             const has = val && val !== '0次';
             html += `<div class="health-item ${has ? 'alert' : ''}">
@@ -414,35 +392,7 @@
                 <div class="health-value ${has ? 'alert' : ''}">${val || '无'}</div>
             </div>`;
         });
-        // 夜尿详细时间
-        if (h.夜尿?.时间点?.length) {
-            html += `<div class="health-item alert" style="grid-column: span 2;">
-                <div class="health-label">夜尿时间</div>
-                <div class="health-value alert">${h.夜尿.时间点.join(', ')}</div>
-            </div>`;
-        }
-        // 大便时间
-        if (h.大便?.时间) {
-            html += `<div class="health-item" style="grid-column: span 2;">
-                <div class="health-label">大便时间</div>
-                <div class="health-value">${h.大便.时间}</div>
-            </div>`;
-        }
-        html += '</div>';
-        
-        // 近7日健康历史
-        if (healthHistory.length > 0) {
-            html += `<div style="margin-top:12px;padding-top:12px;border-top:1px solid #eee;">
-                <div style="font-size:11px;color:#888;margin-bottom:6px;">近7日健康</div>`;
-            healthHistory.forEach(r => {
-                html += `<div style="display:flex;gap:8px;font-size:12px;padding:3px 0;color:#666;">
-                    <span style="min-width:60px;">${r.date}</span>
-                    <span>${r.items}</span>
-                </div>`;
-            });
-            html += '</div>';
-        }
-        html += '</div>';
+        html += '</div></div>';
         
         // 周视图
         const dayNames = ['周日','周一','周二','周三','周四','周五','周六'];

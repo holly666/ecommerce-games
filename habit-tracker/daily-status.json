@@ -22,8 +22,8 @@
       "id": "heshui",
       "name": "每日液体",
       "icon": "💧",
-      "done": false,
-      "value": 1800,
+      "done": true,
+      "value": 2100,
       "streak": 2
     },
     {
