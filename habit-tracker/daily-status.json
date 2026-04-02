@@ -14,9 +14,9 @@
       "id": "paojiao",
       "name": "泡脚",
       "icon": "🦶",
-      "done": false,
-      "value": 0,
-      "streak": 0
+      "done": true,
+      "value": 1,
+      "streak": 1
     },
     {
       "id": "heshui",
