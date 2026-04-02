@@ -128,6 +128,63 @@
         .fill-blue { background: linear-gradient(90deg, #4facfe, #00f2fe); }
         .fill-purple { background: linear-gradient(90deg, #667eea, #764ba2); }
         .fill-orange { background: linear-gradient(90deg, #fa709a, #fee140); }
+
+        /* 30天历史弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .modal-header h3 { font-size: 18px; color: #333; }
+        .modal-close {
+            background: #f0f0f0;
+            border: none;
+            border-radius: 50%;
+            width: 36px; height: 36px;
+            font-size: 18px;
+            cursor: pointer;
+            color: #666;
+        }
+        .modal-close:hover { background: #e0e0e0; }
+        .history-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .history-day {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 6px 4px;
+            text-align: center;
+            font-size: 11px;
+        }
+        .history-day.has-data { background: #e8f5e9; }
+        .history-day.today { background: #e3f2fd; border: 2px solid #667eea; }
+        .history-day .date { font-weight: bold; color: #333; margin-bottom: 3px; }
+        .history-day .weekday { color: #888; font-size: 10px; margin-bottom: 4px; }
+        .history-day .habits { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
+        .history-day .habit-dot { font-size: 10px; }
+        .history-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+        .dot-done { background: #43e97b; }
+        .dot-miss { background: #ff6b6b; }
+        .dot-empty { background: #eee; }
         
         .footer { text-align: center; color: rgba(255,255,255,0.7); margin-top: 15px; font-size: 11px; }
         .no-data { text-align: center; color: #888; padding: 30px; }
@@ -477,6 +534,13 @@
         });
         html += '</div></div>';
         
+        // 查看30天按钮
+        html += `<div style="text-align:center;margin-top:12px;">
+            <button onclick="showHistoryModal()" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:10px 24px;border-radius:20px;font-size:13px;cursor:pointer;box-shadow:0 2px 10px rgba(102,126,234,0.4);">
+                📋 查看30天记录
+            </button>
+        </div>`;
+        
         // 进度条
         html += `<div class="card"><h2>📈 今日进度</h2>`;
         const progressItems = [
@@ -502,7 +566,76 @@
         document.getElementById('content').innerHTML = html;
     }
     
+    // 30天历史弹窗
+    function showHistoryModal() {
+        const modal = document.getElementById('historyModal');
+        modal.classList.add('active');
+        renderHistory30();
+    }
+    
+    function closeHistoryModal() {
+        document.getElementById('historyModal').classList.remove('active');
+    }
+    
+    function renderHistory30() {
+        const container = document.getElementById('historyContent');
+        const habits = [
+            ['heshui','💧'],['doujiang','🥛'],['milk','🥛'],['zhongyao','🍵'],
+            ['paojiao','🦶'],['duanlian','🏃'],['shuijiao','😴'],['dabian','💩'],
+        ];
+        
+        // 生成近30天（从今天往前）
+        const today = new Date();
+        today.setHours(12,0,0,0);
+        const days = [];
+        for (let i = 0; i < 30; i++) {
+            const d = new Date(today);
+            d.setDate(d.getDate() - i);
+            days.push(d.toISOString().split('T')[0]);
+        }
+        
+        let html = '<div class="history-grid">';
+        const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+        days.forEach(dateStr => {
+            const d = new Date(dateStr + 'T12:00:00');
+            const wd = d.getDay();
+            const isToday = dateStr === new Date().toISOString().split('T')[0];
+            const rec = getRecord(dateStr);
+            const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.zhongyao||0);
+            
+            const habitDots = [];
+            habits.forEach(([hid, icon]) => {
+                let done = false;
+                if (hid === 'heshui') done = totalLiquid >= 2000;
+                else if (hid === 'duanlian') done = (rec?.duanlian||0) >= 30;
+                else if (['doujiang','milk','zhongyao'].includes(hid)) done = (rec?.[hid]||0) > 0;
+                else done = (rec?.[hid]||0) > 0;
+                habitDots.push(`<span class="history-dot ${done ? 'dot-done' : 'dot-empty'}" title="${hid}">${icon}</span>`);
+            });
+            
+            const hasData = rec && Object.keys(rec).some(k => rec[k] > 0);
+            html += `<div class="history-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}">
+                <div class="weekday">${weekdays[wd]}</div>
+                <div class="date">${d.getMonth()+1}/${d.getDate()}</div>
+                <div class="habits">${habitDots.join('')}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+    
     loadAll();
     </script>
+    
+    <!-- 30天历史弹窗 -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 近30天习惯记录</h3>
+                <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+            </div>
+            <div id="historyContent"></div>
+        </div>
+    </div>
 </body>
 </html>
