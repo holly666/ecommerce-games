@@ -66,7 +66,7 @@
         .med-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .med-item { background: #f0f0f0; border-radius: 12px; padding: 12px 8px; text-align: center; }
         /* 今日计划 - 要做 */
-        .med-item.plan-yes { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+        .med-item.plan-yes { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
         /* 今日计划 - 不用做 */
         .med-item.plan-no { background: #e8e8e8; color: #999; }
         /* 已完成 */
@@ -253,9 +253,18 @@
         
         // 服药判断
         const TREATMENT_START = new Date('2026-03-27');
+        const VD_START = new Date('2026-04-01');
+        const HEPARIN_BASE = new Date('2026-04-02'); // 04-02右边
         const daysSinceStart = Math.floor((d - TREATMENT_START) / (1000*60*60*24)) + 1;
+        const vdDays = Math.floor((d - VD_START) / (1000*60*60*24)) + 1;
         const isEven = daysSinceStart % 2 === 0;
-        const vdToday = daysSinceStart % 3 === 0;
+        const vdToday = (vdDays - 1) % 3 === 0;
+        // 肝素：左右交替（04-02右，04-03左...）
+        const heparinIdx = Math.floor((d - HEPARIN_BASE) / (1000*60*60*24));
+        const heparinSide = heparinIdx % 2 === 0 ? '右边' : '左边';
+        // 黄体酮：偶数天打，左右交替（第1次右，第2次左...）
+        const progIdx = Math.floor(daysSinceStart / 2); // 第几次注射
+        const progSide = progIdx % 2 === 1 ? '右边' : '左边';
         
         // 计算总液体
         const totalLiquid = rec ? (rec.heshui || 0) + (rec.doujiang || 0) + (rec.milk || 0) + (rec.zhongyao || 0) : 0;
@@ -294,9 +303,9 @@
         
         // 服药卡片
         const medItems = [
-            ['💉','黄体酮针', isEven, '今天要打', '今天不打'],
+            ['💉','黄体酮针', isEven, `今天要打（${progSide}）`, '今天不打'],
             ['💊','阿司匹林', isEven, '今天要吃', '今天不吃'],
-            ['💉','肝素针', true, '今天要打', ''],
+            ['💉','肝素针', true, `今天要打（${heparinSide}）`, ''],
             ['💊','维生素D', vdToday, '今天要吃', '今天不吃'],
             ['💊','环孢素', true, '早2颗', ''],
             ['🍵','中药', true, '早晚各1袋', ''],
