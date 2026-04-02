@@ -302,14 +302,13 @@
         let html = '';
         
         // 服药卡片
-        // 服药卡片：cond=true显示蓝色"计划"，cond=false显示灰色"—"
         const medItems = [
-            ['💉','黄体酮针', isEven, `✅打（${progSide}）`, '—'],
-            ['💊','阿司匹林', isEven, '✅吃', '—'],
-            ['💉','肝素针', true, `✅打（${heparinSide}）`, ''],
-            ['💊','维生素D', vdToday, '✅吃', '—'],
-            ['💊','环孢素', true, '✅早2颗', ''],
-            ['🍵','中药', true, '✅早晚各1袋', ''],
+            ['💉','黄体酮针', isEven, `今天要打（${progSide}）`, '今天不打'],
+            ['💊','阿司匹林', isEven, '今天要吃', '今天不吃'],
+            ['💉','肝素针', true, `今天要打（${heparinSide}）`, ''],
+            ['💊','维生素D', vdToday, '今天要吃', '今天不吃'],
+            ['💊','环孢素', true, '早2颗', ''],
+            ['🍵','中药', true, '早晚各1袋', ''],
         ];
         
         html += `<div class="card">
@@ -443,9 +442,7 @@
         });
         html += '</div>';
         
-        // 数据更新说明：习惯数据通过 GitHub Pages 更新，约有 1-3 分钟延迟
-        const lastUpdate = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-        html += `<div class="footer">${isToday ? '今日' : dateDisplay} · 数据更新于 ${lastUpdate} <span style="opacity:0.5">(同步延迟约1-3分钟)</span></div>`;
+        html += `<div class="footer">${isToday ? '今日' : dateDisplay} · 数据更新于 ${new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</div>`;
         
         document.getElementById('content').innerHTML = html;
     }
