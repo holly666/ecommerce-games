@@ -406,7 +406,6 @@
                 ['heshui','💧'],
                 ['duanlian','🏃'],
                 ['shuijiao','😴'],
-                ['dabian','💩'],
             ];
             html += `<div class="week-day ${isWdToday ? 'today' : ''}">
                 <div class="day-name">${dayNames[i]}</div>
@@ -418,7 +417,6 @@
                     const v = wr[hid] || 0;
                     if (hid === 'heshui') cls = v >= 2000 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
                     else if (hid === 'duanlian') cls = v >= 30 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
-                    else if (hid === 'dabian') cls = v >= 1 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
                     else cls = v > 0 ? 'wh-done' : 'wh-empty';
                 }
                 html += `<div class="week-habit ${cls}">${icon}</div>`;
