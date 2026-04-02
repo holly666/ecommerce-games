@@ -1,10 +1,10 @@
 {
-  "date": "2026-04-02",
-  "display": "4月2日（周四）",
+  "date": "2026-04-03",
+  "display": "4月3日（周五）",
   "medication": {
-    "treatment_day": 7,
-    "progesterone": false,
-    "aspirin": false,
+    "treatment_day": 8,
+    "progesterone": true,
+    "aspirin": true,
     "heparin": true,
     "vitamin_d": false,
     "cyclosporine": true
@@ -14,24 +14,24 @@
       "id": "paojiao",
       "name": "泡脚",
       "icon": "🦶",
-      "done": true,
-      "value": 1,
+      "done": false,
+      "value": 0,
       "streak": 1
     },
     {
       "id": "heshui",
       "name": "每日液体",
       "icon": "💧",
-      "done": true,
-      "value": 2100,
+      "done": false,
+      "value": 0,
       "streak": 2
     },
     {
       "id": "duanlian",
       "name": "锻炼",
       "icon": "🏃",
-      "done": true,
-      "value": 30,
+      "done": false,
+      "value": 0,
       "streak": 2
     },
     {
@@ -46,40 +46,42 @@
       "id": "dabian",
       "name": "大便",
       "icon": "💩",
-      "done": true,
-      "value": 1,
+      "done": false,
+      "value": 0,
       "streak": 2
     },
     {
       "id": "chiyao",
       "name": "吃药",
       "icon": "💊",
-      "done": true,
-      "value": 1,
+      "done": false,
+      "value": 0,
       "streak": 1
     },
     {
       "id": "heparin",
       "name": "肝素针",
       "icon": "💉",
-      "done": true,
-      "value": "右边",
+      "done": false,
+      "value": 0,
       "streak": 0
     },
     {
       "id": "progesterone",
       "name": "黄体酮针",
       "icon": "💉",
-      "done": true,
-      "value": "右边",
+      "done": false,
+      "value": 0,
       "streak": 0
     }
   ],
   "health": {
     "胀气": "",
     "打嗝": "",
-    "夜尿次数": 0,
-    "夜尿时间": [],
+    "夜尿次数": 1,
+    "夜尿时间": [
+      "3:00"
+    ],
     "大便": ""
   }
 }
