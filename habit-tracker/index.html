@@ -266,8 +266,8 @@
         const progIdx = Math.floor(daysSinceStart / 2); // 第几次注射
         const progSide = progIdx % 2 === 1 ? '右边' : '左边';
         
-        // 计算总液体
-        const totalLiquid = rec ? (rec.heshui || 0) + (rec.doujiang || 0) + (rec.milk || 0) + (rec.zhongyao || 0) : 0;
+        // 计算总液体（heshui已经是所有液体的累计，不需要再相加）
+        const totalLiquid = rec ? (rec.heshui || 0) : 0;
         const liquidPct = Math.min(100, Math.round((totalLiquid / 2000) * 100));
         const liquidDone = totalLiquid >= 2000;
         
@@ -291,7 +291,7 @@
             const wr = getRecord(wd);
             if (wr) {
                 if (wr.paojiao > 0) weekDoneCount++;
-                if ((wr.heshui||0)+(wr.doujiang||0)+(wr.milk||0)+(wr.zhongyao||0) >= 2000) weekDoneCount++;
+                if ((wr.heshui||0) >= 2000) weekDoneCount++;
                 if (wr.duanlian >= 30) weekDoneCount++;
                 if (wr.shuijiao > 0) weekDoneCount++;
             }
@@ -339,8 +339,9 @@
         html += `<div class="card">
             <h2>📅 习惯 ${dateDisplay}</h2>`;
         
+        // 注意：heshui在数据里已经是所有液体的累计（=水+豆浆+牛奶+中药），不要重复相加
         const habitDisplayItems = [
-            ['heshui', '💧', '喝水', rec ? rec.heshui || 0 : 0, 'ml', 2000],
+            ['heshui', '💧', '液体合计', rec ? rec.heshui || 0 : 0, 'ml', 2000],
             ['doujiang', '🥛', '豆浆', rec ? rec.doujiang || 0 : 0, 'ml', 500],
             ['milk', '🥛', '牛奶', rec ? rec.milk || 0 : 0, 'ml', 200],
             ['zhongyao', '🍵', '中药', rec ? rec.zhongyao || 0 : 0, 'ml', 400],
