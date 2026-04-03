@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我是营销总监 - Day1 市场调研部</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 960px; margin: 0 auto; padding: 20px; }
+
+/* Header */
+.game-header { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 20px 28px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+.game-title { font-size: 1.5em; color: #ffd700; font-weight: bold; }
+.day-badge { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 6px 18px; border-radius: 20px; font-size: 0.9em; }
+.score-display { color: #ffd700; font-size: 1.1em; }
+.score-display span { color: #51cf66; }
+
+/* Dashboard */
+.dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: #16213e; border-radius: 12px; padding: 14px; text-align: center; }
+.stat-label { color: #aaa; font-size: 0.8em; margin-bottom: 4px; }
+.stat-value { color: #ffd700; font-size: 1.3em; font-weight: bold; }
+.stat-value.up { color: #51cf66; }
+.stat-value.down { color: #ff6b6b; }
+
+/* Situation */
+.situation-box { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.section-label { color: #667eea; font-size: 0.85em; margin-bottom: 12px; font-weight: bold; }
+.task-title { color: #ffd700; font-size: 1.2em; margin-bottom: 14px; }
+.task-desc { color: #ccc; line-height: 1.8; font-size: 0.95em; margin-bottom: 16px; }
+
+/* Info Cards */
+.info-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+.info-card { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px; border-left: 3px solid #334; }
+.info-card-label { color: #aaa; font-size: 0.8em; margin-bottom: 4px; }
+.info-card-value { color: #ffd700; font-size: 0.95em; font-weight: bold; }
+
+/* Question */
+.question { color: #fff; font-size: 1.05em; margin-bottom: 16px; line-height: 1.7; }
+.options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.option-btn { background: #0f3460; border: 2px solid #334; color: #ddd; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; transition: all 0.2s; line-height: 1.5; }
+.option-btn:hover { border-color: #667eea; background: #1a237e; color: white; }
+.option-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.15); color: #ffd700; }
+.option-btn.correct { border-color: #51cf66; background: rgba(81,207,102,0.15); color: #51cf66; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.15); color: #ff6b6b; }
+.option-btn:disabled { opacity: 0.7; cursor: default; }
+
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 40px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 16px; }
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Feedback */
+.feedback-box { background: #16213e; border-radius: 16px; padding: 20px; margin-top: 16px; border-left: 4px solid #ffd700; }
+.feedback-title { color: #ffd700; font-weight: bold; margin-bottom: 8px; font-size: 1.05em; }
+.feedback-text { color: #ccc; line-height: 1.8; font-size: 0.95em; }
+.feedback-knowledge { background: rgba(102,126,234,0.15); border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 0.9em; color: #667eea; }
+
+/* Start Screen */
+#start-screen { text-align: center; padding-top: 60px; }
+#start-screen h1 { font-size: 2.5em; color: #ffd700; margin-bottom: 10px; }
+#start-screen p { color: #aaa; font-size: 1.1em; margin-bottom: 30px; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 18px 60px; font-size: 1.3em; border-radius: 50px; cursor: pointer; }
+
+/* Progress */
+.progress-bar { background: #334; border-radius: 10px; height: 8px; margin-top: 20px; overflow: hidden; }
+.progress-fill { background: linear-gradient(90deg, #51cf66, #667eea); height: 100%; border-radius: 10px; transition: width 0.5s; }
+
+/* Result */
+#result-screen { display: none; text-align: center; padding-top: 60px; }
+.result-title { font-size: 2em; color: #ffd700; margin-bottom: 20px; }
+.result-score { font-size: 1.3em; color: #aaa; margin-bottom: 30px; }
+.result-summary { background: #16213e; border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; }
+.result-summary h3 { color: #ffd700; margin-bottom: 12px; }
+.day-result { padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 0.95em; }
+.day-result.pass { background: rgba(81,207,102,0.15); color: #51cf66; }
+.day-result.fail { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+
+@media (max-width: 700px) {
+  .options-grid { grid-template-columns: 1fr; }
+  .info-cards { grid-template-columns: 1fr; }
+  .dashboard { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="start-screen">
+  <h1>🏢 我是营销总监</h1>
+  <p>你是「次元杂货铺」淘宝店的营销总监<br>四天工作日记，迎接真实挑战</p>
+  <button class="start-btn" id="startBtn">开始工作</button>
+</div>
+
+<div id="game-screen" style="display:none">
+  <div class="game-header">
+    <div class="game-title">🏢 我是营销总监</div>
+    <div class="day-badge" id="dayBadge">第 1 天 · 市场调研部</div>
+    <div class="score-display">得分：<span id="scoreDisplay">0</span></div>
+  </div>
+  
+  <div class="dashboard" id="dashboard">
+    <div class="stat-card"><div class="stat-label">今日任务</div><div class="stat-value" id="taskProgress">1/3</div></div>
+    <div class="stat-card"><div class="stat-label">信息判断正确</div><div class="stat-value up" id="infoCorrect">0</div></div>
+    <div class="stat-card"><div class="stat-label">方法选择正确</div><div class="stat-value up" id="methodCorrect">0</div></div>
+    <div class="stat-card"><div class="stat-label">原则判断正确</div><div class="stat-value up" id="principleCorrect">0</div></div>
+  </div>
+  
+  <div class="situation-box">
+    <div class="section-label" id="sectionLabel">📋 市场信息类型判断</div>
+    <div class="task-title" id="taskTitle">任务一：这些信息属于什么类型？</div>
+    <div class="task-desc" id="taskDesc">助理收集了以下4条市场信息，请判断每条属于哪种类型。</div>
+    
+    <div class="info-cards" id="infoCards"></div>
+    
+    <div class="question" id="questionText">请从下方选项中选出正确答案（可多选或单选，根据题目要求）</div>
+    <div class="options-grid" id="optionsContainer"></div>
+    
+    <button class="action-btn" id="actionBtn" disabled>确认答案</button>
+    
+    <div class="feedback-box" id="feedbackBox" style="display:none">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div class="feedback-text" id="feedbackText"></div>
+      <div class="feedback-knowledge" id="feedbackKnowledge"></div>
+    </div>
+  </div>
+  
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div id="result-screen">
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-score" id="resultScore"></div>
+  <div class="result-summary" id="resultSummary"></div>
+  <button class="start-btn" onclick="restartGame()">再来一次</button>
+</div>
+
+</div>
+
+<script>
+const gameState = {
+  score: 0,
+  taskIndex: 0,
+  infoCorrect: 0,
+  methodCorrect: 0,
+  principleCorrect: 0,
+  selectedOptions: [],
+  taskResults: []
+};
+
+const tasks = [
+  // ===== TASK 1: 信息类型 =====
+  {
+    type: 'multi_choice',
+    section: '📋 市场信息类型判断',
+    taskTitle: '任务一：这些信息属于什么类型？',
+    taskDesc: '助理收集了以下4条市场信息，请判断每条属于哪种类型（4分）',
+    items: [
+      { label: '信息A', text: '"最近半年汉服销量同比增长30%，抖音汉服话题播放量破50亿"', value: '行业趋势信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '行业趋势信息', hint: '反映行业发展方向和数据' },
+      { label: '信息B', text: '"18-25岁大学生群体偏爱平价周边，月均消费100-300元，重度依赖小红书和微博获取新品资讯"', value: '目标消费群体信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '目标消费群体信息', hint: '描述目标用户特征和消费行为' },
+      { label: '信息C', text: '"竞店「萌二次元」月销20万，主打学生市场，直播间场均观看5000人"', value: '竞争对手信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '竞争对手信息', hint: '反映竞争对手的市场表现和策略' },
+      { label: '信息D', text: '"盲盒产品复购率最高达65%，因为拆盒的不确定感带来强烈愉悦体验"', value: '商品信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '商品信息', hint: '反映商品在市场上的表现和用户反馈' }
+    ],
+    question: '点选你认为正确的答案，全部判断完成后点击确认',
+    // Player selects by clicking items directly
+    onStart() {
+      // Items shown as cards, player clicks to select
+      const container = document.getElementById('infoCards');
+      container.innerHTML = '';
+      this.items.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'info-card';
+        card.style.cursor = 'pointer';
+        card.id = `infoCard-${idx}`;
+        card.innerHTML = `<div class="info-card-label">${item.label}</div><div class="info-card-value">${item.text.substring(0,50)}...</div>`;
+        card.addEventListener('click', () => this.onItemClick(idx));
+        container.appendChild(card);
+      });
+      
+      // Show item as selected when clicked → reveal options
+      this.selectedOptions = new Array(this.items.length).fill(null);
+      
+      document.getElementById('questionText').textContent = this.question;
+      document.getElementById('optionsContainer').innerHTML = '<div style="color:#aaa;font-size:0.9em;padding:10px;">点击上方信息卡片，选择其所属类型</div>';
+      document.getElementById('actionBtn').disabled = true;
+      document.getElementById('feedbackBox').style.display = 'none';
+    },
+    selectedOptions: [],
+    onItemClick(idx) {
+      const item = this.items[idx];
+      const container = document.getElementById('infoCards');
+      container.innerHTML = '';
+      this.items.forEach((it, i) => {
+        const card = document.createElement('div');
+        card.className = 'info-card';
+        if (i === idx) card.style.borderColor = '#ffd700';
+        card.innerHTML = `<div class="info-card-label">${it.label}</div><div class="info-card-value">${it.text}</div>`;
+        container.appendChild(card);
+      });
+      
+      const optsContainer = document.getElementById('optionsContainer');
+      optsContainer.innerHTML = '';
+      item.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => {
+          this.selectedOptions[idx] = opt;
+          // Highlight selected
+          optsContainer.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          document.getElementById('actionBtn').disabled = false;
+        });
+        optsContainer.appendChild(btn);
+      });
+      
+      // Store current item for answer check
+      this.currentItemIdx = idx;
+      this.currentItem = item;
+      
+      // Back button
+      const backBtn = document.createElement('button');
+      backBtn.className = 'action-btn';
+      backBtn.style.background = '#334';
+      backBtn.style.marginRight = '10px';
+      backBtn.textContent = '← 返回';
+      backBtn.addEventListener('click', () => this.onStart());
+      document.getElementById('actionBtn').style.display = 'none';
+      const btnWrap = document.createElement('div');
+      btnWrap.appendChild(backBtn);
+    }
+  },
+  // ===== TASK 2: 获取方法 =====
+  {
+    type: 'choice',
+    section: '🔍 市场信息获取方法',
+    taskTitle: '任务二：用哪种方法获取这些信息？',
+    taskDesc: '根据以下业务场景，选择最合适的信息获取方法（3分）',
+    scenario: {
+      title: '业务场景',
+      text: '你刚接手一个新店铺，对目标市场一无所知。老板要求你在一周内摸清：目标用户是谁？竞争对手在做什么？市场趋势如何？'
+    },
+    question: '以下哪种信息获取方法的组合最全面高效？',
+    options: [
+      { text: '仅用问卷调查法：设计问卷投放给新老客户，快速收集第一手数据', key: 'wrong', feedback: '问卷调查只能获取已有客户数据，无法了解竞争对手和市场趋势。信息维度太单一。' },
+      { text: '竞品信息挖掘法：重点分析排名靠前的3-5家竞店页面、评价、动态', key: 'neutral', feedback: '竞品挖掘能了解竞争对手，但缺少对目标用户和市场趋势的系统了解。维度不全面。' },
+      { text: '综合使用市场调研法（问卷+访谈）+ 竞品信息挖掘 + 大数据工具法', key: 'correct', feedback: '问卷/访谈了解目标用户，竞品挖掘了解对手，大数据工具快速获取行业趋势——三者互补，最全面。' },
+      { text: '直接参考艾瑞咨询的行业报告，花钱买数据最省事', key: 'neutral', feedback: '买报告能了解行业趋势，但缺少一手竞品和用户数据，且成本高、时效性不确定。' }
+    ],
+    knowledge: '市场信息获取6种方法：市场调研法、社交媒体监测法、竞品信息挖掘法、客户反馈法、大数据工具法、搜索引擎检索法。综合使用比单一方法更全面。'
+  },
+  // ===== TASK 3: 获取原则 =====
+  {
+    type: 'choice',
+    section: '⚖️ 市场信息获取原则',
+    taskTitle: '任务三：这些做法遵循了哪些原则？',
+    taskDesc: '以下是小王收集信息时的一些做法，判断其遵循了哪些原则（3分）',
+    scenario: {
+      title: '小王的信息收集流程',
+      items: [
+        '收集了行业报告（艾瑞）、竞争对手数据（生意参谋）、用户问卷（问卷星）三个不同来源的数据进行交叉验证',
+        '通过百度指数、微信指数、抖音热榜等多个平台获取行业趋势数据，覆盖各渠道',
+        '使用自动化工具实时跟踪竞品价格和新品上架动态，每小时更新一次'
+      ]
+    },
+    question: '以上做法分别体现了哪些原则？',
+    options: [
+      { text: '准确性 + 时效性', key: 'wrong', feedback: '题目描述的是多来源交叉验证（准确性）+ 多渠道覆盖（全面性），不是时效性。' },
+      { text: '全面性 + 时效性', key: 'wrong', feedback: '多来源交叉验证体现的是准确性原则，不只是时效性。' },
+      { text: '准确性 + 全面性', key: 'correct', feedback: '多来源交叉验证 → 准确性；多平台多渠道获取 → 全面性。完美符合描述。' },
+      { text: '合法性 + 时效性', key: 'wrong', feedback: '题目没有涉及合法性判断，重点是多来源和覆盖面。' }
+    ],
+    knowledge: '市场信息获取4原则：合法性（合规获取）、准确性（交叉验证）、全面性（多维度覆盖）、时效性（及时更新）。'
+  }
+];
+
+function startGame() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  gameState.score = 0;
+  gameState.taskIndex = 0;
+  gameState.infoCorrect = 0;
+  gameState.methodCorrect = 0;
+  gameState.principleCorrect = 0;
+  gameState.taskResults = [];
+  updateDashboard();
+  loadTask(0);
+}
+
+function loadTask(idx) {
+  const task = tasks[idx];
+  gameState.taskIndex = idx;
+  gameState.selectedOptions = [];
+  
+  document.getElementById('dayBadge').textContent = `第 ${idx + 1} 天 · 市场调研部`;
+  document.getElementById('sectionLabel').textContent = task.section;
+  document.getElementById('taskTitle').textContent = task.taskTitle;
+  document.getElementById('taskDesc').textContent = task.taskDesc;
+  
+  const progress = (idx / tasks.length) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+  
+  if (task.type === 'multi_choice') {
+    task.selectedOptions = new Array(task.items.length).fill(null);
+    task.onStart();
+  } else {
+    // Show scenario
+    const container = document.getElementById('infoCards');
+    if (task.scenario) {
+      container.innerHTML = `<div style="background:rgba(102,126,234,0.12);border-radius:10px;padding:16px;border-left:3px solid #667eea;margin-bottom:14px;"><div style="color:#667eea;font-weight:bold;margin-bottom:8px;">${task.scenario.title}</div>${Array.isArray(task.scenario.items) ? task.scenario.items.map(it => `<div style="margin-bottom:6px;color:#ccc;">• ${it}</div>`).join('') : `<div style="color:#ccc;">${task.scenario.text}</div>`}</div>`;
+    }
+    document.getElementById('questionText').textContent = task.question;
+    
+    const optsContainer = document.getElementById('optionsContainer');
+    optsContainer.innerHTML = '';
+    task.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt.text;
+      btn.addEventListener('click', () => selectOption(opt, btn));
+      optsContainer.appendChild(btn);
+    });
+    
+    document.getElementById('actionBtn').style.display = 'inline-block';
+    document.getElementById('actionBtn').disabled = true;
+    document.getElementById('feedbackBox').style.display = 'none';
+    
+    gameState.selectedOption = null;
+  }
+}
+
+function selectOption(opt, btn) {
+  if (document.getElementById('feedbackBox').style.display !== 'none') return;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  gameState.selectedOption = opt;
+  document.getElementById('actionBtn').disabled = false;
+}
+
+function confirmAnswer() {
+  const task = tasks[gameState.taskIndex];
+  
+  if (task.type === 'multi_choice') {
+    // For task 1, each item click already handled
+    // We just confirm after all items done - but actually task 1 needs special handling
+    if (gameState.taskIndex === 0) {
+      // Check the current item answer
+      const idx = task.currentItemIdx;
+      const selected = task.selectedOptions[idx];
+      const item = task.items[idx];
+      const isCorrect = selected === item.correct;
+      if (isCorrect) gameState.infoCorrect++;
+      showFeedback(isCorrect, item.correct, selected, item.hint, item.label, task.knowledge);
+    }
+    return;
+  }
+  
+  const opt = gameState.selectedOption;
+  if (!opt) return;
+  
+  const isCorrect = opt.key === 'correct';
+  if (isCorrect) {
+    if (gameState.taskIndex === 1) gameState.methodCorrect++;
+    if (gameState.taskIndex === 2) gameState.principleCorrect++;
+  }
+  
+  // Show all options result
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.disabled = true;
+    const text = btn.textContent;
+    const found = task.options.find(o => o.text === text);
+    if (found) {
+      if (found.key === 'correct') btn.classList.add('correct');
+      else if (btn.classList.contains('selected')) btn.classList.add('wrong');
+    }
+  });
+  
+  showFeedback(isCorrect, opt.correct || task.options.find(o => o.key === 'correct').text, opt.text, opt.feedback, null, task.knowledge);
+}
+
+function showFeedback(isCorrect, correct, selected, feedback, itemLabel, knowledge) {
+  const fb = document.getElementById('feedbackBox');
+  fb.style.display = 'block';
+  document.getElementById('feedbackTitle').textContent = isCorrect ? '✅ 正确！' : '❌ 不对，继续加油！';
+  document.getElementById('feedbackText').textContent = feedback;
+  if (knowledge) {
+    document.getElementById('feedbackKnowledge').innerHTML = `<strong>📖 知识点：</strong>${knowledge}`;
+  }
+  
+  const btn = document.getElementById('actionBtn');
+  btn.style.display = 'inline-block';
+  btn.disabled = false;
+  btn.textContent = gameState.taskIndex < tasks.length - 1 ? '下一关 →' : '完成！';
+  btn.onclick = () => {
+    fb.style.display = 'none';
+    btn.style.display = 'inline-block';
+    btn.disabled = true;
+    btn.textContent = '确认答案';
+    btn.onclick = confirmAnswer;
+    
+    if (gameState.taskIndex < tasks.length - 1) {
+      loadTask(gameState.taskIndex + 1);
+    } else {
+      showResult();
+    }
+  };
+}
+
+function updateDashboard() {
+  document.getElementById('scoreDisplay').textContent = gameState.score;
+  document.getElementById('infoCorrect').textContent = gameState.infoCorrect + '/4';
+  document.getElementById('methodCorrect').textContent = gameState.methodCorrect + '/3';
+  document.getElementById('principleCorrect').textContent = gameState.principleCorrect + '/3';
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  
+  const total = gameState.infoCorrect + gameState.methodCorrect + gameState.principleCorrect;
+  const max = 10;
+  const pct = total / max;
+  
+  let title = pct >= 0.9 ? '🏆 市场调研高手！' : pct >= 0.7 ? '🌟 优秀分析师！' : pct >= 0.5 ? '📚 合格实习生' : '💡 还需要学习';
+  
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = `Day 1 总得分：${total}/${max}`;
+  document.getElementById('resultSummary').innerHTML = `
+    <h3>📊 能力评估</h3>
+    <div class="day-result ${gameState.infoCorrect >= 3 ? 'pass' : 'fail'}">
+      ${gameState.infoCorrect >= 3 ? '✅' : '❌'} 信息类型判断：${gameState.infoCorrect}/4
+    </div>
+    <div class="day-result ${gameState.methodCorrect >= 2 ? 'pass' : 'fail'}">
+      ${gameState.methodCorrect >= 2 ? '✅' : '❌'} 获取方法选择：${gameState.methodCorrect}/3
+    </div>
+    <div class="day-result ${gameState.principleCorrect >= 2 ? 'pass' : 'fail'}">
+      ${gameState.principleCorrect >= 2 ? '✅' : '❌'} 获取原则理解：${gameState.principleCorrect}/3
+    </div>
+  `;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+document.getElementById('startBtn').onclick = startGame;
+document.getElementById('actionBtn').onclick = confirmAnswer;
+</script>
+</body>
+</html>
