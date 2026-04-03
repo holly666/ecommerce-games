@@ -49,6 +49,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 }
 .label-card:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
 .label-card.dragging { opacity: 0.5; cursor: grabbing; transform: scale(1.1); }
+.label-card.selected { background: linear-gradient(135deg, #ffd700, #f59e0b) !important; transform: scale(1.1); box-shadow: 0 0 20px rgba(255,215,0,0.5); }
 
 /* 分类区 */
 .categories-area {
@@ -293,6 +294,7 @@ let currentLevel = 0;
 let totalScore = 0;
 let placedLabels = {}; // categoryName -> [tagKey]
 let draggedEl = null;
+let selectedEl = null; // for touch/click select
 
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
@@ -336,6 +338,12 @@ function loadLevel(levelIndex) {
     card.draggable = true;
     card.addEventListener('dragstart', onDragStart);
     card.addEventListener('dragend', onDragEnd);
+    // Touch support
+    card.addEventListener('touchstart', onTouchStart, { passive: false });
+    card.addEventListener('touchend', onTouchEnd, { passive: false });
+    card.addEventListener('touchmove', onTouchMove, { passive: false });
+    // Click to select on touch devices
+    card.addEventListener('click', onCardClick);
     pool.appendChild(card);
   });
   
@@ -360,6 +368,9 @@ function loadLevel(levelIndex) {
     catsArea.appendChild(box);
   });
   
+  // Add click-to-place handler for touch/click devices
+  addCategoryClickHandler();
+  
   document.getElementById('feedbackArea').classList.remove('show');
   document.getElementById('submitBtn').style.display = 'inline-block';
   document.getElementById('submitBtn').disabled = true;
@@ -375,6 +386,129 @@ function onDragStart(e) {
 function onDragEnd(e) {
   e.target.classList.remove('dragging');
   document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+}
+
+// ===== Touch / Click support =====
+function onCardClick(e) {
+  // For touch devices: tap card to select, then tap category to place
+  if (e.target.classList.contains('label-card')) {
+    // Deselect previous
+    if (selectedEl) selectedEl.classList.remove('selected');
+    // Select this one
+    selectedEl = e.target;
+    e.target.classList.add('selected');
+  }
+}
+
+function onTouchStart(e) {
+  const card = e.target.closest('.label-card');
+  if (!card) return;
+  e.preventDefault();
+  if (selectedEl) selectedEl.classList.remove('selected');
+  selectedEl = card;
+  card.classList.add('selected');
+  card.classList.add('dragging');
+}
+
+function onTouchMove(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+  if (el) {
+    const box = el.closest('.category-box');
+    if (box) box.classList.add('drag-over');
+  }
+}
+
+function onTouchEnd(e) {
+  e.preventDefault();
+  document.querySelectorAll('.label-card').forEach(c => c.classList.remove('dragging'));
+  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+  
+  if (!selectedEl) return;
+  const touch = e.changedTouches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  if (!el) return;
+  
+  const box = el.closest('.category-box');
+  if (box) {
+    // Simulate a drop
+    const prevDragged = draggedEl;
+    draggedEl = selectedEl;
+    const fakeEvent = { preventDefault: () => {}, currentTarget: box };
+    onDrop(fakeEvent);
+    draggedEl = prevDragged;
+  }
+  
+  selectedEl.classList.remove('selected');
+  selectedEl = null;
+}
+
+// Make category boxes clickable to accept selected card
+function addCategoryClickHandler() {
+  document.querySelectorAll('.category-box').forEach(box => {
+    box.addEventListener('click', function(e) {
+      // Don't trigger if clicking a dropped card
+      if (e.target.closest('.dropped-card')) return;
+      if (!selectedEl) return;
+      
+      // Move selected card to this category
+      const card = selectedEl;
+      const tag = card.dataset.tag;
+      const correctCat = card.dataset.correctCat;
+      const targetCat = box.dataset.catName;
+      
+      // Add to placed
+      if (!placedLabels[targetCat]) placedLabels[targetCat] = [];
+      placedLabels[targetCat].push({ tag, correctCat });
+      
+      // Create dropped card in category
+      const slots = box.querySelector('.category-slots');
+      const droppedCard = document.createElement('div');
+      droppedCard.className = 'dropped-card';
+      droppedCard.textContent = tag;
+      droppedCard.dataset.tag = tag;
+      droppedCard.dataset.correctCat = correctCat;
+      droppedCard.dataset.placedCat = targetCat;
+      
+      droppedCard.addEventListener('click', function(ev) {
+        ev.stopPropagation();
+        if (this.classList.contains('right')) return; // submitted, can't remove
+        const t = this.dataset.tag;
+        const pc = this.dataset.placedCat;
+        placedLabels[pc] = placedLabels[pc].filter(x => x.tag !== t);
+        
+        // Return to pool
+        const pool = document.getElementById('labelsPool');
+        const poolCard = document.createElement('div');
+        poolCard.className = 'label-card';
+        poolCard.textContent = t;
+        poolCard.dataset.tag = t;
+        poolCard.dataset.correctCat = this.dataset.correctCat;
+        poolCard.draggable = true;
+        poolCard.addEventListener('dragstart', onDragStart);
+        poolCard.addEventListener('dragend', onDragEnd);
+        poolCard.addEventListener('touchstart', onTouchStart, { passive: false });
+        poolCard.addEventListener('touchend', onTouchEnd, { passive: false });
+        poolCard.addEventListener('touchmove', onTouchMove, { passive: false });
+        poolCard.addEventListener('click', onCardClick);
+        pool.appendChild(poolCard);
+        
+        slots.removeChild(this);
+        checkHasPlaced();
+      });
+      
+      slots.appendChild(droppedCard);
+      
+      // Remove from pool
+      card.remove();
+      selectedEl.classList.remove('selected');
+      selectedEl = null;
+      
+      checkHasPlaced();
+    });
+  });
 }
 
 function onDragOver(e) {
