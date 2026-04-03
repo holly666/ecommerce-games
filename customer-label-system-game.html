@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>标签炼金师 - 客户标签体系搭建</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+#start-screen { text-align: center; padding-top: 40px; }
+.title { font-size: 2.2em; color: #ffd700; margin-bottom: 10px; }
+.subtitle { font-size: 1.1em; color: #aaa; margin-bottom: 30px; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 16px 48px; font-size: 1.2em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.start-btn:hover { transform: scale(1.05); }
+.game-desc { background: #16213e; border-radius: 16px; padding: 24px; margin-top: 30px; text-align: left; }
+.game-desc h3 { color: #ffd700; margin-bottom: 12px; }
+.game-desc p { color: #ccc; line-height: 1.8; font-size: 0.95em; margin-bottom: 8px; }
+
+#game-screen { display: none; }
+.task-box { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.task-title { color: #ffd700; font-size: 1.1em; margin-bottom: 12px; }
+.task-text { color: #ddd; line-height: 1.9; font-size: 1em; }
+.task-hint { background: rgba(102,126,234,0.15); border-left: 3px solid #667eea; padding: 10px 14px; margin-top: 14px; font-size: 0.9em; color: #aaa; border-radius: 0 8px 8px 0; }
+.step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.step-dot { width: 10px; height: 10px; border-radius: 50%; background: #334; }
+.step-dot.active { background: #ffd700; }
+.step-dot.done { background: #51cf66; }
+
+.question { font-size: 1.05em; color: #fff; margin-bottom: 16px; line-height: 1.7; }
+.think-hint { background: rgba(255, 215, 0, 0.1); border-left: 3px solid #ffd700; padding: 10px 14px; margin-bottom: 16px; font-size: 0.9em; color: #ffd700; border-radius: 0 8px 8px 0; }
+
+.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; transition: all 0.2s; line-height: 1.5; min-height: 60px; display: flex; align-items: center; }
+.option-btn:hover { border-color: #667eea; background: #1a237e; color: #fff; }
+.option-btn.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.15); color: #ffd700; }
+.option-btn.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+.option-btn.neutral { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); color: #ffd700; }
+.option-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 20px; }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.feedback-box { background: #16213e; border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+.feedback-title { font-size: 1.1em; font-weight: bold; margin-bottom: 8px; }
+.feedback-text { color: #ccc; line-height: 1.8; font-size: 0.95em; }
+.feedback-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; margin-bottom: 10px; }
+.tag-build { background: rgba(102,126,234,0.2); color: #667eea; }
+.tag-type { background: rgba(255,107,107,0.2); color: #ff6b6b; }
+
+.customer-list { background: #0f3460; border-radius: 12px; padding: 16px; margin-top: 12px; }
+.customer-card { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; font-size: 0.9em; }
+.customer-card .name { color: #ffd700; font-weight: bold; }
+.customer-card .desc { color: #aaa; margin-top: 2px; }
+
+#result-screen { display: none; text-align: center; padding-top: 40px; }
+.result-title { font-size: 1.8em; color: #ffd700; margin-bottom: 16px; }
+.result-score { font-size: 1.2em; color: #aaa; margin-bottom: 30px; }
+.result-detail { background: #16213e; border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; }
+.result-detail h4 { color: #ffd700; margin-bottom: 12px; }
+.round-result { background: #0f3460; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.round-result .round-title { color: #667eea; font-size: 0.9em; margin-bottom: 8px; }
+.round-result .choice { margin-bottom: 4px; }
+.round-result .outcome { color: #aaa; font-size: 0.9em; }
+
+.hidden { display: none !important; }
+@media (max-width: 600px) { .options { grid-template-columns: 1fr; } .title { font-size: 1.6em; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="start-screen">
+  <div class="title">🏷️ 标签炼金师</div>
+  <div class="subtitle">客户标签体系搭建 · 沉浸式决策游戏</div>
+  <button class="start-btn" id="startBtn">开始挑战</button>
+  <div class="game-desc">
+    <h3>📋 游戏说明</h3>
+    <p>你是「潮尚优品」淘宝店的运营总监。<br>老板让你搭建一套客户标签体系，但你不知道从哪里下手。</p>
+    <p>⚠️ 标签体系乱，后面的精准营销和个性化推荐全都白搭。</p>
+    <p>💡 这个游戏考察的是你对<strong style="color:#ffd700">如何搭建标签体系</strong>的理解。</p>
+  </div>
+  <div style="background:#0f3460;border-radius:12px;padding:16px;margin-top:16px;text-align:left;">
+    <div style="color:#aaa;font-size:0.9em;margin-bottom:8px;">📚 知识点预告（题目不会提示）：</div>
+    <div style="color:#667eea;font-size:0.85em;line-height:1.8;">建立标签体系的步骤：确定标签名称→归类标签→定义标签内容→整合成体系</div>
+  </div>
+</div>
+
+<div id="game-screen">
+  <div class="step-indicator" id="stepIndicator"></div>  
+  <div class="task-box">
+    <div class="task-title" id="taskTitle"></div>
+    <div class="task-text" id="taskText"></div>
+    <div id="extraContent"></div>
+  </div>
+  <div class="question" id="questionText"></div>
+  <div class="think-hint" id="thinkHint">🤔 思考提示：看清楚题目要求，这一步该做什么？</div>
+  <div class="options" id="optionsContainer"></div>
+  <div style="text-align:center;">
+    <button class="action-btn" id="actionBtn" disabled>请先选择一个方案</button>
+  </div>
+</div>
+
+<div id="result-screen">
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-score" id="resultScore"></div>
+  <div class="result-detail" id="resultDetail"></div>
+  <button class="start-btn" onclick="restartGame()">再玩一次</button>
+</div>
+
+</div>
+
+<script>
+const gameData = {
+  rounds: [
+    {
+      id: 1,
+      taskTitle: "📋 第一步 · 了解客户全貌",
+      taskText: "老板：\"先去做客户调研，把客户的基本情况摸清楚，再来谈标签的事。\"<br>你安排助理收集了200位客户的数据，包括：年龄、性别、所在城市、职业、购买频次、客单价、偏好的商品类目、常用的支付方式……助理问：\"这些信息里，哪些是基础信息，哪些是行为信息？\"",
+      extraContent: "",
+      question: "助理的问题你打算怎么回答？",
+      options: [
+        { text: "不用分那么细，全部打成标签用就行", key: "wrong" },
+        { text: "先按\"基础信息\"和\"行为特征\"两大类分开，再逐个明确标签含义", key: "correct" },
+        { text: "基础信息是静态的，行为特征是动态的，分开有利于后续更新维护", key: "neutral" },
+        { text: "让助理自己看着办，我只要结果", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 思路正确！",
+          text: "这就是确定标签名称与内容的核心：先把信息按维度分类，基础信息（年龄/性别/地域）和行为特征（购买频次/金额）分开，再逐个定义每个标签的具体含义。基础信息决定了你是\"谁\"，行为特征决定了你会\"做什么\"。两者一起，才能构建完整的用户画像。"
+        },
+        wrong: {
+          title: "❌ 思路混乱，标签会成一锅粥",
+          text: "不分类、不定义，标签体系搭起来之后你会发现：标签重复、含义不清、没法用。\"客户A的活跃度和客户B的活跃度居然不是一回事\"——这就是没有提前定义的下场。标签体系要有效，第一步就必须厘清维度和定义。"
+        },
+        neutral: {
+          title: "⚠️ 说对了一半，但还没到点上",
+          text: "\"静态/动态\"的区分是对的，但更关键的是：这些信息要逐个变成明确的标签——比如\"年龄\"变成\"18-25岁\"\"26-35岁\"这样的具体标签值。光是区分\"静态还是动态\"还不够，需要落到每个标签的准确定义上。"
+        }
+      }
+    },
+    {
+      id: 2,
+      taskTitle: "🏷️ 第二步 · 给标签起名字",
+      taskText: "信息分类后，你开始逐个定义标签。<br>助理翻出一条客户数据：最近30天有3次购买记录，且累计消费超过500元。<br>助理问：\"这个客户叫什么标签？\"",
+      extraContent: "",
+      question: "你打算给这个客户打什么标签？",
+      options: [
+        { text: "叫\"活跃客户\"——简洁明了", key: "wrong" },
+        { text: "叫\"高价值活跃客户\"——同时体现活跃度和消费能力两个维度", key: "correct" },
+        { text: "叫\"优质客户\"——反正大家都知道是啥意思", key: "wrong" },
+        { text: "叫\"购买3次且消费500以上的客户\"——最精确", key: "neutral" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 标签命名合理！",
+          text: "\"高价值活跃客户\"同时体现了两个维度：活跃度（30天3次）和消费能力（500元以上）。标签名称要精准但不能太长——太长了不便后续使用，太笼统了又无法指导运营。好的标签名应该是：，一看就懂，一看就知道怎么用。"
+        },
+        wrong: {
+          title: "❌ 标签太笼统，无法指导运营",
+          text: "\"活跃客户\"谁都能打——月买1次算活跃，还是月买10次算活跃？没有标准，运营人员拿到标签也不知道怎么用。最后就是贴了等于没贴。"
+        },
+        neutral: {
+          title: "⚠️ 定义过于繁琐，标签会很难用",
+          text: "\"购买3次且消费500以上\"——这个名字包含了具体规则，运营用的时候还得对照原文看。标签名应该是简洁的关键词，让运营人员看到就懂，不用每次都去查定义。"
+        }
+      }
+    },
+    {
+      id: 3,
+      taskTitle: "📂 第三步 · 给标签归类",
+      taskText: "你整理了20个标签，但全堆在一起很乱：<br>【女】【杭州】【白领】【高消费】【月均3次】【偏好美妆】【会员等级Lv3】【价格敏感型】【喜欢分享】【江浙沪】<br>助理：\"这么多标签，怎么管得过来？\"",
+      extraContent: "",
+      question: "你打算怎么组织这些标签？",
+      options: [
+        { text: "按字母顺序排——A开头在前，B开头在后", key: "wrong" },
+        { text: "按使用频率排——常用的放前面，不常用的放后面", key: "neutral" },
+        { text: "按标签类型分组：基础信息类、行为特征类、偏好特征类、价值类……", key: "correct" },
+        { text: "不做分类——让运营人员自己建文件夹管理", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 归类清晰，体系才有结构！",
+          text: "这就是\"归类到不同的类目中\"的核心思想：把同一维度的标签放在一起管理。基础信息类（性别/地域/职业）、行为特征类（购买频次/金额）、偏好特征类（品类偏好/品牌偏好）、价值类（客户价值/忠诚度）——分类清晰，后续运营人员才能高效查找和使用标签。"
+        },
+        wrong: {
+          title: "❌ 没有分类，标签体系等于虚设",
+          text: "字母顺序排、用文件夹管理——这些是文件管理思维，不是标签体系思维。标签体系的目的是让运营人员快速找到\"要用哪些标签做活动\"，而不是\"这个标签存在哪个文件夹里\"。没有分类，标签越多越乱。"
+        },
+        neutral: {
+          title: "⚠️ 按频率只能解决展示问题，解决不了结构问题",
+          text: "按使用频率排序，常用的确在前面——但标签本身的分类逻辑依然混乱。今后来新标签，还是不知道往哪放。分类是体系结构问题，不只是展示排序问题。"
+        }
+      }
+    },
+    {
+      id: 4,
+      taskTitle: "📝 第四步 · 给标签下定义",
+      taskText: "标签建好了，但运营部的小王和小李吵了起来。<br>小王：\"高消费用户\"指的是累计消费满2000元的！<br>小李：\"高消费用户\"明明是单笔超过500元的！两个人吵得不可开交，谁都说自己用的是对的。",
+      extraContent: "",
+      question: "问题出在哪里？你怎么解决？",
+      options: [
+        { text: "让他俩别吵了，各用各的定义", key: "wrong" },
+        { text: "制定标签定义规范文档：每个标签都有明确的计算口径、统计周期、适用场景", key: "correct" },
+        { text: "删掉\"高消费用户\"这个标签——歧义太大", key: "neutral" },
+        { text: "让老板来评判谁的定义是对的", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 这就是标签的「规范定义」！",
+          text: "\"对每个标签进行规范定义，确保其准确性和实用性\"——这就是解决歧义的核心。每个标签的定义文档应该包括：计算口径（用什么数据算）、统计周期（多久更新一次）、适用场景（适合用于哪些运营动作）。有了规范，小王和小李不用再吵，标签体系才能真正落地。"
+        },
+        wrong: {
+          title: "❌ 各用各的定义，标签体系就崩了",
+          text: "各用各的定义——结果是两个运营人员做出的数据分析结论完全不一样，老板看了不知道该信谁。标签体系最怕的就是\"同一个标签，十个人有十种理解\"。必须有统一的规范文档。"
+        },
+        neutral: {
+          title: "⚠️ 删标签是逃避，不是解决",
+          text: "删掉歧义标签，问题是解决了，但业务需求还在。高消费用户的运营价值不可否认。正确做法是给它一个清晰无歧义的定义，而不是直接删掉。"
+        }
+      }
+    },
+    {
+      id: 5,
+      taskTitle: "🔗 第五步 · 整合成体系",
+      taskText: "标签分类做好了，规范也写完了。<br>老板：\"现在把这些整合起来，形成一套体系，我要能看懂的。\"<br>你整理的框架如下：<br>📁 基础信息类：性别、年龄、地域、职业<br>📁 行为特征类：购买频次、购买金额、支付方式<br>📁 偏好特征类：品类偏好、品牌偏好<br>📁 价值类：客户价值等级、忠诚度<br>📁 社交类：分享活跃度",
+      extraContent: "",
+      question: "老板看完问：\"这套体系完整吗？还有什么缺的？\"",
+      options: [
+        { text: "差不多了，该有的都有了，可以用", key: "neutral" },
+        { text: "完整了，每个类目下都有标签，定义也清晰，体系已经可以运作", key: "correct" },
+        { text: "缺了反馈类标签——客户对商品质量、物流服务的评价还没收进来", key: "wrong" },
+        { text: "把所有标签合并成一个大表就行，不需要分类", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 体系搭建完成！",
+          text: "这套标签体系涵盖了主要类型：基础信息（人口属性）、行为特征（购买行为）、偏好特征（兴趣倾向）、价值类（客户分层）、社交类（传播能力）。每个类目有标签，每个标签有定义，结构完整，可以支撑后续的精准营销和个性化推荐。这就是\"将标签和类目整合成一个完整的体系\"。"
+        },
+        wrong: {
+          title: "❌ 反馈标签是运营后的事，不是体系搭建的第一步",
+          text: "客户反馈类标签（商品评价、物流评分）属于标签体系后续运营优化的范畴，不是搭建体系本身要解决的问题。搭建体系的核心是：先把客户静态属性和行为特征标签化，形成框架，后续再根据业务需要扩展其他类型。"
+        },
+        neutral: {
+          title: "⚠️ \"差不多\"思维是体系搭建的大敌",
+          text: "标签体系最怕\"差不多得了\"——后续运营会发现这个缺、那个漏。严格来说，客户反馈类标签、预警类标签等也是价值标签体系的组成部分。但对于首次搭建，以上5类已经覆盖核心需求，可以先跑起来再迭代。"
+        }
+      }
+    }
+  ]
+};
+
+let currentRound = 0;
+let selectedOption = null;
+let roundResults = [];
+let gamePhase = 'choice';
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('game-screen').style.display = 'block';
+  currentRound = 0;
+  roundResults = [];
+  loadRound(currentRound);
+}
+
+function loadRound(roundIndex) {
+  const round = gameData.rounds[roundIndex];
+  gamePhase = 'choice';
+  
+  const indicator = document.getElementById('stepIndicator');
+  indicator.innerHTML = gameData.rounds.map((_, i) => 
+    `<div class="step-dot ${i < roundIndex ? 'done' : i === roundIndex ? 'active' : ''}"></div>`
+  ).join('');
+
+  document.getElementById('taskTitle').textContent = round.taskTitle;
+  document.getElementById('taskText').innerHTML = round.taskText;
+  
+  const extraContent = document.getElementById('extraContent');
+  extraContent.innerHTML = round.extraContent || '';
+  
+  document.getElementById('questionText').textContent = round.question;
+  document.getElementById('thinkHint').textContent = '🤔 思考提示：看清楚题目要求，这一步该做什么？';
+
+  const shuffledOptions = shuffle(round.options);
+  const letters = ['A', 'B', 'C', 'D'];
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = shuffledOptions.map((opt, i) => 
+    `<button class="option-btn" onclick="selectOption('${opt.key}', this)"><span style="font-weight:bold;color:#ffd700;margin-right:10px;font-size:1.1em;">${letters[i]}</span>${opt.text}</button>`
+  ).join('');
+  
+  selectedOption = null;
+  const btn = document.getElementById('actionBtn');
+  btn.disabled = true;
+  btn.textContent = '请先选择一个方案';
+  btn.onclick = null;
+}
+
+function selectOption(key, btn) {
+  if (gamePhase !== 'choice') return;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedOption = key;
+  const btnEl = document.getElementById('actionBtn');
+  btnEl.disabled = false;
+  btnEl.textContent = '确认方案';
+  btnEl.onclick = confirmChoice;
+}
+
+function confirmChoice() {
+  if (!selectedOption || gamePhase !== 'choice') return;
+  const round = gameData.rounds[currentRound];
+  const feedback = round.feedback[selectedOption];
+  gamePhase = 'feedback';
+  
+  document.querySelectorAll('.option-btn').forEach(b => {
+    b.disabled = true;
+    if (b.classList.contains('selected')) {
+      if (selectedOption === 'correct') b.classList.add('correct');
+      else b.classList.add('wrong');
+    }
+  });
+
+  const container = document.getElementById('optionsContainer');
+  const fc = selectedOption === 'correct' ? '#51cf66' : selectedOption === 'wrong' ? '#ff6b6b' : '#ffd700';
+  const fb = selectedOption === 'correct' ? 'rgba(81,207,102,0.1)' : selectedOption === 'wrong' ? 'rgba(255,107,107,0.1)' : 'rgba(255,215,0,0.1)';
+  container.innerHTML = `
+    <div style="grid-column: 1/-1; background: ${fb}; border-radius: 12px; padding: 20px; border: 2px solid ${fc}">
+      <div style="color: ${fc}; font-size: 1.1em; font-weight: bold; margin-bottom: 8px;">${feedback.title}</div>
+      <div style="color: #ccc; line-height: 1.8; font-size: 0.95em;">${feedback.text}</div>
+    </div>
+  `;
+
+  const keyLabel = selectedOption === 'correct' ? '✅ 正确' : selectedOption === 'wrong' ? '❌ 有误' : '⚠️ 欠佳';
+  roundResults.push({ round: currentRound + 1, choice: selectedOption, feedback: feedback, label: keyLabel });
+
+  const btn = document.getElementById('actionBtn');
+  btn.disabled = false;
+  if (currentRound < gameData.rounds.length - 1) {
+    btn.textContent = '下一关 →';
+    btn.onclick = goNextRound;
+  } else {
+    btn.textContent = '查看战报';
+    btn.onclick = showResult;
+  }
+}
+
+function goNextRound() {
+  currentRound++;
+  loadRound(currentRound);
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const correctCount = roundResults.filter(r => r.choice === 'correct').length;
+  const total = roundResults.length;
+  
+  let title = '';
+  if (correctCount === 5) title = '🏆 标签大师！';
+  else if (correctCount >= 4) title = '🌟 体系架构清晰！';
+  else if (correctCount >= 3) title = '📚 基础扎实';
+  else title = '💡 还需要学习';
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = `搭建思路正确率：${correctCount}/${total}`;
+  
+  const detail = document.getElementById('resultDetail');
+  detail.innerHTML = `
+    <h4>📊 各关思路回顾</h4>
+    ${roundResults.map((r, i) => `
+      <div class="round-result">
+        <div class="round-title">第${i+1}关</div>
+        <div class="choice">${r.label}</div>
+        <div class="outcome">${r.feedback.title.replace(/^[✅❌⚠️]/, '')}</div>
+      </div>
+    `).join('')}
+    
+    <h4 style="margin-top: 20px;">💡 核心感悟</h4>
+    <p>建立客户标签体系的核心步骤：</p>
+    <p style="margin-top:6px;">① 确定标签名称与内容 → ② 将标签归类到不同类目 → ③ 对每个标签进行规范定义 → ④ 整合成完整体系</p>
+    <p style="margin-top:6px;color:#667eea;">标签体系的价值：精准定位目标受众，开展个性化和精准化推广。</p>
+  `;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+
+document.getElementById('startBtn').onclick = startGame;
+</script>
+</body>
+</html>
