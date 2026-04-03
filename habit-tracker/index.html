@@ -537,7 +537,7 @@
         // 查看30天按钮
         html += `<div style="text-align:center;margin-top:12px;">
             <button onclick="showHistoryModal()" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:10px 24px;border-radius:20px;font-size:13px;cursor:pointer;box-shadow:0 2px 10px rgba(102,126,234,0.4);">
-                📋 查看30天记录
+                📋 查看30天
             </button>
         </div>`;
         
@@ -583,8 +583,7 @@
             ['heshui','💧'],['doujiang','🥛'],['milk','🥛'],['zhongyao','🍵'],
             ['paojiao','🦶'],['duanlian','🏃'],['shuijiao','😴'],['dabian','💩'],
         ];
-        
-        // 生成近30天（从今天往前）
+
         const today = new Date();
         today.setHours(12,0,0,0);
         const days = [];
@@ -593,7 +592,8 @@
             d.setDate(d.getDate() - i);
             days.push(d.toISOString().split('T')[0]);
         }
-        
+
+        // Part 1: 习惯 + 健康图标网格
         let html = '<div class="history-grid">';
         const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
         days.forEach(dateStr => {
@@ -601,8 +601,9 @@
             const wd = d.getDay();
             const isToday = dateStr === new Date().toISOString().split('T')[0];
             const rec = getRecord(dateStr);
+            const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
             const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.zhongyao||0);
-            
+
             const habitDots = [];
             habits.forEach(([hid, icon]) => {
                 let done = false;
@@ -612,15 +613,56 @@
                 else done = (rec?.[hid]||0) > 0;
                 habitDots.push(`<span class="history-dot ${done ? 'dot-done' : 'dot-empty'}" title="${hid}">${icon}</span>`);
             });
-            
+
+            const healthDots = [];
+            if (hd) {
+                if (hd.大便 && hd.大便.形状) healthDots.push('🚽');
+                if (hd.夜尿 && hd.夜尿.次数 > 0) healthDots.push('🌙×'+hd.夜尿.次数);
+                if (hd.胀气 && hd.胀气.有) healthDots.push('💨');
+            }
+
             const hasData = rec && Object.keys(rec).some(k => rec[k] > 0);
-            html += `<div class="history-day ${hasData ? 'has-data' : ''} ${isToday ? 'today' : ''}">
+            const hasHealth = healthDots.length > 0;
+            html += `<div class="history-day ${hasData || hasHealth ? 'has-data' : ''} ${isToday ? 'today' : ''}">
                 <div class="weekday">${weekdays[wd]}</div>
                 <div class="date">${d.getMonth()+1}/${d.getDate()}</div>
                 <div class="habits">${habitDots.join('')}</div>
+                ${hasHealth ? `<div style="font-size:9px;margin-top:2px;color:#e64a19;">${healthDots.join(' ')}</div>` : ''}
             </div>`;
         });
         html += '</div>';
+
+        // Part 2: 健康详情（只显示有记录的日子）
+        const weekdaysFull = ['周日','周一','周二','周三','周四','周五','周六'];
+        const healthDays = [];
+        days.forEach(dateStr => {
+            const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
+            if (!hd) return;
+            const d = new Date(dateStr + 'T12:00:00');
+            const parts = [];
+            if (hd.胀气 && hd.胀气.有) parts.push(`💨 胀气${hd.胀气.详情 ? '：'+hd.胀气.详情 : ''}`);
+            if (hd.夜尿 && hd.夜尿.次数 > 0) parts.push(`🌙 夜尿${hd.夜尿.次数}次${hd.夜尿.时间点?.length ? '（'+hd.夜尿.时间点.join(',')+'）' : ''}`);
+            if (hd.大便 && hd.大便.形状) parts.push(`🚽 大便${hd.大便.形状}${hd.大便.时间 ? '·'+hd.大便.时间 : ''}`);
+            if (parts.length) {
+                const wd = d.getDay();
+                healthDays.push({date: `${d.getMonth()+1}月${d.getDate()}日${weekdaysFull[wd]}`, items: parts.join(' | ')});
+            }
+        });
+
+        html += `<div style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
+            <h4 style="margin:0 0 10px 0;color:#666;font-size:13px;">🏥 健康记录（近30天）</h4>`;
+        if (healthDays.length === 0) {
+            html += `<div style="color:#aaa;font-size:12px;text-align:center;padding:10px;">近30天无健康记录</div>`;
+        } else {
+            healthDays.slice(0,15).forEach(day => {
+                html += `<div style="background:#fff3e0;border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:12px;">
+                    <span style="font-weight:bold;color:#e64a19;">${day.date}</span>
+                    <div style="color:#555;margin-top:3px;">${day.items}</div>
+                </div>`;
+            });
+        }
+        html += '</div>';
+
         container.innerHTML = html;
     }
     
@@ -631,7 +673,7 @@
     <div class="modal-overlay" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>📋 近30天习惯记录</h3>
+                <h3>📋 近30天记录</h3>
                 <button class="modal-close" onclick="closeHistoryModal()">✕</button>
             </div>
             <div id="historyContent"></div>
