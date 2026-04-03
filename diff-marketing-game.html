@@ -81,7 +81,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
     <p>💡 这个游戏考察的是你对<strong style="color:#ffd700">营销策略</strong>的理解，不是背知识点。</p>
   </div>
   <div class="strategy-tags">
-    <div style="color:#aaa;font-size:0.9em;margin-bottom:8px;">📚 游戏中你会用到7种营销策略（题目不会提示是哪种）：</div>
+    <div style="color:#aaa;font-size:0.9em;margin-bottom:8px;">📚 游戏中你会用到8种营销策略（题目不会提示是哪种）：</div>
     <span class="strategy-tag">策略类型1</span>
     <span class="strategy-tag">策略类型2</span>
     <span class="strategy-tag">策略类型3</span>
@@ -89,6 +89,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
     <span class="strategy-tag">策略类型5</span>
     <span class="strategy-tag">策略类型6</span>
     <span class="strategy-tag">策略类型7</span>
+    <span class="strategy-tag">策略类型8</span>
   </div>
 </div>
 
@@ -327,9 +328,44 @@ const gameData = {
     },
     {
       id: 7,
+      strategy: "价格差异化策略",
+      situationTitle: "🗓️ 第七关 · 定价的艺术",
+      situationText: "店铺定位做好了，但另一个问题出现了：「萌二次元」跟你卖同一类周边，进货成本几乎一样。他们把一款热门手办定价¥98，你会定多少？",
+      data: [
+        { label: "萌二次元价格", value: "¥98" },
+        { label: "你们进货成本", value: "¥65" },
+        { label: "你的定价", value: "待定" },
+        { label: "你的目标用户", value: "学生党" },
+        { label: "学生消费心理", value: "\"要买就买最划算的\"" }
+      ],
+      question: "同质货品、同一成本，你打算怎么定价？",
+      options: [
+        { text: "定¥95——比萌二次元便宜3块，用价格抢客", key: "wrong" },
+        { text: "定¥128——\"精选款\"，强调配件更全、服务更好", key: "correct" },
+        { text: "跟萌二次元一样定¥98——市场定价，随大流不冒险", key: "neutral" },
+        { text: "定¥199——反正学生也不差钱", key: "wrong" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "价格差异化策略",
+          text: "你没有选择最简单的\"比对手便宜\"，而是给产品重新定义——\"精选款含全套配件+售后保障+开箱体验\"。价格反而比萌二次元高，但目标是\"买得更值而不是买得更便宜\"的用户。虽然流失了一部分比价用户，但利润率和用户忠诚度都更高。"
+        },
+        wrong: {
+          title: "❌ 降价是最蠢的竞争方式",
+          text: "你¥95，萌二次元看到后降到¥90，你再降...？价格战没有底线，只会大家一起亏死。而且你吸引来的全是价格敏感用户，一旦别人更便宜，立刻流失。"
+        },
+        neutral: {
+          title: "⚠️ 随大流等于放弃主动权",
+          text: "定价跟萌二次元一样，看起来安全，但用户为什么选你不选他？你没有任何主动权，只能等着被用户挑剩。这个策略不解决\"用户凭什么选你\"的问题。"
+        }
+      }
+    },
+    {
+      id: 8,
       strategy: "差异化思维（综合）",
-      situationTitle: "🗓️ 第七关 · 终极复盘",
-      situationText: "经过6轮决策，你的店铺已经形成了独特风格，回头看第一关的选择，你有什么感悟？",
+      situationTitle: "🗓️ 第八关 · 终极复盘",
+      situationText: "经过7轮决策，你的店铺已经形成了独特风格，回头看第一关的选择，你有什么感悟？",
       data: [
         { label: "店铺月销", value: "1.2万", type: "good" },
         { label: "用户复购率", value: "48%", type: "good" },
@@ -498,7 +534,7 @@ function showResult() {
   const total = roundResults.length;
   
   let title = '';
-  if (correctCount === 7) title = '🏆 营销天才！';
+  if (correctCount === 8) title = '🏆 营销天才！';
   else if (correctCount >= 5) title = '🌟 优秀掌柜！';
   else if (correctCount >= 3) title = '📚 潜力无限';
   else title = '💡 继续学习';
