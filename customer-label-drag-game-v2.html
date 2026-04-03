@@ -489,6 +489,49 @@ function makeCategoryClickHandler(box, boxCat) {
     droppedCard.dataset.correctCat = correctCat;
     droppedCard.dataset.placedCat = boxCat;
     
+    // Allow dragging between category boxes
+    droppedCard.draggable = true;
+    droppedCard.addEventListener('dragstart', function(e) {
+      draggedEl = this;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    droppedCard.addEventListener('dragend', function(e) {
+      this.classList.remove('dragging');
+      document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+    });
+    droppedCard.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      if (selectedEl) selectedEl.classList.remove('selected');
+      selectedEl = this;
+      this.classList.add('selected');
+      this.classList.add('dragging');
+    }, { passive: false });
+    droppedCard.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      this.classList.remove('dragging');
+      document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+      if (!selectedEl) return;
+      const touch = e.changedTouches[0];
+      const el = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (!el) return;
+      const targetBox = el.closest('.category-box');
+      if (targetBox && targetBox.dataset.catName !== selectedEl.dataset.placedCat) {
+        const fromCat = selectedEl.dataset.placedCat;
+        const toCat = targetBox.dataset.catName;
+        placedLabels[fromCat] = placedLabels[fromCat].filter(x => x.tag !== selectedEl.dataset.tag);
+        placedLabels[toCat].push({ tag: selectedEl.dataset.tag, correctCat: selectedEl.dataset.correctCat });
+        selectedEl.dataset.placedCat = toCat;
+        targetBox.querySelector('.category-slots').appendChild(selectedEl);
+        selectedEl.classList.add('just-dropped');
+        setTimeout(() => selectedEl.classList.remove('just-dropped'), 300);
+      }
+      selectedEl.classList.remove('selected', 'dragging');
+      selectedEl = null;
+    }, { passive: false });
+    droppedCard.addEventListener('touchmove', onTouchMove, { passive: false });
+    
+    // Click to return to pool
     droppedCard.addEventListener('click', function(ev) {
       ev.stopPropagation();
       if (this.classList.contains('right')) return;
@@ -496,7 +539,6 @@ function makeCategoryClickHandler(box, boxCat) {
       const pc = this.dataset.placedCat;
       placedLabels[pc] = placedLabels[pc].filter(x => x.tag !== t);
       
-      // Return card to pool
       const pool = document.getElementById('labelsPool');
       const poolCard = document.createElement('div');
       poolCard.className = 'label-card';
