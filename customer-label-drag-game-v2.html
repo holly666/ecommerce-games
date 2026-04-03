@@ -49,7 +49,31 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 }
 .label-card:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
 .label-card.dragging { opacity: 0.5; cursor: grabbing; transform: scale(1.1); }
-.label-card.selected { background: linear-gradient(135deg, #ffd700, #f59e0b) !important; transform: scale(1.1); box-shadow: 0 0 20px rgba(255,215,0,0.5); }
+.label-card.selected { 
+  background: linear-gradient(135deg, #ffd700, #f59e0b) !important; 
+  transform: scale(1.12) translateY(-4px); 
+  box-shadow: 0 12px 30px rgba(255,215,0,0.5); 
+  animation: float 1s ease-in-out infinite alternate;
+}
+@keyframes float {
+  from { transform: scale(1.12) translateY(-4px); }
+  to { transform: scale(1.12) translateY(-8px); }
+}
+
+.dropped-card.just-dropped { 
+  animation: dropIn 0.25s ease-out; 
+}
+@keyframes dropIn {
+  from { opacity: 0; transform: scale(0.7) translateY(-10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.category-box.drag-over {
+  border-color: #ffd700;
+  background: rgba(255,215,0,0.12);
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(255,215,0,0.3);
+}
 
 /* 分类区 */
 .categories-area {
@@ -466,7 +490,7 @@ function addCategoryClickHandler() {
       // Create dropped card in category
       const slots = box.querySelector('.category-slots');
       const droppedCard = document.createElement('div');
-      droppedCard.className = 'dropped-card';
+      droppedCard.className = 'dropped-card just-dropped';
       droppedCard.textContent = tag;
       droppedCard.dataset.tag = tag;
       droppedCard.dataset.correctCat = correctCat;
@@ -536,7 +560,7 @@ function onDrop(e) {
   // Create dropped card
   const slots = e.currentTarget.querySelector('.category-slots');
   const card = document.createElement('div');
-  card.className = 'dropped-card';
+  card.className = 'dropped-card just-dropped';
   card.textContent = tag;
   card.dataset.tag = tag;
   card.dataset.correctCat = correctCat;
