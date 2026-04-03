@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>标签归类大挑战 - 客户标签体系</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* ===== 开始页面 ===== */
+#start-screen { text-align: center; padding-top: 30px; }
+.title { font-size: 2.5em; color: #ffd700; margin-bottom: 10px; }
+.subtitle { font-size: 1.3em; color: #aaa; margin-bottom: 30px; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 20px 60px; font-size: 1.5em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.start-btn:hover { transform: scale(1.05); }
+.game-desc { background: #16213e; border-radius: 20px; padding: 30px; margin-top: 30px; text-align: left; max-width: 900px; margin-left: auto; margin-right: auto; }
+.game-desc h3 { color: #ffd700; margin-bottom: 16px; font-size: 1.3em; }
+.game-desc p { color: #ccc; line-height: 2; font-size: 1.1em; margin-bottom: 12px; }
+.score-display { background: #0f3460; border-radius: 16px; padding: 20px; margin-top: 20px; text-align: center; font-size: 1.2em; color: #ffd700; }
+
+/* ===== 游戏页面 ===== */
+#game-screen { display: none; }
+.level-title { text-align: center; font-size: 1.5em; color: #ffd700; margin-bottom: 16px; }
+.level-desc { text-align: center; color: #aaa; font-size: 1.1em; margin-bottom: 24px; }
+
+/* 标签区 */
+.labels-area { 
+  background: #16213e; 
+  border-radius: 20px; 
+  padding: 24px; 
+  margin-bottom: 24px;
+  min-height: 160px;
+}
+.labels-area-title { color: #aaa; font-size: 1em; margin-bottom: 16px; text-align: center; }
+.labels-pool { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+.label-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-size: 1.1em;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.label-card:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+.label-card.dragging { opacity: 0.5; cursor: grabbing; transform: scale(1.1); }
+.label-card.placed { background: linear-gradient(135deg, #51cf66, #20b558); cursor: default; }
+.label-card.placed:hover { transform: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+/* 分类区 */
+.categories-area {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.category-box {
+  background: #0f3460;
+  border-radius: 20px;
+  padding: 20px;
+  min-height: 200px;
+  border: 3px dashed #334;
+  transition: all 0.2s;
+  position: relative;
+}
+.category-box.drag-over {
+  border-color: #ffd700;
+  background: rgba(255,215,0,0.08);
+  transform: scale(1.02);
+}
+.category-box.correct { border-color: #51cf66; border-style: solid; background: rgba(81,207,102,0.08); }
+.category-box.wrong { border-color: #ff6b6b; border-style: solid; background: rgba(255,107,107,0.08); }
+.category-title {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2e;
+  padding: 4px 20px;
+  border-radius: 20px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #ffd700;
+  white-space: nowrap;
+}
+.category-count {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 0.85em;
+  color: #aaa;
+}
+.category-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  min-height: 60px;
+}
+.dropped-card {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: #ddd;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dropped-card:hover { background: rgba(255,107,107,0.2); border-color: #ff6b6b; color: #ff6b6b; }
+
+/* 操作区 */
+.action-area { text-align: center; }
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 16px 48px; font-size: 1.2em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.action-btn:hover { transform: scale(1.05); }
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.action-btn.green { background: linear-gradient(135deg, #51cf66, #20b558); }
+
+/* 反馈区 */
+.feedback-area {
+  display: none;
+  background: #16213e;
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 20px;
+  text-align: center;
+}
+.feedback-area.show { display: block; }
+.feedback-title { font-size: 1.8em; margin-bottom: 16px; }
+.feedback-title.pass { color: #51cf66; }
+.feedback-title.fail { color: #ff6b6b; }
+.feedback-text { color: #ccc; font-size: 1.1em; line-height: 1.8; }
+.feedback-detail { margin-top: 20px; text-align: left; }
+.feedback-item { padding: 10px 16px; border-radius: 10px; margin-bottom: 8px; font-size: 1em; }
+.feedback-item.right { background: rgba(81,207,102,0.15); color: #51cf66; }
+.feedback-item.wrong { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+.score-result { font-size: 2em; color: #ffd700; margin: 16px 0; }
+
+/* ===== 结果页面 ===== */
+#result-screen { display: none; text-align: center; padding-top: 40px; }
+.result-title { font-size: 2.5em; color: #ffd700; margin-bottom: 20px; }
+.result-score { font-size: 1.5em; color: #aaa; margin-bottom: 30px; }
+
+.step-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.step-dot { width: 14px; height: 14px; border-radius: 50%; background: #334; }
+.step-dot.active { background: #ffd700; }
+.step-dot.done { background: #51cf66; }
+
+@media (max-width: 768px) {
+  .categories-area { grid-template-columns: 1fr; }
+  .title { font-size: 1.8em; }
+  .label-card { font-size: 0.95em; padding: 10px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 开始页面 -->
+<div id="start-screen">
+  <div class="title">🏷️ 标签归类大挑战</div>
+  <div class="subtitle">客户标签体系 · 课堂互动版</div>
+  <button class="start-btn" id="startBtn">开始挑战</button>
+  <div class="game-desc">
+    <h3>📋 挑战规则</h3>
+    <p>🎯 任务：将标签卡片拖拽到对应的分类框中</p>
+    <p>🏆 得分：放对1个+10分，放错1个倒扣5分</p>
+    <p>💡 每个分类的标签数量是固定的，放完才能提交</p>
+    <p>⚠️ 点击已放置的标签可以撤回，重新拖拽</p>
+  </div>
+  <div class="score-display">
+    当前得分：<span id="totalScore">0</span> 分
+  </div>
+</div>
+
+<!-- 游戏页面 -->
+<div id="game-screen">
+  <div class="step-indicator" id="stepIndicator"></div>
+  <div class="level-title" id="levelTitle"></div>
+  <div class="level-desc" id="levelDesc"></div>
+  
+  <div class="labels-area">
+    <div class="labels-area-title">📋 待归类标签（拖拽到下方分类框）</div>
+    <div class="labels-pool" id="labelsPool"></div>
+  </div>
+  
+  <div class="categories-area" id="categoriesArea"></div>
+  
+  <div class="action-area">
+    <button class="action-btn green" id="submitBtn" disabled>✓ 确认提交</button>
+  </div>
+  
+  <div class="feedback-area" id="feedbackArea">
+    <div class="feedback-title" id="feedbackTitle"></div>
+    <div class="score-result" id="feedbackScore"></div>
+    <div class="feedback-text" id="feedbackText"></div>
+    <div class="feedback-detail" id="feedbackDetail"></div>
+    <button class="action-btn" id="nextBtn" style="margin-top:20px;">下一关 →</button>
+  </div>
+</div>
+
+<!-- 结果页面 -->
+<div id="result-screen">
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-score" id="resultScore"></div>
+  <button class="start-btn" onclick="restartGame()">再玩一次</button>
+</div>
+
+</div>
+
+<script>
+const levels = [
+  {
+    title: "第1关 · 基础信息 vs 行为特征",
+    desc: "这些标签，哪些是「基础信息」，哪些是「行为特征」？",
+    categories: [
+      { name: "基础信息类", keys: ["女","杭州","白领","北京","学生"] },
+      { name: "行为特征类", keys: ["月均购买3次","单笔500元以上","常用支付宝","夜间活跃"] }
+    ]
+  },
+  {
+    title: "第2关 · 偏好特征 vs 价值类",
+    desc: "继续！这些标签该归到哪一类？",
+    categories: [
+      { name: "偏好特征类", keys: ["偏爱美妆","品牌忠诚用户","热衷折扣","爱买零食"] },
+      { name: "价值类标签", keys: ["高价值客户","忠诚度Lv3","流失风险用户","VIP会员"] }
+    ]
+  },
+  {
+    title: "第3关 · 综合归类挑战",
+    desc: "所有类型一起来，你能分对几个？",
+    categories: [
+      { name: "基础信息类", keys: ["25岁","浙江","女性","公司职员"] },
+      { name: "行为特征类", keys: ["月购5次","客单价300","深夜下单"] },
+      { name: "偏好特征类", keys: ["偏好数码","品牌导向","爱看直播"] },
+      { name: "价值类标签", keys: ["高价值","沉睡用户","复购频率高"] }
+    ]
+  }
+];
+
+let currentLevel = 0;
+let totalScore = 0;
+let placedLabels = {}; // categoryName -> [labelKeys]
+
+// Drag state
+let draggedLabel = null;
+
+function startGame() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  currentLevel = 0;
+  totalScore = 0;
+  document.getElementById('totalScore').textContent = totalScore;
+  loadLevel(currentLevel);
+}
+
+function loadLevel(levelIndex) {
+  const level = levels[levelIndex];
+  placedLabels = {};
+  
+  // Update step indicator
+  const indicator = document.getElementById('stepIndicator');
+  indicator.innerHTML = levels.map((_, i) => 
+    `<div class="step-dot ${i < levelIndex ? 'done' : i === levelIndex ? 'active' : ''}"></div>`
+  ).join('');
+  
+  document.getElementById('levelTitle').textContent = level.title;
+  document.getElementById('levelDesc').textContent = level.desc;
+  
+  // Build labels pool
+  const pool = document.getElementById('labelsPool');
+  pool.innerHTML = '';
+  
+  // Collect all labels and shuffle
+  let allLabels = [];
+  level.categories.forEach(cat => {
+    cat.keys.forEach(key => allLabels.push({ key, cat: cat.name }));
+  });
+  // Shuffle
+  allLabels.sort(() => Math.random() - 0.5);
+  
+  allLabels.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'label-card';
+    card.textContent = item.key;
+    card.dataset.key = item.key;
+    card.dataset.category = item.cat;
+    card.draggable = true;
+    
+    card.addEventListener('dragstart', onDragStart);
+    card.addEventListener('dragend', onDragEnd);
+    
+    pool.appendChild(card);
+  });
+  
+  // Build categories
+  const categoriesArea = document.getElementById('categoriesArea');
+  categoriesArea.innerHTML = '';
+  
+  level.categories.forEach(cat => {
+    placedLabels[cat.name] = [];
+    
+    const box = document.createElement('div');
+    box.className = 'category-box';
+    box.dataset.category = cat.name;
+    box.innerHTML = `
+      <div class="category-title">${cat.name}</div>
+      <div class="category-count">0/${cat.keys.length}</div>
+      <div class="category-cards" data-category="${cat.name}"></div>
+    `;
+    
+    box.addEventListener('dragover', onDragOver);
+    box.addEventListener('dragleave', onDragLeave);
+    box.addEventListener('drop', onDrop);
+    
+    categoriesArea.appendChild(box);
+  });
+  
+  // Hide feedback, show submit
+  document.getElementById('feedbackArea').classList.remove('show');
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function onDragStart(e) {
+  draggedLabel = e.target;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', e.target.dataset.key);
+}
+
+function onDragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  
+  if (!draggedLabel) return;
+  if (draggedLabel.classList.contains('placed')) return;
+  
+  const key = draggedLabel.dataset.key;
+  const correctCat = draggedLabel.dataset.category;
+  const targetCat = e.currentTarget.dataset.category;
+  
+  // Add to placed
+  if (!placedLabels[targetCat]) placedLabels[targetCat] = [];
+  placedLabels[targetCat].push(key);
+  
+  // Move card to category
+  const catCards = e.currentTarget.querySelector('.category-cards');
+  const newCard = document.createElement('div');
+  newCard.className = 'dropped-card';
+  newCard.textContent = key;
+  newCard.dataset.key = key;
+  newCard.dataset.fromCat = correctCat;
+  newCard.dataset.toCat = targetCat;
+  
+  // Click to remove
+  newCard.addEventListener('click', function() {
+    const k = this.dataset.key;
+    const tc = this.dataset.toCat;
+    placedLabels[tc] = placedLabels[tc].filter(x => x !== k);
+    catCards.removeChild(this);
+    updateCount(e.currentTarget);
+    checkAllPlaced();
+  });
+  
+  catCards.appendChild(newCard);
+  
+  // Remove from pool
+  draggedLabel.remove();
+  draggedLabel = null;
+  
+  updateCount(e.currentTarget);
+  checkAllPlaced();
+}
+
+function updateCount(box) {
+  const catName = box.dataset.category;
+  const level = levels[currentLevel];
+  const catDef = level.categories.find(c => c.name === catName);
+  box.querySelector('.category-count').textContent = `${placedLabels[catName].length}/${catDef.keys.length}`;
+}
+
+function checkAllPlaced() {
+  const level = levels[currentLevel];
+  let allPlaced = true;
+  let totalPlaced = 0;
+  let totalNeeded = 0;
+  
+  level.categories.forEach(cat => {
+    totalPlaced += placedLabels[cat.name].length;
+    totalNeeded += cat.keys.length;
+    if (placedLabels[cat.name].length !== cat.keys.length) allPlaced = false;
+  });
+  
+  // Also check if pool is empty
+  const poolCards = document.getElementById('labelsPool').querySelectorAll('.label-card:not(.placed)');
+  if (poolCards.length > 0) allPlaced = false;
+  
+  document.getElementById('submitBtn').disabled = !allPlaced;
+}
+
+function submitAnswer() {
+  const level = levels[currentLevel];
+  let correct = 0;
+  let wrong = 0;
+  let details = [];
+  
+  level.categories.forEach(cat => {
+    cat.keys.forEach(key => {
+      // Find which category this key was placed in
+      let placedIn = null;
+      Object.keys(placedLabels).forEach(catName => {
+        if (placedLabels[catName].includes(key)) placedIn = catName;
+      });
+      
+      if (placedIn === cat.name) {
+        correct++;
+        details.push({ key, result: 'right', correct: cat.name });
+      } else {
+        wrong++;
+        details.push({ key, result: 'wrong', correct: cat.name, placed: placedIn });
+      }
+    });
+  });
+  
+  let roundScore = correct * 10 - wrong * 5;
+  totalScore += roundScore;
+  document.getElementById('totalScore').textContent = totalScore;
+  
+  // Color the category boxes
+  document.querySelectorAll('.category-box').forEach(box => {
+    box.classList.remove('correct', 'wrong');
+    box.classList.add('wrong');
+  });
+  
+  // Mark correct placements green
+  document.querySelectorAll('.dropped-card').forEach(card => {
+    if (card.dataset.fromCat === card.dataset.toCat) {
+      card.style.background = 'rgba(81,207,102,0.25)';
+      card.style.borderColor = '#51cf66';
+      card.style.color = '#51cf66';
+      card.style.cursor = 'default';
+      card.onclick = null;
+      card.parentElement.parentElement.classList.remove('wrong');
+      card.parentElement.parentElement.classList.add('correct');
+    } else {
+      card.style.background = 'rgba(255,107,107,0.25)';
+      card.style.borderColor = '#ff6b6b';
+      card.style.color = '#ff6b6b';
+    }
+  });
+  
+  // Show feedback
+  const feedbackArea = document.getElementById('feedbackArea');
+  feedbackArea.classList.add('show');
+  
+  const feedbackTitle = document.getElementById('feedbackTitle');
+  const feedbackScore = document.getElementById('feedbackScore');
+  const feedbackText = document.getElementById('feedbackText');
+  const feedbackDetail = document.getElementById('feedbackDetail');
+  
+  feedbackScore.textContent = `${correct}/${correct + wrong} 正确  (+${correct * 10} -${wrong * 5} = ${roundScore >= 0 ? '+' : ''}${roundScore})`;
+  
+  if (correct === level.categories.reduce((sum, c) => sum + c.keys.length, 0)) {
+    feedbackTitle.textContent = '🌟 完美！全部正确！';
+    feedbackTitle.className = 'feedback-title pass';
+    feedbackText.textContent = '你对标签分类的理解非常清晰！';
+  } else if (correct > wrong) {
+    feedbackTitle.textContent = '✅ 不错！';
+    feedbackTitle.className = 'feedback-title pass';
+    feedbackText.textContent = '大部分标签归类正确，继续加油！';
+  } else {
+    feedbackTitle.textContent = '❌ 还需要学习';
+    feedbackTitle.className = 'feedback-title fail';
+    feedbackText.textContent = '标签归类有误，对照下面的结果回顾一下知识点吧。';
+  }
+  
+  feedbackDetail.innerHTML = details.map(d => {
+    if (d.result === 'right') {
+      return `<div class="feedback-item right">✅ 「${d.key}」→ ${d.correct}</div>`;
+    } else {
+      return `<div class="feedback-item wrong">❌ 「${d.key}」应归类为：${d.correct}（你放到了：${d.placed || '未放置'}）</div>`;
+    }
+  }).join('');
+  
+  document.getElementById('submitBtn').style.display = 'none';
+  
+  if (currentLevel < levels.length - 1) {
+    document.getElementById('nextBtn').textContent = '下一关 →';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+  } else {
+    document.getElementById('nextBtn').textContent = '查看总成绩';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+  }
+}
+
+function nextLevel() {
+  currentLevel++;
+  if (currentLevel < levels.length) {
+    loadLevel(currentLevel);
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  
+  const maxScore = levels.reduce((sum, l) => sum + l.categories.reduce((s, c) => s + c.keys.length, 0) * 10, 0);
+  
+  let title = '';
+  if (totalScore >= maxScore * 0.9) title = '🏆 标签大师！';
+  else if (totalScore >= maxScore * 0.7) title = '🌟 优秀！';
+  else if (totalScore >= maxScore * 0.5) title = '📚 还不错';
+  else title = '💡 继续加油';
+  
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = `总得分：${totalScore} / ${maxScore}`;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+document.getElementById('startBtn').onclick = startGame;
+document.getElementById('submitBtn').onclick = submitAnswer;
+document.getElementById('nextBtn').onclick = nextLevel;
+</script>
+</body>
+</html>
