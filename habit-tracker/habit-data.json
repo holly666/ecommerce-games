@@ -88,5 +88,16 @@
     "shuijiao": 0,
     "chiyao": 1,
     "water": 1000
+  },
+  "2026-04-03": {
+    "paojiao": 0,
+    "heshui": 0,
+    "doujiang": 0,
+    "milk": 0,
+    "zhongyao": 0,
+    "dabian": 1,
+    "duanlian": 0,
+    "shuijiao": 0,
+    "chiyao": 0
   }
 }
