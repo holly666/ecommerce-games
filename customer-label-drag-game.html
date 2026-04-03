@@ -432,20 +432,17 @@ function updateCountForBox(box) {
 }
 
 function checkAllPlaced() {
+  // 只要分类框里放了任意数量的卡片，就可以提交
+  // 不要求池子空、不要求数量刚好对，放完即可提交
   const level = levels[currentLevel];
-  let poolEmpty = true;
-  let allFilled = true;
+  let hasPlaced = false;
   
-  level.categories.forEach(cat => {
-    if (placedLabels[cat.name].length !== cat.keys.length) allFilled = false;
+  Object.keys(placedLabels).forEach(catName => {
+    if (placedLabels[catName].length > 0) hasPlaced = true;
   });
   
-  // Check if pool is empty
-  const pool = document.getElementById('labelsPool');
-  if (pool.children.length > 0) poolEmpty = false;
-  
   const submitBtn = document.getElementById('submitBtn');
-  submitBtn.disabled = !(poolEmpty && allFilled);
+  submitBtn.disabled = !hasPlaced;
 }
 
 function submitAnswer() {
