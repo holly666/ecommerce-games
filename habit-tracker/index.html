@@ -284,7 +284,7 @@
     function generateDailyCommentary(rec, dateStr) {
         if (!rec) return '';
 
-        const liquid = (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.zhongyao||0);
+        const liquid = (rec.heshui||0);
         const duanlian = rec.duanlian||0;
         const paojiao = rec.paojiao||0;
         const shuijiao = rec.shuijiao||0;
@@ -347,7 +347,7 @@
             const r = getRecord(d);
             return {
                 date: d,
-                liquid: r ? (r.heshui||0)+(r.doujiang||0)+(r.milk||0)+(r.zhongyao||0) : 0,
+                liquid: r ? (r.heshui||0) : 0,
                 duanlian: r ? (r.duanlian||0) : 0,
                 paojiao: r ? (r.paojiao||0) : 0,
                 shuijiao: r ? (r.shuijiao||0) : 0,
@@ -748,7 +748,7 @@
             const isToday = dateStr === new Date().toISOString().split('T')[0];
             const rec = getRecord(dateStr);
             const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
-            const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.zhongyao||0);
+            const totalLiquid = (rec?.heshui||0);
 
             const habitDots = [];
             habits.forEach(([hid, icon]) => {
