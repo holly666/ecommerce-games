@@ -361,13 +361,14 @@ function onDrop(e) {
   const key = draggedLabel.dataset.key;
   const correctCat = draggedLabel.dataset.category;
   const targetCat = e.currentTarget.dataset.category;
+  const targetBox = e.currentTarget;
   
   // Add to placed
   if (!placedLabels[targetCat]) placedLabels[targetCat] = [];
   placedLabels[targetCat].push(key);
   
   // Move card to category
-  const catCards = e.currentTarget.querySelector('.category-cards');
+  const catCards = targetBox.querySelector('.category-cards');
   const newCard = document.createElement('div');
   newCard.className = 'dropped-card';
   newCard.textContent = key;
@@ -375,13 +376,32 @@ function onDrop(e) {
   newCard.dataset.fromCat = correctCat;
   newCard.dataset.toCat = targetCat;
   
-  // Click to remove
+  // Click to remove (return to pool)
   newCard.addEventListener('click', function() {
     const k = this.dataset.key;
     const tc = this.dataset.toCat;
+    const sourceBox = document.querySelector(`.category-box[data-category="${tc}"]`);
+    
+    // Return card to pool
+    const pool = document.getElementById('labelsPool');
+    const poolCard = document.createElement('div');
+    poolCard.className = 'label-card';
+    poolCard.textContent = k;
+    poolCard.dataset.key = k;
+    poolCard.dataset.category = k; // store key for reference
+    poolCard.draggable = true;
+    poolCard.addEventListener('dragstart', onDragStart);
+    poolCard.addEventListener('dragend', onDragEnd);
+    pool.appendChild(poolCard);
+    
+    // Remove from placedLabels
     placedLabels[tc] = placedLabels[tc].filter(x => x !== k);
-    catCards.removeChild(this);
-    updateCount(e.currentTarget);
+    
+    // Remove from category
+    sourceBox.querySelector('.category-cards').removeChild(this);
+    
+    // Update count for the box
+    updateCountForBox(sourceBox);
     checkAllPlaced();
   });
   
@@ -391,7 +411,7 @@ function onDrop(e) {
   draggedLabel.remove();
   draggedLabel = null;
   
-  updateCount(e.currentTarget);
+  updateCountForBox(targetBox);
   checkAllPlaced();
 }
 
@@ -399,26 +419,33 @@ function updateCount(box) {
   const catName = box.dataset.category;
   const level = levels[currentLevel];
   const catDef = level.categories.find(c => c.name === catName);
+  if (!catDef) return; // safety
+  box.querySelector('.category-count').textContent = `${placedLabels[catName].length}/${catDef.keys.length}`;
+}
+
+function updateCountForBox(box) {
+  const catName = box.dataset.category;
+  const level = levels[currentLevel];
+  const catDef = level.categories.find(c => c.name === catName);
+  if (!catDef) return;
   box.querySelector('.category-count').textContent = `${placedLabels[catName].length}/${catDef.keys.length}`;
 }
 
 function checkAllPlaced() {
   const level = levels[currentLevel];
-  let allPlaced = true;
-  let totalPlaced = 0;
-  let totalNeeded = 0;
+  let poolEmpty = true;
+  let allFilled = true;
   
   level.categories.forEach(cat => {
-    totalPlaced += placedLabels[cat.name].length;
-    totalNeeded += cat.keys.length;
-    if (placedLabels[cat.name].length !== cat.keys.length) allPlaced = false;
+    if (placedLabels[cat.name].length !== cat.keys.length) allFilled = false;
   });
   
-  // Also check if pool is empty
-  const poolCards = document.getElementById('labelsPool').querySelectorAll('.label-card:not(.placed)');
-  if (poolCards.length > 0) allPlaced = false;
+  // Check if pool is empty
+  const pool = document.getElementById('labelsPool');
+  if (pool.children.length > 0) poolEmpty = false;
   
-  document.getElementById('submitBtn').disabled = !allPlaced;
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = !(poolEmpty && allFilled);
 }
 
 function submitAnswer() {
