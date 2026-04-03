@@ -390,10 +390,10 @@ function loadLevel(levelIndex) {
     box.addEventListener('dragleave', onDragLeave);
     box.addEventListener('drop', onDrop);
     catsArea.appendChild(box);
+    
+    // Attach per-box click handler (captures correct boxCat in closure)
+    makeCategoryClickHandler(box, cat.name);
   });
-  
-  // Add click-to-place handler for touch/click devices
-  addCategoryClickHandler();
   
   document.getElementById('feedbackArea').classList.remove('show');
   document.getElementById('submitBtn').style.display = 'inline-block';
@@ -414,11 +414,9 @@ function onDragEnd(e) {
 
 // ===== Touch / Click support =====
 function onCardClick(e) {
-  // For touch devices: tap card to select, then tap category to place
+  e.stopPropagation();
   if (e.target.classList.contains('label-card')) {
-    // Deselect previous
     if (selectedEl) selectedEl.classList.remove('selected');
-    // Select this one
     selectedEl = e.target;
     e.target.classList.add('selected');
   }
@@ -455,13 +453,11 @@ function onTouchEnd(e) {
   const el = document.elementFromPoint(touch.clientX, touch.clientY);
   if (!el) return;
   
-  const box = el.closest('.category-box');
-  if (box) {
-    // Simulate a drop
+  const targetBox = el.closest('.category-box');
+  if (targetBox) {
     const prevDragged = draggedEl;
     draggedEl = selectedEl;
-    const fakeEvent = { preventDefault: () => {}, currentTarget: box };
-    onDrop(fakeEvent);
+    onDrop({ preventDefault: () => {}, currentTarget: targetBox });
     draggedEl = prevDragged;
   }
   
@@ -469,69 +465,65 @@ function onTouchEnd(e) {
   selectedEl = null;
 }
 
-// Make category boxes clickable to accept selected card
-function addCategoryClickHandler() {
-  document.querySelectorAll('.category-box').forEach(box => {
-    box.addEventListener('click', function(e) {
-      // Don't trigger if clicking a dropped card
-      if (e.target.closest('.dropped-card')) return;
-      if (!selectedEl) return;
+// Category box click handler - attached per-box during creation
+function makeCategoryClickHandler(box, boxCat) {
+  box.addEventListener('click', function(e) {
+    e.stopPropagation();
+    // Don't trigger if clicking a dropped card (those have their own handlers)
+    if (e.target.closest('.dropped-card')) return;
+    if (!selectedEl) return;
+    
+    const tag = selectedEl.dataset.tag;
+    const correctCat = selectedEl.dataset.correctCat;
+    
+    // Add to placed
+    if (!placedLabels[boxCat]) placedLabels[boxCat] = [];
+    placedLabels[boxCat].push({ tag, correctCat });
+    
+    // Create dropped card
+    const slots = box.querySelector('.category-slots');
+    const droppedCard = document.createElement('div');
+    droppedCard.className = 'dropped-card just-dropped';
+    droppedCard.textContent = tag;
+    droppedCard.dataset.tag = tag;
+    droppedCard.dataset.correctCat = correctCat;
+    droppedCard.dataset.placedCat = boxCat;
+    
+    droppedCard.addEventListener('click', function(ev) {
+      ev.stopPropagation();
+      if (this.classList.contains('right')) return;
+      const t = this.dataset.tag;
+      const pc = this.dataset.placedCat;
+      placedLabels[pc] = placedLabels[pc].filter(x => x.tag !== t);
       
-      // Move selected card to this category
-      const card = selectedEl;
-      const tag = card.dataset.tag;
-      const correctCat = card.dataset.correctCat;
-      const targetCat = box.dataset.catName;
+      // Return card to pool
+      const pool = document.getElementById('labelsPool');
+      const poolCard = document.createElement('div');
+      poolCard.className = 'label-card';
+      poolCard.textContent = t;
+      poolCard.dataset.tag = t;
+      poolCard.dataset.correctCat = correctCat;
+      poolCard.draggable = true;
+      poolCard.addEventListener('dragstart', onDragStart);
+      poolCard.addEventListener('dragend', onDragEnd);
+      poolCard.addEventListener('touchstart', onTouchStart, { passive: false });
+      poolCard.addEventListener('touchend', onTouchEnd, { passive: false });
+      poolCard.addEventListener('touchmove', onTouchMove, { passive: false });
+      poolCard.addEventListener('click', onCardClick);
+      pool.appendChild(poolCard);
       
-      // Add to placed
-      if (!placedLabels[targetCat]) placedLabels[targetCat] = [];
-      placedLabels[targetCat].push({ tag, correctCat });
-      
-      // Create dropped card in category
-      const slots = box.querySelector('.category-slots');
-      const droppedCard = document.createElement('div');
-      droppedCard.className = 'dropped-card just-dropped';
-      droppedCard.textContent = tag;
-      droppedCard.dataset.tag = tag;
-      droppedCard.dataset.correctCat = correctCat;
-      droppedCard.dataset.placedCat = targetCat;
-      
-      droppedCard.addEventListener('click', function(ev) {
-        ev.stopPropagation();
-        if (this.classList.contains('right')) return; // submitted, can't remove
-        const t = this.dataset.tag;
-        const pc = this.dataset.placedCat;
-        placedLabels[pc] = placedLabels[pc].filter(x => x.tag !== t);
-        
-        // Return to pool
-        const pool = document.getElementById('labelsPool');
-        const poolCard = document.createElement('div');
-        poolCard.className = 'label-card';
-        poolCard.textContent = t;
-        poolCard.dataset.tag = t;
-        poolCard.dataset.correctCat = this.dataset.correctCat;
-        poolCard.draggable = true;
-        poolCard.addEventListener('dragstart', onDragStart);
-        poolCard.addEventListener('dragend', onDragEnd);
-        poolCard.addEventListener('touchstart', onTouchStart, { passive: false });
-        poolCard.addEventListener('touchend', onTouchEnd, { passive: false });
-        poolCard.addEventListener('touchmove', onTouchMove, { passive: false });
-        poolCard.addEventListener('click', onCardClick);
-        pool.appendChild(poolCard);
-        
-        slots.removeChild(this);
-        checkHasPlaced();
-      });
-      
-      slots.appendChild(droppedCard);
-      
-      // Remove from pool
-      card.remove();
-      selectedEl.classList.remove('selected');
-      selectedEl = null;
-      
+      slots.removeChild(this);
       checkHasPlaced();
     });
+    
+    slots.appendChild(droppedCard);
+    
+    // Remove from pool
+    selectedEl.remove();
+    selectedEl.classList.remove('selected');
+    selectedEl = null;
+    
+    checkHasPlaced();
   });
 }
 
@@ -609,15 +601,17 @@ function submitAnswer() {
   let wrong = 0;
   let allPlaced = [];
   
-  Object.keys(placedLabels).forEach(catName => {
-    placedLabels[catName].forEach(item => {
-      allPlaced.push(item);
-      if (item.correctCat === catName) {
-        correct++;
-      } else {
-        wrong++;
-      }
-    });
+  // Read directly from DOM cards - more reliable than placedLabels object
+  document.querySelectorAll('.dropped-card').forEach(card => {
+    const tag = card.dataset.tag;
+    const correctCat = card.dataset.correctCat;
+    const placedCat = card.dataset.placedCat;
+    allPlaced.push({ tag, correctCat, placedCat });
+    if (correctCat === placedCat) {
+      correct++;
+    } else {
+      wrong++;
+    }
   });
   
   let roundScore = correct * 10 - wrong * 5;
