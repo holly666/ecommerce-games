@@ -9,7 +9,6 @@
 body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
 .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
-/* ===== 开始页面 ===== */
 #start-screen { text-align: center; padding-top: 30px; }
 .title { font-size: 2.5em; color: #ffd700; margin-bottom: 10px; }
 .subtitle { font-size: 1.3em; color: #aaa; margin-bottom: 30px; }
@@ -19,18 +18,11 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .game-desc h3 { color: #ffd700; margin-bottom: 16px; font-size: 1.3em; }
 .game-desc p { color: #ccc; line-height: 2; font-size: 1.1em; margin-bottom: 12px; }
 
-/* ===== 游戏页面 ===== */
 #game-screen { display: none; }
 .level-title { text-align: center; font-size: 1.5em; color: #ffd700; margin-bottom: 12px; }
 .level-desc { text-align: center; color: #aaa; font-size: 1.1em; margin-bottom: 20px; }
 
-/* 标签区 */
-.labels-area { 
-  background: #16213e; 
-  border-radius: 20px; 
-  padding: 20px; 
-  margin-bottom: 20px;
-}
+.labels-area { background: #16213e; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
 .labels-area-title { color: #aaa; font-size: 0.95em; margin-bottom: 14px; text-align: center; }
 .labels-pool { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 
@@ -46,90 +38,20 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   font-weight: bold;
   letter-spacing: 0.5px;
+  touch-action: none;
 }
 .label-card:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
-.label-card.dragging { opacity: 0.5; cursor: grabbing; transform: scale(1.1); }
-.label-card.selected { 
-  background: linear-gradient(135deg, #ffd700, #f59e0b) !important; 
-  transform: scale(1.12) translateY(-4px); 
-  box-shadow: 0 12px 30px rgba(255,215,0,0.5); 
-  animation: float 1s ease-in-out infinite alternate;
-}
-@keyframes float {
-  from { transform: scale(1.12) translateY(-4px); }
-  to { transform: scale(1.12) translateY(-8px); }
-}
+.label-card.selected { background: linear-gradient(135deg, #ffd700, #f59e0b) !important; transform: scale(1.1) translateY(-4px); box-shadow: 0 12px 30px rgba(255,215,0,0.5); animation: pulse 0.8s ease-in-out infinite alternate; }
+@keyframes pulse { from { transform: scale(1.1) translateY(-4px); } to { transform: scale(1.1) translateY(-8px); } }
 
-.dropped-card.just-dropped { 
-  animation: dropIn 0.25s ease-out; 
-}
-@keyframes dropIn {
-  from { opacity: 0; transform: scale(0.7) translateY(-10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.category-box.drag-over {
-  border-color: #ffd700;
-  background: rgba(255,215,0,0.12);
-  transform: scale(1.03);
-  box-shadow: 0 0 20px rgba(255,215,0,0.3);
-}
-
-/* 分类区 */
-.categories-area {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 20px;
-}
-.category-box {
-  background: #0f3460;
-  border-radius: 16px;
-  padding: 16px;
-  min-height: 160px;
-  border: 3px dashed #334;
-  transition: all 0.2s;
-  position: relative;
-}
-.category-box.drag-over {
-  border-color: #ffd700;
-  background: rgba(255,215,0,0.08);
-  transform: scale(1.02);
-}
+.categories-area { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+.category-box { background: #0f3460; border-radius: 16px; padding: 16px; min-height: 160px; border: 3px dashed #334; transition: all 0.2s; position: relative; cursor: pointer; }
+.category-box.drag-over { border-color: #ffd700; background: rgba(255,215,0,0.12); transform: scale(1.03); box-shadow: 0 0 20px rgba(255,215,0,0.3); }
 .category-box.correct { border-color: #51cf66; border-style: solid; background: rgba(81,207,102,0.08); }
 .category-box.wrong { border-color: #ff6b6b; border-style: solid; }
-.category-title {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1a1a2e;
-  padding: 3px 16px;
-  border-radius: 20px;
-  font-size: 0.9em;
-  font-weight: bold;
-  color: #ffd700;
-  white-space: nowrap;
-  max-width: 90%;
-  text-align: center;
-}
-.category-slots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-  min-height: 50px;
-}
-.slot {
-  background: rgba(255,255,255,0.05);
-  border: 2px dashed rgba(255,255,255,0.15);
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 0.9em;
-  color: rgba(255,255,255,0.25);
-  min-width: 70px;
-  text-align: center;
-}
+.category-title { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #1a1a2e; padding: 3px 16px; border-radius: 20px; font-size: 0.9em; font-weight: bold; white-space: nowrap; }
+.category-slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; min-height: 50px; }
+
 .dropped-card {
   background: rgba(255,255,255,0.1);
   border: 2px solid rgba(255,255,255,0.2);
@@ -139,21 +61,20 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
   font-size: 0.95em;
   cursor: pointer;
   transition: all 0.2s;
-  min-width: 70px;
-  text-align: center;
+  touch-action: none;
+  user-select: none;
 }
 .dropped-card:hover { background: rgba(255,107,107,0.2); border-color: #ff6b6b; color: #ff6b6b; }
-.dropped-card.right { background: rgba(81,207,102,0.2); border-color: #51cf66; color: #51cf66; }
-.dropped-card.right:hover { background: rgba(81,207,102,0.2); border-color: #51cf66; color: #51cf66; cursor: default; }
+.dropped-card.right { background: rgba(81,207,102,0.2); border-color: #51cf66; color: #51cf66; cursor: default; }
+.dropped-card.just-dropped { animation: dropIn 0.25s ease-out; }
+@keyframes dropIn { from { opacity: 0; transform: scale(0.7) translateY(-10px); } to { opacity: 1; transform: scale(1); } }
 
-/* 操作区 */
 .action-area { text-align: center; }
 .action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 44px; font-size: 1.15em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
 .action-btn:hover { transform: scale(1.05); }
 .action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 .action-btn.green { background: linear-gradient(135deg, #51cf66, #20b558); }
 
-/* 反馈区 */
 .feedback-area { display: none; background: #16213e; border-radius: 20px; padding: 24px; margin-top: 16px; text-align: center; }
 .feedback-area.show { display: block; }
 .feedback-title { font-size: 1.6em; margin-bottom: 12px; }
@@ -167,7 +88,6 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .summary-item.right { background: rgba(81,207,102,0.15); color: #51cf66; }
 .summary-item.wrong { background: rgba(255,107,107,0.15); color: #ff6b6b; }
 
-/* ===== 结果页面 ===== */
 #result-screen { display: none; text-align: center; padding-top: 40px; }
 .result-title { font-size: 2.5em; color: #ffd700; margin-bottom: 20px; }
 .result-score { font-size: 1.5em; color: #aaa; margin-bottom: 30px; }
@@ -177,14 +97,8 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .step-dot.active { background: #ffd700; }
 .step-dot.done { background: #51cf66; }
 
-@media (max-width: 900px) {
-  .categories-area { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-  .categories-area { grid-template-columns: 1fr; }
-  .title { font-size: 1.8em; }
-  .label-card { font-size: 0.95em; padding: 10px 14px; }
-}
+@media (max-width: 900px) { .categories-area { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .categories-area { grid-template-columns: 1fr; } .title { font-size: 1.8em; } .label-card { font-size: 0.95em; padding: 10px 14px; } }
 </style>
 </head>
 <body>
@@ -196,10 +110,11 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
   <button class="start-btn" id="startBtn">开始挑战</button>
   <div class="game-desc">
     <h3>📋 挑战规则</h3>
-    <p>🎯 任务：将「标签卡片」拖拽到对应的分类框中</p>
-    <p>🏆 得分：放对1个+10分，放错1个倒扣5分</p>
-    <p>💡 点击已放置的标签可撤回，重新归类</p>
-    <p>⚠️ 共有3关，难度递增，考验你对标签分类的理解！</p>
+    <p>🎯 任务：将「标签卡片」归入对应分类框</p>
+    <p>🖱️ 方式：点击选中卡片 → 点击目标分类框，即可放置</p>
+    <p>🔄 调整：点击已放置卡片可撤回，重新归类</p>
+    <p>🏆 得分：放对+10分 / 放错-5分</p>
+    <p>⚠️ 共3关，难度递增，考验标签分类理解！</p>
   </div>
 </div>
 
@@ -209,7 +124,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
   <div class="level-desc" id="levelDesc"></div>
   
   <div class="labels-area">
-    <div class="labels-area-title">📋 待归类标签（拖拽到下方分类框）</div>
+    <div class="labels-area-title">📋 待归类标签</div>
     <div class="labels-pool" id="labelsPool"></div>
   </div>
   
@@ -237,89 +152,56 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 </div>
 
 <script>
-// 6大标签类型，覆盖考纲
 const levels = [
   {
     title: "第1关 · 基础 vs 行为",
-    desc: "这些是店铺里的真实客户标签，你能区分它们属于哪一类吗？",
+    desc: "这些是店铺真实客户标签，你能区分它们属于哪一类吗？",
     categories: [
-      { 
-        name: "基础信息类", 
-        color: "#667eea",
-        tags: ["女","杭州","白领","25岁","北京"]
-      },
-      { 
-        name: "行为特征类", 
-        color: "#20b558",
-        tags: ["月均购买3次","单笔500元以上","常用支付宝","深夜下单"]
-      }
+      { name: "基础信息类", color: "#667eea", tags: ["女","杭州","白领","25岁","北京"] },
+      { name: "行为特征类", color: "#20b558", tags: ["月均购买3次","单笔500元以上","常用支付宝","深夜下单"] }
     ]
   },
   {
     title: "第2关 · 偏好 vs 价值 vs 社交",
     desc: "加入偏好、价值、社交类标签，挑战升级！",
     categories: [
-      { 
-        name: "偏好特征类", 
-        color: "#f59e0b",
-        tags: ["偏爱美妆","品牌忠诚用户","热衷折扣活动","爱买零食"]
-      },
-      { 
-        name: "价值类", 
-        color: "#ef4444",
-        tags: ["高价值客户","忠诚度Lv3","活跃度低","流失风险用户"]
-      },
-      { 
-        name: "社交类", 
-        color: "#8b5cf6",
-        tags: ["微信好友500+","小红书活跃","爱分享给朋友"]
-      }
+      { name: "偏好特征类", color: "#f59e0b", tags: ["偏爱美妆","品牌忠诚用户","热衷折扣活动","爱买零食"] },
+      { name: "价值类", color: "#ef4444", tags: ["高价值客户","忠诚度Lv3","活跃度低","流失风险用户"] },
+      { name: "社交类", color: "#8b5cf6", tags: ["微信好友500+","小红书活跃","爱分享给朋友"] }
     ]
   },
   {
     title: "第3关 · 六大类型综合挑战",
     desc: "全部六大类型一起来，全部放对才是真正的标签大师！",
     categories: [
-      { 
-        name: "基础信息类", 
-        color: "#667eea",
-        tags: ["女","浙江","学生"]
-      },
-      { 
-        name: "行为特征类", 
-        color: "#20b558",
-        tags: ["月购5次","客单价300"]
-      },
-      { 
-        name: "偏好特征类", 
-        color: "#f59e0b",
-        tags: ["偏好数码","热衷折扣"]
-      },
-      { 
-        name: "价值类", 
-        color: "#ef4444",
-        tags: ["VIP会员","复购频率高"]
-      },
-      { 
-        name: "社交类", 
-        color: "#8b5cf6",
-        tags: ["爱在朋友圈分享"]
-      },
-      { 
-        name: "客户反馈类", 
-        color: "#06b6d4",
-        tags: ["满意度高","有投诉记录"]
-      }
+      { name: "基础信息类", color: "#667eea", tags: ["女","浙江","学生"] },
+      { name: "行为特征类", color: "#20b558", tags: ["月购5次","客单价300"] },
+      { name: "偏好特征类", color: "#f59e0b", tags: ["偏好数码","热衷折扣"] },
+      { name: "价值类", color: "#ef4444", tags: ["VIP会员","复购频率高"] },
+      { name: "社交类", color: "#8b5cf6", tags: ["爱在朋友圈分享"] },
+      { name: "客户反馈类", color: "#06b6d4", tags: ["满意度高","有投诉记录"] }
     ]
   }
 ];
 
 let currentLevel = 0;
 let totalScore = 0;
-let placedLabels = {}; // categoryName -> [tagKey]
-let draggedEl = null;
-let selectedEl = null; // for touch/click select
+let selectedCard = null; // currently selected card (from pool or category)
+let placedTags = {}; // categoryName -> [{tag, correctCat}]
 
+// ========== Utilities ==========
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function tagKey(tag) { return tag; }
+
+// ========== Game Flow ==========
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'block';
@@ -328,13 +210,14 @@ function startGame() {
   loadLevel(currentLevel);
 }
 
-function loadLevel(levelIndex) {
-  const level = levels[levelIndex];
-  placedLabels = {};
+function loadLevel(idx) {
+  const level = levels[idx];
+  placedTags = {};
+  selectedCard = null;
   
-  const indicator = document.getElementById('stepIndicator');
-  indicator.innerHTML = levels.map((_, i) => 
-    `<div class="step-dot ${i < levelIndex ? 'done' : i === levelIndex ? 'active' : ''}"></div>`
+  // Step indicator
+  document.getElementById('stepIndicator').innerHTML = levels.map((_, i) =>
+    `<div class="step-dot ${i < idx ? 'done' : i === idx ? 'active' : ''}"></div>`
   ).join('');
   
   document.getElementById('levelTitle').textContent = level.title;
@@ -345,54 +228,30 @@ function loadLevel(levelIndex) {
   level.categories.forEach(cat => {
     cat.tags.forEach(tag => allTags.push({ tag, catName: cat.name }));
   });
-  // Fisher-Yates shuffle
-  for (let i = allTags.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [allTags[i], allTags[j]] = [allTags[j], allTags[i]];
-  }
+  allTags = shuffle(allTags);
   
   const pool = document.getElementById('labelsPool');
   pool.innerHTML = '';
   allTags.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'label-card';
-    card.textContent = item.tag;
-    card.dataset.tag = item.tag;
-    card.dataset.correctCat = item.catName;
-    card.draggable = true;
-    card.addEventListener('dragstart', onDragStart);
-    card.addEventListener('dragend', onDragEnd);
-    // Touch support
-    card.addEventListener('touchstart', onTouchStart, { passive: false });
-    card.addEventListener('touchend', onTouchEnd, { passive: false });
-    card.addEventListener('touchmove', onTouchMove, { passive: false });
-    // Click to select on touch devices
-    card.addEventListener('click', onCardClick);
+    const card = makePoolCard(item.tag, item.catName);
     pool.appendChild(card);
   });
   
   // Build categories
   const catsArea = document.getElementById('categoriesArea');
   catsArea.innerHTML = '';
-  
   level.categories.forEach(cat => {
-    placedLabels[cat.name] = [];
-    
+    placedTags[cat.name] = [];
     const box = document.createElement('div');
     box.className = 'category-box';
     box.dataset.catName = cat.name;
     box.style.borderColor = cat.color + '66';
-    box.innerHTML = `
-      <div class="category-title" style="color:${cat.color}">${cat.name}</div>
-      <div class="category-slots" data-cat="${cat.name}"></div>
-    `;
-    box.addEventListener('dragover', onDragOver);
-    box.addEventListener('dragleave', onDragLeave);
-    box.addEventListener('drop', onDrop);
+    box.innerHTML = `<div class="category-title" style="color:${cat.color}">${cat.name}</div><div class="category-slots"></div>`;
+    box.addEventListener('dragover', onBoxDragOver);
+    box.addEventListener('dragleave', onBoxDragLeave);
+    box.addEventListener('drop', onBoxDrop);
+    box.addEventListener('click', onBoxClick);
     catsArea.appendChild(box);
-    
-    // Attach per-box click handler (captures correct boxCat in closure)
-    makeCategoryClickHandler(box, cat.name);
   });
   
   document.getElementById('feedbackArea').classList.remove('show');
@@ -401,268 +260,189 @@ function loadLevel(levelIndex) {
   document.getElementById('nextBtn').style.display = 'none';
 }
 
-function onDragStart(e) {
-  draggedEl = e.target;
-  e.target.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
+// ========== Pool Cards ==========
+function makePoolCard(tag, correctCat) {
+  const card = document.createElement('div');
+  card.className = 'label-card';
+  card.textContent = tag;
+  card.dataset.tag = tag;
+  card.dataset.correctCat = correctCat;
+  card.dataset.location = 'pool';
+  card.addEventListener('click', onPoolCardClick);
+  return card;
 }
 
-function onDragEnd(e) {
-  e.target.classList.remove('dragging');
-  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+// ========== Dropped Cards ==========
+function makeDroppedCard(tag, correctCat, placedCat) {
+  const card = document.createElement('div');
+  card.className = 'dropped-card';
+  card.textContent = tag;
+  card.dataset.tag = tag;
+  card.dataset.correctCat = correctCat;
+  card.dataset.placedCat = placedCat;
+  card.dataset.location = 'category';
+  card.addEventListener('click', onDroppedCardClick);
+  return card;
 }
 
-// ===== Touch / Click support =====
-function onCardClick(e) {
+// ========== Event Handlers ==========
+function onPoolCardClick(e) {
   e.stopPropagation();
-  if (e.target.classList.contains('label-card')) {
-    if (selectedEl) selectedEl.classList.remove('selected');
-    selectedEl = e.target;
-    e.target.classList.add('selected');
+  const card = e.currentTarget;
+  // Deselect previous
+  if (selectedCard && selectedCard !== card) {
+    selectedCard.classList.remove('selected');
+  }
+  // Toggle selection
+  if (selectedCard === card) {
+    card.classList.remove('selected');
+    selectedCard = null;
+  } else {
+    card.classList.add('selected');
+    selectedCard = card;
   }
 }
 
-function onTouchStart(e) {
-  const card = e.target.closest('.label-card');
-  if (!card) return;
-  e.preventDefault();
-  if (selectedEl) selectedEl.classList.remove('selected');
-  selectedEl = card;
-  card.classList.add('selected');
-  card.classList.add('dragging');
+function onDroppedCardClick(e) {
+  e.stopPropagation();
+  const card = e.currentTarget;
+  if (card.classList.contains('right')) return; // already submitted
+  
+  const tag = card.dataset.tag;
+  const correctCat = card.dataset.correctCat;
+  const placedCat = card.dataset.placedCat;
+  
+  // Remove from placedTags
+  placedTags[placedCat] = placedTags[placedCat].filter(x => x.tag !== tag);
+  
+  // Return to pool
+  const pool = document.getElementById('labelsPool');
+  const poolCard = makePoolCard(tag, correctCat);
+  pool.appendChild(poolCard);
+  
+  // Remove from DOM
+  card.remove();
+  selectedCard = null;
+  checkHasPlaced();
 }
 
-function onTouchMove(e) {
-  e.preventDefault();
-  const touch = e.touches[0];
-  const el = document.elementFromPoint(touch.clientX, touch.clientY);
-  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
-  if (el) {
-    const box = el.closest('.category-box');
-    if (box) box.classList.add('drag-over');
+function onBoxClick(e) {
+  // Ignore if clicking a dropped card (that has its own handler)
+  if (e.target.closest('.dropped-card')) return;
+  if (!selectedCard) return;
+  
+  const box = e.currentTarget;
+  const targetCat = box.dataset.catName;
+  
+  const tag = selectedCard.dataset.tag;
+  const correctCat = selectedCard.dataset.correctCat;
+  const sourceLoc = selectedCard.dataset.location;
+  
+  if (sourceLoc === 'pool') {
+    // From pool to category
+    placedTags[targetCat].push({ tag, correctCat });
+    const dropped = makeDroppedCard(tag, correctCat, targetCat);
+    box.querySelector('.category-slots').appendChild(dropped);
+    selectedCard.remove();
+  } else {
+    // From category to category (move)
+    const fromCat = selectedCard.dataset.placedCat;
+    if (fromCat === targetCat) {
+      selectedCard.classList.remove('selected');
+      selectedCard = null;
+      return;
+    }
+    // Update placedTags
+    placedTags[fromCat] = placedTags[fromCat].filter(x => x.tag !== tag);
+    placedTags[targetCat].push({ tag, correctCat });
+    // Move card
+    selectedCard.dataset.placedCat = targetCat;
+    box.querySelector('.category-slots').appendChild(selectedCard);
+    // Animation
+    selectedCard.classList.add('just-dropped');
+    setTimeout(() => selectedCard.classList.remove('just-dropped'), 300);
   }
+  
+  selectedCard.classList.remove('selected');
+  selectedCard = null;
+  checkHasPlaced();
 }
 
-function onTouchEnd(e) {
-  e.preventDefault();
-  document.querySelectorAll('.label-card').forEach(c => c.classList.remove('dragging'));
-  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
-  
-  if (!selectedEl) return;
-  const touch = e.changedTouches[0];
-  const el = document.elementFromPoint(touch.clientX, touch.clientY);
-  if (!el) return;
-  
-  const targetBox = el.closest('.category-box');
-  if (targetBox) {
-    const prevDragged = draggedEl;
-    draggedEl = selectedEl;
-    onDrop({ preventDefault: () => {}, currentTarget: targetBox });
-    draggedEl = prevDragged;
-  }
-  
-  selectedEl.classList.remove('selected');
-  selectedEl = null;
-}
-
-// Category box click handler - attached per-box during creation
-function makeCategoryClickHandler(box, boxCat) {
-  box.addEventListener('click', function(e) {
-    e.stopPropagation();
-    // Don't trigger if clicking a dropped card (those have their own handlers)
-    if (e.target.closest('.dropped-card')) return;
-    if (!selectedEl) return;
-    
-    const tag = selectedEl.dataset.tag;
-    const correctCat = selectedEl.dataset.correctCat;
-    
-    // Add to placed
-    if (!placedLabels[boxCat]) placedLabels[boxCat] = [];
-    placedLabels[boxCat].push({ tag, correctCat });
-    
-    // Create dropped card
-    const slots = box.querySelector('.category-slots');
-    const droppedCard = document.createElement('div');
-    droppedCard.className = 'dropped-card just-dropped';
-    droppedCard.textContent = tag;
-    droppedCard.dataset.tag = tag;
-    droppedCard.dataset.correctCat = correctCat;
-    droppedCard.dataset.placedCat = boxCat;
-    
-    // Allow dragging between category boxes
-    droppedCard.draggable = true;
-    droppedCard.addEventListener('dragstart', function(e) {
-      draggedEl = this;
-      this.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    droppedCard.addEventListener('dragend', function(e) {
-      this.classList.remove('dragging');
-      document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
-    });
-    droppedCard.addEventListener('touchstart', function(e) {
-      e.preventDefault();
-      if (selectedEl) selectedEl.classList.remove('selected');
-      selectedEl = this;
-      this.classList.add('selected');
-      this.classList.add('dragging');
-    }, { passive: false });
-    droppedCard.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      this.classList.remove('dragging');
-      document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
-      if (!selectedEl) return;
-      const touch = e.changedTouches[0];
-      const el = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (!el) return;
-      const targetBox = el.closest('.category-box');
-      if (targetBox && targetBox.dataset.catName !== selectedEl.dataset.placedCat) {
-        const fromCat = selectedEl.dataset.placedCat;
-        const toCat = targetBox.dataset.catName;
-        placedLabels[fromCat] = placedLabels[fromCat].filter(x => x.tag !== selectedEl.dataset.tag);
-        placedLabels[toCat].push({ tag: selectedEl.dataset.tag, correctCat: selectedEl.dataset.correctCat });
-        selectedEl.dataset.placedCat = toCat;
-        targetBox.querySelector('.category-slots').appendChild(selectedEl);
-        selectedEl.classList.add('just-dropped');
-        setTimeout(() => selectedEl.classList.remove('just-dropped'), 300);
-      }
-      selectedEl.classList.remove('selected', 'dragging');
-      selectedEl = null;
-    }, { passive: false });
-    droppedCard.addEventListener('touchmove', onTouchMove, { passive: false });
-    
-    // Click to return to pool
-    droppedCard.addEventListener('click', function(ev) {
-      ev.stopPropagation();
-      if (this.classList.contains('right')) return;
-      const t = this.dataset.tag;
-      const pc = this.dataset.placedCat;
-      placedLabels[pc] = placedLabels[pc].filter(x => x.tag !== t);
-      
-      const pool = document.getElementById('labelsPool');
-      const poolCard = document.createElement('div');
-      poolCard.className = 'label-card';
-      poolCard.textContent = t;
-      poolCard.dataset.tag = t;
-      poolCard.dataset.correctCat = correctCat;
-      poolCard.draggable = true;
-      poolCard.addEventListener('dragstart', onDragStart);
-      poolCard.addEventListener('dragend', onDragEnd);
-      poolCard.addEventListener('touchstart', onTouchStart, { passive: false });
-      poolCard.addEventListener('touchend', onTouchEnd, { passive: false });
-      poolCard.addEventListener('touchmove', onTouchMove, { passive: false });
-      poolCard.addEventListener('click', onCardClick);
-      pool.appendChild(poolCard);
-      
-      slots.removeChild(this);
-      checkHasPlaced();
-    });
-    
-    slots.appendChild(droppedCard);
-    
-    // Remove from pool
-    selectedEl.remove();
-    selectedEl.classList.remove('selected');
-    selectedEl = null;
-    
-    checkHasPlaced();
-  });
-}
-
-function onDragOver(e) {
+// ========== Drag & Drop ==========
+function onBoxDragOver(e) {
   e.preventDefault();
   e.currentTarget.classList.add('drag-over');
 }
 
-function onDragLeave(e) {
+function onBoxDragLeave(e) {
   e.currentTarget.classList.remove('drag-over');
 }
 
-function onDrop(e) {
+function onBoxDrop(e) {
   e.preventDefault();
   e.currentTarget.classList.remove('drag-over');
-  if (!draggedEl) return;
   
-  const tag = draggedEl.dataset.tag;
-  const correctCat = draggedEl.dataset.correctCat;
+  const tag = e.dataTransfer.getData('text/plain');
+  const correctCat = e.dataTransfer.getData('application/tag');
+  const sourceLoc = e.dataTransfer.getData('application/sourcebox');
   const targetCat = e.currentTarget.dataset.catName;
   
-  // Add to placed
-  if (!placedLabels[targetCat]) placedLabels[targetCat] = [];
-  placedLabels[targetCat].push({ tag, correctCat });
+  if (!tag) return;
   
-  // Create dropped card
-  const slots = e.currentTarget.querySelector('.category-slots');
-  const card = document.createElement('div');
-  card.className = 'dropped-card just-dropped';
-  card.textContent = tag;
-  card.dataset.tag = tag;
-  card.dataset.correctCat = correctCat;
-  card.dataset.placedCat = targetCat;
+  // Remove from source
+  if (sourceLoc === 'category') {
+    const fromCat = e.dataTransfer.getData('application/sourcebox_cat');
+    if (fromCat && fromCat !== targetCat) {
+      placedTags[fromCat] = placedTags[fromCat].filter(x => x.tag !== tag);
+    }
+  }
   
-  // Click to return to pool
-  card.addEventListener('click', function() {
-    const t = this.dataset.tag;
-    const pc = this.dataset.placedCat;
-    placedLabels[pc] = placedLabels[pc].filter(x => x.tag !== t);
-    
-    // Return to pool
-    const pool = document.getElementById('labelsPool');
-    const poolCard = document.createElement('div');
-    poolCard.className = 'label-card';
-    poolCard.textContent = t;
-    poolCard.dataset.tag = t;
-    poolCard.dataset.correctCat = this.dataset.correctCat;
-    poolCard.draggable = true;
-    poolCard.addEventListener('dragstart', onDragStart);
-    poolCard.addEventListener('dragend', onDragEnd);
-    pool.appendChild(poolCard);
-    
-    slots.removeChild(this);
-    checkHasPlaced();
-  });
+  // Add to target
+  placedTags[targetCat].push({ tag, correctCat });
   
-  slots.appendChild(card);
-  draggedEl.remove();
-  draggedEl = null;
+  // Remove source from DOM
+  const sourceCard = document.querySelector(`[data-location="${sourceLoc}"][data-tag="${tag}"]`);
+  if (sourceCard) sourceCard.remove();
   
+  // Add to target category
+  const dropped = makeDroppedCard(tag, correctCat, targetCat);
+  dropped.classList.add('just-dropped');
+  e.currentTarget.querySelector('.category-slots').appendChild(dropped);
+  setTimeout(() => dropped.classList.remove('just-dropped'), 300);
+  
+  selectedCard = null;
   checkHasPlaced();
 }
 
 function checkHasPlaced() {
   let hasPlaced = false;
-  Object.keys(placedLabels).forEach(cat => {
-    if (placedLabels[cat].length > 0) hasPlaced = true;
-  });
+  Object.values(placedTags).forEach(arr => { if (arr.length > 0) hasPlaced = true; });
   document.getElementById('submitBtn').disabled = !hasPlaced;
 }
 
+// ========== Submit ==========
 function submitAnswer() {
   const level = levels[currentLevel];
-  let correct = 0;
-  let wrong = 0;
+  let correct = 0, wrong = 0;
   let allPlaced = [];
   
-  // Read directly from DOM cards - more reliable than placedLabels object
   document.querySelectorAll('.dropped-card').forEach(card => {
     const tag = card.dataset.tag;
     const correctCat = card.dataset.correctCat;
     const placedCat = card.dataset.placedCat;
     allPlaced.push({ tag, correctCat, placedCat });
-    if (correctCat === placedCat) {
-      correct++;
-    } else {
-      wrong++;
-    }
+    if (correctCat === placedCat) correct++;
+    else wrong++;
   });
   
   let roundScore = correct * 10 - wrong * 5;
   totalScore += roundScore;
   
-  // Color category boxes
+  // Color boxes
   document.querySelectorAll('.category-box').forEach(box => {
     box.classList.remove('correct', 'wrong');
-    box.classList.add('wrong');
+    const hasCards = box.querySelectorAll('.dropped-card').length > 0;
+    if (hasCards) box.classList.add('wrong');
   });
   
   // Color cards
@@ -670,72 +450,53 @@ function submitAnswer() {
     card.classList.remove('right');
     if (card.dataset.correctCat === card.dataset.placedCat) {
       card.classList.add('right');
-      card.onclick = null; // can't remove now
+      card.onclick = null;
       card.parentElement.parentElement.classList.remove('wrong');
       card.parentElement.parentElement.classList.add('correct');
     }
   });
   
-  // Show feedback
+  const totalTags = level.categories.reduce((s, c) => s + c.tags.length, 0);
   const fbArea = document.getElementById('feedbackArea');
   fbArea.classList.add('show');
   
-  const totalTags = level.categories.reduce((sum, c) => sum + c.tags.length, 0);
-  
-  document.getElementById('feedbackTitle').textContent = 
-    correct === totalTags ? '🌟 完美！' :
-    correct > wrong ? '✅ 不错！' : '❌ 继续加油！';
-  document.getElementById('feedbackTitle').className = 
-    'feedback-title ' + (correct > wrong ? 'pass' : 'fail');
-  
-  document.getElementById('feedbackScore').textContent = 
-    `${correct}/${totalTags} 正确  (+${correct * 10} -${wrong * 5} = ${roundScore >= 0 ? '+' : ''}${roundScore}分)`;
-  
-  document.getElementById('feedbackText').textContent = 
+  document.getElementById('feedbackTitle').textContent =
+    correct === totalTags ? '🌟 完美！' : correct > wrong ? '✅ 不错！' : '❌ 继续加油！';
+  document.getElementById('feedbackTitle').className = 'feedback-title ' + (correct > wrong ? 'pass' : 'fail');
+  document.getElementById('feedbackScore').textContent =
+    `${correct}/${totalTags} 正确  (+${correct*10} -${wrong*5} = ${roundScore>=0?'+':''}${roundScore}分)`;
+  document.getElementById('feedbackText').textContent =
     correct === totalTags ? '六大类型你掌握得非常扎实！' :
     correct > wrong ? '大部分正确，回头看看哪些标签容易混淆。' :
     '标签分类还需要加强区分，建议对照考纲复习一遍。';
   
-  // Summary
-  const summary = document.getElementById('feedbackSummary');
-  summary.innerHTML = `<h4>📋 各标签归属结果：</h4>` + 
+  document.getElementById('feedbackSummary').innerHTML = '<h4>📋 各标签归属结果：</h4>' +
     allPlaced.map(item => {
       const ok = item.correctCat === item.placedCat;
-      return `<div class="summary-item ${ok ? 'right' : 'wrong'}">
-        ${ok ? '✅' : '❌'} 「${item.tag}」→ ${item.placedCat}
-        ${!ok ? `（正确答案：${item.correctCat}）` : ''}
+      return `<div class="summary-item ${ok?'right':'wrong'}">
+        ${ok?'✅':'❌'} 「${item.tag}」→ ${item.placedCat}${!ok?`（正确答案：${item.correctCat}）`:''}
       </div>`;
     }).join('');
   
   document.getElementById('submitBtn').style.display = 'none';
-  document.getElementById('nextBtn').textContent = 
-    currentLevel < levels.length - 1 ? '下一关 →' : '查看总成绩';
+  document.getElementById('nextBtn').textContent = currentLevel < levels.length - 1 ? '下一关 →' : '查看总成绩';
   document.getElementById('nextBtn').style.display = 'inline-block';
 }
 
 function nextLevel() {
   currentLevel++;
-  if (currentLevel < levels.length) {
-    loadLevel(currentLevel);
-  } else {
-    showResult();
-  }
+  if (currentLevel < levels.length) loadLevel(currentLevel);
+  else showResult();
 }
 
 function showResult() {
   document.getElementById('game-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'block';
-  
-  const maxScore = levels.reduce((sum, l) => 
-    sum + l.categories.reduce((s, c) => s + c.tags.length, 0) * 10, 0);
-  
-  let title = totalScore >= maxScore * 0.9 ? '🏆 标签大师！' :
-    totalScore >= maxScore * 0.7 ? '🌟 非常优秀！' :
-    totalScore >= maxScore * 0.5 ? '📚 不错的开始' : '💡 继续加油';
-  
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultScore').textContent = 
-    `总得分：${totalScore} / ${maxScore} 分`;
+  const maxScore = levels.reduce((s, l) => s + l.categories.reduce((ss, c) => ss + c.tags.length, 0) * 10, 0);
+  const pct = totalScore / maxScore;
+  document.getElementById('resultTitle').textContent =
+    pct >= 0.9 ? '🏆 标签大师！' : pct >= 0.7 ? '🌟 非常优秀！' : pct >= 0.5 ? '📚 不错的开始' : '💡 继续加油';
+  document.getElementById('resultScore').textContent = `总得分：${totalScore} / ${maxScore} 分`;
 }
 
 function restartGame() {
