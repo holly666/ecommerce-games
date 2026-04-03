@@ -160,74 +160,101 @@ const tasks = [
       { label: '信息C', text: '"竞店「萌二次元」月销20万，主打学生市场，直播间场均观看5000人"', value: '竞争对手信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '竞争对手信息', hint: '反映竞争对手的市场表现和策略' },
       { label: '信息D', text: '"盲盒产品复购率最高达65%，因为拆盒的不确定感带来强烈愉悦体验"', value: '商品信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '商品信息', hint: '反映商品在市场上的表现和用户反馈' }
     ],
-    question: '点选你认为正确的答案，全部判断完成后点击确认',
-    // Player selects by clicking items directly
-    onStart() {
-      // Items shown as cards, player clicks to select
+    question: '点击每条信息旁的选项按钮，为其选择类型。全部选完后点击"确认答案"。',
+    // 4 info cards shown always; each has an option selector
+    task1Init() {
       const container = document.getElementById('infoCards');
       container.innerHTML = '';
+      this.answers = new Array(this.items.length).fill(null);
+      
       this.items.forEach((item, idx) => {
-        const card = document.createElement('div');
-        card.className = 'info-card';
-        card.style.cursor = 'pointer';
-        card.id = `infoCard-${idx}`;
-        card.innerHTML = `<div class="info-card-label">${item.label}</div><div class="info-card-value">${item.text.substring(0,50)}...</div>`;
-        card.addEventListener('click', () => this.onItemClick(idx));
-        container.appendChild(card);
+        const wrapper = document.createElement('div');
+        wrapper.style.marginBottom = '10px';
+        wrapper.style.background = 'rgba(255,255,255,0.03)';
+        wrapper.style.borderRadius = '10px';
+        wrapper.style.padding = '12px';
+        wrapper.id = `item-wrapper-${idx}`;
+        
+        const header = document.createElement('div');
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
+        header.style.marginBottom = '8px';
+        
+        const label = document.createElement('div');
+        label.style.color = '#ffd700';
+        label.style.fontWeight = 'bold';
+        label.style.fontSize = '0.95em';
+        label.textContent = item.label;
+        
+        const status = document.createElement('div');
+        status.id = `item-status-${idx}`;
+        status.style.fontSize = '0.85em';
+        status.style.color = '#666';
+        status.textContent = '未选择';
+        
+        header.appendChild(label);
+        header.appendChild(status);
+        
+        const desc = document.createElement('div');
+        desc.style.color = '#aaa';
+        desc.style.fontSize = '0.88em';
+        desc.style.marginBottom = '10px';
+        desc.textContent = item.text;
+        
+        const optsRow = document.createElement('div');
+        optsRow.style.display = 'flex';
+        optsRow.style.flexWrap = 'wrap';
+        optsRow.style.gap = '6px';
+        
+        item.options.forEach(opt => {
+          const chip = document.createElement('button');
+          chip.style.background = 'rgba(255,255,255,0.08)';
+          chip.style.border = '1px solid #334';
+          chip.style.borderRadius = '20px';
+          chip.style.padding = '5px 12px';
+          chip.style.fontSize = '0.85em';
+          chip.style.color = '#ccc';
+          chip.style.cursor = 'pointer';
+          chip.id = `opt-${idx}-${opt}`;
+          chip.textContent = opt;
+          chip.addEventListener('click', () => {
+            this.answers[idx] = opt;
+            // Update status
+            const s = document.getElementById(`item-status-${idx}`);
+            const isCorrect = opt === item.correct;
+            s.textContent = isCorrect ? '✅ 正确' : '❌ 已选择';
+            s.style.color = isCorrect ? '#51cf66' : '#ff6b6b';
+            // Style chips
+            document.querySelectorAll(`[id^="opt-${idx}-"]`).forEach(c => {
+              c.style.background = 'rgba(255,255,255,0.08)';
+              c.style.borderColor = '#334';
+              c.style.color = '#ccc';
+            });
+            chip.style.background = isCorrect ? 'rgba(81,207,102,0.2)' : 'rgba(255,107,107,0.2)';
+            chip.style.borderColor = isCorrect ? '#51cf66' : '#ff6b6b';
+            chip.style.color = isCorrect ? '#51cf66' : '#ff6b6b';
+            // Check if all answered
+            const allAnswered = this.answers.every(a => a !== null);
+            document.getElementById('actionBtn').disabled = !allAnswered;
+            if (allAnswered) document.getElementById('actionBtn').style.display = 'inline-block';
+          });
+          optsRow.appendChild(chip);
+        });
+        
+        wrapper.appendChild(header);
+        wrapper.appendChild(desc);
+        wrapper.appendChild(optsRow);
+        container.appendChild(wrapper);
       });
       
-      // Show item as selected when clicked → reveal options
-      this.selectedOptions = new Array(this.items.length).fill(null);
-      
       document.getElementById('questionText').textContent = this.question;
-      document.getElementById('optionsContainer').innerHTML = '<div style="color:#aaa;font-size:0.9em;padding:10px;">点击上方信息卡片，选择其所属类型</div>';
+      document.getElementById('optionsContainer').innerHTML = '';
+      document.getElementById('actionBtn').style.display = 'inline-block';
       document.getElementById('actionBtn').disabled = true;
       document.getElementById('feedbackBox').style.display = 'none';
     },
-    selectedOptions: [],
-    onItemClick(idx) {
-      const item = this.items[idx];
-      const container = document.getElementById('infoCards');
-      container.innerHTML = '';
-      this.items.forEach((it, i) => {
-        const card = document.createElement('div');
-        card.className = 'info-card';
-        if (i === idx) card.style.borderColor = '#ffd700';
-        card.innerHTML = `<div class="info-card-label">${it.label}</div><div class="info-card-value">${it.text}</div>`;
-        container.appendChild(card);
-      });
-      
-      const optsContainer = document.getElementById('optionsContainer');
-      optsContainer.innerHTML = '';
-      item.options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.textContent = opt;
-        btn.addEventListener('click', () => {
-          this.selectedOptions[idx] = opt;
-          // Highlight selected
-          optsContainer.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          document.getElementById('actionBtn').disabled = false;
-        });
-        optsContainer.appendChild(btn);
-      });
-      
-      // Store current item for answer check
-      this.currentItemIdx = idx;
-      this.currentItem = item;
-      
-      // Back button
-      const backBtn = document.createElement('button');
-      backBtn.className = 'action-btn';
-      backBtn.style.background = '#334';
-      backBtn.style.marginRight = '10px';
-      backBtn.textContent = '← 返回';
-      backBtn.addEventListener('click', () => this.onStart());
-      document.getElementById('actionBtn').style.display = 'none';
-      const btnWrap = document.createElement('div');
-      btnWrap.appendChild(backBtn);
-    }
+    answers: []
   },
   // ===== TASK 2: 获取方法 =====
   {
@@ -300,8 +327,7 @@ function loadTask(idx) {
   document.getElementById('progressFill').style.width = progress + '%';
   
   if (task.type === 'multi_choice') {
-    task.selectedOptions = new Array(task.items.length).fill(null);
-    task.onStart();
+    task.task1Init();
   } else {
     // Show scenario
     const container = document.getElementById('infoCards');
@@ -340,18 +366,44 @@ function confirmAnswer() {
   const task = tasks[gameState.taskIndex];
   
   if (task.type === 'multi_choice') {
-    // For task 1, each item click already handled
-    // We just confirm after all items done - but actually task 1 needs special handling
+    // Task 1: check all 4 items
     if (gameState.taskIndex === 0) {
-      // Check the current item answer
-      const idx = task.currentItemIdx;
-      const selected = task.selectedOptions[idx];
-      const item = task.items[idx];
-      const isCorrect = selected === item.correct;
-      if (isCorrect) gameState.infoCorrect++;
-      showFeedback(isCorrect, item.correct, selected, item.hint, item.label, task.knowledge);
+      let correct = 0;
+      let details = [];
+      task.items.forEach((item, idx) => {
+        const selected = task.answers[idx];
+        const isCorrect = selected === item.correct;
+        if (isCorrect) correct++;
+        details.push({ label: item.label, selected, correct: item.correct, isCorrect });
+      });
+      gameState.infoCorrect = correct;
+      // Show result for each item
+      let html = '<div style="margin-top:12px;">';
+      details.forEach(d => {
+        html += `<div style="padding:8px 12px;border-radius:8px;margin-bottom:6px;background:${d.isCorrect?'rgba(81,207,102,0.15)':'rgba(255,107,107,0.15)'};color:${d.isCorrect?'#51cf66':'#ff6b6b'};font-size:0.9em;">
+          ${d.isCorrect?'✅':'❌'} ${d.label}：${d.selected} → 正确答案：${d.correct}
+        </div>`;
+      });
+      html += '</div>';
+      document.getElementById('feedbackBox').style.display = 'block';
+      document.getElementById('feedbackTitle').textContent = correct === 4 ? '🌟 全部正确！' : correct >= 2 ? '✅ 还不错！' : '❌ 继续加油！';
+      document.getElementById('feedbackText').innerHTML = `你答对了 ${correct}/4 题`;
+      document.getElementById('feedbackKnowledge').innerHTML = html;
+      const btn = document.getElementById('actionBtn');
+      btn.style.display = 'inline-block';
+      btn.disabled = false;
+      btn.textContent = '下一关 →';
+      btn.onclick = () => {
+        document.getElementById('feedbackBox').style.display = 'none';
+        btn.style.display = 'inline-block';
+        btn.disabled = true;
+        btn.textContent = '确认答案';
+        btn.onclick = confirmAnswer;
+        updateDashboard();
+        loadTask(1);
+      };
+      return;
     }
-    return;
   }
   
   const opt = gameState.selectedOption;
