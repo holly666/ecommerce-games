@@ -155,14 +155,13 @@ const tasks = [
     taskTitle: '任务一：这些信息属于什么类型？',
     taskDesc: '助理收集了以下4条市场信息，请判断每条属于哪种类型（4分）',
     items: [
-      { label: '信息A', text: '"最近半年汉服销量同比增长30%，抖音汉服话题播放量破50亿"', value: '行业趋势信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '行业趋势信息', hint: '反映行业发展方向和数据' },
-      { label: '信息B', text: '"18-25岁大学生群体偏爱平价周边，月均消费100-300元，重度依赖小红书和微博获取新品资讯"', value: '目标消费群体信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '目标消费群体信息', hint: '描述目标用户特征和消费行为' },
-      { label: '信息C', text: '"竞店「萌二次元」月销20万，主打学生市场，直播间场均观看5000人"', value: '竞争对手信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '竞争对手信息', hint: '反映竞争对手的市场表现和策略' },
-      { label: '信息D', text: '"盲盒产品复购率最高达65%，因为拆盒的不确定感带来强烈愉悦体验"', value: '商品信息', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '商品信息', hint: '反映商品在市场上的表现和用户反馈' }
+      { label: '信息A', text: '"最近半年汉服销量同比增长30%，抖音汉服话题播放量破50亿"', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '行业趋势信息', hint: '反映行业发展方向和数据' },
+      { label: '信息B', text: '"18-25岁大学生群体偏爱平价周边，月均消费100-300元，重度依赖小红书和微博获取新品资讯"', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '目标消费群体信息', hint: '描述目标用户特征和消费行为' },
+      { label: '信息C', text: '"竞店「萌二次元」月销20万，主打学生市场，直播间场均观看5000人"', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '竞争对手信息', hint: '反映竞争对手的市场表现和策略' },
+      { label: '信息D', text: '"盲盒产品复购率最高达65%，因为拆盒的不确定感带来强烈愉悦体验"', options: ['行业趋势信息', '目标消费群体信息', '竞争对手信息', '商品信息'], correct: '商品信息', hint: '反映商品在市场上的表现和用户反馈' }
     ],
     question: '点击每条信息旁的选项按钮，为其选择类型。全部选完后点击"确认答案"。',
-    // 4 info cards shown always; each has an option selector
-    task1Init() {
+    multiInit() {
       const container = document.getElementById('infoCards');
       container.innerHTML = '';
       this.answers = new Array(this.items.length).fill(null);
@@ -173,7 +172,6 @@ const tasks = [
         wrapper.style.background = 'rgba(255,255,255,0.03)';
         wrapper.style.borderRadius = '10px';
         wrapper.style.padding = '12px';
-        wrapper.id = `item-wrapper-${idx}`;
         
         const header = document.createElement('div');
         header.style.display = 'flex';
@@ -220,12 +218,10 @@ const tasks = [
           chip.textContent = opt;
           chip.addEventListener('click', () => {
             this.answers[idx] = opt;
-            // Update status
             const s = document.getElementById(`item-status-${idx}`);
             const isCorrect = opt === item.correct;
             s.textContent = isCorrect ? '✅ 正确' : '❌ 已选择';
             s.style.color = isCorrect ? '#51cf66' : '#ff6b6b';
-            // Style chips
             document.querySelectorAll(`[id^="opt-${idx}-"]`).forEach(c => {
               c.style.background = 'rgba(255,255,255,0.08)';
               c.style.borderColor = '#334';
@@ -234,7 +230,6 @@ const tasks = [
             chip.style.background = isCorrect ? 'rgba(81,207,102,0.2)' : 'rgba(255,107,107,0.2)';
             chip.style.borderColor = isCorrect ? '#51cf66' : '#ff6b6b';
             chip.style.color = isCorrect ? '#51cf66' : '#ff6b6b';
-            // Check if all answered
             const allAnswered = this.answers.every(a => a !== null);
             document.getElementById('actionBtn').disabled = !allAnswered;
             if (allAnswered) document.getElementById('actionBtn').style.display = 'inline-block';
@@ -277,26 +272,122 @@ const tasks = [
   },
   // ===== TASK 3: 获取原则 =====
   {
-    type: 'choice',
+    type: 'multi_choice',
     section: '⚖️ 市场信息获取原则',
     taskTitle: '任务三：这些做法遵循了哪些原则？',
-    taskDesc: '以下是小王收集信息时的一些做法，判断其遵循了哪些原则（3分）',
-    scenario: {
-      title: '小王的信息收集流程',
-      items: [
-        '收集了行业报告（艾瑞）、竞争对手数据（生意参谋）、用户问卷（问卷星）三个不同来源的数据进行交叉验证',
-        '通过百度指数、微信指数、抖音热榜等多个平台获取行业趋势数据，覆盖各渠道',
-        '使用自动化工具实时跟踪竞品价格和新品上架动态，每小时更新一次'
-      ]
-    },
-    question: '以上做法分别体现了哪些原则？',
-    options: [
-      { text: '准确性 + 时效性', key: 'wrong', feedback: '题目描述的是多来源交叉验证（准确性）+ 多渠道覆盖（全面性），不是时效性。' },
-      { text: '全面性 + 时效性', key: 'wrong', feedback: '多来源交叉验证体现的是准确性原则，不只是时效性。' },
-      { text: '准确性 + 全面性', key: 'correct', feedback: '多来源交叉验证 → 准确性；多平台多渠道获取 → 全面性。完美符合描述。' },
-      { text: '合法性 + 时效性', key: 'wrong', feedback: '题目没有涉及合法性判断，重点是多来源和覆盖面。' }
+    taskDesc: '以下是小王收集信息时的三个做法，判断每个做法体现了什么原则（3分）',
+    items: [
+      { 
+        label: '做法A', 
+        text: '收集了行业报告（艾瑞）、竞争对手数据（生意参谋）、用户问卷（问卷星）三个不同来源的数据进行交叉验证',
+        correct: '准确性', 
+        hint: '多来源交叉验证 → 确保信息准确可靠',
+        options: ['合法性', '准确性', '全面性', '时效性']
+      },
+      { 
+        label: '做法B', 
+        text: '通过百度指数、微信指数、抖音热榜等多个平台获取行业趋势数据，覆盖各渠道',
+        correct: '全面性', 
+        hint: '多平台多渠道 → 覆盖市场各维度信息',
+        options: ['合法性', '准确性', '全面性', '时效性']
+      },
+      { 
+        label: '做法C', 
+        text: '使用自动化工具实时跟踪竞品价格和新品上架动态，每小时更新一次',
+        correct: '时效性', 
+        hint: '实时跟踪更新 → 紧跟市场变化',
+        options: ['合法性', '准确性', '全面性', '时效性']
+      }
     ],
-    knowledge: '市场信息获取4原则：合法性（合规获取）、准确性（交叉验证）、全面性（多维度覆盖）、时效性（及时更新）。'
+    question: '点击每个做法旁的选项按钮，为其选择对应的原则。全部选完后点击"确认答案"。',
+    multiInit() {
+      const container = document.getElementById('infoCards');
+      container.innerHTML = '';
+      this.answers = new Array(this.items.length).fill(null);
+      
+      this.items.forEach((item, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.style.marginBottom = '10px';
+        wrapper.style.background = 'rgba(255,255,255,0.03)';
+        wrapper.style.borderRadius = '10px';
+        wrapper.style.padding = '12px';
+        
+        const header = document.createElement('div');
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
+        header.style.marginBottom = '8px';
+        
+        const label = document.createElement('div');
+        label.style.color = '#ffd700';
+        label.style.fontWeight = 'bold';
+        label.style.fontSize = '0.95em';
+        label.textContent = item.label;
+        
+        const status = document.createElement('div');
+        status.id = `item-status-${idx}`;
+        status.style.fontSize = '0.85em';
+        status.style.color = '#666';
+        status.textContent = '未选择';
+        
+        header.appendChild(label);
+        header.appendChild(status);
+        
+        const desc = document.createElement('div');
+        desc.style.color = '#aaa';
+        desc.style.fontSize = '0.88em';
+        desc.style.marginBottom = '10px';
+        desc.textContent = item.text;
+        
+        const optsRow = document.createElement('div');
+        optsRow.style.display = 'flex';
+        optsRow.style.flexWrap = 'wrap';
+        optsRow.style.gap = '6px';
+        
+        item.options.forEach(opt => {
+          const chip = document.createElement('button');
+          chip.style.background = 'rgba(255,255,255,0.08)';
+          chip.style.border = '1px solid #334';
+          chip.style.borderRadius = '20px';
+          chip.style.padding = '5px 12px';
+          chip.style.fontSize = '0.85em';
+          chip.style.color = '#ccc';
+          chip.style.cursor = 'pointer';
+          chip.textContent = opt;
+          chip.addEventListener('click', () => {
+            this.answers[idx] = opt;
+            const s = document.getElementById(`item-status-${idx}`);
+            const isCorrect = opt === item.correct;
+            s.textContent = isCorrect ? '✅ 正确' : '❌ 已选择';
+            s.style.color = isCorrect ? '#51cf66' : '#ff6b6b';
+            document.querySelectorAll(`#item-wrapper-${idx} button`).forEach(c => {
+              c.style.background = 'rgba(255,255,255,0.08)';
+              c.style.borderColor = '#334';
+              c.style.color = '#ccc';
+            });
+            chip.style.background = isCorrect ? 'rgba(81,207,102,0.2)' : 'rgba(255,107,107,0.2)';
+            chip.style.borderColor = isCorrect ? '#51cf66' : '#ff6b6b';
+            chip.style.color = isCorrect ? '#51cf66' : '#ff6b6b';
+            const allAnswered = this.answers.every(a => a !== null);
+            document.getElementById('actionBtn').disabled = !allAnswered;
+            if (allAnswered) document.getElementById('actionBtn').style.display = 'inline-block';
+          });
+          optsRow.appendChild(chip);
+        });
+        
+        wrapper.appendChild(header);
+        wrapper.appendChild(desc);
+        wrapper.appendChild(optsRow);
+        container.appendChild(wrapper);
+      });
+      
+      document.getElementById('questionText').textContent = this.question;
+      document.getElementById('optionsContainer').innerHTML = '';
+      document.getElementById('actionBtn').style.display = 'inline-block';
+      document.getElementById('actionBtn').disabled = true;
+      document.getElementById('feedbackBox').style.display = 'none';
+    },
+    answers: []
   }
 ];
 
@@ -327,7 +418,7 @@ function loadTask(idx) {
   document.getElementById('progressFill').style.width = progress + '%';
   
   if (task.type === 'multi_choice') {
-    task.task1Init();
+    task.multiInit();
   } else {
     // Show scenario
     const container = document.getElementById('infoCards');
@@ -377,7 +468,6 @@ function confirmAnswer() {
         details.push({ label: item.label, selected, correct: item.correct, isCorrect });
       });
       gameState.infoCorrect = correct;
-      // Show result for each item
       let html = '<div style="margin-top:12px;">';
       details.forEach(d => {
         html += `<div style="padding:8px 12px;border-radius:8px;margin-bottom:6px;background:${d.isCorrect?'rgba(81,207,102,0.15)':'rgba(255,107,107,0.15)'};color:${d.isCorrect?'#51cf66':'#ff6b6b'};font-size:0.9em;">
@@ -392,7 +482,7 @@ function confirmAnswer() {
       const btn = document.getElementById('actionBtn');
       btn.style.display = 'inline-block';
       btn.disabled = false;
-      btn.textContent = '下一关 →';
+      btn.textContent = gameState.taskIndex < tasks.length - 1 ? '下一关 →' : '完成！';
       btn.onclick = () => {
         document.getElementById('feedbackBox').style.display = 'none';
         btn.style.display = 'inline-block';
@@ -400,7 +490,45 @@ function confirmAnswer() {
         btn.textContent = '确认答案';
         btn.onclick = confirmAnswer;
         updateDashboard();
-        loadTask(1);
+        if (gameState.taskIndex < tasks.length - 1) loadTask(gameState.taskIndex + 1);
+        else showResult();
+      };
+      return;
+    }
+    // Task 3: check 3 items
+    if (gameState.taskIndex === 2) {
+      let correct = 0;
+      let details = [];
+      task.items.forEach((item, idx) => {
+        const selected = task.answers[idx];
+        const isCorrect = selected === item.correct;
+        if (isCorrect) correct++;
+        details.push({ label: item.label, selected, correct: item.correct, isCorrect });
+      });
+      gameState.principleCorrect = correct;
+      let html = '<div style="margin-top:12px;">';
+      details.forEach(d => {
+        html += `<div style="padding:8px 12px;border-radius:8px;margin-bottom:6px;background:${d.isCorrect?'rgba(81,207,102,0.15)':'rgba(255,107,107,0.15)'};color:${d.isCorrect?'#51cf66':'#ff6b6b'};font-size:0.9em;">
+          ${d.isCorrect?'✅':'❌'} ${d.label}：${d.selected} → 正确答案：${d.correct}
+        </div>`;
+      });
+      html += '</div>';
+      document.getElementById('feedbackBox').style.display = 'block';
+      document.getElementById('feedbackTitle').textContent = correct === 3 ? '🌟 全部正确！' : correct >= 2 ? '✅ 还不错！' : '❌ 继续加油！';
+      document.getElementById('feedbackText').innerHTML = `你答对了 ${correct}/3 题`;
+      document.getElementById('feedbackKnowledge').innerHTML = html;
+      const btn = document.getElementById('actionBtn');
+      btn.style.display = 'inline-block';
+      btn.disabled = false;
+      btn.textContent = '完成！';
+      btn.onclick = () => {
+        document.getElementById('feedbackBox').style.display = 'none';
+        btn.style.display = 'inline-block';
+        btn.disabled = true;
+        btn.textContent = '确认答案';
+        btn.onclick = confirmAnswer;
+        updateDashboard();
+        showResult();
       };
       return;
     }
