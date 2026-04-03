@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>标签归类大挑战 - 客户标签体系</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* ===== 开始页面 ===== */
+#start-screen { text-align: center; padding-top: 30px; }
+.title { font-size: 2.5em; color: #ffd700; margin-bottom: 10px; }
+.subtitle { font-size: 1.3em; color: #aaa; margin-bottom: 30px; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 20px 60px; font-size: 1.5em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.start-btn:hover { transform: scale(1.05); }
+.game-desc { background: #16213e; border-radius: 20px; padding: 30px; margin-top: 30px; text-align: left; max-width: 900px; margin-left: auto; margin-right: auto; }
+.game-desc h3 { color: #ffd700; margin-bottom: 16px; font-size: 1.3em; }
+.game-desc p { color: #ccc; line-height: 2; font-size: 1.1em; margin-bottom: 12px; }
+
+/* ===== 游戏页面 ===== */
+#game-screen { display: none; }
+.level-title { text-align: center; font-size: 1.5em; color: #ffd700; margin-bottom: 12px; }
+.level-desc { text-align: center; color: #aaa; font-size: 1.1em; margin-bottom: 20px; }
+
+/* 标签区 */
+.labels-area { 
+  background: #16213e; 
+  border-radius: 20px; 
+  padding: 20px; 
+  margin-bottom: 20px;
+}
+.labels-area-title { color: #aaa; font-size: 0.95em; margin-bottom: 14px; text-align: center; }
+.labels-pool { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+.label-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 1.05em;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.label-card:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+.label-card.dragging { opacity: 0.5; cursor: grabbing; transform: scale(1.1); }
+
+/* 分类区 */
+.categories-area {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.category-box {
+  background: #0f3460;
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 160px;
+  border: 3px dashed #334;
+  transition: all 0.2s;
+  position: relative;
+}
+.category-box.drag-over {
+  border-color: #ffd700;
+  background: rgba(255,215,0,0.08);
+  transform: scale(1.02);
+}
+.category-box.correct { border-color: #51cf66; border-style: solid; background: rgba(81,207,102,0.08); }
+.category-box.wrong { border-color: #ff6b6b; border-style: solid; }
+.category-title {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2e;
+  padding: 3px 16px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #ffd700;
+  white-space: nowrap;
+  max-width: 90%;
+  text-align: center;
+}
+.category-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  min-height: 50px;
+}
+.slot {
+  background: rgba(255,255,255,0.05);
+  border: 2px dashed rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.9em;
+  color: rgba(255,255,255,0.25);
+  min-width: 70px;
+  text-align: center;
+}
+.dropped-card {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: #ddd;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 70px;
+  text-align: center;
+}
+.dropped-card:hover { background: rgba(255,107,107,0.2); border-color: #ff6b6b; color: #ff6b6b; }
+.dropped-card.right { background: rgba(81,207,102,0.2); border-color: #51cf66; color: #51cf66; }
+.dropped-card.right:hover { background: rgba(81,207,102,0.2); border-color: #51cf66; color: #51cf66; cursor: default; }
+
+/* 操作区 */
+.action-area { text-align: center; }
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 44px; font-size: 1.15em; border-radius: 50px; cursor: pointer; transition: transform 0.2s; }
+.action-btn:hover { transform: scale(1.05); }
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.action-btn.green { background: linear-gradient(135deg, #51cf66, #20b558); }
+
+/* 反馈区 */
+.feedback-area { display: none; background: #16213e; border-radius: 20px; padding: 24px; margin-top: 16px; text-align: center; }
+.feedback-area.show { display: block; }
+.feedback-title { font-size: 1.6em; margin-bottom: 12px; }
+.feedback-title.pass { color: #51cf66; }
+.feedback-title.fail { color: #ff6b6b; }
+.feedback-score { font-size: 1.8em; color: #ffd700; margin: 10px 0; }
+.feedback-text { color: #ccc; font-size: 1.05em; line-height: 1.7; }
+.feedback-summary { margin-top: 16px; text-align: left; }
+.feedback-summary h4 { color: #ffd700; margin-bottom: 10px; font-size: 1.05em; }
+.summary-item { padding: 8px 14px; border-radius: 8px; margin-bottom: 6px; font-size: 0.95em; }
+.summary-item.right { background: rgba(81,207,102,0.15); color: #51cf66; }
+.summary-item.wrong { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+
+/* ===== 结果页面 ===== */
+#result-screen { display: none; text-align: center; padding-top: 40px; }
+.result-title { font-size: 2.5em; color: #ffd700; margin-bottom: 20px; }
+.result-score { font-size: 1.5em; color: #aaa; margin-bottom: 30px; }
+
+.step-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.step-dot { width: 14px; height: 14px; border-radius: 50%; background: #334; }
+.step-dot.active { background: #ffd700; }
+.step-dot.done { background: #51cf66; }
+
+@media (max-width: 900px) {
+  .categories-area { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .categories-area { grid-template-columns: 1fr; }
+  .title { font-size: 1.8em; }
+  .label-card { font-size: 0.95em; padding: 10px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="start-screen">
+  <div class="title">🏷️ 标签归类大挑战</div>
+  <div class="subtitle">客户标签体系 · 课堂互动版</div>
+  <button class="start-btn" id="startBtn">开始挑战</button>
+  <div class="game-desc">
+    <h3>📋 挑战规则</h3>
+    <p>🎯 任务：将「标签卡片」拖拽到对应的分类框中</p>
+    <p>🏆 得分：放对1个+10分，放错1个倒扣5分</p>
+    <p>💡 点击已放置的标签可撤回，重新归类</p>
+    <p>⚠️ 共有3关，难度递增，考验你对标签分类的理解！</p>
+  </div>
+</div>
+
+<div id="game-screen">
+  <div class="step-indicator" id="stepIndicator"></div>
+  <div class="level-title" id="levelTitle"></div>
+  <div class="level-desc" id="levelDesc"></div>
+  
+  <div class="labels-area">
+    <div class="labels-area-title">📋 待归类标签（拖拽到下方分类框）</div>
+    <div class="labels-pool" id="labelsPool"></div>
+  </div>
+  
+  <div class="categories-area" id="categoriesArea"></div>
+  
+  <div class="action-area">
+    <button class="action-btn green" id="submitBtn" disabled>✓ 确认提交</button>
+  </div>
+  
+  <div class="feedback-area" id="feedbackArea">
+    <div class="feedback-title" id="feedbackTitle"></div>
+    <div class="feedback-score" id="feedbackScore"></div>
+    <div class="feedback-text" id="feedbackText"></div>
+    <div class="feedback-summary" id="feedbackSummary"></div>
+    <button class="action-btn" id="nextBtn" style="margin-top:16px;">下一关 →</button>
+  </div>
+</div>
+
+<div id="result-screen">
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-score" id="resultScore"></div>
+  <button class="start-btn" onclick="restartGame()">再玩一次</button>
+</div>
+
+</div>
+
+<script>
+// 6大标签类型，覆盖考纲
+const levels = [
+  {
+    title: "第1关 · 基础 vs 行为",
+    desc: "根据考纲，客户标签分为基础信息类和行为特征类，你能分清吗？",
+    categories: [
+      { 
+        name: "基础信息类", 
+        color: "#667eea",
+        tags: ["性别","年龄","职业","地域","学历"]
+      },
+      { 
+        name: "行为特征类", 
+        color: "#20b558",
+        tags: ["购买频率","购买金额","使用时长","访问次数"]
+      }
+    ]
+  },
+  {
+    title: "第2关 · 偏好 vs 价值 vs 社交",
+    desc: "加入偏好特征类、价值类、社交类标签，挑战升级！",
+    categories: [
+      { 
+        name: "偏好特征类", 
+        color: "#f59e0b",
+        tags: ["品类偏好","品牌偏好","功能偏好","价格敏感度"]
+      },
+      { 
+        name: "价值类", 
+        color: "#ef4444",
+        tags: ["客户价值","忠诚度","活跃度","复购周期"]
+      },
+      { 
+        name: "社交类", 
+        color: "#8b5cf6",
+        tags: ["社交关系网络","社交话题领域","KOL影响力"]
+      }
+    ]
+  },
+  {
+    title: "第3关 · 六大类型综合挑战",
+    desc: "全部六大类型一起来，你是标签大师吗？",
+    categories: [
+      { 
+        name: "基础信息类", 
+        color: "#667eea",
+        tags: ["性别","地域","职业"]
+      },
+      { 
+        name: "行为特征类", 
+        color: "#20b558",
+        tags: ["购买频率","购买金额"]
+      },
+      { 
+        name: "偏好特征类", 
+        color: "#f59e0b",
+        tags: ["品类偏好","品牌偏好"]
+      },
+      { 
+        name: "价值类", 
+        color: "#ef4444",
+        tags: ["忠诚度","活跃度"]
+      },
+      { 
+        name: "社交类", 
+        color: "#8b5cf6",
+        tags: ["社交话题领域"]
+      },
+      { 
+        name: "客户反馈类", 
+        color: "#06b6d4",
+        tags: ["满意度","投诉记录"]
+      }
+    ]
+  }
+];
+
+let currentLevel = 0;
+let totalScore = 0;
+let placedLabels = {}; // categoryName -> [tagKey]
+let draggedEl = null;
+
+function startGame() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  currentLevel = 0;
+  totalScore = 0;
+  loadLevel(currentLevel);
+}
+
+function loadLevel(levelIndex) {
+  const level = levels[levelIndex];
+  placedLabels = {};
+  
+  const indicator = document.getElementById('stepIndicator');
+  indicator.innerHTML = levels.map((_, i) => 
+    `<div class="step-dot ${i < levelIndex ? 'done' : i === levelIndex ? 'active' : ''}"></div>`
+  ).join('');
+  
+  document.getElementById('levelTitle').textContent = level.title;
+  document.getElementById('levelDesc').textContent = level.desc;
+  
+  // Build pool
+  let allTags = [];
+  level.categories.forEach(cat => {
+    cat.tags.forEach(tag => allTags.push({ tag, catName: cat.name }));
+  });
+  // Fisher-Yates shuffle
+  for (let i = allTags.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [allTags[i], allTags[j]] = [allTags[j], allTags[i]];
+  }
+  
+  const pool = document.getElementById('labelsPool');
+  pool.innerHTML = '';
+  allTags.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'label-card';
+    card.textContent = item.tag;
+    card.dataset.tag = item.tag;
+    card.dataset.correctCat = item.catName;
+    card.draggable = true;
+    card.addEventListener('dragstart', onDragStart);
+    card.addEventListener('dragend', onDragEnd);
+    pool.appendChild(card);
+  });
+  
+  // Build categories
+  const catsArea = document.getElementById('categoriesArea');
+  catsArea.innerHTML = '';
+  
+  level.categories.forEach(cat => {
+    placedLabels[cat.name] = [];
+    
+    const box = document.createElement('div');
+    box.className = 'category-box';
+    box.dataset.catName = cat.name;
+    box.style.borderColor = cat.color + '66';
+    box.innerHTML = `
+      <div class="category-title" style="color:${cat.color}">${cat.name}</div>
+      <div class="category-slots" data-cat="${cat.name}"></div>
+    `;
+    box.addEventListener('dragover', onDragOver);
+    box.addEventListener('dragleave', onDragLeave);
+    box.addEventListener('drop', onDrop);
+    catsArea.appendChild(box);
+  });
+  
+  document.getElementById('feedbackArea').classList.remove('show');
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function onDragStart(e) {
+  draggedEl = e.target;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function onDragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.category-box').forEach(b => b.classList.remove('drag-over'));
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!draggedEl) return;
+  
+  const tag = draggedEl.dataset.tag;
+  const correctCat = draggedEl.dataset.correctCat;
+  const targetCat = e.currentTarget.dataset.catName;
+  
+  // Add to placed
+  if (!placedLabels[targetCat]) placedLabels[targetCat] = [];
+  placedLabels[targetCat].push({ tag, correctCat });
+  
+  // Create dropped card
+  const slots = e.currentTarget.querySelector('.category-slots');
+  const card = document.createElement('div');
+  card.className = 'dropped-card';
+  card.textContent = tag;
+  card.dataset.tag = tag;
+  card.dataset.correctCat = correctCat;
+  card.dataset.placedCat = targetCat;
+  
+  // Click to return to pool
+  card.addEventListener('click', function() {
+    const t = this.dataset.tag;
+    const pc = this.dataset.placedCat;
+    placedLabels[pc] = placedLabels[pc].filter(x => x.tag !== t);
+    
+    // Return to pool
+    const pool = document.getElementById('labelsPool');
+    const poolCard = document.createElement('div');
+    poolCard.className = 'label-card';
+    poolCard.textContent = t;
+    poolCard.dataset.tag = t;
+    poolCard.dataset.correctCat = this.dataset.correctCat;
+    poolCard.draggable = true;
+    poolCard.addEventListener('dragstart', onDragStart);
+    poolCard.addEventListener('dragend', onDragEnd);
+    pool.appendChild(poolCard);
+    
+    slots.removeChild(this);
+    checkHasPlaced();
+  });
+  
+  slots.appendChild(card);
+  draggedEl.remove();
+  draggedEl = null;
+  
+  checkHasPlaced();
+}
+
+function checkHasPlaced() {
+  let hasPlaced = false;
+  Object.keys(placedLabels).forEach(cat => {
+    if (placedLabels[cat].length > 0) hasPlaced = true;
+  });
+  document.getElementById('submitBtn').disabled = !hasPlaced;
+}
+
+function submitAnswer() {
+  const level = levels[currentLevel];
+  let correct = 0;
+  let wrong = 0;
+  let allPlaced = [];
+  
+  Object.keys(placedLabels).forEach(catName => {
+    placedLabels[catName].forEach(item => {
+      allPlaced.push(item);
+      if (item.correctCat === catName) {
+        correct++;
+      } else {
+        wrong++;
+      }
+    });
+  });
+  
+  let roundScore = correct * 10 - wrong * 5;
+  totalScore += roundScore;
+  
+  // Color category boxes
+  document.querySelectorAll('.category-box').forEach(box => {
+    box.classList.remove('correct', 'wrong');
+    box.classList.add('wrong');
+  });
+  
+  // Color cards
+  document.querySelectorAll('.dropped-card').forEach(card => {
+    card.classList.remove('right');
+    if (card.dataset.correctCat === card.dataset.placedCat) {
+      card.classList.add('right');
+      card.onclick = null; // can't remove now
+      card.parentElement.parentElement.classList.remove('wrong');
+      card.parentElement.parentElement.classList.add('correct');
+    }
+  });
+  
+  // Show feedback
+  const fbArea = document.getElementById('feedbackArea');
+  fbArea.classList.add('show');
+  
+  const totalTags = level.categories.reduce((sum, c) => sum + c.tags.length, 0);
+  
+  document.getElementById('feedbackTitle').textContent = 
+    correct === totalTags ? '🌟 完美！' :
+    correct > wrong ? '✅ 不错！' : '❌ 继续加油！';
+  document.getElementById('feedbackTitle').className = 
+    'feedback-title ' + (correct > wrong ? 'pass' : 'fail');
+  
+  document.getElementById('feedbackScore').textContent = 
+    `${correct}/${totalTags} 正确  (+${correct * 10} -${wrong * 5} = ${roundScore >= 0 ? '+' : ''}${roundScore}分)`;
+  
+  document.getElementById('feedbackText').textContent = 
+    correct === totalTags ? '六大类型你掌握得非常扎实！' :
+    correct > wrong ? '大部分正确，回头看看哪些标签容易混淆。' :
+    '标签分类还需要加强区分，建议对照考纲复习一遍。';
+  
+  // Summary
+  const summary = document.getElementById('feedbackSummary');
+  summary.innerHTML = `<h4>📋 各标签归属结果：</h4>` + 
+    allPlaced.map(item => {
+      const ok = item.correctCat === item.placedCat;
+      return `<div class="summary-item ${ok ? 'right' : 'wrong'}">
+        ${ok ? '✅' : '❌'} 「${item.tag}」→ ${item.placedCat}
+        ${!ok ? `（正确答案：${item.correctCat}）` : ''}
+      </div>`;
+    }).join('');
+  
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').textContent = 
+    currentLevel < levels.length - 1 ? '下一关 →' : '查看总成绩';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextLevel() {
+  currentLevel++;
+  if (currentLevel < levels.length) {
+    loadLevel(currentLevel);
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  
+  const maxScore = levels.reduce((sum, l) => 
+    sum + l.categories.reduce((s, c) => s + c.tags.length, 0) * 10, 0);
+  
+  let title = totalScore >= maxScore * 0.9 ? '🏆 标签大师！' :
+    totalScore >= maxScore * 0.7 ? '🌟 非常优秀！' :
+    totalScore >= maxScore * 0.5 ? '📚 不错的开始' : '💡 继续加油';
+  
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = 
+    `总得分：${totalScore} / ${maxScore} 分`;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+document.getElementById('startBtn').onclick = startGame;
+document.getElementById('submitBtn').onclick = submitAnswer;
+document.getElementById('nextBtn').onclick = nextLevel;
+</script>
+</body>
+</html>
