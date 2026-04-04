@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>女尊世界当家主</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #e8d5b7; min-height: 100vh; }
+#game { max-width: 700px; margin: 0 auto; padding: 20px; }
+h1 { text-align: center; color: #c9a96e; font-size: 1.8em; margin: 20px 0; letter-spacing: 4px; }
+h2 { color: #c9a96e; font-size: 1.1em; margin: 15px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+#stats { background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 15px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.stat { background: #0f3460; border-radius: 6px; padding: 8px 12px; text-align: center; }
+.stat-name { font-size: 0.75em; color: #a89070; }
+.stat-val { font-size: 1.3em; color: #c9a96e; font-weight: bold; }
+#scene { background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 20px; margin-bottom: 15px; min-height: 200px; }
+#scene-title { color: #c9a96e; font-size: 1.1em; margin-bottom: 12px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 8px; }
+#scene-text { line-height: 1.8; color: #d4c4a8; font-size: 0.95em; margin-bottom: 15px; }
+.choice { display: block; width: 100%; background: #0f3460; border: 1px solid #c9a96e; color: #e8d5b7; padding: 12px 16px; margin: 8px 0; border-radius: 6px; cursor: pointer; text-align: left; font-size: 0.95em; transition: background 0.2s; }
+.choice:hover { background: #1a4a7a; }
+.choice:disabled { opacity: 0.4; cursor: not-allowed; }
+#inventory { background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 15px; margin-top: 15px; }
+#inventory h3 { color: #c9a96e; font-size: 0.9em; margin-bottom: 8px; }
+.item-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.item { background: #0f3460; color: #a89070; padding: 4px 10px; border-radius: 4px; font-size: 0.8em; }
+#log { background: #0d1b2a; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-top: 15px; max-height: 150px; overflow-y: auto; font-size: 0.8em; color: #7a6a50; line-height: 1.6; }
+.log-entry { border-bottom: 1px solid #222; padding: 3px 0; }
+#save-bar { text-align: center; margin: 15px 0; }
+button.btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 0 5px; }
+.husband-card { background: #0f3460; border: 1px solid #c9a96e; border-radius: 8px; padding: 12px; margin: 8px 0; }
+.husband-card .name { color: #c9a96e; font-size: 1.1em; font-weight: bold; }
+.husband-card .desc { color: #a89070; font-size: 0.85em; margin-top: 4px; }
+.hint-box { background: #1a0a2e; border: 1px solid #6a4a9a; border-radius: 6px; padding: 10px; margin: 10px 0; font-size: 0.85em; color: #a890c0; }
+.sub-text { background: #0f3460; border-radius: 6px; padding: 12px; margin-top: 10px; color: #d4c4a8; font-style: italic; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div id="game">
+  <h1>🏛️ 女尊世界当家主</h1>
+  <div id="stats">
+    <div class="stat"><div class="stat-name">💰 银两</div><div class="stat-val" id="s-money">0</div></div>
+    <div class="stat"><div class="stat-name">⭐ 声望</div><div class="stat-val" id="s-prestige">1</div></div>
+    <div class="stat"><div class="stat-name">🤝 人脉</div><div class="stat-val" id="s-social">1</div></div>
+    <div class="stat"><div class="stat-name">📖 智慧</div><div class="stat-val" id="s-wit">1</div></div>
+    <div class="stat"><div class="stat-name">⚔️ 魄力</div><div class="stat-val" id="s-bravo">1</div></div>
+    <div class="stat"><div class="stat-name">🏠 身份</div><div class="stat-val" id="s-class">寒门子弟</div></div>
+    <div class="stat"><div class="stat-name">📅 第</div><div class="stat-val" id="s-day">1</div></div>
+  </div>
+  <div id="scene">
+    <div id="scene-title"></div>
+    <div id="scene-text"></div>
+  </div>
+  <div id="choices"></div>
+  <div id="log"><div class="log-entry">—— 游戏开始 ——</div></div>
+  <div id="save-bar">
+    <button class="btn" onclick="saveGame()">💾 存档</button>
+    <button class="btn" onclick="loadGame()">📂 读档</button>
+    <button class="btn" onclick="resetGame()">🔄 重开</button>
+  </div>
+</div>
+<script>
+var S = { money: 0, prestige: 1, social: 1, wit: 1, bravo: 1, cls: '寒门子弟', items: [], log: [], day: 1, phase: 1, flags: {}, husband: null };
+var _selBg = null;
+
+var BACKGROUNDS = [
+  { id: 'scholar', name: '书香门第', desc: '父亲是落魄秀才，自幼教授诗书，略通文墨。性格温和，但不善交际。', traits: ['文采', '软懦'], bonus: { wit: 2, social: -1 } },
+  { id: 'merchant', name: '商贾之子', desc: '家中经营布匹生意，自小耳濡目染，算账精明。性格圆滑，善于察言观色。', traits: ['精明', '务实'], bonus: { wit: 1, bravo: 1 } },
+  { id: 'martial', name: '武勋遗孤', desc: '父亲是边境小吏，战死沙场。性格刚烈，嫉恶如仇，但不善权谋。', traits: ['刚烈', '正直'], bonus: { bravo: 2, wit: -1 } },
+  { id: 'noble', name: '罪臣之后', desc: '祖父曾任朝官，后遭贬谪。家道中落，但心中藏有惊天秘密。', traits: ['隐忍', '深沉'], bonus: { wit: 1, social: 1 } },
+  { id: 'medical', name: '杏林世家', desc: '祖上三代行医，医术精湛。性格纯善，不谙世事。', traits: ['仁心', '单纯'], bonus: { wit: 1, bravo: 1 } },
+  { id: 'artistic', name: '伶人血脉', desc: '生母是青楼花魁，身份低微。容貌出众，能歌善舞，但自卑敏感。', traits: ['多艺', '敏感'], bonus: { social: 2, bravo: -1 } },
+];
+
+var PERSONALITIES = [
+  { id: 'gentle', name: '温顺柔和', desc: '体贴入微，唯命是从，让做什么就做什么。' },
+  { id: 'proud', name: '清高傲气', desc: '性子倔强，有自己的主见，不轻易服软。' },
+  { id: 'scheming', name: '心机深沉', desc: '心思缜密，擅长算计，笑里藏刀。' },
+  { id: 'brave', name: '刚烈正直', desc: '嫉恶如仇，眼里不揉沙子，敢说敢做。' },
+  { id: 'kind', name: '善良多情', desc: '心软如棉，见不得人受苦，常自作主张。' },
+  { id: 'cold', name: '冷漠寡言', desc: '惜字如金，喜怒不形于色，难以捉摸。' },
+];
+
+var persText = {
+  gentle: '一切都听娘子的，娘子说怎样便怎样。',
+  proud: '既已嫁你，便盼你能出人头地。我不求依附，只求并肩。',
+  scheming: '我知娘子不是凡人……愿为娘子暗中筹谋。',
+  brave: '我恨不能与娘子一同打天下，不愿只做宅中男子！',
+  kind: '我只盼你我同心，在这世道好好活下去。',
+  cold: '（沉默良久）……我既入了你家的门，便是你家的人。',
+};
+
+function render() {
+  document.getElementById('s-money').textContent = S.money + '文';
+  document.getElementById('s-prestige').textContent = S.prestige;
+  document.getElementById('s-social').textContent = S.social;
+  document.getElementById('s-wit').textContent = S.wit;
+  document.getElementById('s-bravo').textContent = S.bravo;
+  document.getElementById('s-class').textContent = S.cls;
+  document.getElementById('s-day').textContent = S.day;
+  var items = S.items.length ? S.items.map(function(i){return '<span class="item">'+i+'</span>';}).join('') : '<span class="item">空空如也</span>';
+  document.getElementById('item-list').innerHTML = items;
+}
+
+function addLog(text) {
+  S.log.push(text);
+  var logDiv = document.getElementById('log');
+  var entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.textContent = text;
+  logDiv.appendChild(entry);
+  logDiv.scrollTop = logDiv.scrollHeight;
+  if (S.log.length > 50) S.log.shift();
+}
+
+var RANDOM_EVENTS = [
+  { id: 'found_money', title: '天降横财', text: '你在回家路上，低头看见墙角有一只旧布袋，打开一看——里面竟有五百文铜钱！', effect: function(){S.money+=5;}, chance: 0.08 },
+  { id: 'husband_sick', title: '夫君生病', text: ''+hName()+'今日神色倦怠，似乎着了风寒。你需要花钱给他买药。', effect: function(){S.money-=3;S.flags.husband_sick=true;}, chance: 0.06, condition: function(){return S.money>=3;} },
+  { id: 'kind_stranger', title: '陌生女子', text: '一位衣着华贵的女子向你问路，临走时随手赏了你一两银子。"这点小钱，拿去喝茶。"', effect: function(){S.money+=10;S.prestige+=1;}, chance: 0.05 },
+  { id: 'robbery', title: '遭遇劫匪', text: '你行至小巷，忽被两名劫匪拦住去路！', effect: function(){S.money=Math.max(0,S.money-5);S.bravo+=0.5;}, chance: 0.06, condition: function(){return S.money>=5;} },
+  { id: 'old_friend', title: '故人相遇', text: '街头偶遇一位故人——是从小一起长大的邻家姐姐，如今已嫁入富户。她邀你改日去她府上喝茶。', effect: function(){S.social+=2;}, chance: 0.07 },
+  { id: 'lucky_find', title: '地摊淘宝', text: '集市边有个清仓摊位，你挑中一件小物件，竟是件有来历的古物——有人出价收购，赚了一笔。', effect: function(){S.money+=8;S.prestige+=1;}, chance: 0.05, condition: function(){return S.wit>=2;} },
+  { id: 'tax_collector', title: '官差查税', text: '两名官差拦住你，说是例行查税。你被迫交了两百文"过路费"。', effect: function(){S.money=Math.max(0,S.money-2);}, chance: 0.06, condition: function(){return S.money>=2;} },
+  { id: 'black_brief', title: '有人捎信', text: '一个陌生小厮塞给你一封信就走。你拆开一看——竟是一张揭露某富商走私的密信！有人想借你之手告发。', effect: function(){S.flags.secret_letter=true;S.prestige+=1;}, chance: 0.04 },
+  { id: 'merchant_robbed', title: '布商遇难', text: '集市上一位布商遭遇地痞哄抢，你出手相助，帮他保住了货款。他感激之余，送你两匹布作为酬谢。', effect: function(){S.items.push('布匹x2');S.social+=1;S.prestige+=1;}, chance: 0.05 },
+  { id: 'night_theft', title: '梁上君子', text: '深夜，你被一阵窃窃声惊醒——有贼入室偷走了两百文铜钱！', effect: function(){S.money=Math.max(0,S.money-2);}, chance: 0.06, condition: function(){return S.money>=2;} },
+  { id: 'widow_help', title: '寡妇求助', text: '一位年轻寡妇跪在街头，哭诉婆婆逼她改嫁。你动了惻隐之心，给了她几百文度日。', effect: function(){S.money=Math.max(0,S.money-1);S.prestige+=2;}, chance: 0.06, condition: function(){return S.money>=1;} },
+  { id: 'talent_discover', title: '发现商机', text: '你敏锐地发现镇上最近流行一种新布料，于是抢先进货，大赚了一笔！', effect: function(){S.money+=15;S.prestige+=1;}, chance: 0.05, condition: function(){return S.wit>=3;} },
+  { id: 'accident', title: '街头意外', text: '街角处一名男子被马车撞伤，无人敢救。你犹豫着是否出手。', effect: function(){S.flags.witness_accident=true;}, chance: 0.05 },
+  { id: 'merchant_invite', title: '商号招新', text: '镇上最大商号"永丰号"张贴告示，招募能干的伙计。你决定去试试。', effect: function(){S.flags.yongfeng=true;}, chance: 0.06 },
+  { id: 'nightmare', title: '噩梦惊醒', text: ''+hName()+'半夜从噩梦中惊醒——他梦见了自己的父亲战死沙场的场景。', effect: function(){S.flags.husband_nightmare=true;}, chance: 0.05, condition: function(){return S.husband&&S.husband.bgId==='martial';} },
+  { id: 'shuang_event', title: '天赐良缘？', text: '一名陌生男子拦住你，自称是算命先生，说你与某位贵人有着命中注定的缘分……', effect: function(){S.flags.strange_fate=true;}, chance: 0.04 },
+];
+
+var _pendingNext = null;
+
+function triggerRandomEvent(nextSceneId) {
+  var eligible = RANDOM_EVENTS.filter(function(e){
+    return (!e.condition || e.condition()) && Math.random() < e.chance;
+  });
+  if (eligible.length === 0) {
+    showScene(nextSceneId);
+    return;
+  }
+  var ev = eligible[Math.floor(Math.random() * eligible.length)];
+  ev.effect();
+  var sceneText = document.getElementById('scene-text').innerHTML;
+  document.getElementById('scene-title').textContent = '⚡ ' + ev.title;
+  document.getElementById('scene-text').innerHTML = '<div style="background:#1a0a2e;border:1px solid #6a4a9a;border-radius:8px;padding:15px;margin-bottom:15px;color:#a890c0;font-style:italic">🎲 随机事件触发！</div>' + ev.text;
+  var choicesDiv = document.getElementById('choices');
+  choicesDiv.innerHTML = '';
+  var btn = document.createElement('button');
+  btn.className = 'choice';
+  btn.textContent = '继续';
+  btn.onclick = function(){
+    addLog('⚡ 随机事件：' + ev.title);
+    render();
+    showScene(nextSceneId);
+  };
+  choicesDiv.appendChild(btn);
+  render();
+}
+
+function go(c) {
+  if (c.effect) c.effect();
+  addLog(c.text);
+  render();
+  if (c.next === 'reset') { resetGame(); return; }
+  if (c.next) {
+    _pendingNext = c.next;
+    triggerRandomEvent(c.next);
+  } else { showScene('start'); }
+}
+
+function showScene(id) {
+  var scene = scenes[id];
+  if (!scene) return;
+  document.getElementById('scene-title').textContent = scene.title || '';
+  document.getElementById('scene-text').innerHTML = scene.text || '';
+  var choicesDiv = document.getElementById('choices');
+  choicesDiv.innerHTML = '';
+  if (scene.choices) {
+    scene.choices.forEach(function(c) {
+      var btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.textContent = c.text;
+      if (c.condition && !c.condition()) { btn.disabled = true; }
+      btn.onclick = function(){ go(c); };
+      choicesDiv.appendChild(btn);
+    });
+  }
+  render();
+}
+
+function hName() { return S.husband ? S.husband.name : '顾长安'; }
+function hBg() { return S.husband ? S.husband.bgName : '某家'; }
+function hPers() { return S.husband ? S.husband.persId : 'kind'; }
+function hTraits() { return S.husband ? S.husband.traits.join(' / ') : '无'; }
+
+function showCreate() {
+  document.getElementById('scene-title').textContent = '开局·娶亲';
+  document.getElementById('scene-text').innerHTML = '在女尊王朝，男子及笄之后便要婚配。你已到了议亲之年。\n\n这一日，托媒婆说媒，得知镇上有一户人家愿将儿子许配于你。\n但对方家世、性情各异——究竟娶谁，关系到你日后的处境。';
+
+  var html = '<div class="hint-box">👆 先选家世背景，再选性格，最后取名，三步完成婚配</div><h2>一、选择夫君家世</h2>';
+  BACKGROUNDS.forEach(function(bg, i) {
+    html += '<div class="husband-card"><div class="name">'+bg.name+'</div><div class="desc">'+bg.desc+'</div><div style="margin-top:4px;font-size:0.8em;color:#c9a96e">特性：'+bg.traits.join(' / ')+'</div><button class="choice" style="margin-top:8px" onclick="selectBg('+i+')">选择此家世</button></div>';
+  });
+  html += '<div id="sel-bg"></div>';
+  document.getElementById('choices').innerHTML = '';
+  document.getElementById('scene-text').innerHTML += html;
+  render();
+}
+
+window.selectBg = function(i) {
+  var bg = BACKGROUNDS[i];
+  _selBg = bg;
+  var html = '<div class="husband-card" style="border-color:#4a9a4a"><div class="name" style="color:#4a9a4a">✓ 已选择：'+bg.name+'</div><div class="desc">'+bg.desc+'</div></div>';
+  html += '<div id="pers-sec"><h2>二、选择夫君性格</h2>';
+  PERSONALITIES.forEach(function(p, j) {
+    html += '<div class="husband-card"><div class="name">'+p.name+'</div><div class="desc">'+p.desc+'</div><button class="choice" style="margin-top:8px" onclick="selectPers('+j+')">选择此性格</button></div>';
+  });
+  html += '</div>';
+  document.getElementById('sel-bg').innerHTML = html;
+};
+
+window.selectPers = function(j) {
+  var pers = PERSONALITIES[j];
+  var bg = _selBg;
+  S.husband = { name: '待取名', bgId: bg.id, bgName: bg.name, bgDesc: bg.desc, persId: pers.id, persName: pers.name, persDesc: pers.desc, traits: bg.traits.concat([pers.name]), bonus: bg.bonus };
+  S.wit += bg.bonus.wit || 0;
+  S.social += bg.bonus.social || 0;
+  S.bravo += bg.bonus.bravo || 0;
+
+  var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a"><div class="name" style="color:#4a9a4a">✓ 夫君已定：'+pers.name+' · '+bg.name+'</div><div class="desc">'+pers.desc+'</div></div>';
+  html += '<h2 style="margin-top:20px">三、为夫君取名</h2>';
+  html += '<div style="background:#0f3460;border:1px solid #c9a96e;border-radius:8px;padding:15px;margin:10px 0"><div style="color:#a89070;font-size:0.85em;margin-bottom:5px">夫君姓名</div><input type="text" id="hname" value="顾长安" style="width:100%;background:#16213e;border:1px solid #c9a96e;color:#e8d5b7;padding:8px 12px;border-radius:6px;font-size:0.95em"></div>';
+  html += '<button class="choice" style="background:#1a4a2a;border-color:#4a9a4a" onclick="confirmHusband()">✓ 确认，完成婚娶 →</button>';
+  document.getElementById('sel-bg').innerHTML += html;
+  render();
+};
+
+window.confirmHusband = function() {
+  var nameInput = document.getElementById('hname');
+  S.husband.name = nameInput.value.trim() || '顾长安';
+  addLog('婚配：' + S.husband.name + '（' + S.husband.bgName + '，' + S.husband.persName + '）');
+  render();
+  showScene('start');
+};
+
+var scenes = {
+  start: {
+    title: '第一章·破屋',
+    text: '黎明时分，寒风从破屋的缝隙灌入。\n\n你睁开眼，身侧躺着新婚的夫君——'+hName()+'。他睡得正酣，睫毛微颤。\n\n这是女尊王朝的边境小城——亭汝镇。你年过及笄之年，议得一门亲事，便用积蓄置办了这份薄业：一间破屋，几亩薄田，夫君一名。\n\n今日，是你们成亲后的第三日。'+(S.items.length?'\n\n📦 行囊里还有：'+S.items.join('、'):''),
+    choices: [
+      { text: '唤醒夫君，商量今日生计', next: 'plan_life' },
+      { text: '独自出门，看看镇上有什么活计', next: 'town_works' },
+      { text: '与夫君再谈谈，了解他的心意', next: 'talk_husband' },
+    ]
+  },
+  plan_life: {
+    title: '商议生计',
+    text: ''+hName()+'揉了揉睡眼，坐起身来。\n\n"娘子，今日可有什么打算？"\n\n你看着这个即将与你共度一生的男子，心中盘算着日后的生活。家中银两不多，必须尽快找到进项。',
+    choices: [
+      { text: '让夫君在家操持家务，自己外出找活', next: 'town_works' },
+      { text: '与夫君一同出门摆摊', next: 'street_stall', condition: function(){return S.wit>=3;} },
+      { text: '典当些家当，先稳住眼前', next: 'pawn_items' },
+    ]
+  },
+  town_works: {
+    title: '镇上的活计',
+    text: '清晨的街道已有行人往来。镇中心有一块告示墙，张贴着各类招募。\n\n一位中年女子正在布告前踱步，神态焦急。她衣着得体，看起来是殷实人家。',
+    choices: [
+      { text: '上前询问是否需要帮工', next: 'work_ask', condition: function(){return S.wit>=2||(S.husband&&S.husband.persId==='scheming');} },
+      { text: '直接去告示墙前找零工', next: 'work_post' },
+      { text: '在街边观察，找合适的下手目标', next: 'street_watch' },
+    ]
+  },
+  work_ask: {
+    title: '主动出击',
+    text: '你上前行礼："这位姐姐，可是有什么需要帮忙的？"\n\n女子打量你一番，见你虽衣着朴素却言谈从容，便道："我府上缺个账房先生，包吃住，月钱二两银子。你可愿意？"\n\n账房先生地位不低，但需要一定学识。',
+    choices: [
+      { text: '答应，去她府上当账房', next: 'maid_start', effect: function(){S.flags.accountant=true;} },
+      { text: '婉拒，觉得事情太顺利', next: 'work_post', effect: function(){S.prestige+=1;} },
+    ]
+  },
+  work_post: {
+    title: '告示墙前',
+    text: '告示墙上贴满了各类招募：洗衣、帮厨、码头扛货、药铺打杂……都是辛苦活，工钱日结。\n\n一位媒婆模样的老妇人正在物色人手，目光扫过人群，在你身上停留了片刻。',
+    choices: [
+      { text: '去码头扛货，工钱日结', next: 'dock_work', effect: function(){S.money+=30;} },
+      { text: '应征药铺打杂', next: 'pharmacy_work', effect: function(){S.money+=20;S.wit+=0.5;} },
+      { text: '与媒婆搭话', next: 'matchmaker' },
+    ]
+  },
+  street_stall: {
+    title: '夫妻摆摊',
+    text: '你与'+hName()+'商议之下，决定一同出门摆摊。\n\n他虽出身'+hBg()+'，却也愿意与你同甘共苦。借了邻家的板车，你们在集市边支起了摊位。',
+    choices: [
+      { text: '卖些针线杂货，薄利多销', next: 'stall_prosper', effect: function(){S.money+=50;} },
+      { text: '让夫君吆喝叫卖', next: 'stall_husband', condition: function(){return S.husband&&(S.husband.persId==='artistic'||S.husband.persId==='gentle');} },
+      { text: '与邻摊商贩套近乎，打听行情', next: 'stall_info' },
+    ]
+  },
+  stall_prosper: {
+    title: '开张营业',
+    text: '生意出乎意料地好！'+hName()+'在旁帮忙收钱找零，手脚麻利。\n\n集市散时，你们净赚五十文，够家里吃用五日。',
+    choices: [
+      { text: '回家犒劳夫君，商议明日计划', next: 'home_evening' },
+      { text: '用赚来的钱进货，趁热打铁', next: 'buy_resell', effect: function(){S.money+=3;} },
+    ]
+  },
+  pawn_items: {
+    title: '典当周转',
+    text: '你翻箱倒柜，找出一件成色的首饰——是成亲时娘家陪嫁的银钗。\n\n拿去镇上当铺，换得三两银子，够撑过一个月。',
+    choices: [
+      { text: '去集市买些便宜的货物来转卖', next: 'buy_resell', effect: function(){S.money+=3;} },
+      { text: '留着慢慢花，先节省度日', next: 'home_evening', effect: function(){S.money+=3;} },
+    ]
+  },
+  buy_resell: {
+    title: '倒货营利',
+    text: '你用二两银子在集市上淘了一批低价布匹，转手卖给布庄，赚了五百文。\n\n"这小娘子倒是个会做生意的。"布庄老板娘如是说。',
+    choices: [
+      { text: '继续往来贩布，渐渐做出门路', next: 'merchant_road', effect: function(){S.money+=5;S.cls='小商贩';} },
+      { text: '见好就收，回家与夫君分享喜讯', next: 'home_evening', effect: function(){S.money+=5;} },
+    ]
+  },
+  dock_work: {
+    title: '码头扛货',
+    text: '码头繁忙，你扛了一下午盐包，肩膀酸痛，但手里攥着三十文工钱，心里踏实了不少。\n\n收工时，码头管事看了你一眼："明日还来吗？我这儿正缺人手。"',
+    choices: [
+      { text: '留下继续扛货', next: 'dock_work2', effect: function(){S.money+=30;} },
+      { text: '拿钱离开，见好就收', next: 'town_works', effect: function(){S.money+=30;} },
+    ]
+  },
+  dock_work2: {
+    title: '码头又一日',
+    text: '又一日的辛苦劳动。你扛盐包、搬货箱，手肩都磨出了老茧。\n\n但三十文稳稳到手。',
+    choices: [
+      { text: '继续扛下去，攒钱再说', next: 'dock_work2', effect: function(){S.money+=30;} },
+      { text: '够了，回家去', next: 'home_evening', effect: function(){S.money+=30;} },
+    ]
+  },
+  pharmacy_work: {
+    title: '药铺学徒',
+    text: '药铺老板是个沉默寡言的中年妇人，见你识字，便留下了你。\n\n一日下来，你学会了辨药、包药，还帮忙搬药材、晒药材。她递给你一碗热粥和二十文钱："明日巳时来。"',
+    choices: [
+      { text: '道谢后离开，明日再来', next: 'pharmacy_next', effect: function(){S.money+=20;S.wit+=1;} },
+      { text: '询问能否长做，留在药铺', next: 'pharmacy_stay', effect: function(){S.money+=20;S.cls='药铺学徒';} },
+    ]
+  },
+  pharmacy_stay: {
+    title: '药铺长工',
+    text: '药铺老板娘见你勤快，便让你长做。包吃包住，月钱八百文。\n\n你开始学看方子、辨药材，渐渐成了药铺里的熟手。',
+    choices: [
+      { text: '继续在药铺做下去，等待机会', next: 'home_evening' },
+    ]
+  },
+  matchmaker: {
+    title: '媒婆搭话',
+    text: '老媒婆笑眯眯地拉你到一旁："姑娘生得清秀，骨格也正。我这儿有个活计——给刘府老太太端茶递水，包吃住，月钱八百文。"\n\n她压低声音："老太太眼光高，不合心意的人不要。你若愿意，随我来。"',
+    choices: [
+      { text: '跟媒婆去刘府', next: 'maid_start', effect: function(){S.flags.liu=true;} },
+      { text: '婉拒，觉得事情不简单', next: 'town_works', effect: function(){S.prestige+=1;} },
+    ]
+  },
+  maid_start: {
+    title: '刘府当差',
+    text: '刘府是亭汝镇上的大户。老太太年过花甲，精神矍铄，一双眼睛透亮。\n\n她上下打量你一番："识字？会算数？"\n\n你点头。她微微点头："好，就留在我跟前伺候。"\n\n从此你有了稳定的进项。',
+    choices: [
+      { text: '尽心伺候老太太，等待机会', next: 'maid_days', effect: function(){S.prestige+=2;S.cls='丫鬟';} },
+      { text: '暗中观察府中人事，伺机而动', next: 'maid_spy' },
+    ]
+  },
+  maid_days: {
+    title: '刘府一月',
+    text: '一月过去，你将老太太伺候得妥妥帖帖。老太太对你越发满意，赏了你一身新衣裳，还额外给了你五两银子。\n\n府里的管事娘子——大丫鬟青姨也对你有了几分好颜色，偶尔会指点你几句。',
+    choices: [
+      { text: '向青姨示好，结为心腹', next: 'maid_friend', effect: function(){S.social+=2;} },
+      { text: '暗中打听府中的秘密', next: 'maid_spy' },
+    ]
+  },
+  maid_spy: {
+    title: '暗中观察',
+    text: '你在府中察言观色，发现几件蹊跷事：\n\n老太太有个亲生女儿，据说早年嫁入京城，数年未曾归宁。\n府中二房的娘子，对你这个大丫鬟颇为不满，暗中拉帮结派。\n库房里堆着几箱来历不明的布匹——南方贡品花色，却无进货单据。',
+    choices: [
+      { text: '将布匹的事告知老太太，表忠心', next: 'maid_loyal', effect: function(){S.prestige+=3;S.social+=1;} },
+      { text: '暗中联络二房娘子，换取好处', next: 'maid_intrigue', effect: function(){S.money+=5;} },
+      { text: '佯装不知，继续蛰伏', next: 'maid_days' },
+    ]
+  },
+  maid_loyal: {
+    title: '忠心进言',
+    text: '你将库房布匹之事密报老太太。老太太眼中闪过一丝赞许："你很好。"\n\n当日，二房娘子被叫去正厅问话，后被禁足一个月。库房重新清点，你被调入老太太的内院伺候，地位仅次于青姨。\n\n青姨私下对你道："老太太眼里不揉沙子，你今日立了功，日后自有你的好处。"',
+    choices: [
+      { text: '继续步步为营，等待机会', next: 'maid_rise', effect: function(){S.cls='二等丫鬟';S.prestige+=3;} },
+    ]
+  },
+  maid_intrigue: {
+    title: '暗通二房',
+    text: '二房娘子与你秘密来往，用小恩小惠收买你。你将老太太的起居作息透露给她，换得五两银子。\n\n但你心里清楚——这种事一旦败露，你将万劫不复。',
+    choices: [
+      { text: '继续两边下注，静观其变', next: 'home_evening', effect: function(){S.money+=5;} },
+      { text: '金盆洗手，向老太太坦白请罪', next: 'maid_confess', effect: function(){S.prestige-=2;} },
+    ]
+  },
+  maid_confess: {
+    title: '坦白请罪',
+    text: '你思来想去，还是主动向老太太坦白了一切。\n\n老太太沉默良久："你虽行差踏错，却能主动坦白，还算有救。罢了，念你初犯，此事就此揭过。但从今往后，好自为之。"',
+    choices: [
+      { text: '磕头谢恩，退出内院', next: 'home_evening' },
+    ]
+  },
+  maid_rise: {
+    title: '内院新贵',
+    text: '半年过去，你已是老太太跟前最得脸的丫鬟。\n\n这日，老太太叫你去跟前："我女儿来信了，京中来信说要接我进京奉养。但我这身子……"\n\n她顿了顿，浑浊的眼盯着你："你可愿随我进京？"\n\n京城，天子脚下，繁华无尽——那是你从未敢想过的地方。',
+    choices: [
+      { text: '跪下谢恩，愿随老太太进京', next: 'jing_capital', effect: function(){S.cls='随侍丫鬟';S.flags.capital=true;} },
+      { text: '婉拒，想留在镇上另谋出路', next: 'town_leave', effect: function(){S.cls='平民';} },
+    ]
+  },
+  jing_capital: {
+    title: '京城！',
+    text: '大燕王朝的京城——盛京。\n\n巍峨城墙，十里长街，繁华盛景远非小镇可比。老太太的女儿嫁入世家大族——沈府，是京城数一数二的门第。\n\n你随老太太入沈府，身份是"老太太从家乡带来的旧仆"。\n\n沈府之大，亭汝镇十倍不止。府中妻妾成群，明争暗斗。你一个新来的丫鬟，犹如浮萍入海。\n\n但你知道——机会，也在这里。',
+    choices: [
+      { text: '【待续】第二章·世家浮沉', next: 'ch1_end' },
+    ]
+  },
+  town_leave: {
+    title: '离府另谋',
+    text: '你跪别老太太，领了十两银子和一身衣裳，出了刘府。\n\n站在亭汝镇的街道上，天高海阔。\n\n你揣着银子，望着通往各处的路，心底某处微微发热。',
+    choices: [
+      { text: '用积蓄在镇上开个摊位，做小买卖', next: 'merchant_road', effect: function(){S.cls='小商贩';} },
+      { text: '【待续】', next: 'ch1_end' },
+    ]
+  },
+  merchant_road: {
+    title: '商路起步',
+    text: '你用积蓄在镇上开了个布匹摊位。\n\n'+(S.husband&&S.husband.bgId==='merchant'?'夫君虽是'+S.husband.bgName+'，但对布匹生意竟颇为精通，帮你看货、定价，省了不少心。':'夫君帮你看摊，你负责进货。')+'\n\n一年下来，你们攒下了二十两银子，在镇上租下了一间铺面。\n\n"这小两口倒是个做生意的料。"镇上的人如是说。',
+    choices: [
+      { text: '【待续】第一章完', next: 'ch1_end' },
+    ]
+  },
+  home_evening: {
+    title: '归家',
+    text: '夜幕降临，你与'+hName()+'回家。\n\n他生火做饭，你整理银钱。一日的忙碌，换来的是踏实的温饱。\n\n饭后，他坐在灯下，轻声道："娘子，今日虽累，却觉得日子有奔头。"',
+    choices: [
+      { text: '【明日再说】', next: 'day_end', effect: function(){S.day++;} },
+    ]
+  },
+  talk_husband: {
+    title: '夫妻夜话',
+    text: '你唤醒了'+hName()+'，借着晨光，看着他的眼睛。\n\n"你我既已结发，我想知道——你心里究竟作何想？"\n\n他垂下眼眸，轻声道：',
+    choices: [
+      { text: '【继续】', next: 'talk_answer' },
+    ]
+  },
+  talk_answer: {
+    title: '他的心意',
+    text: '<div class="sub-text">'+(S.husband&&persText[hPers()]?persText[hPers()]:'愿随娘子同甘共苦，白头偕老。')+'</div>',
+    choices: [
+      { text: '【继续】', next: 'start' },
+    ]
+  },
+  day_end: {
+    title: '夜深了',
+    text: '夜深了，灯火渐暗。\n\n你与'+hName()+'相拥而眠，等待明日的到来。\n\n—— 第 '+S.day+' 天 结束 ——',
+    choices: [
+      { text: '进入新的一天', next: 'day_start', effect: function(){S.day++;} },
+    ]
+  },
+  day_start: {
+    title: '新的一天',
+    text: '晨光再次透过破屋的缝隙，洒在你的脸上。\n\n身侧的'+hName()+'也渐渐转醒，新的一天开始了。\n\n📅 第 '+S.day+' 天',
+    choices: [
+      { text: '规划今日行程', next: 'plan_life' },
+      { text: '直接出门找活干', next: 'town_works' },
+    ]
+  },
+    title: '第一章·完',
+    text: '第一章完结！\n\n你目前的状态：\n💰 银两：'+S.money+'文\n⭐ 声望：'+S.prestige+' | 🤝 人脉：'+S.social+' | 📖 智慧：'+S.wit+' | ⚔️ 魄力：'+S.bravo+'\n🏠 身份：'+S.cls+'\n\n👤 夫君：'+hName()+'（'+hBg()+'，'+(S.husband?S.husband.persName:'未知')+'）\n\n特性：'+hTraits()+'\n\n感谢游玩！🌟',
+    choices: [
+      { text: '重新开始', next: 'reset' },
+    ]
+  },
+  pharmacy_next: {
+    title: '药铺又一日',
+    text: '又一日在药铺忙碌。老板娘依旧沉默，但对你渐有几分好脸色。\n\n又赚了二十文。',
+    choices: [
+      { text: '继续做下去', next: 'pharmacy_next', effect: function(){S.money+=20;S.wit+=0.5;} },
+      { text: '回家休息，改日另谋', next: 'home_evening' },
+    ]
+  },
+};
+
+function saveGame(){localStorage.setItem('nvzh_save',JSON.stringify(S));addLog('💾 存档成功！');}
+function loadGame(){var d=localStorage.getItem('nvzh_save');if(d){Object.assign(S,JSON.parse(d));addLog('📂 读档成功！');render();showScene('start');}else addLog('无存档！');}
+function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';showCreate();}
+
+showCreate();
+</script>
+</body>
+</html>
