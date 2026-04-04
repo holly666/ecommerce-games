@@ -25,6 +25,7 @@ h2 { color: #c9a96e; font-size: 1.1em; margin: 15px 0 10px; border-bottom: 1px s
 .stat-name { font-size: 0.75em; color: #a89070; }
 .stat-val { font-size: 1.3em; color: #c9a96e; font-weight: bold; }
 #scene { background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 20px; margin-bottom: 15px; min-height: 200px; }
+#scene.show { display: block !important; }
 #scene-title { color: #c9a96e; font-size: 1.1em; margin-bottom: 12px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 8px; }
 #scene-text { line-height: 1.8; color: #d4c4a8; font-size: 0.95em; margin-bottom: 15px; }
 .choice { display: block; width: 100%; background: #0f3460; border: 1px solid #c9a96e; color: #e8d5b7; padding: 12px 16px; margin: 8px 0; border-radius: 6px; cursor: pointer; text-align: left; font-size: 0.95em; transition: background 0.2s; }
@@ -37,6 +38,8 @@ h2 { color: #c9a96e; font-size: 1.1em; margin: 15px 0 10px; border-bottom: 1px s
 #log { background: #0d1b2a; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-top: 15px; max-height: 150px; overflow-y: auto; font-size: 0.8em; color: #7a6a50; line-height: 1.6; }
 .log-entry { border-bottom: 1px solid #222; padding: 3px 0; }
 #save-bar { text-align: center; margin: 15px 0; }
+#choices.show { display: block !important; }
+#save-bar.show { display: block !important; }
 button.btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 0 5px; }
 .husband-card { background: #0f3460; border: 1px solid #c9a96e; border-radius: 8px; padding: 12px; margin: 8px 0; }
 .husband-card .name { color: #c9a96e; font-size: 1.1em; font-weight: bold; }
@@ -236,7 +239,7 @@ function startGame() {
   cover.style.width = '100%';
   cover.style.zIndex = '-1';
   // stats stay hidden during character creation (already visibility:hidden)
-  document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); el.style.display = el.id === 'stats' ? 'grid' : 'block'; });
+  document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
   var h1 = document.querySelector('#game > h1');
   if(h1) h1.style.display = 'block';
   showStep1PlayerBg();
