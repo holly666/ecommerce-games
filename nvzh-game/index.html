@@ -9,6 +9,15 @@
 body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #e8d5b7; min-height: 100vh; }
 #game { max-width: 700px; margin: 0 auto; padding: 20px; }
 h1 { text-align: center; color: #c9a96e; font-size: 1.8em; margin: 20px 0; letter-spacing: 4px; }
+#cover { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center; }
+#cover h2 { color: #c9a96e; font-size: 2.2em; margin-bottom: 10px; letter-spacing: 6px; }
+#cover .subtitle { color: #a89070; font-size: 1em; margin-bottom: 40px; letter-spacing: 2px; }
+#cover .desc { color: #7a6a50; font-size: 0.9em; max-width: 480px; line-height: 1.8; margin-bottom: 40px; }
+#cover button.start-btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 15px 50px; border-radius: 8px; cursor: pointer; font-size: 1.1em; font-weight: bold; letter-spacing: 4px; transition: background 0.2s; }
+#cover button.start-btn:hover { background: #e0c080; }
+#stats, #scene, #choices, #save-bar, #game > h1 { display: none; }
+.show { display: block !important; }
+#stats.show { display: grid !important; }
 h2 { color: #c9a96e; font-size: 1.1em; margin: 15px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
 #stats { background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 15px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
 .stat { background: #0f3460; border-radius: 6px; padding: 8px 12px; text-align: center; }
@@ -37,7 +46,12 @@ button.btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 8px 20p
 </head>
 <body>
 <div id="game">
-  <h1>🏛️ 女尊世界当家主</h1>
+  <div id="cover">
+    <h2>🏛️ 女尊世界</h2>
+    <div class="subtitle">当 家 主</div>
+    <div class="desc">女尊王朝，边境小镇。<br>你年过及笄，议得一门亲事。<br>破屋一间，薄田几亩，夫君一名。<br>从寒门子弟到一方霸主，一切从今日开始。</div>
+    <button class="start-btn" onclick="startGame()">开始游戏</button>
+  </div>
   <div id="stats">
     <div class="stat"><div class="stat-name">💰 银两</div><div class="stat-val" id="s-money">0</div></div>
     <div class="stat"><div class="stat-name">⭐ 声望</div><div class="stat-val" id="s-prestige">1</div></div>
@@ -196,6 +210,14 @@ function hName() { return S.husband ? S.husband.name : '顾长安'; }
 function hBg() { return S.husband ? S.husband.bgName : '某家'; }
 function hPers() { return S.husband ? S.husband.persId : 'kind'; }
 function hTraits() { return S.husband ? S.husband.traits.join(' / ') : '无'; }
+
+function startGame() {
+  document.getElementById('cover').style.display = 'none';
+  document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
+  var h1 = document.querySelector('#game > h1');
+  if(h1) h1.style.display = 'block';
+  showCreate();
+}
 
 function showCreate() {
   document.getElementById('scene-title').textContent = '开局·娶亲';
@@ -497,7 +519,7 @@ function saveGame(){localStorage.setItem('nvzh_save',JSON.stringify(S));addLog('
 function loadGame(){var d=localStorage.getItem('nvzh_save');if(d){Object.assign(S,JSON.parse(d));addLog('📂 读档成功！');render();showScene('start');}else addLog('无存档！');}
 function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';showCreate();}
 
-showCreate();
+// startGame() is called by the "开始游戏" button — not auto-run
 </script>
 </body>
 </html>
