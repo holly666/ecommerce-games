@@ -15,9 +15,10 @@ h1 { text-align: center; color: #c9a96e; font-size: 1.8em; margin: 20px 0; lette
 #cover .desc { color: #7a6a50; font-size: 0.9em; max-width: 480px; line-height: 1.8; margin-bottom: 40px; }
 #cover button.start-btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 15px 50px; border-radius: 8px; cursor: pointer; font-size: 1.1em; font-weight: bold; letter-spacing: 4px; transition: background 0.2s; }
 #cover button.start-btn:hover { background: #e0c080; }
-#stats, #scene, #choices, #save-bar, #game > h1 { display: none !important; }
+#stats, #scene, #choices, #save-bar, #game > h1 { display: none; }
 .show { display: block !important; }
 #stats.show { display: grid !important; }
+#cover.gone { visibility: hidden; position: absolute; pointer-events: none; }
 h2 { color: #c9a96e; font-size: 1.1em; margin: 15px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
 #stats { background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 15px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
 .stat { background: #0f3460; border-radius: 6px; padding: 8px 12px; text-align: center; }
@@ -225,14 +226,11 @@ function hPers() { return S.husband ? S.husband.persId : 'kind'; }
 function hTraits() { return S.husband ? S.husband.traits.join(' / ') : '无'; }
 
 function startGame() {
-  document.getElementById('cover').style.display = 'none';
-  document.getElementById('cover').style.minHeight = '0';
-  document.getElementById('cover').style.height = '0';
+  document.getElementById('cover').classList.add('gone');
   document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
   var h1 = document.querySelector('#game > h1');
   if(h1) h1.style.display = 'block';
   showStep1PlayerBg();
-  document.getElementById('scene').scrollIntoView({behavior:'smooth'});
 }
 
 function showStep1PlayerBg() {
@@ -571,7 +569,7 @@ var scenes = {
 
 function saveGame(){localStorage.setItem('nvzh_save',JSON.stringify(S));addLog('💾 存档成功！');}
 function loadGame(){var d=localStorage.getItem('nvzh_save');if(d){Object.assign(S,JSON.parse(d));addLog('📂 读档成功！');render();showScene('start');}else addLog('无存档！');}
-function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null,playerBg:null,playerBgName:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';document.getElementById('cover').style.display='flex';document.getElementById('cover').style.minHeight='';document.getElementById('cover').style.height='';document.querySelectorAll('#stats,#scene,#choices,#save-bar').forEach(function(el){el.classList.remove('show');});var h1=document.querySelector('#game>h1');if(h1)h1.style.display='none';}
+function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null,playerBg:null,playerBgName:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';document.getElementById('cover').classList.remove('gone');document.querySelectorAll('#stats,#scene,#choices,#save-bar').forEach(function(el){el.classList.remove('show');});var h1=document.querySelector('#game>h1');if(h1)h1.style.display='none';}
 
 // startGame() is called by the "开始游戏" button — not auto-run
 </script>
