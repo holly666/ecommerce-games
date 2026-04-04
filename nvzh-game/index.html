@@ -226,10 +226,13 @@ function hTraits() { return S.husband ? S.husband.traits.join(' / ') : '无'; }
 
 function startGame() {
   document.getElementById('cover').style.display = 'none';
+  document.getElementById('cover').style.minHeight = '0';
+  document.getElementById('cover').style.height = '0';
   document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
   var h1 = document.querySelector('#game > h1');
   if(h1) h1.style.display = 'block';
   showStep1PlayerBg();
+  document.getElementById('scene').scrollIntoView({behavior:'smooth'});
 }
 
 function showStep1PlayerBg() {
@@ -568,7 +571,7 @@ var scenes = {
 
 function saveGame(){localStorage.setItem('nvzh_save',JSON.stringify(S));addLog('💾 存档成功！');}
 function loadGame(){var d=localStorage.getItem('nvzh_save');if(d){Object.assign(S,JSON.parse(d));addLog('📂 读档成功！');render();showScene('start');}else addLog('无存档！');}
-function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null,playerBg:null,playerBgName:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';document.getElementById('cover').style.display='flex';document.querySelectorAll('#stats,#scene,#choices,#save-bar').forEach(function(el){el.classList.remove('show');});var h1=document.querySelector('#game>h1');if(h1)h1.style.display='none';}
+function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null,playerBg:null,playerBgName:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';document.getElementById('cover').style.display='flex';document.getElementById('cover').style.minHeight='';document.getElementById('cover').style.height='';document.querySelectorAll('#stats,#scene,#choices,#save-bar').forEach(function(el){el.classList.remove('show');});var h1=document.querySelector('#game>h1');if(h1)h1.style.display='none';}
 
 // startGame() is called by the "开始游戏" button — not auto-run
 </script>
