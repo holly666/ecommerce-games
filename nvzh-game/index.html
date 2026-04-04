@@ -226,7 +226,14 @@ function hPers() { return S.husband ? S.husband.persId : 'kind'; }
 function hTraits() { return S.husband ? S.husband.traits.join(' / ') : '无'; }
 
 function startGame() {
-  document.getElementById('cover').classList.add('gone');
+  var cover = document.getElementById('cover');
+  cover.style.position = 'absolute';
+  cover.style.visibility = 'hidden';
+  cover.style.pointerEvents = 'none';
+  cover.style.top = '0';
+  cover.style.left = '0';
+  cover.style.width = '100%';
+  cover.style.zIndex = '-1';
   document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
   var h1 = document.querySelector('#game > h1');
   if(h1) h1.style.display = 'block';
