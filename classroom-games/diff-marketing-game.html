@@ -81,7 +81,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
     <p>💡 这个游戏考察的是你对<strong style="color:#ffd700">营销策略</strong>的理解，不是背知识点。</p>
   </div>
   <div class="strategy-tags">
-    <div style="color:#aaa;font-size:0.9em;margin-bottom:8px;">📚 游戏中你会用到7种营销策略（题目不会提示是哪种）：</div>
+    <div style="color:#aaa;font-size:0.9em;margin-bottom:8px;">📚 游戏中你会用到8种营销策略（题目不会提示是哪种）：</div>
     <span class="strategy-tag">策略类型1</span>
     <span class="strategy-tag">策略类型2</span>
     <span class="strategy-tag">策略类型3</span>
@@ -89,6 +89,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
     <span class="strategy-tag">策略类型5</span>
     <span class="strategy-tag">策略类型6</span>
     <span class="strategy-tag">策略类型7</span>
+    <span class="strategy-tag">策略类型8</span>
   </div>
 </div>
 
@@ -327,9 +328,44 @@ const gameData = {
     },
     {
       id: 7,
+      strategy: "价格差异化策略",
+      situationTitle: "🗓️ 第七关 · 定价的艺术",
+      situationText: "「萌二次元」同款手办卖¥98，你进的货完全一样，成本都是¥65。<br>但你发现一个有趣的现象：来店里买手办的用户分两种——<br>一种是\"自用型\"，觉得到手能玩就行；另一种是\"收藏型\"，愿意为\"更好的开箱体验\"多付钱。",
+      data: [
+        { label: "同款手办萌二次元售价", value: "¥98" },
+        { label: "你的进货成本", value: "¥65" },
+        { label: "用户类型A（自用）", value: "\"到手能玩就行\"" },
+        { label: "用户类型B（收藏）", value: "\"买的是仪式感\"" },
+        { label: "升级包装+配件成本", value: "仅多¥8" }
+      ],
+      question: "你打算怎么定价，让两种用户都愿意付钱？",
+      options: [
+        { text: "统一卖¥98——跟萌二次元一样，用价格硬刚", key: "wrong" },
+        { text: "分层定价：普通版¥68 + 珍藏版¥188（编号卡+专属盒）成本只多¥8", key: "correct" },
+        { text: "降价到¥60——薄利多销，用低价挤掉萌二次元", key: "wrong" },
+        { text: "统一卖¥188——坚持高端路线，不跟低价党玩", key: "neutral" }
+      ],
+      feedback: {
+        correct: {
+          title: "✅ 策略正确！",
+          strategy: "价格差异化策略",
+          text: "这就是价格差异化的精髓：同样的产品成本结构，通过分层满足不同用户——普通版留住\"要便宜\"的用户，珍藏版捕获\"要仪式感\"的用户。同样成本¥65，普通版赚¥3，珍藏版赚¥115。两个用户群都留住，利润翻倍。"
+        },
+        wrong: {
+          title: "❌ 价格战是最蠢的打法",
+          text: "你降价，萌二次元看到后也降，你再降...？无限循环，谁都不赚钱。而且降价吸引来的全是价格敏感用户，一旦别人更便宜，立刻流失。根本问题没解决。"
+        },
+        neutral: {
+          title: "⚠️ 高端路线放弃了大多数用户",
+          text: "¥188统一高端，只买得起的少数人回来。大多数用户会觉得\"太贵了，不买了\"。市场白白让给了萌二次元。"
+        }
+      }
+    },
+    {
+      id: 8,
       strategy: "差异化思维（综合）",
-      situationTitle: "🗓️ 第七关 · 终极复盘",
-      situationText: "经过6轮决策，你的店铺已经形成了独特风格，回头看第一关的选择，你有什么感悟？",
+      situationTitle: "🗓️ 第八关 · 终极复盘",
+      situationText: "经过7轮决策，你的店铺已经形成了独特风格，回头看第一关的选择，你有什么感悟？",
       data: [
         { label: "店铺月销", value: "1.2万", type: "good" },
         { label: "用户复购率", value: "48%", type: "good" },
@@ -388,7 +424,6 @@ function loadRound(roundIndex) {
   const round = gameData.rounds[roundIndex];
   gamePhase = 'choice';
   
-  // 清理上一轮可能残留的额外按钮（retry时）
   const existingNextBtn = document.getElementById('nextRoundExtraBtn');
   if (existingNextBtn) existingNextBtn.remove();
   
@@ -411,9 +446,10 @@ function loadRound(roundIndex) {
   document.getElementById('questionText').textContent = round.question;
   document.getElementById('thinkHint').textContent = '🤔 思考提示：仔细看数据，想清楚这个问题的关键是什么。';
 
+  const shuffledOptions = shuffle(round.options);
   const letters = ['A', 'B', 'C', 'D'];
   const container = document.getElementById('optionsContainer');
-  container.innerHTML = round.options.map((opt, i) => 
+  container.innerHTML = shuffledOptions.map((opt, i) => 
     `<button class="option-btn" onclick="selectOption('${opt.key}', this)"><span style="font-weight:bold;color:#ffd700;margin-right:10px;font-size:1.1em;">${letters[i]}</span>${opt.text}</button>`
   ).join('');
   
@@ -467,7 +503,6 @@ function confirmChoice() {
   const btn = document.getElementById('actionBtn');
   btn.disabled = false;
   if (selectedOption !== 'correct' && currentRound < gameData.rounds.length - 1) {
-    // 选错了：显示重试按钮
     btn.textContent = '🔄 重试本关';
     btn.onclick = () => { gamePhase = 'choice'; loadRound(currentRound); };
     const retryBtn = document.createElement('button');
@@ -499,7 +534,7 @@ function showResult() {
   const total = roundResults.length;
   
   let title = '';
-  if (correctCount === 7) title = '🏆 营销天才！';
+  if (correctCount === 8) title = '🏆 营销天才！';
   else if (correctCount >= 5) title = '🌟 优秀掌柜！';
   else if (correctCount >= 3) title = '📚 潜力无限';
   else title = '💡 继续学习';

@@ -1,455 +1,179 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>运营总监的一周 - 电商数据收集</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%); min-height: 100vh; color: #fff; }
-.container { max-width: 800px; margin: 0 auto; padding: 20px; }
-
-/* 开始页面 */
-#start-screen { text-align: center; padding: 40px 20px; }
-.title { font-size: 2.4em; color: #ff6b9d; text-shadow: 0 0 30px rgba(255,107,157,0.5); margin-bottom: 10px; }
-.subtitle { font-size: 1.2em; color: #c792ea; margin-bottom: 30px; }
-.start-btn { background: linear-gradient(135deg, #ff6b9d, #c792ea); color: #fff; border: none; padding: 18px 50px; font-size: 1.3em; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 20px rgba(255,107,157,0.4); }
-.start-btn:hover { transform: translateY(-3px); }
-.story-box { background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin: 20px 0; border: 1px solid rgba(255,107,157,0.3); text-align: left; }
-.story-title { color: #ff6b9d; font-size: 1.2em; margin-bottom: 15px; font-weight: bold; }
-.story-text { line-height: 1.8; color: #e0d4f7; }
-.method-card { background: linear-gradient(135deg, #1a1a2e, #2d1b4e); border: 1px solid #ff6b9d; border-radius: 12px; padding: 12px; margin: 8px 0; text-align: left; }
-.method-name { color: #ff6b9d; font-weight: bold; font-size: 0.95em; margin-bottom: 5px; }
-.method-examples { color: #c792ea; font-size: 0.8em; }
-
-/* 游戏页面 */
-#game-screen { display: none; }
-.step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
-.step-dot { width: 10px; height: 10px; border-radius: 50%; background: #334; }
-.step-dot.active { background: #ff6b9d; }
-.step-dot.done { background: #51cf66; }
-
-.question-box { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-.knowledge-tag { display: inline-block; background: linear-gradient(135deg, #ff6b9d, #c792ea); color: #fff; padding: 5px 12px; border-radius: 12px; font-size: 0.75em; margin-bottom: 15px; }
-.scenario { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 20px; border-radius: 12px; margin-bottom: 18px; text-align: left; }
-.scenario-title { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; }
-.scenario-text { line-height: 1.7; font-size: 0.95em; white-space: pre-line; }
-.question-text { font-size: 1.05em; line-height: 1.7; color: #333; margin-bottom: 15px; font-weight: 500; }
-.hint-btn { background: #fff3cd; color: #856404; border: 1px solid #ffc107; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 15px; }
-
-.think-box { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 15px; color: #856404; border-left: 4px solid #ffc107; text-align: left; font-size: 0.9em; }
-.think-title { font-weight: bold; margin-bottom: 8px; }
-
-.options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
-.option-btn { background: #f8f9fa; border: 2px solid #e9ecef; padding: 12px 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: center; font-size: 0.95em; color: #333; font-weight: 500; min-height: 60px; display: flex; align-items: center; justify-content: center; }
-.option-btn:hover { border-color: #ff6b9d; background: #ffe8f0; transform: translateY(-2px); }
-.option-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); color: #ffd700; font-weight: bold; }
-.option-btn.correct { background: linear-gradient(135deg, #00ff88, #00cc6a); border-color: #00ff88; color: #fff; }
-.option-btn.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
-.option-btn.disabled { opacity: 0.7; cursor: not-allowed; }
-
-.feedback-box { background: #e8f5e9; padding: 18px; border-radius: 12px; margin-top: 16px; display: none; color: #2e7d32; border-left: 4px solid #4caf50; text-align: left; }
-.feedback-box.show { display: block; animation: fadeIn 0.3s; }
-.feedback-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; }
-.feedback-type { display: inline-block; background: #51cf66; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; margin-bottom: 8px; }
-.feedback-text { line-height: 1.7; font-size: 0.95em; }
-.retry-btn { background: #ff9800; border: none; color: #fff; padding: 10px 24px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin-top: 12px; }
-.next-btn { background: #51cf66; border: none; color: #fff; padding: 10px 24px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin-top: 12px; margin-left: 8px; }
-
-.action-btn { background: linear-gradient(135deg, #ff6b9d, #c792ea); border: none; color: #fff; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 8px; }
-.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* 结果页面 */
-#result-screen { display: none; text-align: center; padding: 40px 20px; }
-.result-title { font-size: 2.5em; margin-bottom: 20px; }
-.final-score { font-size: 4em; color: #ffd700; margin: 20px 0; text-shadow: 0 0 30px rgba(255,215,0,0.5); }
-.result-msg { font-size: 1.2em; color: #aaa; margin-bottom: 30px; line-height: 1.6; }
-.stats { display: flex; justify-content: center; gap: 20px; margin: 30px 0; flex-wrap: wrap; }
-.stat { background: rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 15px; }
-.stat-value { font-size: 1.5em; color: #ff6b9d; font-weight: bold; }
-.stat-label { font-size: 0.75em; color: #888; margin-top: 5px; }
-.result-detail { background: #16213e; border-radius: 16px; padding: 24px; text-align: left; margin-bottom: 24px; }
-.result-round { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.result-round:last-child { border-bottom: none; }
-.result-round-title { font-weight: bold; margin-bottom: 4px; }
-.result-correct { color: #51cf66; font-size: 0.9em; }
-.result-wrong { color: #ff6b6b; font-size: 0.9em; }
-.result-answer { color: #888; font-size: 0.85em; margin-top: 4px; }
-
-@media (max-width: 600px) { .options { grid-template-columns: repeat(2, 1fr); } }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据侦探 - 竞品情报收集</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%); min-height: 100vh; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        #start-screen { text-align: center; padding: 40px 20px; }
+        .title { font-size: 2.4em; color: #ff6b9d; text-shadow: 0 0 30px rgba(255,107,157,0.5); margin-bottom: 10px; }
+        .subtitle { font-size: 1.2em; color: #c792ea; margin-bottom: 30px; }
+        .start-btn { background: linear-gradient(135deg, #ff6b9d, #c792ea); color: #fff; border: none; padding: 18px 50px; font-size: 1.3em; border-radius: 50px; cursor: pointer; transition: all 0.3s; font-weight: bold; }
+        .start-btn:hover { transform: translateY(-3px); }
+        .story-box { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid rgba(255,107,157,0.3); text-align: left; }
+        .story-title { color: #ff6b9d; font-size: 1.1em; margin-bottom: 10px; font-weight: bold; }
+        .story-text { line-height: 1.6; color: #e0d4f7; font-size: 0.95em; }
+        .tip-box { background: rgba(255,193,7,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid rgba(255,193,7,0.3); text-align: left; }
+        .tip-title { color: #ffc107; font-weight: bold; margin-bottom: 8px; }
+        #game-screen { display: none; }
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 20px; flex-wrap: wrap; gap: 5px; }
+        .step { font-size: 0.7em; color: #666; }
+        .step.active { color: #ff6b9d; font-weight: bold; }
+        .step.completed { color: #00ff88; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .score { font-size: 1.2em; color: #ff6b9d; font-weight: bold; }
+        .phase-tag { background: linear-gradient(135deg, #ff6b9d, #c792ea); padding: 5px 12px; border-radius: 15px; font-size: 0.75em; }
+        .question-box { background: #fff; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .scenario { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 15px; border-radius: 10px; margin-bottom: 12px; text-align: left; font-size: 0.95em; line-height: 1.6; }
+        .question-text { font-size: 1em; color: #333; margin-bottom: 10px; font-weight: 500; }
+        .think-box { background: #fff3cd; padding: 12px; border-radius: 8px; margin-bottom: 12px; color: #856404; font-size: 0.85em; text-align: left; }
+        .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .option { background: #f8f9fa; border: 2px solid #e9ecef; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; font-size: 0.85em; color: #333; }
+        .option:hover { border-color: #ff6b9d; background: #ffe8f0; }
+        .option.correct { background: linear-gradient(135deg, #00ff88, #00cc6a); border-color: #00ff88; color: #fff; }
+        .option.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); border-color: #ff6b6b; color: #fff; }
+        .option.disabled { pointer-events: none; opacity: 0.7; }
+        .explanation { background: #e8f5e9; padding: 15px; border-radius: 10px; margin-top: 12px; display: none; color: #2e7d32; text-align: left; font-size: 0.9em; }
+        .explanation.show { display: block; }
+        .explanation-title { font-weight: bold; margin-bottom: 8px; }
+        #result-screen { display: none; text-align: center; padding: 30px 20px; }
+        .result-title { font-size: 2em; margin-bottom: 15px; }
+        .final-score { font-size: 3em; color: #ff6b9d; margin: 15px 0; }
+        .result-msg { font-size: 1em; color: #aaa; margin-bottom: 20px; }
+        .stats { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        .stat { background: rgba(255,255,255,0.05); padding: 12px 18px; border-radius: 12px; }
+        .stat-value { font-size: 1.3em; color: #ff6b9d; }
+        .stat-label { font-size: 0.7em; color: #888; }
+        .restart-btn { background: linear-gradient(135deg, #ff6b9d, #c792ea); color: #fff; border: none; padding: 12px 30px; font-size: 1em; border-radius: 50px; cursor: pointer; font-weight: bold; }
+        .method-card { background: linear-gradient(135deg, #1a1a2e, #2d1b4e); border: 1px solid #ff6b9d; border-radius: 10px; padding: 10px; margin: 6px 0; text-align: left; }
+        .method-name { color: #ff6b9d; font-weight: bold; font-size: 0.9em; }
+        .method-examples { color: #c792ea; font-size: 0.75em; }
+        @media (max-width: 600px) { .options { grid-template-columns: 1fr; } .title { font-size: 1.8em; } }
+    </style>
 </head>
 <body>
-<div class="container">
-
-<div id="start-screen">
-  <h1 class="title">📊 运营总监的一周</h1>
-  <p class="subtitle">电商数据收集实战</p>
-  <button class="start-btn" id="startBtn">📊 开始任务</button>
-  <div class="story-box">
-    <div class="story-title">📖 任务说明</div>
-    <p class="story-text">你是某宝店铺的运营总监！周一到周五每天都有不同的数据收集任务。</p>
-    <p style="margin-top:15px;">🎯 <strong>任务目标：</strong>选择正确的数据收集途径！</p>
-  </div>
-  <div class="story-box">
-    <div class="story-title">📋 5大数据收集途径</div>
-    <div class="method-card">
-      <div class="method-name">A. 🌐 公开渠道</div>
-      <div class="method-examples">官网、社交媒体、行业报告、新闻、政府信息</div>
+    <div class="container">
+        <div id="start-screen">
+            <h1 class="title">🕵️ 数据侦探</h1>
+            <p class="subtitle">竞品情报收集大挑战</p>
+            <button class="start-btn" onclick="startGame()">🔍 开始调查</button>
+            <div class="story-box">
+                <div class="story-title">任务说明</div>
+                <p class="story-text">你是一家公司的市场情报员！老板给了你8个调查任务，选择正确的数据收集途径。</p>
+            </div>
+            <div class="tip-box">
+                <div class="tip-title">📋 5大数据收集途径</div>
+                <div class="method-card"><div class="method-name">🌐 公开渠道</div><div class="method-examples">官网、社交媒体、行业报告</div></div>
+                <div class="method-card"><div class="method-name">🏢 第三方渠道</div><div class="method-examples">行业协会、展会、咨询公司</div></div>
+                <div class="method-card"><div class="method-name">👀 实地调研</div><div class="method-examples">现场考察、用户访谈</div></div>
+                <div class="method-card"><div class="method-name">💻 网络监测</div><div class="method-examples">搜索引擎、社交媒体监测</div></div>
+                <div class="method-card"><div class="method-name">🏠 内部信息源</div><div class="method-examples">员工反馈、销售数据</div></div>
+            </div>
+        </div>
+        <div id="game-screen">
+            <div class="progress-bar">
+                <span class="step active" id="step1">1</span><span class="step" id="step2">2</span><span class="step" id="step3">3</span><span class="step" id="step4">4</span><span class="step" id="step5">5</span><span class="step" id="step6">6</span><span class="step" id="step7">7</span><span class="step" id="step8">8</span>
+            </div>
+            <div class="header">
+                <div class="phase-tag" id="phase-tag">任务</div>
+                <div class="score">⭐ <span id="score">0</span></div>
+            </div>
+            <div class="question-box">
+                <div class="scenario" id="scenario-text"></div>
+                <p class="question-text" id="question-text"></p>
+                <div class="think-box" id="think-text"></div>
+                <div class="explanation" id="explanation"><div class="explanation-title" id="explanation-title"></div><p id="explanation-text"></p></div>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        <div id="result-screen">
+            <h1 class="result-title" id="result-title">🎉 完成任务!</h1>
+            <div class="final-score"><span id="final-score">0</span></div>
+            <p class="result-msg" id="result-msg"></p>
+            <div class="stats"><div class="stat"><div class="stat-value" id="stat-right">0</div><div class="stat-label">正确</div></div><div class="stat"><div class="stat-value" id="stat-wrong">0</div><div class="stat-label">错误</div></div></div>
+            <button class="restart-btn" onclick="restartGame()">再调查一次</button>
+        </div>
     </div>
-    <div class="method-card">
-      <div class="method-name">B. 🏢 第三方渠道</div>
-      <div class="method-examples">行业协会、展会研讨、咨询公司</div>
-    </div>
-    <div class="method-card">
-      <div class="method-name">C. 👀 实地调研</div>
-      <div class="method-examples">现场考察、用户访谈、问卷调查</div>
-    </div>
-    <div class="method-card">
-      <div class="method-name">D. 💻 网络监测</div>
-      <div class="method-examples">搜索引擎、社交媒体监测</div>
-    </div>
-    <div class="method-card">
-      <div class="method-name">E. 🏠 内部信息源</div>
-      <div class="method-examples">员工反馈、销售数据、客户数据</div>
-    </div>
-  </div>
-</div>
-
-<div id="game-screen">
-  <div class="step-indicator" id="stepIndicator"></div>
-  <div class="question-box">
-    <span class="knowledge-tag" id="knowledgeTag">数据收集</span>
-    <div class="scenario">
-      <div class="scenario-title" id="scenarioTitle"></div>
-      <div class="scenario-text" id="scenarioText"></div>
-    </div>
-    <div class="question-text" id="questionText"></div>
-    <button class="hint-btn" id="hintBtn" onclick="showHint()" style="background:#fff3cd;color:#856404;border:1px solid #ffc107;padding:8px 16px;border-radius:8px;cursor:pointer;margin-bottom:15px;display:block;">📋 点我看提示</button>
-    <div class="think-box" id="thinkBox" style="display:none;">
-      <div class="think-title">📌 思考提示</div>
-      <div id="thinkText"></div>
-    </div>
-    <div class="options" id="optionsContainer"></div>
-    <div class="feedback-box" id="feedbackBox">
-      <div class="feedback-title" id="feedbackTitle"></div>
-      <div id="feedbackType"></div>
-      <div class="feedback-text" id="feedbackText"></div>
-      <button class="retry-btn" id="retryBtn" onclick="retryRound()">🔄 再试一次</button>
-      <button class="next-btn" id="nextBtn" onclick="nextRound()">下一关 →</button>
-    </div>
-    <div style="text-align:center;">
-      <button class="action-btn" id="actionBtn" disabled onclick="confirmChoice()">请先选择一种途径</button>
-    </div>
-  </div>
-</div>
-
-<div id="result-screen">
-  <div class="result-title" id="resultTitle"></div>
-  <div class="final-score"><span id="finalScore">0</span>分</div>
-  <div class="result-msg" id="resultMsg"></div>
-  <div class="stats">
-    <div class="stat"><div class="stat-value" id="statRight">0</div><div class="stat-label">正确</div></div>
-    <div class="stat"><div class="stat-value" id="statWrong">0</div><div class="stat-label">错误</div></div>
-  </div>
-  <div class="result-detail" id="resultDetail"></div>
-  <button id="restartBtn" class="start-btn" onclick="restartGame()">再来一周</button>
-</div>
-
-</div>
-<script>
-const gameData = {
-  rounds: [
-    {
-      id: 1,
-      title: "周一 · 竞品情报",
-      caseText: "老板问：最近竞品A做了什么动作？",
-      question: "要获取竞品动态，最合适的方式是？",
-      hint: "💡 产品信息、价格策略、公司动态——哪里查最全最快？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: true, title: "✅ 正确！", type: "公开渠道", text: "竞品动态看官网、新闻、社交媒体就够了，不用花钱找第三方。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "花钱找第三方没必要，竞品动态都是公开信息，自己查又快又省钱。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "只能看到1-2家店的表面装修，看不到竞品的新品发布、线上推广、价格策略。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "工具适合持续追踪，一次性任务用公开搜索就够了，不用工具。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，查竞品动态用内部信息没用，方向完全不对。" } }
-      ]
-    },
-    {
-      id: 2,
-      title: "周二 · 客户流失",
-      caseText: "VIP客户突然不续费了，想知道为什么。",
-      question: "要了解客户流失的真正原因，应该？",
-      hint: "💡 客户为什么流失——谁最清楚？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "网上的评价有水军、有恶意差评，不一定是客户真实想法。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告是通用数据，解决不了「这个客户为什么不续费」这个具体问题。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "直接联系客户、做访谈或问卷，才能知道真实原因。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "监测工具适合追踪竞品或市场动态，查单个客户流失原因用不上。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部数据能看到流失事实，但看不到原因。" } }
-      ]
-    },
-    {
-      id: 3,
-      title: "周三 · 门店体验",
-      caseText: "想知道竞品B的门店产品体验和服务态度。",
-      question: "要了解门店真实体验，合适的方式是？",
-      hint: "💡 产品手感、服务态度——能网上感受吗？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "网上能看到装修风格、货架陈列，但看不到产品手感、服务态度、现场氛围。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告主要做数据分析，现场体验必须自己感受，报告给不了。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: true, title: "✅ 正确！", type: "实地调研", text: "亲自去竞品门店，感受产品、服务、氛围，这是网上无法替代的。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "网络只能看图文评价，现场体验必须亲自去。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，查竞品门店体验用内部信息没用。" } }
-      ]
-    },
-    {
-      id: 4,
-      title: "周四 · 行业数据",
-      caseText: "老板要做季度规划，需要行业市场规模和趋势。",
-      question: "要获取行业数据报告，最合适的方式是？",
-      hint: "💡 市场规模、趋势——普通人能查到吗？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "市场规模、发展趋势是专业机构研究整理的，公开搜索只能找到碎片，无法支撑决策。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: true, title: "✅ 正确！", type: "第三方渠道", text: "行业报告由咨询公司、行业协会、研究机构整理，花钱买报告才能获得系统数据。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "实地调研适合看具体门店，不适合了解整个行业的规模和发展趋势。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "工具适合追踪实时动态，行业报告是阶段性研究成果，工具给不了。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，行业规模是外部市场的宏观数据，内部没有。" } }
-      ]
-    },
-    {
-      id: 5,
-      title: "周五 · 销售复盘",
-      caseText: "月底了，想分析自家店铺的销售数据做复盘。",
-      question: "自家销售数据应该从哪里获取？",
-      hint: "💡 销售数据、订单记录——从哪里查？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "公开渠道查的是竞品或市场信息，自家销售数据在后台，公开渠道查不到。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方是查外部数据的，自家数据在后台，不需要花钱找第三方。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "自家销售数据是后台数字，实地调研别人的店看不出自家店的销售情况。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "网络监测是查外部动态的，自家销售数据在后台，监测工具用不上。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: true, title: "✅ 正确！", type: "内部信息源", text: "自家销售数据在后台，登录后台即可查看订单、转化率、复购率等。" } }
-      ]
-    },
-    {
-      id: 6,
-      title: "周六 · 社媒监测",
-      caseText: "想实时监测竞品C的社交媒体动态和用户口碑。",
-      question: "要持续追踪多个平台的竞品动态，最高效的方式是？",
-      hint: "💡 持续追踪多平台——手动刷还是用工具？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "手动去各平台刷，一次性操作，无法「持续监测」。每天刷一遍累死还漏消息。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "第三方报告是定期发布的，不适合需要实时追踪的社交媒体监测场景。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "实地调研适合看线下门店，社交媒体在线上，调研方式完全不对路。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: true, title: "✅ 正确！", type: "网络监测", text: "用专业工具自动追踪多个平台，设定关键词告警，比人工刷高效一百倍。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "内部信息是自家数据，竞品动态属于外部信息，内部信息查不到。" } }
-      ]
-    },
-    {
-      id: 7,
-      title: "周日 · 展会情报",
-      caseText: "下周有行业展会，想提前了解竞品动态和行业趋势。",
-      question: "参加展会的核心价值是什么？",
-      hint: "💡 展会能同时了解哪些信息？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: false, title: "⚠️ 后果", text: "展会是一手信息，窝在家里查网上二手信息，等于放弃了最好的情报来源。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: true, title: "✅ 正确！", type: "第三方渠道", text: "展会和行业研讨会是第三方渠道，一次能看行业趋势、竞品动态、新技术，效率极高。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "实地调研是去具体门店或访问特定对象，展会是面对整个行业，场景不同。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "展会是线下活动，网络监测是线上工具，两码事。去展会还监测啥？" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "展会是获取外部信息的场景，内部信息在这个时候完全没用。" } }
-      ]
-    },
-    {
-      id: 8,
-      title: "额外 · 专利查询",
-      caseText: "想查竞品的技术专利和研发方向。",
-      question: "查专利的正确方式是？",
-      hint: "💡 专利信息——收费还是免费？",
-      options: [
-        { text: "A. 公开渠道", key: "public", feedback: { correct: true, title: "✅ 正确！", type: "公开渠道", text: "专利在国家知识产权局官网免费查，完全公开，不需要花钱找第三方。" } },
-        { text: "B. 第三方渠道", key: "third", feedback: { correct: false, title: "⚠️ 后果", text: "查专利完全免费！花钱找第三方是被坑，自己动手5分钟搞定。" } },
-        { text: "C. 实地调研", key: "field", feedback: { correct: false, title: "⚠️ 后果", text: "专利是文档信息，不是门店体验，实地调研完全用不上。" } },
-        { text: "D. 网络监测", key: "online", feedback: { correct: false, title: "⚠️ 后果", text: "专利数据库是特定网站，网络监测工具不适合查专利这种定向信息。" } },
-        { text: "E. 内部信息源", key: "internal", feedback: { correct: false, title: "⚠️ 后果", text: "专利是竞品的技术资料，属于外部信息，内部信息里不可能有。" } }
-      ]
-    }
-  ]
-};
-
-let currentRound = 0;
-let selectedIndex = -1;
-let score = 0;
-let roundResults = [];
-
-function shuffle(array) {
-  let arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function startGame() {
-  currentRound = 0;
-  score = 0;
-  roundResults = [];
-  document.getElementById('start-screen').style.display = 'none';
-  document.getElementById('game-screen').style.display = 'block';
-  document.getElementById('result-screen').style.display = 'none';
-  loadRound();
-}
-
-
-function showHint() {
-    document.getElementById('thinkBox').style.display = 'block';
-    document.getElementById('hintBtn').style.display = 'none';
-}
-
-function loadRound() {
-  selectedIndex = -1;
-  const round = gameData.rounds[currentRound];
-  
-  const indicator = document.getElementById('stepIndicator');
-  indicator.innerHTML = gameData.rounds.map((_, i) => 
-    `<div class="step-dot ${i < currentRound ? 'done' : i === currentRound ? 'active' : ''}"></div>`
-  ).join('');
-  
-  document.getElementById('scenarioTitle').textContent = round.title;
-  document.getElementById('scenarioText').textContent = round.caseText;
-  document.getElementById('questionText').textContent = round.question;
-  document.getElementById('thinkText').textContent = round.hint;
-  
-  const container = document.getElementById('optionsContainer');
-  container.innerHTML = round.options.map((opt, i) => 
-    `<div class="option-btn" data-index="${i}" data-key="${opt.key}" onclick="selectOption(${i})">${opt.text}</div>`
-  ).join('');
-  
-  document.getElementById('feedbackBox').classList.remove('show');
-  document.getElementById('thinkBox').style.display = 'none';
-  document.getElementById('hintBtn').style.display = 'block';
-  document.getElementById('retryBtn').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('actionBtn').disabled = true;
-  document.getElementById('actionBtn').textContent = '请先选择一种途径';
-}
-
-function selectOption(index) {
-  if (document.getElementById('feedbackBox').classList.contains('show')) return;
-  document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-  document.querySelectorAll('.option-btn')[index].classList.add('selected');
-  selectedIndex = index;
-  document.getElementById('actionBtn').disabled = false;
-  document.getElementById('actionBtn').textContent = '确认收集方式';
-}
-
-function confirmChoice() {
-  if (selectedIndex < 0) return;
-  
-  const round = gameData.rounds[currentRound];
-  const btns = document.querySelectorAll('.option-btn');
-  const selectedBtn = btns[selectedIndex];
-  const selectedKey = selectedBtn.dataset.key;
-  
-  // Find the selected option and its feedback
-  const selectedOption = round.options.find(o => o.key === selectedKey);
-  const optionFeedback = selectedOption ? selectedOption.feedback : null;
-  const isCorrect = optionFeedback ? optionFeedback.correct : false;
-  
-  btns.forEach(btn => btn.classList.add('disabled'));
-  
-  if (isCorrect) {
-    selectedBtn.classList.add('correct');
-    // Show correct answer for all options
-    btns.forEach(btn => {
-      const key = btn.dataset.key;
-      const opt = round.options.find(o => o.key === key);
-      if (opt && opt.feedback.correct) {
-        btn.classList.add('correct');
-      }
-    });
-    score += 12;
-    roundResults.push({ id: round.id, title: round.title, correct: true });
-    document.getElementById('feedbackTitle').textContent = optionFeedback.title;
-    document.getElementById('feedbackType').innerHTML = `<span class="feedback-type">🏷️ ${optionFeedback.type}</span>`;
-    document.getElementById('feedbackText').textContent = optionFeedback.text;
-    document.getElementById('nextBtn').style.display = 'inline-block';
-    document.getElementById('retryBtn').style.display = 'none';
-  } else {
-    selectedBtn.classList.add('wrong');
-    // Do NOT show correct answer - let student retry
-    roundResults.push({ id: round.id, title: round.title, correct: false, yourAnswer: selectedKey, correctAnswer: round.options.find(o => o.feedback.correct)?.key });
-    document.getElementById('feedbackTitle').textContent = optionFeedback.title;
-    document.getElementById('feedbackType').innerHTML = '';
-    document.getElementById('feedbackText').textContent = optionFeedback.text;
-    document.getElementById('retryBtn').style.display = 'inline-block';
-    document.getElementById('nextBtn').style.display = currentRound < gameData.rounds.length - 1 ? 'inline-block' : 'none';
-  }
-  
-  document.getElementById('feedbackBox').classList.add('show');
-  document.getElementById('actionBtn').disabled = true;
-  document.getElementById('actionBtn').textContent = '已确认';
-}
-
-function retryRound() {
-  document.getElementById('feedbackBox').classList.remove('show');
-  document.getElementById('thinkBox').style.display = 'none';
-  document.getElementById('hintBtn').style.display = 'block';
-  loadRound();
-}
-
-function nextRound() {
-  currentRound++;
-  if (currentRound >= gameData.rounds.length) {
-    showResult();
-  } else {
-    loadRound();
-  }
-}
-
-function showResult() {
-  document.getElementById('game-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'block';
-  
-  const correctCount = roundResults.filter(r => r.correct).length;
-  const total = roundResults.length;
-  
-  document.getElementById('finalScore').textContent = score;
-  document.getElementById('statRight').textContent = correctCount;
-  document.getElementById('statWrong').textContent = total - correctCount;
-  
-  let title, msg;
-  if (correctCount === total) {
-    title = "🏆 数据大师！";
-    msg = "你对数据收集方法了如指掌！是运营高手！";
-  } else if (correctCount >= total * 0.7) {
-    title = "⭐ 运营熟手";
-    msg = "你对数据收集途径有较好理解，继续加油！";
-  } else {
-    title = "📚 运营新手";
-    msg = "数据收集的学问很深奥！建议再学习理论知识！";
-  }
-  
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultMsg').textContent = msg;
-  
-  document.getElementById('resultDetail').innerHTML = roundResults.map(r => {
-    const round = gameData.rounds.find(g => g.id === r.id);
-    const correctOption = round.options.find(o => o.feedback.correct); const correctText = correctOption ? correctOption.text : "未知";
-    if (r.correct) {
-      return `<div class="result-round"><div class="result-round-title">任务${r.id} ${r.title}</div><div class="result-correct">✅ 正确</div></div>`;
-    } else {
-      const yourText = round.options.find(o => o.key === r.yourAnswer)?.text || '未知';
-      return `<div class="result-round"><div class="result-round-title">任务${r.id} ${r.title}</div><div class="result-wrong">❌ 错误</div><div class="result-answer">你的答案：${yourText} ｜ 正确答案：${correctText}</div></div>`;
-    }
-  }).join('');
-}
-
-function restartGame() {
-  startGame();
-}
-
-document.getElementById('startBtn').addEventListener('click', startGame);
-</script>
+    <script>
+        const dataMethods = [
+            { type: "public", text: "🌐 公开渠道", desc: "官网、社交媒体、行业报告" },
+            { type: "third", text: "🏢 第三方渠道", desc: "行业协会、展会、咨询公司" },
+            { type: "field", text: "👀 实地调研", desc: "现场考察、用户访谈" },
+            { type: "online", text: "💻 网络监测", desc: "搜索引擎、社交媒体监测" },
+            { type: "internal", text: "🏠 内部信息源", desc: "员工反馈、销售数据" }
+        ];
+        
+        window.allCases = [
+            { caseText: "老板让你了解竞品A公司的产品有哪些、价格怎么样、最近有什么动态。", question: "这些信息最适合从哪里获取？", hint: "💡 产品信息和价格最容易从哪里看到？", answer: "public", explanation: "✅ 公开渠道\n\n产品信息、价格、公司动态都可以通过官网、新闻、社交媒体等公开渠道获取。\n\n❌ 实地调研：不需要去线下\n❌ 第三方渠道：不需要花冤枉钱" },
+            { caseText: "你想亲自去竞品B的门店看看：服务态度怎么样、产品好不好用、客人多不多。", question: "这些信息最适合从哪里获取？", hint: "💡 服务态度和客流必须去哪里才能感受到？", answer: "field", explanation: "✅ 实地调研\n\n服务态度、产品体验、客流情况必须亲自去现场才能感受到。\n\n❌ 公开渠道：服务态度网上很难了解\n❌ 网络监测：只能监测线上数据" },
+            { caseText: "老板让你分析今年行业市场规模多大、未来发展趋势怎么样。", question: "这些专业数据最适合从哪里获取？", hint: "💡 行业数据一般谁会做？", answer: "third", explanation: "✅ 第三方渠道\n\n行业规模、发展趋势需要行业协会、研究机构或咨询公司的报告。\n\n❌ 公开渠道：网上信息碎片化\n❌ 实地调研：个人无法获取行业级数据" },
+            { caseText: "你每天需要监控竞品C在微博、抖音上的营销活动，看看他们发了什么、用户怎么评价。", question: "要实时高效获取这些信息，最适合用什么方式？", hint: "💡 有什么工具可以自动帮你盯着？", answer: "online", explanation: "✅ 网络监测\n\n社交媒体动态需要持续监测，用专业工具可以实时追踪，比人工高效。\n\n❌ 公开渠道：手动搜索效率低\n❌ 实地调研：这是线上数据" },
+            { caseText: "你想知道自己公司的客户为什么有时候选择竞品而不是你们，他们真正关心什么。", question: "要获取客户的真实想法，最适合用什么方式？", hint: "💡 直接问客户能不能问到？", answer: "field", explanation: "✅ 实地调研（访谈/问卷）\n\n客户的真实评价、选择原因需要通过直接访谈或问卷获取。\n\n❌ 公开渠道：公开评价可能不真实\n❌ 网络监测：只能看到网上言论" },
+            { caseText: "老板让你分析公司过去一年的销售数据，看看哪些产品卖得好、客户复购率怎么样。", question: "这些数据应该从哪里获取？", hint: "💡 销售记录数据一般存在哪里？", answer: "internal", explanation: "✅ 内部信息源\n\n销售数据是公司内部数据，应该从自家系统获取。\n\n❌ 公开渠道：销售数据是内部机密\n❌ 实地调研：不需要去现场" },
+            { caseText: "你想查一下竞品E公司有哪些专利、技术实力怎么样、研发方向是什么。", question: "这些技术信息最适合从哪里获取？", hint: "💡 专利信息在哪里可以查到？", answer: "public", explanation: "✅ 公开渠道\n\n专利信息可以通过国家知识产权局官网公开查询。\n\n❌ 实地调研：不适合了解技术信息\n❌ 第三方渠道：专利是公开的，不需要花钱" },
+            { caseText: "你想了解竞品F公司最近参加了什么展会、展示了什么新产品、行业有什么新趋势。", question: "要一次性获取这么多信息，最适合用什么方式？", hint: "💡 参加什么活动能同时看到这么多东西？", answer: "third", explanation: "✅ 第三方渠道（展会）\n\n参加行业展会可以一次性了解行业趋势、竞品动态、新技术，非常高效。\n\n❌ 公开渠道：只能看到二手信息\n❌ 实地调研：只是去看展" }
+        ];
+        
+        window.caseOrder = []; window.currentIndex = 0; window.score = 0; window.rightCount = 0; window.wrongCount = 0; window.currentOptions = [];
+        const startScreen = document.getElementById('start-screen'), gameScreen = document.getElementById('game-screen'), resultScreen = document.getElementById('result-screen');
+        
+        function shuffle(a) { for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; }
+        
+        function generateOptions(correctType) {
+            let opts = []; const correct = dataMethods.find(o=>o.type===correctType);
+            opts.push({type:correct.type, text:correct.text, desc:correct.desc, correct:true});
+            dataMethods.filter(o=>o.type!==correctType).forEach(o=>opts.push({type:o.type, text:o.text, desc:o.desc, correct:false}));
+            return shuffle(opts);
+        }
+        
+        function startGame() { window.caseOrder=shuffle([...Array(window.allCases.length).keys()]);window.currentIndex=0;window.score=0;window.rightCount=0;window.wrongCount=0;startScreen.style.display='none';gameScreen.style.display='block';resultScreen.style.display='none';showCase(); }
+        
+        function showCase() {
+            const q=window.allCases[window.caseOrder[window.currentIndex]];
+            for(let i=1;i<=8;i++){document.getElementById('step'+i).className='step'+(i-1<window.currentIndex?' completed':i-1===window.currentIndex?' active':'')}
+            document.getElementById('phase-tag').textContent='任务'+(window.currentIndex+1);
+            document.getElementById('scenario-text').innerHTML=q.caseText.replace(/\n/g,'<br>');
+            document.getElementById('question-text').textContent=q.question;
+            document.getElementById('think-text').textContent=q.hint;
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('score').textContent=window.score;
+            window.currentOptions=generateOptions(q.answer);
+            const container=document.getElementById('options');container.innerHTML='';
+            window.currentOptions.forEach((opt,idx)=>{const btn=document.createElement('div');btn.className='option';btn.innerHTML=`<div>${opt.text}</div><div style="font-size:0.7em;opacity:0.7">${opt.desc}</div>`;btn.onclick=()=>selectAnswer(idx);container.appendChild(btn);});
+        }
+        
+        function selectAnswer(idx) {
+            const q=window.allCases[window.caseOrder[window.currentIndex]];
+            const opts=document.querySelectorAll('.option');
+            if(window.currentOptions[idx].correct){
+                opts.forEach((o,i)=>{o.classList.add('disabled');if(window.currentOptions[i].correct)o.classList.add('correct')});
+                window.rightCount++;window.score+=12;document.getElementById('score').textContent=window.score;
+                document.getElementById('explanation-title').textContent='✅ 回答正确！';
+                document.getElementById('explanation-text').innerHTML=q.explanation.replace(/\n/g,'<br>');
+                document.getElementById('explanation').classList.add('show');
+                const nextBtn=document.createElement('div');nextBtn.className='option';nextBtn.style.cssText='background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;grid-column:span 2;margin-top:10px;';
+                nextBtn.textContent='➡️ 下一题';nextBtn.onclick=e=>{e.stopPropagation();nextCase()};
+                document.getElementById('options').appendChild(nextBtn);
+            }else{
+                opts[idx].classList.add('wrong');
+                opts.forEach(o=>o.classList.add('disabled'));
+                const retryBtn=document.createElement('div');retryBtn.className='option';retryBtn.style.cssText='background:linear-gradient(135deg,#ff9800,#ff5722);color:#fff;grid-column:span 2;margin-top:10px;';
+                retryBtn.textContent='🔄 再试一次';retryBtn.onclick=e=>{e.stopPropagation();retryBtn.remove();opts.forEach(o=>o.classList.remove('disabled','wrong','correct'))};
+                document.getElementById('options').appendChild(retryBtn);
+            }
+        }
+        
+        function nextCase(){window.currentIndex++;window.currentIndex>=window.allCases.length?showResult():showCase();}
+        
+        function showResult(){gameScreen.style.display='none';resultScreen.style.display='block';document.getElementById('final-score').textContent=window.score;document.getElementById('stat-right').textContent=window.rightCount;document.getElementById('stat-wrong').textContent=window.wrongCount;
+            let t,m;if(window.score>=80){t="🏆 顶级侦探！";m="你对数据收集途径了如指掌！"}else if(window.score>=50){t="⭐ 资深侦探";m="你对数据收集途径有较好理解！"}else{t="📚 实习侦探";m="数据收集的学问很深奥，建议再学习！"}
+            document.getElementById('result-title').textContent=t;document.getElementById('result-msg').textContent=m;
+        }
+        
+        function restartGame(){resultScreen.style.display='none';startScreen.style.display='block';}
+    </script>
 </body>
 </html>

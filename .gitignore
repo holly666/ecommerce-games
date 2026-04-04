@@ -1,4 +1,32 @@
 # 不push的文件
 *.pptx
-*.pptx.*
-!.gitignore
+*.docx
+*.xmind
+
+# 敏感配置
+AGENTS.md
+USER.md
+MEMORY.md
+SOUL.md
+HEARTBEAT.md
+IDENTITY.md
+TOOLS.md
+lessons.md
+decisions.md
+MEMORY.md
+BOOTSTRAP.md
+diary-standard.md
+multi-agent-collaboration.md
+
+# 系统文件
+.DS_Store
+.gitignore
+.learnings/
+memory/
+skills/
+scripts/
+reference/
+~
+
+# 私有任务
+.tasks/
