@@ -271,9 +271,12 @@ window.selectPlayerBg = function(i) {
   addLog('身世：' + bg.name + '（' + bg.bonus.cls + '）');
   render();
   var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a"><div class="name" style="color:#4a9a4a">✓ 已选择：'+bg.name+'</div><div class="desc">'+bg.desc+'</div></div>';
-  html += '<div style="background:#1a2a0a;border:1px solid #4a9a4a;border-radius:8px;padding:12px;margin:10px 0;font-size:0.85em;color:#8ac98a">💰 银两 +'+(bg.bonus.money||0)+'　⭐ 声望 +'+(bg.bonus.prestige||0)+'　🤝 人脉 +'+(bg.bonus.social||0)+'　📖 智慧 +'+(bg.bonus.wit||0)+'　⚔️ 魄力 +'+(bg.bonus.bravo||0)+'</div>';
+  html += '<div style="background:#1a2a0a;border:1px solid #4a9a4a;border-radius:8px;padding:12px;margin:10px 0;font-size:0.85em;color:#8ac98a">💰 银两 +'+(bg.bonus.money||0)+'　⭐ 声望 +'+(bg.bonus.prestige||0)+'　🤝 人脉 +'+(bg.bonus.social||0)+'　📖 智慧 +'+(bg.bonus.wit||0)+'　⚔️ 魄力 +'+(bg.bravo||0)+'</div>';
   html += '<button class="choice" style="background:#1a4a2a;border-color:#4a9a4a" onclick="showStep2HusbandBg()">下一步：选择夫君 →</button>';
-  document.getElementById('sel-player').innerHTML = html;
+  var sceneText = document.getElementById('scene-text');
+  var existing = document.getElementById('sel-player');
+  if (existing) { existing.innerHTML = html; } else { sceneText.insertAdjacentHTML('beforeend', '<div id="sel-player">'+html+'</div>'); }
+  setTimeout(function() { document.getElementById('sel-player').scrollIntoView({behavior:'smooth',block:'nearest'}); }, 50);
 };
 
 function showStep2HusbandBg() {
