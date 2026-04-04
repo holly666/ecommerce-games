@@ -74,13 +74,16 @@ def generate_html():
     days_since_start = (today_obj - TREATMENT_START).days + 1
     is_even = days_since_start % 2 == 0
     vd_today = days_since_start % 3 == 0
+    
+    # 阿司匹林：隔天一次，从04-03算第一天
+    ASPIRIN_START = datetime(2026, 4, 3)
+    aspirin_days = (today_obj - ASPIRIN_START).days + 1
+    aspirin_today = aspirin_days % 2 == 1  # 奇数天吃
 
     med_items = [
-        ("💉", "黄体酮针", is_even, "✅ 打", "❌ 不打"),
-        ("💊", "阿司匹林", is_even, "✅ 吃", "❌ 不吃"),
+        ("💊", "阿司匹林", aspirin_today, "✅ 吃", "❌ 不吃"),
         ("💉", "肝素针", True, "✅ 每天打", ""),
         ("💊", "维生素D", vd_today, "✅ 吃", "❌ 不吃"),
-        ("💊", "环孢素", True, "✅ 早2颗", ""),
         ("🍵", "中药", True, "✅ 早晚各1袋", ""),
     ]
 
