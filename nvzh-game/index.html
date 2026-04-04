@@ -60,6 +60,7 @@ button.btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 8px 20p
     <div class="stat"><div class="stat-name">⚔️ 魄力</div><div class="stat-val" id="s-bravo">1</div></div>
     <div class="stat"><div class="stat-name">🏠 身份</div><div class="stat-val" id="s-class">寒门子弟</div></div>
     <div class="stat"><div class="stat-name">📅 第</div><div class="stat-val" id="s-day">1</div></div>
+    <div class="stat" id="s-affection-stat" style="display:none"><div class="stat-name">💕 夫君好感</div><div class="stat-val" id="s-affection">50</div></div>
   </div>
   <div id="scene">
     <div id="scene-title"></div>
@@ -95,6 +96,15 @@ var PERSONALITIES = [
   { id: 'cold', name: '冷漠寡言', desc: '惜字如金，喜怒不形于色，难以捉摸。' },
 ];
 
+var PLAYER_BACKGROUNDS = [
+  { id: 'poor', name: '寒门子弟', desc: '家道中落，一贫如洗，只有破屋一间薄田几亩。需要从零开始，一步步翻身。', bonus: { money: 0, prestige: 0, social: 0, wit: 0, bravo: 0, cls: '寒门子弟' } },
+  { id: 'scholar', name: '书香门第', desc: '家中曾出过秀才，留下些书籍典藏。文采过人，在镇上小有声望。', bonus: { money: 3, prestige: 1, social: 0, wit: 2, bravo: 0, cls: '书香后人' } },
+  { id: 'merchant', name: '商贾之家', desc: '父母经营布匹生意，家境殷实。耳濡目染之下，精通算账，眼光独到。', bonus: { money: 8, prestige: 0, social: 1, wit: 1, bravo: 0, cls: '商户之女' } },
+  { id: 'martial', name: '武勋世家', desc: '祖上是边境将领，虽已没落，但留下了一把佩刀和一身搏击之术。', bonus: { money: 2, prestige: 1, social: 0, wit: 0, bravo: 3, cls: '武勋之后' } },
+  { id: 'medical', name: '杏林人家', desc: '家中祖传医术，父亲早逝，母亲略通药理。会些简单的针灸草药。', bonus: { money: 3, prestige: 1, social: 1, wit: 1, bravo: 0, cls: '医家之女' } },
+  { id: 'official', name: '小吏之女', desc: '父亲是镇上一名文书小吏，虽无权无势，但认识些衙门中人，了解官场门道。', bonus: { money: 2, prestige: 2, social: 2, wit: 1, bravo: 0, cls: '吏员之女' } },
+];
+
 var persText = {
   gentle: '一切都听娘子的，娘子说怎样便怎样。',
   proud: '既已嫁你，便盼你能出人头地。我不求依附，只求并肩。',
@@ -114,6 +124,9 @@ function render() {
   document.getElementById('s-day').textContent = S.day;
   var items = S.items.length ? S.items.map(function(i){return '<span class="item">'+i+'</span>';}).join('') : '<span class="item">空空如也</span>';
   document.getElementById('item-list').innerHTML = items;
+  var affStat = document.getElementById('s-affection-stat');
+  if(affStat){ affStat.style.display = S.husband ? 'block' : 'none'; }
+  if(S.husband){ document.getElementById('s-affection').textContent = S.husband.affection || 50; }
 }
 
 function addLog(text) {
@@ -216,14 +229,44 @@ function startGame() {
   document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
   var h1 = document.querySelector('#game > h1');
   if(h1) h1.style.display = 'block';
-  showCreate();
+  showStep1PlayerBg();
 }
 
-function showCreate() {
-  document.getElementById('scene-title').textContent = '开局·娶亲';
-  document.getElementById('scene-text').innerHTML = '在女尊王朝，男子及笄之后便要婚配。你已到了议亲之年。\n\n这一日，托媒婆说媒，得知镇上有一户人家愿将儿子许配于你。\n但对方家世、性情各异——究竟娶谁，关系到你日后的处境。';
+function showStep1PlayerBg() {
+  document.getElementById('scene-title').textContent = '一、选择你的身世';
+  document.getElementById('scene-text').innerHTML = '在踏入这世界之前，你需要知道自己是谁。\n\n不同的出身，将决定你最初的资源和天赋。';
+  var html = '<div class="hint-box">👆 你的出身将决定初始属性，选择需谨慎</div>';
+  PLAYER_BACKGROUNDS.forEach(function(bg, i) {
+    html += '<div class="husband-card"><div class="name">'+bg.name+'</div><div class="desc">'+bg.desc+'</div><div style="margin-top:4px;font-size:0.8em;color:#c9a96e">🏷️ 身份：'+bg.bonus.cls+'</div><button class="choice" style="margin-top:8px" onclick="selectPlayerBg('+i+')">选择此身世</button></div>';
+  });
+  html += '<div id="sel-player"></div>';
+  document.getElementById('choices').innerHTML = '';
+  document.getElementById('scene-text').innerHTML = html;
+  render();
+}
 
-  var html = '<div class="hint-box">👆 先选家世背景，再选性格，最后取名，三步完成婚配</div><h2>一、选择夫君家世</h2>';
+window.selectPlayerBg = function(i) {
+  var bg = PLAYER_BACKGROUNDS[i];
+  S.money += bg.bonus.money || 0;
+  S.prestige += bg.bonus.prestige || 0;
+  S.social += bg.bonus.social || 0;
+  S.wit += bg.bonus.wit || 0;
+  S.bravo += bg.bonus.bravo || 0;
+  S.cls = bg.bonus.cls;
+  S.playerBg = bg.id;
+  S.playerBgName = bg.name;
+  addLog('身世：' + bg.name + '（' + bg.bonus.cls + '）');
+  render();
+  var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a"><div class="name" style="color:#4a9a4a">✓ 已选择：'+bg.name+'</div><div class="desc">'+bg.desc+'</div></div>';
+  html += '<div style="background:#1a2a0a;border:1px solid #4a9a4a;border-radius:8px;padding:12px;margin:10px 0;font-size:0.85em;color:#8ac98a">💰 银两 +'+(bg.bonus.money||0)+'　⭐ 声望 +'+(bg.bonus.prestige||0)+'　🤝 人脉 +'+(bg.bonus.social||0)+'　📖 智慧 +'+(bg.bonus.wit||0)+'　⚔️ 魄力 +'+(bg.bonus.bravo||0)+'</div>';
+  html += '<button class="choice" style="background:#1a4a2a;border-color:#4a9a4a" onclick="showStep2HusbandBg()">下一步：选择夫君 →</button>';
+  document.getElementById('sel-player').innerHTML = html;
+};
+
+function showStep2HusbandBg() {
+  document.getElementById('scene-title').textContent = '二、选择夫君家世';
+  document.getElementById('scene-text').innerHTML = '在女尊王朝，男子及笄之后便要婚配。你已到了议亲之年。\n\n这一日，托媒婆说媒，得知镇上有一户人家愿将儿子许配于你。\n但对方家世、性情各异——究竟娶谁，关系到你日后的处境。';
+  var html = '<div class="hint-box">👆 选择夫君的家世背景，将影响他的初始属性和专属剧情</div>';
   BACKGROUNDS.forEach(function(bg, i) {
     html += '<div class="husband-card"><div class="name">'+bg.name+'</div><div class="desc">'+bg.desc+'</div><div style="margin-top:4px;font-size:0.8em;color:#c9a96e">特性：'+bg.traits.join(' / ')+'</div><button class="choice" style="margin-top:8px" onclick="selectBg('+i+')">选择此家世</button></div>';
   });
@@ -236,28 +279,35 @@ function showCreate() {
 window.selectBg = function(i) {
   var bg = BACKGROUNDS[i];
   _selBg = bg;
-  var html = '<div class="husband-card" style="border-color:#4a9a4a"><div class="name" style="color:#4a9a4a">✓ 已选择：'+bg.name+'</div><div class="desc">'+bg.desc+'</div></div>';
-  html += '<div id="pers-sec"><h2>二、选择夫君性格</h2>';
+  var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a"><div class="name" style="color:#4a9a4a">✓ 已选择：'+bg.name+'</div><div class="desc">'+bg.desc+'</div></div>';
+  html += '<button class="choice" style="background:#1a4a2a;border-color:#4a9a4a" onclick="showStep3HusbandPers()">下一步：选择性格 →</button>';
+  document.getElementById('sel-bg').innerHTML = html;
+};
+
+function showStep3HusbandPers() {
+  var bg = _selBg;
+  var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a"><div class="name" style="color:#4a9a4a">✓ 家世：'+bg.name+'</div><div class="desc">'+bg.desc+'</div></div>';
+  html += '<h2 style="margin-top:15px">三、选择夫君性格</h2>';
   PERSONALITIES.forEach(function(p, j) {
     html += '<div class="husband-card"><div class="name">'+p.name+'</div><div class="desc">'+p.desc+'</div><button class="choice" style="margin-top:8px" onclick="selectPers('+j+')">选择此性格</button></div>';
   });
-  html += '</div>';
+  html += '<div id="sel-pers"></div>';
   document.getElementById('sel-bg').innerHTML = html;
 };
 
 window.selectPers = function(j) {
   var pers = PERSONALITIES[j];
   var bg = _selBg;
-  S.husband = { name: '待取名', bgId: bg.id, bgName: bg.name, bgDesc: bg.desc, persId: pers.id, persName: pers.name, persDesc: pers.desc, traits: bg.traits.concat([pers.name]), bonus: bg.bonus };
+  S.husband = { name: '待取名', bgId: bg.id, bgName: bg.name, bgDesc: bg.desc, persId: pers.id, persName: pers.name, persDesc: pers.desc, traits: bg.traits.concat([pers.name]), bonus: bg.bonus, affection: 50 };
   S.wit += bg.bonus.wit || 0;
   S.social += bg.bonus.social || 0;
   S.bravo += bg.bonus.bravo || 0;
 
-  var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a"><div class="name" style="color:#4a9a4a">✓ 夫君已定：'+pers.name+' · '+bg.name+'</div><div class="desc">'+pers.desc+'</div></div>';
-  html += '<h2 style="margin-top:20px">三、为夫君取名</h2>';
+  var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a"><div class="name" style="color:#4a9a4a">✓ 已选择：'+bg.name+' · '+pers.name+'</div><div class="desc">'+bg.desc+'</div></div>';
+  html += '<h2 style="margin-top:20px">四、为夫君取名</h2>';
   html += '<div style="background:#0f3460;border:1px solid #c9a96e;border-radius:8px;padding:15px;margin:10px 0"><div style="color:#a89070;font-size:0.85em;margin-bottom:5px">夫君姓名</div><input type="text" id="hname" value="顾长安" style="width:100%;background:#16213e;border:1px solid #c9a96e;color:#e8d5b7;padding:8px 12px;border-radius:6px;font-size:0.95em"></div>';
-  html += '<button class="choice" style="background:#1a4a2a;border-color:#4a9a4a" onclick="confirmHusband()">✓ 确认，完成婚娶 →</button>';
-  document.getElementById('sel-bg').innerHTML += html;
+  html += '<button class="choice" style="background:#1a4a2a;border-color:#4a9a4a" onclick="confirmHusband()">✓ 完成婚娶，开始新生活 →</button>';
+  document.getElementById('sel-pers').innerHTML = html;
   render();
 };
 
@@ -517,7 +567,7 @@ var scenes = {
 
 function saveGame(){localStorage.setItem('nvzh_save',JSON.stringify(S));addLog('💾 存档成功！');}
 function loadGame(){var d=localStorage.getItem('nvzh_save');if(d){Object.assign(S,JSON.parse(d));addLog('📂 读档成功！');render();showScene('start');}else addLog('无存档！');}
-function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';showCreate();}
+function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null,playerBg:null,playerBgName:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';document.getElementById('cover').style.display='flex';document.querySelectorAll('#stats,#scene,#choices,#save-bar').forEach(function(el){el.classList.remove('show');});var h1=document.querySelector('#game>h1');if(h1)h1.style.display='none';}
 
 // startGame() is called by the "开始游戏" button — not auto-run
 </script>
