@@ -53,7 +53,7 @@ button.btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 8px 20p
     <div class="desc">女尊王朝，边境小镇。<br>你年过及笄，议得一门亲事。<br>破屋一间，薄田几亩，夫君一名。<br>从寒门子弟到一方霸主，一切从今日开始。</div>
     <button class="start-btn" onclick="startGame()">开始游戏</button>
   </div>
-  <div id="stats">
+  <div id="stats" style="visibility:hidden">
     <div class="stat"><div class="stat-name">💰 银两</div><div class="stat-val" id="s-money">0</div></div>
     <div class="stat"><div class="stat-name">⭐ 声望</div><div class="stat-val" id="s-prestige">1</div></div>
     <div class="stat"><div class="stat-name">🤝 人脉</div><div class="stat-val" id="s-social">1</div></div>
@@ -234,7 +234,7 @@ function startGame() {
   cover.style.left = '0';
   cover.style.width = '100%';
   cover.style.zIndex = '-1';
-  document.querySelectorAll('#stats').forEach(function(el){ el.classList.remove('show'); el.style.visibility = 'hidden'; });
+  // stats stay hidden during character creation (already visibility:hidden)
   document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
   var h1 = document.querySelector('#game > h1');
   if(h1) h1.style.display = 'block';
@@ -324,8 +324,10 @@ window.confirmHusband = function() {
   var nameInput = document.getElementById('hname');
   S.husband.name = nameInput.value.trim() || '顾长安';
   addLog('婚配：' + S.husband.name + '（' + S.husband.bgName + '，' + S.husband.persName + '）');
+  var statsEl = document.getElementById('stats');
+  statsEl.style.visibility = '';
+  statsEl.classList.add('show');
   render();
-  document.querySelectorAll('#stats').forEach(function(el){ el.style.visibility = ''; el.classList.add('show'); });
   showScene('start');
 };
 
@@ -577,8 +579,8 @@ var scenes = {
 };
 
 function saveGame(){localStorage.setItem('nvzh_save',JSON.stringify(S));addLog('💾 存档成功！');}
-function loadGame(){var d=localStorage.getItem('nvzh_save');if(d){Object.assign(S,JSON.parse(d));addLog('📂 读档成功！');render();showScene('start');}else addLog('无存档！');}
-function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null,playerBg:null,playerBgName:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';document.getElementById('cover').classList.remove('gone');document.querySelectorAll('#stats,#scene,#choices,#save-bar').forEach(function(el){el.classList.remove('show');});var h1=document.querySelector('#game>h1');if(h1)h1.style.display='none';}
+function loadGame(){var d=localStorage.getItem('nvzh_save');if(d){Object.assign(S,JSON.parse(d));addLog('📂 读档成功！');var s=document.getElementById('stats');s.style.visibility='';s.classList.add('show');render();showScene('start');}else addLog('无存档！');}
+function resetGame(){Object.assign(S,{money:0,prestige:1,social:1,wit:1,bravo:1,cls:'寒门子弟',items:[],log:[],day:1,phase:1,flags:{},husband:null,playerBg:null,playerBgName:null});localStorage.removeItem('nvzh_save');document.getElementById('log').innerHTML='<div class="log-entry">—— 重新开始 ——</div>';var cover=document.getElementById('cover');cover.classList.remove('gone');cover.style.position='';cover.style.visibility='';cover.style.pointerEvents='';cover.style.top='';cover.style.left='';cover.style.width='';cover.style.zIndex='';var s=document.getElementById('stats');s.style.visibility='hidden';s.classList.remove('show');document.querySelectorAll('#scene,#choices,#save-bar').forEach(function(el){el.classList.remove('show');});var h1=document.querySelector('#game>h1');if(h1)h1.style.display='none';}
 
 // startGame() is called by the "开始游戏" button — not auto-run
 </script>
