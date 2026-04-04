@@ -236,7 +236,7 @@ function startGame() {
   cover.style.width = '100%';
   cover.style.zIndex = '-1';
   // stats stay hidden during character creation (already visibility:hidden)
-  document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); });
+  document.querySelectorAll('#stats, #scene, #choices, #save-bar').forEach(function(el){ el.classList.add('show'); el.style.display = el.id === 'stats' ? 'grid' : 'block'; });
   var h1 = document.querySelector('#game > h1');
   if(h1) h1.style.display = 'block';
   showStep1PlayerBg();
