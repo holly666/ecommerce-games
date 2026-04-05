@@ -392,9 +392,10 @@ function showNight(){
 
   // 认识新人
   if(S.availableMen&&S.availableMen.length>0){
-    var man=S.availableMen[0];
-    var mname=AVAILABLE_MEN.find(function(m){return m.id===man;});
-    if(mname)opts.push({text:'打听'+mname.name+'的下落',next:'man_detail_'+man,type:'love',tag:'👤'});
+    S.availableMen.forEach(function(man){
+      var mname=AVAILABLE_MEN.find(function(m){return m.id===man;});
+      if(mname)opts.push({text:'打听'+mname.name+'的下落',next:'man_detail_'+man,type:'love',tag:'👤'});
+    });
   }
 
   // 随机前兆提示
@@ -2863,6 +2864,19 @@ window.go=function(n,t){
     default:
     // 动态路由兜底（harem_judge_X_Y, harem_conspiracy_X_Y, harem_illness_X, harem_room_X, harem_social_X 等）
     if(typeof n==='string'){
+      // 打听/纳妾动态路由
+      if(n.startsWith('man_detail_')){
+        var mid=n.split('_')[2];
+        man_detail(mid);return;
+      }
+      if(n.startsWith('man_chat_')){
+        var cid=n.split('_')[2];
+        man_chat(cid);return;
+      }
+      if(n.startsWith('recruit_')){
+        var rid=n.split('_').slice(1).join('_');
+        recruit_man(rid);return;
+      }
       if(n.startsWith('harem_judge_')){
         var pj=n.split('_');
         if(pj.length>=4&&pj[2]!=='neutral'&&pj[2]!=='comfort'&&pj[2]!=='scold'){
