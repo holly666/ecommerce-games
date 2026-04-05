@@ -145,34 +145,14 @@ var S={};
 var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
 var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
 function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
-function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.concubinePregnant)S.concubinePregnant={};if(!S.concubinePregnancyDay)S.concubinePregnancyDay={};if(S._currentConcubine===undefined)S._currentConcubine=null;if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(!S.examDay)S.examDay=0;if(!S.interviewPassed)S.interviewPassed=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}if(!S.husbandMood)S.husbandMood='neutral';if(!S.goodEventToday)S.goodEventToday=false;if(!S.touchedConcubineToday)S.touchedConcubineToday=false;if(!S.todayEvents)S.todayEvents=[];if(!S.todayWeather)S.todayWeather=null;if(!S.todaySeason)S.todaySeason=null;if(!S.todayMood)S.todayMood=1;}
+function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concurrineAffection)S.concurrineAffection={};if(!S.concurrinePregnant)S.concurrinePregnant={};if(!S.concurrinePregnancyDay)S.concurrinePregnancyDay={};if(S._currentConcubine===undefined)S._currentConcubine=null;if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}if(!S.husbandMood)S.husbandMood='neutral';if(!S.goodEventToday)S.goodEventToday=false;if(!S.touchedConcubineToday)S.touchedConcubineToday=false;if(!S.todayEvents)S.todayEvents=[];if(!S.todayWeather)S.todayWeather=null;if(!S.todaySeason)S.todaySeason=null;if(!S.todayMood)S.todayMood=1;if(!S.examLevel)S.examLevel='none';if(!S.examStatus)S.examStatus='idle';if(!S.examAnnounced)S.examAnnounced=false;if(!S.examDay)S.examDay=0;if(!S.examPassed)S.examPassed=false;if(!S.lastExamDay)S.lastExamDay=0;if(!S.govTitle)S.govTitle='无';if(!S.governance)S.governance={justice:0,tax:0,security:0,publicSentiment:0};if(!S.currentRank)S.currentRank='none';if(!S.salary)S.salary=0;if(!S.lastSalaryDay)S.lastSalaryDay=0;if(!S.annualReviewYear)S.annualReviewYear=0;if(!S.promotionReady)S.promotionReady=false;if(!S.examPrepDays)S.examPrepDays=0;if(!S.examType)S.examType=null;if(!S.isOfficial)S.isOfficial=false;if(!S.govTaskDone)S.govTaskDone=0;}
 function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
 function toggleLog(){var lw=document.getElementById('log-wrap');if(lw)lw.classList.toggle('on');}
 function saveGame(){localStorage.setItem('nvzh_v5',JSON.stringify(S));addLog('已存档');}
 function loadGame(){var d=localStorage.getItem('nvzh_v5');if(d){S=JSON.parse(d);showGame();document.getElementById('aff-wrap').classList.add('on');document.getElementById('sbar').classList.add('on');renderStats();updateAff();addLog('读档成功');}else{addLog('无存档');}}
 function resetGame(){localStorage.removeItem('nvzh_v5');location.reload();}
 function showGame(){document.getElementById('scene').classList.add('on');document.getElementById('stats-bar').style.display='block';}
-function checkIdentity(){
-  // 阶段1→2的判断：只要有布庄或已当官就升级阶段（不覆盖已有的cls）
-  if(S.identity===1){
-    if(S.hasShop||S.isOfficial){
-      S.identity=2;
-      if(S.hasShop&&!S.cls.match('布庄'))S.cls='布庄老板';
-      else if(S.isOfficial&&!S.cls.match('县衙'))S.cls='县衙小吏';
-      addLog('⏩ 进入阶段2：谋生·'+((S.hasShop&&!S.isOfficial)?'商':(S.isOfficial?'仕':'?')));
-    }
-  }
-  // 阶段2→3：积累足够后升级
-  if(S.identity===2&&S.day>=60&&(S.marketProfit>=500||S.govTaskDone>=5)){
-    S.identity=3;
-    addLog('⏩ 进入阶段3：崛起');
-  }
-  // 阶段3→4：120天后进入霸主
-  if(S.identity===3&&S.day>=120){
-    S.identity=4;
-    addLog('⏩ 进入阶段4：一方霸主');
-  }
-}
+function checkIdentity(){if(S.examLevel==='none'&&S.hasShop){S.identity=2;S.cls='布庄老板';}else if(S.examLevel!=='none'&&S.examLevel!=='官员'){S.identity=2;S.cls=S.examLevel;}else if(S.examLevel==='官员'){S.identity=3;S.cls=S.govTitle||'官员';}if(S.identity===2&&S.day>=60&&S.examLevel==='none'&&S.marketProfit>=200){S.identity=3;}if(S.identity===3&&S.day>=120){S.identity=4;}}
 function renderStats(){var el=document.getElementById('stats-grid');var idt=IDT_NAMES[S.identity-1]||'窘境';el.innerHTML='<div class=st2><div class=sn>💰 银两</div><div class=sv>'+(S.money||0)+'</div></div><div class=st2><div class=sn>⭐ 声望</div><div class=sv>'+(S.prestige||0)+'</div></div><div class=st2><div class=sn>🤝 人脉</div><div class=sv>'+(S.social||0)+'</div></div><div class=st2><div class=sn>📖 智慧</div><div class=sv>'+(S.wit||0)+'</div></div><div class=st2><div class=sn>⚔ 魄力</div><div class=sv>'+(S.bravo||0)+'</div></div><div class=st2><div class=sn>🏷 身份</div><div class=sv>'+idt+'</div></div><div class=st2><div class=sn>📅</div><div class=sv>第'+(S.day||1)+'日</div></div>';}
 function updateAff(){var a=Math.round(S.affection);document.getElementById('aff-num').textContent=a;document.getElementById('aff-bar').style.width=a+'%';var el=document.getElementById('aff-level');if(el)el.textContent=getAffLabel(a);}
 
@@ -611,50 +591,7 @@ function getMorningGreeting(){
   return base;
 }
 
-function showMorning(){
-  var hname=S.husband.name;
-  var greet=getMorningGreeting();
-  var choices=[];
-
-  // 两条主线选项（商人+官员可以并存）
-  if(S.isMerchant){
-    choices.push({text:'经营布庄（老板模式）',next:'manage_shop',type:'safe'});
-    choices.push({text:'查看今日有无生意要谈',next:'merchant_negotiate',type:'smart'});
-    choices.push({text:'去集市进货',next:'shop_restock',type:'smart'});
-    choices.push({text:'参加社交活动',next:'social_event',type:'love'});
-  }
-  if(S.isOfficial){
-    choices.push({text:'去县衙办公务',next:'gov_work',type:'gov'});
-    choices.push({text:'处理纠纷',next:'gov_dispute',type:'gov'});
-  }
-
-  // 通用选项（所有身份都有）
-  choices.push({text:'去集市逛逛',next:'go_market',type:'safe'});
-  choices.push({text:'去找点活干',next:'go_work',type:'safe'});
-  choices.push({text:'和'+hname+'商量经营',next:'shop_husband_chat',type:'love'});
-  choices.push({text:'去镇上打听消息',next:'go_town',type:'smart'});
-
-  // 仕途入口（只要还没当官，随时可以开始）
-  if(!S.isOfficial){
-    if(S.examDay>0&&!S.interviewPassed&&S.day>=S.examDay+3){
-      choices.push({text:'⚠️去县衙参加面试！',next:'gov_interview',type:'gov',tag:'🏛'});
-    } else {
-      choices.push({text:'去县衙看看（仕途入口）',next:'gov_enlist',type:'gov',tag:'🏛'});
-    }
-  }
-
-  // 随机在清晨遇到新人
-  if((S.isMerchant||S.isOfficial)&&Math.random()<0.12){
-    if(checkMeetNewMan())return;
-  }
-
-  var weathers=['晴朗的早晨','薄云遮日','微风轻拂','天色阴沉'];
-  var weather=weathers[Math.floor(Math.random()*weathers.length)];
-  var idt=S.identity;
-  var idNames=['','窘境','谋生·商','谋生·仕','崛起','一方霸主'];
-  showScene('第'+S.day+'日 · 清晨',[weather+'。阳光从窗纸透进来，在地上投下斑驳的光影。',greet,'新的一天开始了。（当前：'+idNames[S.identity]+'）'],choices);
-}
-
+function showMorning(){var hname=S.husband.name;var greet=getMorningGreeting();var choices=[];var rankNames={'none':'白身','merchant':'商人','童生':'童生','秀才':'秀才','举人':'举人','进士':'进士','官员':S.govTitle||'官员'};var idLabel=(!S.examLevel||S.examLevel==='none')?(S.hasShop?'白身·商人':'白身'):(rankNames[S.examLevel]||'白身');var govOpt=null;if(S.examLevel==='none'||S.examStatus==='idle'){govOpt={text:'去县学宫看看（科举仕途）',next:'exam_wenMiao',type:'gov',tag:'🏛'};}else if(S.examStatus==='prepping'){var daysLeft=Math.max(0,S.examDay-S.day);govOpt={text:'备考中（还剩'+daysLeft+'天）',next:'exam_prep_start',type:'gov',tag:'📖'};}var govWorkOpt=null;if(['童生','秀才','举人','进士','官员'].indexOf(S.examLevel)>=0){govWorkOpt={text:'去县衙处理公务（政绩）',next:'gov_work',type:'gov',tag:'📋'};}if(S.hasShop&&S.examLevel==='none'){choices.push({text:'经营布庄',next:'manage_shop',type:'safe'});choices.push({text:'去集市进货',next:'shop_restock',type:'smart'});choices.push({text:'参加社交活动',next:'social_event',type:'love'});}if(govWorkOpt)choices.push(govWorkOpt);if(['童生','秀才','举人'].indexOf(S.examLevel)>=0&&S.examStatus==='idle'){choices.push({text:'温习功课（备考）',next:'exam_prep_study',type:'smart',tag:'📖'});}choices.push({text:'去集市逛逛',next:'go_market',type:'safe'});choices.push({text:'去找点活干',next:'go_work',type:'safe'});choices.push({text:'和'+hname+'商量经营',next:'shop_husband_chat',type:'love'});choices.push({text:'去镇上打听消息',next:'go_town',type:'smart'});if(govOpt)choices.push(govOpt);if((S.hasShop||S.examLevel!=='none')&&Math.random()<0.10){if(checkMeetNewMan())return;}var weathers=['晴朗的早晨','薄云遮日','微风轻拂','天色阴沉'];var weather=weathers[Math.floor(Math.random()*weathers.length)];var salaryHint='';if(S.salary>0&&S.lastSalaryDay>0&&S.day-S.lastSalaryDay>=30){var months=Math.floor((S.day-S.lastSalaryDay)/30);if(months>=1)salaryHint='【俸禄待领：'+S.salary*months+'两】';}showScene('第'+S.day+'日 · 清晨'+salaryHint,[weather+'。阳光从窗纸透进来，在地上投下斑驳的光影。',greet,'新的一天开始了。（当前：'+idLabel+'）'],choices);}
 function go_market(){
   addLog('去集市');
   var evs=[
@@ -741,278 +678,355 @@ function go_town(){
 
 
 // ========== 仕途入口 ==========
-function gov_enlist(){
-  if(S.eventsTriggered.gov_enlist_told){
-    // 笔试通过但未面试：提示面试
-    if(S.examDay>0&&!S.interviewPassed&&S.day>=S.examDay+3){
-      showScene('县衙门口',['你再次来到县衙。告示旁多了一张红纸：「女吏招募——笔试合格者，三日后面试。」','你已经等了三天，是时候参加面试了。'], [{text:'参加面试',next:'gov_interview',type:'gov'},{text:'再准备准备',next:'go_home',type:'safe'}],'🏛 面试');
-      return;
-    }
-    showScene('县衙门口',['你再次来到县衙。门口的告示还贴着：「招募女吏若干，择优录取。」'], [{text:'进去报名',next:'gov_enlist_signup',type:'gov'},{text:'再考虑考虑',next:'go_home',type:'safe'}],'🏛 县衙');return;}
-  S.eventsTriggered.gov_enlist_told=true;
-  addLog('发现仕途入口');
-  showScene('县衙门口',['你路过县衙，看见门口贴着一张告示。围观的百姓议论纷纷——','「听说了吗？县衙要招女吏了！以前可从没有过这样的先例！」','「谁家的姑娘要是能考上，那可是光耀门楣的大事啊……」','告示上写着：招募女吏三名，笔试加面试，择优录取。你心里一动——这条路，或许值得一试。'], [{text:'进去报名',next:'gov_enlist_signup',type:'gov'},{text:'回去再想想',next:'go_home',type:'safe'}],'🏛 县衙');
-}
-function gov_enlist_signup(){
-  showScene('县衙 · 报名',['你走进县衙，一个文书模样的小吏抬眼看你。','「报名女吏？」她上下打量你一番，「倒是有些胆色。不过要先过笔试，考核你的学识和能力。」','她递过一张纸：「这是报名表，填好了三日后来考试。」'], [{text:'当场答题应试（笔试）',next:'gov_exam',type:'gov'},{text:'回去准备，改日再来',next:'go_home',type:'safe'}],'🏛 仕途入口');
-}
-function gov_exam(){
-  var qs=[
-    {q:'镇上两家布商起争执，争的是一批布的货源。你会怎么断？',opts:['让两家平分货源','实地调查，谁先到谁有理','上报县衙等候裁决'],ans:1,exp:'实地调查是尊重事实的做法。'},
-    {q:'县衙粮仓失火，百姓哄抢。你正好在场，该怎么做？',opts:['立刻制止哄抢行为','先报告县衙','加入哄抢'],ans:0,exp:'秩序是一切的基础。制止哄抢才能防止事态扩大。'}
-  ];
-  var q=qs[0];
-  showScene('笔试开始',[q.q], q.opts.map(function(o,i){return{text:o,next:'gov_exam_result',type:'smart'};}),'📝 笔试');
-  S._examAnswer=0;
-}
-function gov_exam_result(){
-  // 简单处理，答对给奖励
-  S.prestige+=2;S.wit+=1;
-  S.officialProbation.push('exam_passed');
-  S.examDay=S.day;
-  addLog('笔试通过 声望+2 智慧+1 面试在3天后');
-  showScene('笔试结果',['你答完卷子，小吏接过看了看，微微点头：「不错，有点见识。三日后来面试。」','这关算是过了！接下来还有面试。记住，三日后一早，来县衙参加面试。'],[{text:'回去好好准备',next:'go_home',type:'safe'}],'✅ 笔试通过');
-}
-function gov_interview(){
-  S.interviewPassed=true;
-  S.prestige+=3;
-  S.wit+=1;
-  addLog('面试通过 声望+3 智慧+1');
-  showScene('面试',['你走进县衙正堂，县丞亲自坐堂。','「你就是通过了笔试的小姑娘？」县丞上下打量你，「我出一道题——」','「镇上李家和王家因宅基地起纠纷，两家各执一词。你如何断？」','你沉吟片刻，将两家情况和利弊娓娓道来，提出了一个双方都能接受的折中方案。','县丞微微点头：「不错，有见识，有肚量。明日来报到，正式试用三个月。」'], [{text:'回家休息，明日上任！',next:'go_home',type:'safe'}],'🎉 面试通过');
-}
-function gov_onboard(){
-  S.isOfficial=true;
-  S.cls='县衙试用小吏';
-  S.goodEventToday=true;
-  addLog('正式入职县衙！');
-  renderStats();
-  showScene('正式入职',['翌日清晨，你换上崭新的吏员服，来到县衙报到。','县丞指着一个角落的桌子说：「那是你的位置。先从试用小吏做起，三个月内完成三件公务，便可转正。」','「是！」你心中暗喜——从这一天起，你正式踏上了仕途之路。'], [{text:'开始新的一天',next:'go_home',type:'safe'}],'🏛 正式入职');
-}
-// ========== 市场/事件 ==========
-function ev_market_buy(){if(Math.random()<0.6){S.money+=50;S.goodEventToday=true;addLog('低买高卖 +50文');showScene('投资成功',['你大胆吃进二十匹布，果然布价持续走高，转手卖出后赚了五十两！虽然有风险，但这钱来得快。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📈 投资成功');}else{S.money-=15;addLog('囤货亏损 -15文');showScene('投资失败',['你吃进了布，却发现消息有误，价格不涨反跌。咬牙低价脱手，亏了十五文。吃一堑长一智。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📉 投资失败');}renderStats();}
-function ev_market_calm(){S.wit+=1;addLog('静观其变 智慧+1');showScene('静观其变',['你没有盲目跟风，而是在一旁观察。布价大起大落，有人欢喜有人愁。而你，稳住了本金。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📋 静观其变');renderStats();}
-function ev_market_info(){S.social+=1;addLog('打听行情 人脉+1');showScene('打听行情',['你和相熟的布商聊了很久，得到了不少有价值的信息。虽然没有直接赚钱，但这些消息日后必有用处。'],[{text:'回家休息',next:'go_home',type:'safe'}],'💬 打听行情');renderStats();}
-function ev_rogue_scold(){S.bravo+=1;S.prestige+=1;addLog('厉声斥责 魄力+1 声望+1');showScene('舌战胜利',['你叉腰怒斥，地痞们被你气势所慑，一时竟不敢妄动。为首的刀疤脸讪讪一笑：「算你狠！走！」围观的人群中，有人暗暗叫好。'],[{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 舌战胜利');renderStats();}
-function ev_rogue_escape(){S.wit+=1;addLog('机智脱身 智慧+1');showScene('机智脱身',['你假装害怕，弯腰作呕，趁他们愣神之际，拎起买的东西从人群中钻了出去。等他们反应过来，你早已消失在巷子里。','虽然有些狼狈，但总算全身而退。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🃏 机智脱身');renderStats();}
-function ev_rogue_fight(){if(S.bravo>=3){S.prestige+=2;addLog('击退地痞 声望+2');showScene('击退地痞',['你抄起扁担，一记横扫——为首的地痞惨叫。他没想到一个姑娘家这么能打。其他人见状，一哄而散。'],[{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 击退地痞');}else{S.money-=10;addLog('被打伤 -10文');showScene('力不从心',['你挥拳反击，但力气不够，被刀疤脸推倒在地。身上青了几块，还丢了几件东西。真是赔了夫人又折兵。回去好好养伤吧。'],[{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 力不从心');}renderStats();}
-function ev_rich_accept(){S.prestige+=2;S.social+=1;S.invitationAccepted=true;S.invitationDay=S.day+25;addLog('结识柳夫人 声望+2 人脉+1');showScene('结识贵人',['你收下名帖，真诚道谢。柳夫人满意地点点头，放下轿帘，悠悠而去。','你望着那顶小轿远去的背影，知道自己或许攀上了一条重要的线。赏花宴的邀请也一并收下了。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🌟 结识贵人');renderStats();}
-function ev_rich_refuse(){S.wit+=1;addLog('婉拒邀请 智慧+1');showScene('有礼谢绝',['你婉言谢绝，柳夫人微微挑眉，意味深长地看了你一眼：「倒是个有骨气的。有缘再见吧。」轿子悠悠远去，你心里却有些后悔……'],[{text:'回家休息',next:'go_home',type:'safe'}],'🌸 有礼谢绝');renderStats();}
-function ev_rich_biz(){S.money+=20;S.social+=1;S.goodEventToday=true;addLog('商谈得利 +20文 人脉+1');showScene('商谈得利',['你不卑不亢地和柳夫人攀谈，夫人对你颇为欣赏，临走时竟让丫鬟给你塞了个红包——里面是二十两银子的定金！「下次来府上细谈。」'],[{text:'回家休息',next:'go_home',type:'safe'}],'💰 商谈得利');renderStats();}
-function ev_landlord_pay(){S.money-=5;addLog('如数交租 -5文');showScene('忍气交租',['你忍下这口气，如数交了五两银子。王太太这才换了一副嘴脸：「这才对嘛！下个月早些！」她扭着腰走了，你望着她的背影，心里暗暗发誓：总有一天，要有自己的房子。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🏠 忍气交租');renderStats();}
-function ev_landlord_negotiate(){if(S.wit>=3){S.money-=3;addLog('谈判成功 -3文');showScene('谈判成功',['你拿出账本，一笔笔算给她看——她要的租金已经超过了镇上平均水平。王太太被你算得哑口无言，最后同意减两成。你保住了面子和银子。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📖 谈判成功');}else{S.money-=5;addLog('谈判失败 -5文');showScene('谈判失败',['你想讨价还价，却被王太太一顿抢白，最后还是如数交了租。不过她答应宽限三天——聊胜于无吧。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📖 谈判失败');}renderStats();}
-function ev_landlord_fight(){S.prestige+=1;S.affection=Math.min(100,S.affection+5);addLog('强势回击 声望+1 好感+5');showScene('强势反击',['你毫不退让地和王太太对骂——「我相公是清白人家，轮不到你欺辱！下次再来无理取闹，我去县衙告你骚扰！」她被你震住，灰溜溜地跑了。','「娘子……」'+S.husband.name+'握着你的手，眼眶竟有些红了。'], [{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 强势反击');renderStats();updateAff();}
-function ev_biz_attempt(){if(S.money>=300){S.money-=300;S.hasShop=true;S.isMerchant=true;S.marketProfit=0;S.goodEventToday=true;addLog('买下布庄！-300文');S.cls='布庄老板';renderStats();checkIdentity();showScene('梦想成真',['你凑齐三百两银子，签下契约的那一刻，手都在抖。','从这一刻起，你不再是穷街僻巷的小媳妇——你是孙布庄的新主人！','「娘子……」'+S.husband.name+'得知消息，眼眶都红了，「我就知道你行的。」'], [{text:'回家休息',next:'go_home',type:'safe'}],'🏆 梦想成真');}else{var need=300-S.money;S.cls='无业';renderStats();showScene('本钱不足',['你四处借钱，却怎么也凑不够三百两。还差'+need+'两。','梦想很丰满，现实很骨感。但你不甘心——总有一天，要把这布庄拿下！'],[{text:'回家休息',next:'go_home',type:'safe'}],'💸 本钱不足');}}
-function ev_biz_info(){S.social+=1;S.wit+=1;addLog('打听详情 智慧+1 人脉+1');showScene('知己知彼',['你找到孙家的旧伙计，详细打听了布庄的情况——位置好，老客户多，就是缺一个懂经营的新主人。你心里有了数，只等时机和本钱。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📋 知己知彼');renderStats();}
-function ev_biz_giveup(){showScene('量力而行',['三百两，是你现在想都不敢想的数字。你叹了口气，转身离开。有些事情，不是光有野心就能做到的。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🌫️ 量力而行');}
+// ========== 科举系统 ==========
+// 科举路线：县试→童生→府试→秀才→乡试→举人→会试→进士→殿试→授官→升迁
+var EXAM_LEVELS=['none','童生','秀才','举人','进士','官员'];
+var EXAM_REQUIREMENTS={
+  '县试':{wit:3,social:2,prestige:1},
+  '府试':{wit:5,social:3,prestige:2},
+  '乡试':{wit:8,social:5,prestige:3,condition:'三年一次'},
+  '会试':{wit:12,social:8,prestige:5},
+  '殿试':{wit:15,social:10,prestige:8,condition:'皇帝亲考'},
+};
+var EXAM_SALARY={'童生':0,'秀才':5,'举人':15,'进士':30,'官员':50};
+var EXAM_TITLE={'童生':'县学学子','秀才':'县学书吏','举人':'县衙县尉','进士':'县令','官员':'朝廷命官'};
 
-// ========== 布庄老板模式 ==========
-function manage_shop(){
-  addLog('经营布庄');
-  var earnings=20+Math.floor(Math.random()*30)+(S.shopReputation||0);
-  S.money+=earnings;
-  S.marketProfit+=earnings;
-  S.shopReputation=Math.min(10,(S.shopReputation||0)+1);
-  addLog('布庄营收 +'+earnings+'文');
-  showScene('布庄经营',['你坐在柜台后面，招呼着来往的客人。','「老板娘，这匹布怎么卖？」一个衣着体面的妇人挑中了一匹苏州绢。','你报价，她也不还价，爽快地买下了。','一天下来，营业额还不错。'], [{text:'继续经营',next:'go_home',type:'safe'},{text:'和伙计聊聊',next:'shop_worker_chat',type:'smart'}],'🏪 布庄');
-  renderStats();checkIdentity();
+function exam_announce(examType,examDay){
+  S.examAnnounced=true;
+  S.examType=examType;
+  S.examDay=examDay;
+  addLog('公告：'+examType+'将于第'+examDay+'日举行！');
+  var req=EXAM_REQUIREMENTS[examType]||{};
+  var texts=['县学宫外贴出了告示——'];
+  if(examType==='县试'){
+    texts.push('【县试公告】每年春季举行县试，录取童生。凡年满十六、品行端正者，皆可报名参加。');
+    texts.push('考取童生者，可入县学读书，并有资格参加府试。');
+  } else if(examType==='府试'){
+    texts.push('【府试公告】今秋将举行府试，录取秀才。已在县试中取中的童生方可应试。');
+    texts.push('考取秀才者，社会地位大升，可担任县衙书吏，月俸五两。');
+  } else if(examType==='乡试'){
+    texts.push('【乡试公告】三年一度的乡试即将举行！取得秀才资格者方可应试。');
+    texts.push('考取举人者，可担任县尉要职，月俸十五两！');
+  } else if(examType==='会试'){
+    texts.push('【会试公告】京城会试在即！举人皆可入京赶考。');
+    texts.push('考取进士者，可任县令，月俸三十两！');
+  } else if(examType==='殿试'){
+    texts.push('【殿试公告】皇帝将于下月亲自主持殿试！进士齐聚皇宫，一较高下。');
+    texts.push('殿试分三甲：状元、榜眼、探花，授官品级各有不同！');
+  }
+  var reqTexts=[];
+  if(req.wit)reqTexts.push('智慧≥'+req.wit);
+  if(req.social)reqTexts.push('人脉≥'+req.social);
+  if(req.prestige)reqTexts.push('声望≥'+req.prestige);
+  if(reqTexts.length>0)texts.push('要求：'+reqTexts.join('、'));
+  if(req.condition)texts.push('备注：'+req.condition);
+  showScene(examType+'公告',texts,[{text:'回去准备',next:'go_home',type:'safe'}],'🏛 '+examType);
 }
-function shop_restock(){
-  if(S.money<50){showScene('进货',['你本想多进些货，但手头的银子不够。'], [{text:'算了',next:'go_home',type:'safe'}],'🏪 进货');return;}
-  S.money-=50;
-  S.shopReputation=Math.min(10,(S.shopReputation||0)+2);
-  addLog('进货 -50文 店铺声望+2');
-  if(checkMeetNewMan())return;
-  showScene('进货',['你去了镇外的集市，精挑细选了一批布料。','「老板娘好眼光，这批货品质不错！」进货商笑道。','回来的路上，你盘算着怎么定价才能多赚些。'], [{text:'回家',next:'go_home',type:'safe'}],'🏪 进货');
-  renderStats();
-}
-function shop_husband_chat(){
-  var hname=S.husband.name;
-  var aff=S.affection;
+
+function exam_wenMiao(){
+  addLog('前往县学宫');
+  var level=S.examLevel;
   var texts=[];
-  if(aff>=71){
-    texts=[
-      [hname+'主动来到布庄帮忙：「娘子，我帮你看店，你歇歇。」他算账算得又快又准，比你雇的伙计还精明。你惊讶地发现，他竟然有这方面的天赋！','他算账又快又准'],
-      [hname+'说：「娘子，我在前厅招呼客人，你在后面算账，我们配合得真好。」你心里暖暖的。','默契配合']
-    ];
-  } else if(aff>=51){
-    texts=[
-      [hname+'来布庄看你，他坐在一旁安静地绣花，时不时抬头看你忙碌的身影，嘴角带着淡淡的笑。','温馨的一天']
-    ];
-  } else {
-    texts=[
-      [hname+'站在门口，有些不安地看着来往的客人：「娘子，我……我能帮什么忙吗？」他小心翼翼的样子，让你有些心酸。','他的小小帮忙']
-    ];
+  var choices=[];
+  if(level==='none'){
+    texts.push('县学宫是本地最高学府，青砖黛瓦，古木参天。');
+    texts.push('门口的告示栏上贴着一张告示——');
+    texts.push('【县试公告】每年春季举行县试，录取童生。凡有志于学、品行端正者，皆可报名参加。');
+    texts.push('考取童生，是科举的第一步，也是改变命运的第一步。');
+    choices.push({text:'报名参加县试',next:'exam_signup_county',type:'gov'});
+    if(S.wit>=3&&S.social>=2&&S.prestige>=1){
+      choices.push({text:'我准备好了，直接应试！',next:'exam_take_county',type:'gov',tag:'🎯'});
+    }
+    choices.push({text:'先回去准备',next:'go_home',type:'safe'});
+  } else if(level==='童生'){
+    texts.push('你以童生身份进入县学宫，旁听的秀才们对你点头致意。');
+    texts.push('学官见了你，翻出一张告示：「府试将在秋季举行，你已具备资格。」');
+    texts.push('府试要求：智慧≥5，人脉≥3，声望≥2。');
+    choices.push({text:'报名参加府试',next:'exam_signup_prefect',type:'gov'});
+    if(S.wit>=5&&S.social>=3&&S.prestige>=2){
+      choices.push({text:'我准备好了，直接应试！',next:'exam_take_prefect',type:'gov',tag:'🎯'});
+    }
+    choices.push({text:'先温习备考',next:'exam_prep_study',type:'smart'});
+    choices.push({text:'先回去',next:'go_home',type:'safe'});
+  } else if(level==='秀才'){
+    var yearsSince=S.day-S.lastExamDay;
+    texts.push('你以秀才身份进入县学宫深处，贡院大门紧闭。');
+    if(yearsSince>=365){
+      texts.push('告示：「乡试每三年举行一次。下次乡试正在报名中！」');
+      texts.push('乡试要求：智慧≥8，人脉≥5，声望≥3。');
+      if(S.wit>=8&&S.social>=5&&S.prestige>=3){
+        choices.push({text:'报名参加乡试！',next:'exam_signup_provincial',type:'gov'});
+        choices.push({text:'我准备好了，直接应试！',next:'exam_take_provincial',type:'gov',tag:'🎯'});
+      }
+    } else {
+      var daysLeft=365-yearsSince%365;
+      texts.push('告示：「乡试每三年举行一次。还需等待'+(365-yearsSince)+'日。」');
+    }
+    choices.push({text:'先温习备考',next:'exam_prep_study',type:'smart'});
+    choices.push({text:'先回去',next:'go_home',type:'safe'});
+  } else if(level==='举人'){
+    texts.push('你以举人身份来到府学，周围的举人们对你的目光中带着敬意。');
+    texts.push('告示：「会试每年举行，地点在京城。举人皆可入京赶考。」');
+    texts.push('会试要求：智慧≥12，人脉≥8，声望≥5。');
+    choices.push({text:'报名参加会试',next:'exam_signup_metropolitan',type:'gov'});
+    if(S.wit>=12&&S.social>=8&&S.prestige>=5){
+      choices.push({text:'我准备好了，直接应试！',next:'exam_take_metropolitan',type:'gov',tag:'🎯'});
+    }
+    choices.push({text:'先温习备考',next:'exam_prep_study',type:'smart'});
+    choices.push({text:'先回去',next:'go_home',type:'safe'});
+  } else if(level==='进士'){
+    texts.push('你以进士身份进京，礼部门前排起了长队。');
+    texts.push('告示：「殿试由皇帝亲自主持，分三甲：状元、榜眼、探花，另有赐同进士出身。」');
+    texts.push('殿试要求：智慧≥15，人脉≥10，声望≥8。');
+    choices.push({text:'报名参加殿试',next:'exam_signup_palace',type:'gov'});
+    if(S.wit>=15&&S.social>=10&&S.prestige>=8){
+      choices.push({text:'我准备好了，直接应试！',next:'exam_take_palace',type:'gov',tag:'🎯'});
+    }
+    choices.push({text:'先温习备考',next:'exam_prep_study',type:'smart'});
+    choices.push({text:'先回去',next:'go_home',type:'safe'});
+  } else if(level==='官员'){
+    var g=S.governance||{};
+    texts.push('现任 '+S.govTitle+'，政绩如下：');
+    texts.push('【断案】'+(g.justice||0)+'　【征税】'+(g.tax||0)+'　【治安】'+(g.security||0)+'　【民心】'+(g.publicSentiment||0));
+    var total=(g.justice||0)+(g.tax||0)+(g.security||0)+(g.publicSentiment||0);
+    if(total>=50&&S.currentRank==='县令'){
+      texts.push('你的政绩卓著，有升迁机会！');
+      choices.push({text:'进京谋求升迁',next:'gov_promotion',type:'gov',tag:'⬆️'});
+    } else {
+      texts.push('继续积累政绩（总政绩'+total+'/50可申请升迁）。');
+    }
+    choices.push({text:'继续处理公务',next:'gov_work',type:'gov'});
+    choices.push({text:'先回去',next:'go_home',type:'safe'});
   }
-  var t=texts[0];
-  S.affection=Math.min(100,S.affection+3);
-  addLog('布庄夫妻互动 好感+3');
-  showScene('布庄时光',[t[0]], [{text:'继续忙布庄',next:'go_home',type:'safe'}],t[1]+' 💕');
-  renderStats();updateAff();
-}
-function shop_worker_chat(){
-  S.social+=1;addLog('结交伙计 人脉+1');
-  showScene('和伙计聊天',['你和伙计聊了起来，打听到不少布行的门道。','「老板娘，你要是想多赚点钱，可以试试直接从苏州进货，省去中间差价。」','这倒是个不错的建议。'], [{text:'回家',next:'go_home',type:'safe'}],'💬 打听行情');
-  renderStats();
+  showScene('县学宫',texts,choices,'🏛 学宫');
 }
 
-function merchant_negotiate(){
-  addLog('查看生意');
-  var bizTypes=[
-    {
-      title:'苏州客商谈代销',
-      text:['你刚到布庄，就有一位苏州来的客商上门。','「听闻贵号布匹品质上乘，我苏州"锦绣阁"想与贵号合作，代销苏州精品丝绸。」','他递上一份合作方案：代销分成三七开，你拿七，他拿三，但要先交五十两保证金。'],
-      opts:[
-        {text:'答应合作，进五十两丝绸代销',next:'biz_accept',type:'risky'},
-        {text:'先付三十两试试水',next:'biz_trial',type:'smart'},
-        {text:'条件不合适，婉拒',next:'biz_refuse',type:'safe'},
-      ]
-    },
-    {
-      title:'县衙采购',
-      text:['县衙的钱粮师爷来到你布庄，说是县丞夫人要做一批新衣裳。','「县衙的账年底结清，绝不拖欠。但价钱方面，要比市价低一成。」','这是一笔大单，但也意味着要压不少货款。'],
-      opts:[
-        {text:'接下这笔单子',next:'biz_gov_accept',type:'safe'},
-        {text:'提出加价一成，否则不接',next:'biz_gov_bargain',type:'smart'},
-        {text:'婉拒，不想压货款',next:'biz_refuse',type:'safe'},
-      ]
-    },
-    {
-      title:'外地行商谈采购',
-      text:['一位外地行商路过镇上，偶然走进你的布庄。','他看了看你店里的布，眼晴一亮：「这批货我要了！我付现金，不拖欠——但要打个八折。」','现金采购，没有账期风险，但价格要让不少。'],
-      opts:[
-        {text:'给他八折，成交',next:'biz_cash',type:'safe'},
-        {text:'最多九折，否则不卖',next:'biz_cash_bargain',type:'smart'},
-        {text:'不卖，不压价',next:'biz_refuse',type:'safe'},
-      ]
-    },
-    {
-      title:'布行合伙人招募',
-      text:['一位老相识来到店里，正是当年布行的旧管事老周。','「老板娘，我有些本钱，想入一股和你合伙经营。你出布庄，我出银子，年底分红对半。」','他确实有些本钱和经验，但合伙意味着日后要分一半利润。'],
-      opts:[
-        {text:'接受合伙，出让一半股权',next:'biz_partner',type:'risky'},
-        {text:'只让他当掌柜，不给股份',next:'biz_hire',type:'smart'},
-        {text:'婉拒，不想分利润',next:'biz_refuse',type:'safe'},
-      ]
-    },
+function exam_signup_county(){
+  if(S.wit<3||S.social<2||S.prestige<1){
+    showScene('条件不足',['你的资质尚不足以通过县试。','要求：智慧≥3，人脉≥2，声望≥1','当前：智慧'+S.wit+'，人脉'+S.social+'，声望'+S.prestige,'先回去积累再来吧。'], [{text:'回去准备',next:'go_home',type:'safe'}],'⚠️ 条件不足');return;
+  }
+  var examDay=S.day+30+Math.floor(Math.random()*15);
+  S.examType='县试';S.examDay=examDay;S.examStatus='idle';S.goodEventToday=true;
+  addLog('报名县试！考试在第'+examDay+'日');
+  showScene('报名成功',['你郑重填写了报名表。','县学官员接过表格，微微点头：「不错，有几分才气。」','「县试将在第'+examDay+'日举行，届时记得准时到场。」'], [{text:'回家准备',next:'go_home',type:'safe'}],'✅ 报名成功');
+}
+function exam_signup_prefect(){
+  if(S.wit<5||S.social<3||S.prestige<2){
+    showScene('条件不足',['你的资质尚不足以通过府试。','要求：智慧≥5，人脉≥3，声望≥2'], [{text:'回去准备',next:'go_home',type:'safe'}],'⚠️ 条件不足');return;
+  }
+  var examDay=S.day+20+Math.floor(Math.random()*10);
+  S.examType='府试';S.examDay=examDay;S.examStatus='idle';S.goodEventToday=true;
+  addLog('报名府试！考试在第'+examDay+'日');
+  showScene('报名成功',['你以童生身份报名府试。','学官翻了翻你的档案：「不错，县试成绩优异，有希望。」','「府试将在第'+examDay+'日举行，好好准备！」'], [{text:'回家准备',next:'go_home',type:'safe'}],'✅ 报名成功');
+}
+function exam_signup_provincial(){
+  if(S.day-S.lastExamDay<365){showScene('时机未到',['乡试每三年举行一次，还需等待。'], [{text:'回去',next:'go_home',type:'safe'}],'⏰ 时机未到');return;}
+  if(S.wit<8||S.social<5||S.prestige<3){showScene('条件不足',['要求：智慧≥8，人脉≥5，声望≥3'], [{text:'回去',next:'go_home',type:'safe'}],'⚠️ 条件不足');return;}
+  S.lastExamDay=S.day;
+  var examDay=S.day+15+Math.floor(Math.random()*10);
+  S.examType='乡试';S.examDay=examDay;S.examStatus='idle';S.goodEventToday=true;
+  addLog('报名乡试！考试在第'+examDay+'日');
+  showScene('报名成功',['你以秀才身份报名乡试！','这是三年一度的考试，整个省城的秀才都会参加。'], [{text:'回家准备',next:'go_home',type:'safe'}],'✅ 乡试报名');
+}
+function exam_signup_metropolitan(){
+  if(S.wit<12||S.social<8||S.prestige<5){showScene('条件不足',['要求：智慧≥12，人脉≥8，声望≥5'], [{text:'回去',next:'go_home',type:'safe'}],'⚠️ 条件不足');return;}
+  var examDay=S.day+25+Math.floor(Math.random()*15);
+  S.examType='会试';S.examDay=examDay;S.examStatus='idle';S.goodEventToday=true;
+  addLog('报名会试！进京赶考！');
+  showScene('会试报名',['你收拾行囊，准备进京赶考。','从县城到京城，路途遥远。','「会试将于第'+examDay+'日举行，好好准备！」'], [{text:'回家等待',next:'go_home',type:'safe'}],'🏛 会试');
+}
+function exam_signup_palace(){
+  if(S.wit<15||S.social<10||S.prestige<8){showScene('条件不足',['要求：智慧≥15，人脉≥10，声望≥8'], [{text:'回去',next:'go_home',type:'safe'}],'⚠️ 条件不足');return;}
+  var examDay=S.day+30+Math.floor(Math.random()*15);
+  S.examType='殿试';S.examDay=examDay;S.examStatus='idle';S.goodEventToday=true;
+  addLog('报名殿试！皇帝亲考！');
+  showScene('殿试报名',['你进京礼部报名殿试。','礼部官员见到你，吃了一惊：「竟然有女子参加殿试？」','「不过规矩就是规矩，不论男女，能者居之。」'], [{text:'回家等待',next:'go_home',type:'safe'}],'👑 殿试');
+}
+
+function exam_prep_study(){
+  if(S.examStatus==='prepping'){
+    showScene('正在备考',['你已经在备考中了。'], [{text:'继续备考',next:'exam_prep_do',type:'smart'},{text:'休息',next:'go_home',type:'safe'}],'📖 备考');return;
+  }
+  var nextExam=S.examDay||S.day+30;
+  var daysLeft=Math.max(5,nextExam-S.day);
+  S.examStatus='prepping';S.examPrepDays=0;
+  showScene('开始备考',['你决定全力备考！','每天温习经义，练习策论。','距离考试还有约'+daysLeft+'日。'], [{text:'开始备考',next:'exam_prep_do',type:'smart'},{text:'还是算了',next:'go_home',type:'safe'}],'📖 备考');
+}
+function exam_prep_do(){
+  if(S.examDay>0&&S.day>=S.examDay&&S.examStatus==='prepping'){exam_auto_take();return;}
+  S.examPrepDays=Math.min(30,S.examPrepDays+1);
+  S.wit=Math.min(20,S.wit+1);
+  addLog('备考'+S.examPrepDays+'天 智慧+1');
+  var texts=[
+    ['你翻开《四书章句》，认真诵读了一整天。经义渐渐烂熟于胸。'],
+    ['你练习了几道策论题目。智慧+1。'],
+    ['你挑灯夜读，策论思路更加清晰。智慧+1。'],
   ];
-  var biz=bizTypes[Math.floor(Math.random()*bizTypes.length)];
-  showScene(biz.title,biz.text,biz.opts,'💰 生意商谈');
+  var t=texts[Math.floor(Math.random()*texts.length)];
+  if(S.examDay>0&&S.day>=S.examDay){
+    showScene('考试日到了',['考试的日子到了！'], [{text:'前往考场',next:'exam_auto_take',type:'gov',tag:'🏛'}],'📖 备考完成');
+  } else {
+    showScene('备考中',t.concat(['备考天数：'+S.examPrepDays+'天']), [{text:'继续备考',next:'exam_prep_do',type:'smart'},{text:'参加考试',next:'exam_auto_take',type:'gov'},{text:'休息',next:'go_home',type:'safe'}],'📖 备考');
+  }
+  renderStats();
+}
+function exam_prep_start(){
+  if(S.examDay>0&&S.day>=S.examDay){exam_auto_take();return;}
+  showScene('备考中',['科举在即，你正在备考。','距离考试还有'+Math.max(0,S.examDay-S.day)+'日。'], [{text:'继续备考',next:'exam_prep_do',type:'smart'},{text:'提前参加考试',next:'exam_auto_take',type:'gov'},{text:'休息',next:'go_home',type:'safe'}],'📖 备考');
+}
+function exam_auto_take(){
+  var t=S.examType;
+  if(t==='县试')exam_take_county();
+  else if(t==='府试')exam_take_prefect();
+  else if(t==='乡试')exam_take_provincial();
+  else if(t==='会试')exam_take_metropolitan();
+  else if(t==='殿试')exam_take_palace();
+  else{go('go_home','safe');}
 }
 
-function biz_accept(){
-  if(S.money<50){showScene('资金不足',['你手头没有五十两银子，合作暂时无法进行。'], [{text:'返回',next:'go_home',type:'safe'}],'💸 资金不足');return;}
-  S.money-=50;
-  var earn=30+Math.floor(Math.random()*40);
-  S.money+=earn;
-  S.marketProfit+=earn;
-  addLog('代销合作 -50文+' +earn+'文');
-  showScene('合作达成',['你签下契约，进了一批苏州丝绸。','果然品质上乘，不到半月便销售一空。算上分成，净赚约'+earn+'两！','「下次还合作！」客商笑道。'], [{text:'继续经营',next:'go_home',type:'safe'}],'📈 生意成功');
-  renderStats();
-}
-function biz_trial(){
-  if(S.money<30){showScene('资金不足',['手头的银子不够三十两。'], [{text:'返回',next:'go_home',type:'safe'}],'💸 资金不足');return;}
-  S.money-=30;
-  var earn=10+Math.floor(Math.random()*20);
-  S.money+=earn;
-  S.marketProfit+=earn;
-  addLog('试水代销 -30文 +'+earn+'文');
-  showScene('试水成功',['你谨慎地付了三十两，进了小批量丝绸试水。','虽然赚得不多，但资金安全，没压太多货。净赚约'+earn+'两。'], [{text:'继续经营',next:'go_home',type:'safe'}],'📈 小赚');
-  renderStats();
-}
-function biz_gov_accept(){
-  var earn=40+Math.floor(Math.random()*60);
-  S.money+=earn;
-  S.marketProfit+=earn;
-  S.govTaskDone+=1;
-  S.prestige+=1;
-  addLog('县衙采购单 +'+earn+'文');
-  showScene('接下采购单',['你接下了县衙的采购单。','虽然年底才能结账，但这笔单子金额不小，而且和县衙搭上线，日后好处多多。','预期利润约'+earn+'两。'], [{text:'继续经营',next:'go_home',type:'safe'}],'🏛 官府合作');
-  renderStats();
-}
-function biz_gov_bargain(){
-  var success=Math.random()>0.4;
-  if(success){
-    var earn=50+Math.floor(Math.random()*60);
-    S.money+=earn;
-    S.marketProfit+=earn;
-    addLog('谈判加价 +'+earn+'文');
-    showScene('谈判成功',['你坚持要加价一成，县衙最终同意了。','「成交！不过日后还要多关照。」师爷笑道。','预期利润约'+earn+'两。'], [{text:'继续经营',next:'go_home',type:'safe'}],'💰 谈判成功');
+function exam_take_county(){
+  var prep=Math.min(5,S.examPrepDays||0);
+  var score=Math.min(100,Math.floor(S.wit*6+Math.random()*25+prep*4));
+  var rank=score>=90?'案首':score>=70?'前十':score>=50?'取中':'落第';
+  if(score>=50){
+    S.examLevel='童生';S.examStatus='passed';S.examPassed=true;S.govTitle='县学学子';S.salary=0;S.goodEventToday=true;
+    addLog('县试第'+rank+'名！成为童生！');
+    showScene('县试放榜',['第'+S.day+'日，县学宫外张贴红榜。','你挤进人群，在榜上找到了自己的名字——「'+rank+'！」','围观的人群欢呼：「恭喜！这位姑娘考中童生了！」','从这一天起，你不再是白身，而是堂堂正正的——童生！'], [{text:'衣锦还家',next:'go_home',type:'safe'}],'🎉 县试通过：'+rank);
   } else {
-    showScene('谈判失败',['你提出加价一成，师爷脸色一沉：「加价？那就算了，县衙不愁找不到布庄。」','这笔生意黄了。'], [{text:'算了',next:'go_home',type:'safe'}],'😔 谈判失败');
+    S.examStatus='idle';S.examPassed=false;S.examDay=0;S.examType=null;
+    addLog('县试落第...再接再厉');
+    showScene('县试落第',['你再次名落孙山。但科举之路本就艰难，吸取教训，来年再战！'], [{text:'回去继续',next:'go_home',type:'safe'}],'😢 落第');
   }
-  renderStats();
-}
-function biz_cash(){
-  var earn=20+Math.floor(Math.random()*30);
-  S.money+=earn;
-  S.marketProfit+=earn;
-  addLog('现金售出 +'+earn+'文');
-  showScene('现金交易',['行商爽快地付了钱，拿着布匹离开了。','虽然打了个八折，但现金结算没有风险，赚了约'+earn+'两。'], [{text:'继续经营',next:'go_home',type:'safe'}],'💰 现金交易');
-  renderStats();
-}
-function biz_cash_bargain(){
-  var success=S.wit>=3||Math.random()>0.5;
-  if(success){
-    var earn=25+Math.floor(Math.random()*35);
-    S.money+=earn;
-    S.marketProfit+=earn;
-    addLog('谈判加价 +'+earn+'文');
-    showScene('谈判成功',['你坚持九折，行商想了想，答应了：「成交！」','赚了约'+earn+'两，比八折多赚了不少。'], [{text:'继续经营',next:'go_home',type:'safe'}],'💰 谈判成功');
-  } else {
-    var earn=15+Math.floor(Math.random()*25);
-    S.money+=earn;
-    S.marketProfit+=earn;
-    addLog('现金售出 +'+earn+'文');
-    showScene('坚持失败',['你坚持九折，行商摇摇头：「那就算了，我再去别家看看。」','虽然没按你的价卖，但后来还是按原价现金卖掉了一些布，赚了'+earn+'两。'], [{text:'继续经营',next:'go_home',type:'safe'}],'📉 小赚');
-  }
-  renderStats();
-}
-function biz_partner(){
-  S.shopReputation=Math.min(10,(S.shopReputation||0)+3);
-  var earn=50+Math.floor(Math.random()*50);
-  S.money+=earn;
-  S.marketProfit+=earn;
-  addLog('合伙人加入 +'+earn+'文');
-  showScene('合伙经营',['老周入了股，你们正式合伙经营。','他果然有门路，进货渠道更宽了，还带来了一批老客户。年底分红各半，但这月赚得比以前多，净赚约'+earn+'两。'], [{text:'继续经营',next:'go_home',type:'safe'}],'🤝 合伙经营');
-  renderStats();
-}
-function biz_hire(){
-  S.social+=1;
-  addLog('聘用掌柜 人脉+1');
-  showScene('聘用掌柜',['你婉拒了合伙，只聘老周当了掌柜。','「也好，我给你好好干！」他倒也爽快。','有了掌柜帮忙，布庄经营得井井有条，你轻松了不少。'], [{text:'继续经营',next:'go_home',type:'safe'}],'🏪 聘用掌柜');
-  renderStats();
-}
-function biz_refuse(){
-  showScene('婉拒合作',['你婉言谢绝了对方的提议。','「也好，日后有需要再谈。」对方倒也没有不满。'], [{text:'继续经营',next:'go_home',type:'safe'}],'🌸 婉拒');
-}
-function social_event(){
-  if(S.prestige>=10){
-    if(checkMeetNewMan())return;
-    showScene('赏花宴',['你受邀来到柳府，满园的花开得正盛。柳夫人热情地拉着你介绍给众宾客：「这位就是我跟你们说的，新来的小媳妇，人又能干又机灵！」','你举止得体，谈笑风生，给众人留下了极好的印象。'], [{text:'结交新朋友',next:'social_event_2',type:'love'},{text:'和柳夫人深谈',next:'social_event_liu',type:'love'}],'🌸 柳府赏花宴');
-  } else {
-    if(checkMeetNewMan())return;
-    showScene('街头偶遇',['你在镇上遇到了柳夫人。她看见你，笑着点了点头：「哟，小媳妇，最近可好？改天来府上坐坐？」'], [{text:'寒暄几句',next:'go_home',type:'safe'}],'💬 偶遇');
-  }
-}
-function social_event_2(){S.prestige+=2;S.social+=1;addLog('赏花宴结交 声望+2 人脉+1');if(checkMeetNewMan())return;showScene('结交名流',['你在赏花宴上与几位镇上名流交谈甚欢。分别时，她们纷纷邀请你日后多来往。'], [{text:'回家',next:'go_home',type:'safe'}],'🌟 赏花宴');renderStats();}
-function social_event_liu(){S.social+=2;S.prestige+=1;addLog('柳夫人深谈 人脉+2 声望+1');if(checkMeetNewMan())return;showScene('柳夫人',['柳夫人拉着你说了很久。她对你的布庄经营颇感兴趣，临走时说：「小媳妇，我有个生意想和你谈谈。下次来府上，我们细说。」'], [{text:'回家',next:'go_home',type:'safe'}],'💬 深谈');renderStats();}
-
-// ========== 仕途模式 ==========
-function gov_work(){
-  var tasks=['你去街巷巡逻，维持秩序。', '你帮忙整理文书，誊抄告示。', '你随县丞下乡巡视农情。'];
-  var task=tasks[Math.floor(Math.random()*tasks.length)];
-  S.govTaskDone+=1;
-  S.prestige+=1;
-  addLog('公务处理 声望+1');
-  showScene('县衙日常',[task,'忙碌了一天，县丞对你点了点头：「不错，继续努力。」'], [{text:'回家',next:'go_home',type:'safe'}],'🏛 公务');
   renderStats();checkIdentity();
 }
-function gov_dispute(){
-  showScene('纠纷调解',['镇上两家因摊位问题起了争执，双方各执一词，闹到了县衙。','「大人！是她先占了我的位置！」', '「明明是你诬赖我！」','作为女吏，你需要公正地处理这起纠纷。'], [{text:'实地勘察，明辨是非',next:'gov_dispute_fair',type:'gov'},{text:'各打五十大板，各让一步',next:'gov_dispute_split',type:'safe'},{text:'上报县丞定夺',next:'gov_dispute_up',type:'smart'}],'⚖️ 纠纷');
+
+function exam_take_prefect(){
+  var prep=Math.min(8,S.examPrepDays||0);
+  var score=Math.min(100,Math.floor(S.wit*6+Math.random()*25+prep*4));
+  var rank=score>=90?'案首':score>=70?'前十':score>=50?'取中':'落第';
+  if(score>=50){
+    S.examLevel='秀才';S.examStatus='passed';S.examPassed=true;S.govTitle='县学书吏';S.salary=5;S.lastSalaryDay=S.day;S.goodEventToday=true;
+    addLog('府试第'+rank+'名！成为秀才！月俸5两！');
+    showScene('府试放榜',['第'+S.day+'日，府学张贴红榜。你高居榜上——「'+rank+'！」作为秀才，你月俸五两，获得参加乡试资格！'], [{text:'衣锦还家',next:'go_home',type:'safe'}],'🎉 府试通过：'+rank);
+  } else {
+    S.examStatus='idle';S.examPassed=false;S.examDay=0;S.examType=null;
+    addLog('府试落第');
+    showScene('府试落第',['你再次名落孙山。但没有放弃，吸取教训来年再战！'], [{text:'回去',next:'go_home',type:'safe'}],'😢 落第');
+  }
+  renderStats();checkIdentity();
 }
-function gov_dispute_fair(){S.wit+=2;S.prestige+=2;S.govTaskDone+=1;addLog('公正裁决 智慧+2 声望+2');if(checkMeetNewMan())return;showScene('公正裁决',['你亲自去实地查看，很快弄清了来龙去脉——是后来的商贩占了先来者的位置。你秉公而断，众人心服口服。'], [{text:'回家',next:'go_home',type:'safe'}],'✅ 公正裁决');renderStats();checkIdentity();}
-function gov_dispute_split(){S.prestige+=1;S.govTaskDone+=1;addLog('各让一步 声望+1');showScene('各让一步',['你各打五十大板，两家各让一步。虽不算完美，但总算是平息了争端。'], [{text:'回家',next:'go_home',type:'safe'}],'⚖️ 调解');renderStats();}
-function gov_dispute_up(){S.social+=1;addLog('上报县丞 人脉+1');showScene('上报县丞',['你将情况如实上报县丞。县丞赞赏你「知道轻重，不擅自做主」，也算加了一分印象分。'], [{text:'回家',next:'go_home',type:'safe'}],'🏛 明智');renderStats();}
+
+function exam_take_provincial(){
+  var prep=Math.min(10,S.examPrepDays||0);
+  var score=Math.min(100,Math.floor(S.wit*5+S.social*1+Math.random()*25+prep*3));
+  var rank=score>=90?'解元':score>=75?'亚元':score>=55?'经魁':score>=40?'举人':'落第';
+  if(score>=40){
+    S.examLevel='举人';S.examStatus='passed';S.examPassed=true;S.govTitle='县衙县尉';S.salary=15;S.lastSalaryDay=S.day;S.lastExamDay=S.day;S.goodEventToday=true;
+    addLog('乡试第'+rank+'名！成为举人！月俸15两！');
+    showScene('乡试放榜',['第'+S.day+'日，省城贡院张贴红榜！你高居榜首——解元！整个省城轰动：「出了个女解元！」月俸十五两！'], [{text:'衣锦还家',next:'go_home',type:'safe'}],'🎉 乡试通过：'+rank);
+  } else {
+    S.examStatus='idle';S.examPassed=false;S.examDay=0;S.examType=null;
+    addLog('乡试落第');
+    showScene('乡试落第',['你再次落第。三年后卷土重来！'], [{text:'回去',next:'go_home',type:'safe'}],'😢 落第');
+  }
+  renderStats();checkIdentity();
+}
+
+function exam_take_metropolitan(){
+  var prep=Math.min(12,S.examPrepDays||0);
+  var score=Math.min(100,Math.floor(S.wit*5+S.social*1.5+Math.random()*25+prep*3));
+  var rank=score>=90?'会元':score>=70?'会魁':score>=50?'赐同进士':'落第';
+  if(score>=50){
+    S.examLevel='进士';S.examStatus='passed';S.examPassed=true;S.govTitle='县令';S.salary=30;S.lastSalaryDay=S.day;S.goodEventToday=true;
+    addLog('会试第'+rank+'名！成为进士！月俸30两！');
+    showScene('会试放榜',['第'+S.day+'日，京城礼部张贴金榜！你的名字赫然在列！整个京城轰动了：「女子考中进士！」月俸三十两！'], [{text:'衣锦还家',next:'go_home',type:'safe'}],'🎉 会试通过：'+rank);
+  } else {
+    S.examStatus='idle';S.examPassed=false;S.examDay=0;S.examType=null;
+    addLog('会试落第');
+    showScene('会试落第',['会试落第，但来年可再战！'], [{text:'回去',next:'go_home',type:'safe'}],'😢 落第');
+  }
+  renderStats();checkIdentity();
+}
+
+function exam_take_palace(){
+  var prep=Math.min(15,S.examPrepDays||0);
+  var score=Math.min(100,Math.floor(S.wit*4+S.social*2+Math.random()*30+prep*3));
+  var rank=score>=95?'状元（第一名）':score>=88?'榜眼':score>=80?'探花':score>=65?'赐同进士出身':'落第';
+  var titleMap={'状元（第一名）':'知府','榜眼':'同知','探花':'通判','赐同进士出身':'县令','落第':'白身'};
+  var govTitle=titleMap[rank]||'县令';
+  if(score>=65){
+    S.examLevel='官员';S.examStatus='passed';S.examPassed=true;S.govTitle=govTitle;S.currentRank=govTitle;
+    S.salary={'知府':80,'同知':60,'通判':50,'县令':30}[govTitle]||30;
+    S.lastSalaryDay=S.day;S.goodEventToday=true;
+    addLog('殿试！'+rank+'！授'+govTitle+'！月俸'+S.salary+'两！');
+    var celebTexts={
+      '状元（第一名）':['第'+S.day+'日，皇宫大殿，皇帝亲自主持殿试！','你笔下生花，文章惊世！','皇帝拍案叫绝：「状元！开朝以来第一位女状元！」','整个朝堂震动：「状元的文章，真是字字珠玑！」','你被授予知府，从一品，月俸八十两！'],
+      '榜眼':['第'+S.day+'日，殿试结果揭晓。','你荣获榜眼！仅次于状元！','皇帝龙颜大悦：「榜眼亦是人中龙凤！」','你被授予同知，正四品，月俸六十两！'],
+      '探花':['第'+S.day+'日，殿试放榜。','你荣获探花！','皇帝笑道：「探花之名，果然名不虚传！」','你被授予通判，正五品，月俸五十两！'],
+      '赐同进士出身':['第'+S.day+'日，殿试发榜。','你赐同进士出身！','虽然不是前列，但也是正途出身！','你被授予县令，正七品，月俸三十两！'],
+    };
+    showScene('殿试放榜',celebTexts[rank]||[], [{text:'衣锦还家',next:'go_home',type:'safe'}],'👑 '+rank+'！授'+govTitle);
+  } else {
+    S.examLevel='进士';S.examStatus='idle';S.examPassed=false;S.examDay=0;S.examType=null;
+    addLog('殿试落第...进士身份保留');
+    showScene('殿试落第',['你未能在殿试中取得名次。','但你的进士身份依然保留，可来年再战！'], [{text:'回去',next:'go_home',type:'safe'}],'😢 殿试落第');
+  }
+  renderStats();checkIdentity();
+}
+
+// ========== 仕途公务系统 ==========
+function gov_work(){
+  if(!S.governance)S.governance={justice:0,tax:0,security:0,publicSentiment:0};
+  addLog("处理公务");
+  var tasks=[
+    {type:"justice",text:"有两位商人为一笔货款起纠纷，闹到了县衙。",win:"你仔细查阅账簿，发现其中一人有伪造证据之嫌。你当场戳穿，正义得以伸张。","bad":"你秉公而断，虽然未必让所有人满意，但尽力了。"},
+    {type:"tax",text:"春耕时节到了，你需要督促各乡缴纳赋税。",win:"你下乡走访，宣讲政策，百姓纷纷主动缴纳，征税任务圆满完成。","bad":"征税工作进展缓慢，你尽力督促，只完成了七成。"},
+    {type:"security",text:"镇上出现了一伙流窜的地痞，百姓人心惶惶。",win:"你带领衙役深夜围捕，将地痞一网打尽。镇上百姓拍手称快！","bad":"地痞闻风而逃，你尽力加强巡逻，治安有所改善。"},
+    {type:"publicSentiment",text:"有一户人家因病致贫，孩子无法上学，恳求帮助。",win:"你自掏腰包并倡议富户捐资，建了一座义学，百姓交口称赞。","bad":"你尽力而为，捐了一部分俸禄，但无力解决根本问题。"},
+  ];
+  var task=tasks[Math.floor(Math.random()*tasks.length)];
+  var g=S.governance;
+  var witThresh=10;
+  var pass=S.wit>=witThresh||Math.random()<0.55;
+  var bonus=pass?2+Math.floor(Math.random()*2):1;
+  var stat=task.type==="justice"?"justice":task.type==="tax"?"tax":task.type==="security"?"security":"publicSentiment";
+  g[stat]=Math.min(50,g[stat]+bonus);
+  var statNames={justice:"断案",tax:"征税",security:"治安",publicSentiment:"民心"};
+  S.prestige=Math.min(30,S.prestige+1);
+  S.govTaskDone++;
+  addLog("公务处理 "+statNames[stat]+"+"+bonus+" 声望+1");
+  showScene("公务："+statNames[stat],[task.text,pass?task.win:task.bad,"此项政绩 +"+bonus+"（总计："+g[stat]+"/50）"],[{text:"继续处理公务",next:"gov_work",type:"gov"},{text:"回去休息",next:"go_home",type:"safe"}],"📋 公务");
+  renderStats();
+}
+
+function gov_promotion(){
+  var g=S.governance||{};
+  var total=(g.justice||0)+(g.tax||0)+(g.security||0)+(g.publicSentiment||0);
+  var rankTitles={1:{from:'县令',to:'县丞',salary:50},2:{from:'县丞',to:'同知',salary:70},3:{from:'同知',to:'知府',salary:100}};
+  var tier=1;
+  if(total>=80)tier=3;else if(total>=60)tier=2;
+  var info=rankTitles[tier];
+  if(S.currentRank!==info.from){showScene('升迁条件',['你的政绩还不足以升迁。需要积累更多政绩。'], [{text:'继续努力',next:'go_home',type:'safe'}],'⬆️ 升迁');return;}
+  S.currentRank=info.to;S.govTitle=info.to;S.salary=info.salary;S.lastSalaryDay=S.day;S.promotionReady=false;
+  S.governance={justice:0,tax:0,security:0,publicSentiment:0};
+  S.goodEventToday=true;
+  addLog('升迁！新官职：'+info.to+' 月俸'+info.salary+'两！');
+  showScene('圣旨到！',['一骑快马飞奔而来——是京城来的钦差！','「奉天承运，皇帝诏曰：'+S.playerName+'勤政爱民，政绩卓著，着即升任'+info.to+'！」','你跪接圣旨，心中激动难抑。从白身到知府，这一路走来，多少艰辛！'], [{text:'接旨谢恩',next:'go_home',type:'safe'}],'⬆️ 升迁：'+info.to);
+  renderStats();checkIdentity();
+}
+
+// 俸禄发放（月薪）
+function gov_collect_salary(){
+  if(S.salary<=0)return;
+  var months=Math.max(1,Math.floor((S.day-S.lastSalaryDay)/30));
+  if(months<=0)return;
+  var total=S.salary*months;
+  S.money+=total;
+  S.lastSalaryDay=S.day+(months*30);
+  addLog('领取俸禄 '+months+'个月共'+total+'两！');
+  showScene('俸禄发放',['又到了发薪的日子。','俸禄核算中：本月俸禄 '+S.salary+'两 × '+months+'个月 = '+total+'两','你签收俸禄，银两入库。'], [{text:'继续',next:'go_home',type:'safe'}],'💰 俸禄+'+total+'两');
+  renderStats();
+}
 
 // ========== 晚间互动 ==========
 function n_eat(){
@@ -1294,11 +1308,7 @@ function n_he_cold(){
 // ========== 回家与结算 ==========
 function go_home(){
   // 面试通过后次日入职
-  if(S.interviewPassed&&!S.isOfficial){
-    S.interviewPassed=false;
-    gov_onboard();
-    return;
-  }
+
   // 赏花宴触发检测
   if(S.invitationAccepted&&S.day>=S.invitationDay&&!S.eventsTriggered.invitation_event){
     S.eventsTriggered.invitation_event=true;
@@ -2598,11 +2608,10 @@ window.go=function(n,t){
     case 'go_work':go_work();break;
     case 'talk_husband_early':talk_husband_early();break;
     case 'go_town':go_town();break;
-    case 'gov_enlist':gov_enlist();break;
-    case 'gov_enlist_signup':gov_enlist_signup();break;
-    case 'gov_exam':gov_exam();break;
-    case 'gov_exam_result':gov_exam_result();break;
-    case 'ev_market_buy':ev_market_buy();break;
+    case 'exam_wenMiao':exam_wenMiao();break;
+    case 'exam_signup_county':exam_signup_county();break;
+    case 'exam_signup_prefect':exam_signup_prefect();break;
+        case 'ev_market_buy':ev_market_buy();break;
     case 'ev_market_calm':ev_market_calm();break;
     case 'ev_market_info':ev_market_info();break;
     case 'ev_rogue_scold':ev_rogue_scold();break;
@@ -2635,13 +2644,10 @@ window.go=function(n,t){
     case 'social_event_2':social_event_2();break;
     case 'social_event_liu':social_event_liu();break;
     case 'gov_work':gov_work();break;
-    case 'gov_dispute':gov_dispute();break;
-    case 'gov_dispute_fair':gov_dispute_fair();break;
-    case 'gov_dispute_split':gov_dispute_split();break;
-    case 'gov_dispute_up':gov_dispute_up();break;
-    case 'gov_interview':gov_interview();break;
-    case 'gov_onboard':gov_onboard();break;
-    case 'n_eat':n_eat();break;
+    case 'exam_prep_study':exam_prep_study();break;
+            case 'gov_work':gov_work();break;
+    case 'gov_promotion':gov_promotion();break;
+        case 'n_eat':n_eat();break;
     case 'n_talk':n_talk();break;
     case 'n_heart':n_heart();break;
     case 'n_secret':n_secret();break;
