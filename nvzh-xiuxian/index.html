@@ -1,392 +1,651 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>天涯剑影</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仙侠缘·情动九天</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0a0a14;color:#c8d4e8;min-height:100vh}
-#game{max-width:680px;margin:0 auto;padding:20px}
-#cover{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:92vh;text-align:center}
-h2{color:#6ab4f0;font-size:2.4em;margin-bottom:6px;letter-spacing:6px;text-shadow:0 0 20px #3a8ad0}
-.s{color:#4a7aaa;font-size:1.1em;margin-bottom:28px;letter-spacing:4px}
-.d{color:#5a7a9a;font-size:0.88em;max-width:440px;line-height:1.9;margin-bottom:36px}
-.bgg{background:#1a4a8a;color:#c8d4e8;border:none;padding:14px 50px;border-radius:8px;cursor:pointer;font-size:1.05em;font-weight:bold;letter-spacing:4px;transition:background 0.2s;box-shadow:0 0 15px #1a3a6a}
-.bgg:hover{background:#2a5a9a}
-.sw{background:#0d1b2a;border:1px solid #2a4a6a;border-radius:12px;padding:22px;margin-bottom:14px;display:none}
-.sw.on{display:block}
-.st{color:#6ab4f0;font-size:1.1em;text-align:center;margin-bottom:6px;font-weight:bold;letter-spacing:2px}
-.ss{color:#4a7aaa;font-size:0.8em;text-align:center;margin-bottom:18px}
-.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.cc{background:#0f2a4a;border:2px solid #2a4a6a;border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;text-align:left}
-.cc:hover{border-color:#6ab4f0;transform:translateY(-2px)}
-.cn{color:#6ab4f0;font-size:0.98em;font-weight:bold;margin-bottom:5px}
-.cd{color:#7a9aba;font-size:0.8em;line-height:1.5;margin-bottom:5px}
-.ct{display:flex;flex-wrap:wrap;gap:4px}
-.ch{background:#1a3a6a;color:#6ab4f0;font-size:0.7em;padding:2px 6px;border-radius:3px}
-.cbtn{display:block;width:100%;background:#1a5a3a;color:#c8d4e8;border:none;padding:13px;border-radius:8px;cursor:pointer;font-size:1em;font-weight:bold;letter-spacing:2px;margin-top:14px;transition:background 0.2s}
-.cbtn:hover{background:#2a7a4a}
-.sel{background:#0a2a1a;border:1px solid #2a6a4a;border-radius:6px;padding:10px;margin:8px 0;font-size:0.85em;color:#6aca8a}
-.nw{background:#0d1b2a;border:1px solid #2a4a6a;border-radius:8px;padding:14px;margin:10px 0}
-.nl{color:#4a7aaa;font-size:0.8em;display:block;margin-bottom:6px}
-.ni{width:100%;background:#16213e;border:1px solid #3a5a7a;color:#c8d4e8;padding:10px 12px;border-radius:6px;font-size:1em}
-.sc{background:#0d1b2a;border:1px solid #2a4a6a;border-radius:12px;padding:20px;margin-bottom:14px;display:none}
-.sc.on{display:block}
-.sct{color:#6ab4f0;font-size:1.0em;font-weight:bold;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #1a2a3a;display:flex;justify-content:space-between;align-items:center}
-.scd{color:#3a5a7a;font-size:0.8em}
-.sctx{line-height:1.9;color:#b8c8d8;font-size:0.9em;margin-bottom:14px}
-.sctx p{margin-bottom:10px}
-.chc{display:block;width:100%;background:#0f2a4a;border:2px solid #2a4a6a;color:#c8d4e8;padding:12px 14px;margin:6px 0;border-radius:8px;cursor:pointer;text-align:left;font-size:0.9em;line-height:1.5;transition:all 0.18s}
-.chc:hover{background:#1a4a7a;transform:translateX(3px)}
-.chc.safe{border-color:#2a6a4a}.chc.safe:hover{background:#0a3a2a}
-.chc.risky{border-color:#6a2a2a}.chc.risky:hover{background:#3a1a1a}
-.chc.love{border-color:#5a2a6a}.chc.love:hover{background:#2a1a3a}
-.chc.smart{border-color:#2a2a6a}.chc.smart:hover{background:#1a1a4a}
-.tag{display:inline-block;font-size:0.72em;padding:1px 6px;border-radius:3px;margin-right:5px;font-weight:bold}
-.t-safe{background:#1a4a2a;color:#6aca8a}.t-risky{background:#4a1a1a;color:#ca6a6a}.t-love{background:#3a1a3a;color:#ca6aca}.t-smart{background:#1a1a4a;color:#6a6aca}
-.sb{background:#0d1b2a;border:1px solid #2a4a6a;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:none}.sb.on{display:block}
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.st2{background:#0f2a4a;border-radius:6px;padding:5px 6px;text-align:center}
-.sn{font-size:0.65em;color:#4a7aaa}.sv{font-size:1.0em;color:#6ab4f0;font-weight:bold}
-.aw{display:none;background:#1a0a2a;border:1px solid #5a2a6a;border-radius:6px;padding:7px 12px;text-align:center;margin-top:8px}.aw.on{display:block}
-.al{color:#9a4aba;font-size:0.75em}.abb{background:#1a0a2a;border-radius:10px;height:6px;margin-top:4px}
-.abf{background:linear-gradient(90deg,#5a2a6a,#9a4aba);border-radius:10px;height:6px;transition:width 0.5s}
-.sbar{display:none;text-align:center;margin:10px 0}.sbar.on{display:block}
-.bs{background:#1a4a8a;color:#c8d4e8;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.82em;font-weight:bold;margin:0 3px}
-.bg2{background:transparent;color:#4a7aaa;border:1px solid #2a3a4a;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.82em;margin:0 3px}
-.lw{display:none;background:#060c14;border:1px solid #1a2a3a;border-radius:8px;padding:8px;margin-top:12px;max-height:110px;overflow-y:auto;font-size:0.75em;color:#3a5a7a;line-height:1.6}.lw.on{display:block}
-.le{border-bottom:1px solid #0a1a2a;padding:2px 0}.et{background:#1a2a4a;color:#6ab4f0;font-size:0.7em;padding:2px 8px;border-radius:4px;margin-bottom:8px;letter-spacing:1px}
+body{background:linear-gradient(135deg,#1a0a2e 0%,#2d1b4e 40%,#1a0a2e 100%);min-height:100vh;font-family:'Noto Serif SC',serif;color:#e8d5f0;overflow-x:hidden}
+.particle{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle span{position:absolute;border-radius:50%;background:rgba(180,120,255,0.3);animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) rotate(720deg);opacity:0}}
+#game-container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px;min-height:100vh}
+.screen{display:none;padding:20px}
+.screen.active{display:block}
+.title-screen{text-align:center;padding-top:60px}
+.game-title{font-family:'Ma Shan Zheng',cursive;font-size:4em;background:linear-gradient(135deg,#c084fc,#f472b6,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(192,132,252,0.5);margin-bottom:10px;animation:glow 3s ease-in-out infinite}
+.game-subtitle{font-size:1.2em;color:#a78bfa;margin-bottom:40px;letter-spacing:4px}
+@keyframes glow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+.start-btn{background:linear-gradient(135deg,#7c3aed,#db2777);border:none;padding:15px 60px;font-size:1.3em;color:#fff;border-radius:50px;cursor:pointer;font-family:'Noto Serif SC',serif;box-shadow:0 0 30px rgba(124,58,237,0.5);transition:all 0.3s;letter-spacing:3px}
+.start-btn:hover{transform:scale(1.08);box-shadow:0 0 50px rgba(219,39,119,0.7)}
+.load-btn{margin-top:15px;background:linear-gradient(135deg,#4c1d95,#6d28d9);border:1px solid #8b5cf6;padding:10px 40px;font-size:1em;color:#c4b5fd;border-radius:50px;cursor:pointer;font-family:'Noto Serif SC',serif;transition:all 0.3s}
+.load-btn:hover{background:linear-gradient(135deg,#5b21b6,#7c3aed)}
+.creation-title{text-align:center;font-family:'Ma Shan Zheng',cursive;font-size:2.5em;color:#e9d5ff;margin-bottom:30px}
+.section-box{background:linear-gradient(135deg,rgba(88,28,135,0.4),rgba(30,10,60,0.6));border:1px solid rgba(192,132,252,0.3);border-radius:16px;padding:20px;margin-bottom:20px;backdrop-filter:blur(10px)}
+.section-title{font-size:1.1em;color:#c084fc;margin-bottom:12px;border-bottom:1px solid rgba(192,132,252,0.2);padding-bottom:8px;letter-spacing:2px}
+.name-input{width:100%;background:rgba(0,0,0,0.3);border:1px solid #6d28d9;border-radius:10px;padding:12px;color:#e9d5ff;font-size:1.1em;font-family:'Noto Serif SC',serif;text-align:center;letter-spacing:2px}
+.name-input:focus{outline:none;border-color:#c084fc;box-shadow:0 0 15px rgba(192,132,252,0.3)}
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.option-card{background:rgba(0,0,0,0.25);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:12px;cursor:pointer;transition:all 0.3s;text-align:center}
+.option-card:hover{border-color:#a78bfa;background:rgba(139,92,246,0.15)}
+.option-card.selected{border-color:#c084fc;background:rgba(192,132,252,0.2);box-shadow:0 0 15px rgba(192,132,252,0.2)}
+.option-card .opt-title{color:#e9d5ff;font-weight:600}
+.option-card .opt-desc{color:#a78bfa;font-size:0.85em;margin-top:4px}
+.traits-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.trait-card{background:rgba(0,0,0,0.25);border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:10px;cursor:pointer;transition:all 0.3s;text-align:center;font-size:0.9em}
+.trait-card:hover{border-color:#f472b6;background:rgba(244,114,182,0.1)}
+.trait-card.selected{border-color:#f472b6;background:rgba(244,114,182,0.2)}
+.male-lead-card{background:rgba(0,0,0,0.25);border:1px solid rgba(139,92,246,0.3);border-radius:12px;padding:15px;cursor:pointer;transition:all 0.3s;margin-bottom:10px}
+.male-lead-card:hover{border-color:#c084fc;transform:translateY(-2px)}
+.male-lead-card.selected{border-color:#f472b6;background:rgba(244,114,182,0.15);box-shadow:0 0 20px rgba(244,114,182,0.2)}
+.male-lead-card .lead-name{color:#e9d5ff;font-size:1.2em;font-weight:600}
+.male-lead-card .lead-title{color:#f472b6;font-size:0.85em;margin-top:3px}
+.male-lead-card .lead-desc{color:#a78bfa;font-size:0.8em;margin-top:5px;line-height:1.5}
+.confirm-btn{width:100%;background:linear-gradient(135deg,#7c3aed,#db2777);border:none;padding:15px;border-radius:12px;color:#fff;font-size:1.1em;cursor:pointer;font-family:'Noto Serif SC',serif;box-shadow:0 0 20px rgba(124,58,237,0.4);transition:all 0.3s;letter-spacing:3px;margin-top:10px}
+.confirm-btn:hover{transform:scale(1.02);box-shadow:0 0 30px rgba(219,39,119,0.5)}
+.confirm-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px}
+.stat-item{background:rgba(0,0,0,0.3);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:6px 10px;font-size:0.8em}
+.stat-item .stat-label{color:#a78bfa}
+.stat-item .stat-val{color:#e9d5ff;font-weight:600}
+.stat-bar-outer{height:4px;background:rgba(0,0,0,0.4);border-radius:2px;margin-top:3px}
+.stat-bar-inner{height:100%;border-radius:2px;background:linear-gradient(90deg,#7c3aed,#db2777);transition:width 0.5s}
+.scene-box{background:linear-gradient(135deg,rgba(30,10,60,0.7),rgba(88,28,135,0.3));border:1px solid rgba(192,132,252,0.2);border-radius:16px;padding:25px;margin-bottom:15px;backdrop-filter:blur(8px);min-height:200px;animation:slideIn 0.4s ease-out}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.scene-text{font-size:1.05em;line-height:2;color:#e8d5f0;text-align:justify;white-space:pre-wrap}
+.narrator{color:#a78bfa;font-style:italic;border-left:3px solid #6d28d9;padding-left:12px;margin:10px 0}
+.dialogue{color:#f0e6ff;background:rgba(139,92,246,0.1);border-radius:8px;padding:10px 15px;margin:8px 0;border-left:3px solid #c084fc}
+.dialogue .speaker{color:#f472b6;font-weight:600}
+.choices{display:flex;flex-direction:column;gap:10px;margin-top:15px}
+.choice-btn{background:rgba(0,0,0,0.3);border:1px solid rgba(139,92,246,0.4);border-radius:10px;padding:12px 18px;color:#e9d5ff;font-size:0.95em;cursor:pointer;transition:all 0.3s;font-family:'Noto Serif SC',serif;text-align:left;line-height:1.6}
+.choice-btn:hover{transform:translateX(5px)}
+.choice-btn.safe{border-left:3px solid #22c55e}
+.choice-btn.safe:hover{background:rgba(34,197,94,0.1)}
+.choice-btn.risky{border-left:3px solid #ef4444}
+.choice-btn.risky:hover{background:rgba(239,68,68,0.1)}
+.choice-btn.love{border-left:3px solid #f472b6}
+.choice-btn.love:hover{background:rgba(244,114,182,0.1)}
+.choice-btn.smart{border-left:3px solid #a78bfa}
+.choice-btn.smart:hover{background:rgba(167,139,250,0.1)}
+.hub-title{text-align:center;font-family:'Ma Shan Zheng',cursive;font-size:2em;color:#e9d5ff;margin-bottom:20px}
+.hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hub-btn{background:linear-gradient(135deg,rgba(88,28,135,0.5),rgba(30,10,60,0.7));border:1px solid rgba(192,132,252,0.3);border-radius:14px;padding:20px;color:#e9d5ff;font-size:1.1em;cursor:pointer;transition:all 0.3s;font-family:'Noto Serif SC',serif;text-align:center;letter-spacing:2px}
+.hub-btn:hover{border-color:#c084fc;transform:translateY(-3px);box-shadow:0 8px 25px rgba(124,58,237,0.3)}
+.hub-btn .hub-icon{font-size:1.8em;display:block;margin-bottom:5px}
+.hub-btn .hub-desc{font-size:0.75em;color:#a78bfa;margin-top:3px}
+.romance-panel{background:rgba(0,0,0,0.3);border:1px solid rgba(244,114,182,0.3);border-radius:12px;padding:15px;margin-bottom:15px}
+.romance-title{color:#f472b6;font-size:1em;margin-bottom:8px}
+.heart-bar{height:8px;background:rgba(0,0,0,0.4);border-radius:4px;overflow:hidden}
+.heart-fill{height:100%;background:linear-gradient(90deg,#f472b6,#fb7185);transition:width 0.8s}
+.heart-text{color:#f9a8d4;font-size:0.85em;margin-top:5px}
+.event-card{background:rgba(0,0,0,0.25);border:1px solid rgba(192,132,252,0.2);border-radius:12px;padding:15px;margin-bottom:10px;cursor:pointer;transition:all 0.3s}
+.event-card:hover{border-color:#a78bfa;background:rgba(139,92,246,0.1)}
+.event-card .evt-title{color:#e9d5ff;font-weight:600}
+.event-card .evt-type{color:#a78bfa;font-size:0.8em}
+.notif{position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#4c1d95,#7c3aed);border:1px solid #c084fc;border-radius:10px;padding:12px 20px;color:#e9d5ff;font-size:0.9em;z-index:100;opacity:0;transform:translateX(120%);transition:all 0.5s;max-width:280px}
+.notif.show{opacity:1;transform:translateX(0)}
+.notif.positive{background:linear-gradient(135deg,#064e3b,#059669);border-color:#34d399}
+.notif.negative{background:linear-gradient(135deg,#7f1d1d,#dc2626);border-color:#f87171}
+.notif.love{background:linear-gradient(135deg,#831843,#be185d);border-color:#f472b6}
+.save-load-bar{display:flex;gap:8px;margin-bottom:15px}
+.sbtn{flex:1;padding:8px;background:rgba(0,0,0,0.3);border:1px solid rgba(139,92,246,0.3);border-radius:8px;color:#a78bfa;cursor:pointer;font-size:0.85em;font-family:'Noto Serif SC',serif;transition:all 0.3s}
+.sbtn:hover{border-color:#c084fc;color:#e9d5ff}
+.day-badge{display:inline-block;background:rgba(139,92,246,0.3);border:1px solid #7c3aed;border-radius:20px;padding:4px 16px;font-size:0.8em;color:#c4b5fd;margin-bottom:15px;letter-spacing:2px}
+.back-btn{background:rgba(0,0,0,0.3);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:8px 16px;color:#a78bfa;cursor:pointer;font-family:'Noto Serif SC',serif;margin-bottom:15px;transition:all 0.3s;font-size:0.85em;display:inline-block;border:none}
+.back-btn:hover{border-color:#c084fc;color:#e9d5ff}
+.cultivate-effect{animation:flashIn 1.5s ease-out}
+@keyframes flashIn{0%{opacity:0;transform:scale(0.95)}20%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+.heal-btn{background:rgba(0,0,0,0.3);border:1px solid rgba(34,197,94,0.4);border-radius:10px;padding:10px 20px;color:#86efac;cursor:pointer;font-family:'Noto Serif SC',serif;transition:all 0.3s;margin:5px;font-size:0.9em}
+.heal-btn:hover{background:rgba(34,197,94,0.15)}
 </style>
 </head>
 <body>
-<div id=game>
-<div id=cover>
-<h2>⚔️ 天涯剑影</h2>
-<div class=s>修 真 武 侠</div>
-<div class=d>天道崩坏，宗门林立。<br>你本是山野少年，偶入修真途。<br>御剑飞天，斩妖除魔，快意恩仇。<br>江湖路远，且看你一剑天涯。</div>
-<button class=bgg onclick="s1()">开始游戏</button>
-</div>
-<div id=step1 class="sw"><div class=st>第一步 · 你的来历</div><div class=ss>踏入修真界之前，你是什么人？</div><div class=cg id=bg-grid></div><div id=sel-bg></div></div>
-<div id=step2 class="sw"><div class=st>第二步 · 你的心性</div><div class=ss>修的是什么心？</div><div class=cg id=trait-grid></div><div id=sel-trait></div></div>
-<div id=step3 class="sw"><div class=st>第三步 · 选择道侣</div><div class=ss>修真路漫漫，谁人与你同行？</div><div class=cg id=husband-grid></div><div id=sel-husband></div></div>
-<div id=step4 class="sw"><div class=st>第四步 · 命名</div><div id=sel-name></div></div>
-<div id=stats-bar class=sb><div class=sg id=stats-grid></div><div class=aw id=aff-wrap><div class=al>💕 道侣好感 <span id=aff-num>50</span>/100</div><div class=abb><div class=abf id=aff-bar style=width:50%></div></div></div></div>
-<div id=scene class=sc><div class=sct><span id=scene-title-text></span><span class=scd id=day-num></span></div><div id=event-tag></div><div class=sctx id=scene-text></div><div id=choices></div></div>
-<div id=sbar class=sbar><button class=bs onclick="saveGame()">💾 存档</button><button class=bs onclick="loadGame()">📂 读档</button><button class=bg2 onclick="if(confirm('确定重开？'))resetGame()">🔄 重开</button></div>
-<div class=lw id=log-wrap><div id=log></div></div>
+<div class="particle" id="particles"></div>
+<div class="notif" id="notif"></div>
+<div id="game-container">
+  <div class="screen active" id="screen-title">
+    <div class="title-screen">
+      <div class="game-title">仙侠缘</div>
+      <div class="game-subtitle">情动九天</div>
+      <div style="font-size:0.85em;color:#a78bfa;margin-bottom:40px;line-height:2;text-align:center">红尘万丈，修仙路遥<br>情之所钟，虽死不悔</div>
+      <button class="start-btn" onclick="newGame()">开始新游戏</button><br>
+      <button class="load-btn" onclick="loadGame()">读取存档</button>
+    </div>
+  </div>
+  <div class="screen" id="screen-create">
+    <div class="creation-title">命定之人</div>
+    <div class="section-box">
+      <div class="section-title">姓名</div>
+      <input class="name-input" id="playerName" placeholder="请输入你的名字" maxlength="6">
+    </div>
+    <div class="section-box">
+      <div class="section-title">身世背景</div>
+      <div class="option-grid" id="bgOptions"></div>
+    </div>
+    <div class="section-box">
+      <div class="section-title">性格特质（选择一项）</div>
+      <div class="traits-grid" id="traitOptions"></div>
+    </div>
+    <div class="section-box">
+      <div class="section-title">命定之人（选择一位男主）</div>
+      <div id="maleLeadOptions"></div>
+    </div>
+    <button class="confirm-btn" id="confirmCreate" onclick="confirmCreation()" disabled>确认创建</button>
+  </div>
+  <div class="screen" id="screen-game">
+    <div class="save-load-bar">
+      <button class="sbtn" onclick="saveGame()">存档</button>
+      <button class="sbtn" onclick="toTitle()">主页</button>
+    </div>
+    <div class="day-badge" id="dayBadge"></div>
+    <div class="stats-bar" id="statsBar"></div>
+    <div id="hubArea"></div>
+    <div id="sceneArea"></div>
+    <div id="choicesArea"></div>
+  </div>
 </div>
 <script>
-var BGS=[
-{id:"wandering",name:"流浪孤儿",desc:"自幼无父无母，流落江湖。饥一顿饱一顿，却练就了一身野路子的本事，和一颗不服命的心。",tags:["意志坚","野路子"],init:{spirit:2,combat:2,gold:10}},
-{id:"medic",name:"药王谷弟子",desc:"出身药王谷，从小采药辨草，医术毒术均有涉猎。行事低调，却救人无数。",tags:["通药理","人脉广"],init:{spirit:3,heal:2,gold:30}},
-{id:"sword",name:"剑修遗孤",desc:"父亲是散修剑客，死于魔修之手。留下残缺剑谱一本，和一把锈迹斑斑的铁剑。",tags:["剑道天赋","杀伐果断"],init:{spirit:1,combat:3,gold:15}},
-{id:"scholar",name:"书香门生",desc:"本是世俗书院学生，偶得残破功法，误入修真。满腹经纶，擅长以智取胜。",tags:["智慧高","心机深"],init:{spirit:2,wit:3,gold:20}},
-{id:"beast",name:"驭兽山庄",desc:"驭兽山庄庶出，从小与妖兽为伴。能感知妖兽情绪，也有几手驯兽本事。",tags:["驭妖兽","亲和力"],init:{spirit:2,social:2,combat:1,gold:25}},
-{id:"demon",name:"魔修弃徒",desc:"曾入魔道宗门，因拒绝修炼邪功被逐出。身负旧伤，但心性坚韧。",tags:["魔功底子","隐忍"],init:{spirit:2,combat:2,evil:2,gold:5}}
+const BACKGROUNDS=[
+  {id:'noble',title:'世家贵女',desc:'名门望族，自幼锦衣玉食',bonus:{声望:5,银两:10}},
+  {id:'orphan',title:'孤儿弃婴',desc:'不知来处，却有坚韧之心',bonus:{战力:3,灵力:3}},
+  {id:'survivor',title:'宗门遗孤',desc:'宗门覆灭之夜幸存，背负血仇',bonus:{战力:5,灵力:3}},
+  {id:'wander',title:'江湖游医',desc:'四处漂泊，悬壶济世',bonus:{智慧:5,银两:5}},
 ];
-var TRAITS=[
-{id:"righteous",name:"心怀正义",desc:"邪魔外道，见一个杀一个。行事光明磊落，但有时过于执拗。",effect:{spirit:1,repute:2},tags:["正直","嫉恶"]},
-{id:"cunning",name:"阴险狡诈",desc:"兵不厌诈，为达目的不择手段。江湖险恶，你比它更险。",effect:{wit:2,combat:1},tags:["阴狠","智谋"]},
-{id:"free",name:"放浪不羁",desc:"不受拘束，我行我素。江湖规矩不过是给弱者定的。",effect:{combat:2,evil:1},tags:["狂放","无畏"]},
-{id:"serene",name:"心境澄明",desc:"心如止水，不为外物所动。修炼事半功倍，但人情世故略显笨拙。",effect:{spirit:2,social:-1},tags:["冷静","专注"]},
-{id:"benevolent",name:"仁心仁术",desc:"但凡一线生机，绝不伤人性命。你救过的人，日后或成贵人。",effect:{repute:2,heal:1},tags:["善良","厚德"]},
-{id:"ambitious",name:"野心勃勃",desc:"这江湖，迟早是你的。步步为营，算无遗策。",effect:{wit:1,spirit:1},tags:["野心","谋划"]}
+const TRAITS=[
+  {id:'brave',title:'勇敢',desc:'直面危险'},
+  {id:'wise',title:'睿智',desc:'洞察人心'},
+  {id:'kind',title:'善良',desc:'心怀慈悲'},
+  {id:'crafty',title:'狡黠',desc:'机敏灵活'},
+  {id:'cold',title:'清冷',desc:'外冷内热'},
+  {id:'passionate',title:'热忱',desc:'敢爱敢恨'},
 ];
-var HUSBANDS=[
-{id:"youngMaster",name:"冷夜寒",bg:"青云宗少主",desc:"面若冰霜，剑眉星目。出身名门正派，却不苟言笑。身负血仇，独来独往。",traits:["冷傲","剑法高"]},
-{id:"rogue",name:"萧无痕",bg:"江湖散修",desc:"放浪形骸，来去如风。腰间一把弯刀，脸上永远带着玩世不恭的笑。",traits:["洒脱","武艺杂"]},
-{id:"healer",name:"苏白衣",bg:"百草门弟子",desc:"温润如玉，一袭白衣。医术冠绝当代，走遍山川，济世救人。",traits:["医术","温和"]},
-{id:"beast",name:"熊蛮儿",bg:"蛮荒部落",desc:"身材魁梧，性情豪爽。不懂世俗礼节，但重情重义，一诺千金。",traits:["勇猛","单纯"]},
-{id:"demon",name:"血罗刹",bg:"魔道宗门",desc:"神秘莫测，美艳不可方物。传言她是魔道中人，但真相无人知晓。",traits:["妖媚","危险"]},
-{id:"scholar",name:"沈墨香",bg:"书剑双修",desc:"文武双全，谈吐不凡。出身没落世家，却始终保持一份傲骨。",traits:["博学","清高"]}
+const MALE_LEADS=[
+  {id:'lengyehan',name:'冷夜寒',title:'寒渊剑宗·少宗主',desc:'冷若冰霜的剑道天才，眼中只有剑与复仇，却在遇见你时流露出一丝不易察觉的温度。',color:'#60a5fa'},
+  {id:'xiaowuhen',name:'萧无痕',title:'万法阁·神秘阁主',desc:'博学多识，神秘莫测，擅长奇门遁甲，似乎知晓世间一切秘密。',color:'#a78bfa'},
+  {id:'subaiyi',name:'苏白衣',title:'药王谷·嫡传弟子',desc:'温润如玉，医术无双，笑起来如春风拂面。',color:'#f0abfc'},
+  {id:'xiongmaner',name:'熊蛮儿',title:'蛮荒部落·少主',desc:'粗犷豪爽，力大无穷，对你有着笨拙的温柔。',color:'#fb923c'},
 ];
-var S={};
+const REALMS=['凡躯','炼气','筑基','金丹','元婴','化神','大乘','渡劫','真仙'];
+const STAT_MAX={灵力:100,战力:100,智慧:100,银两:9999,声望:100};
+
+let G={};
+function defaultState(){
+  return{playerName:'',background:null,trait:null,maleLead:null,
+    stats:{灵力:10,战力:10,智慧:10,银两:20,声望:5,境界:0},
+    affection:10,day:1,currentScene:'prologue',sceneData:{},flags:{},cultivationProgress:0};
+}
+
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<30;i++){
+    const s=document.createElement('span');
+    const sz=Math.random()*4+2;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;animation-duration:'+(Math.random()*15+10)+'s;animation-delay:'+(Math.random()*10)+'s;background:rgba('+(Math.random()>0.5?'180,120,255':'244,114,182')+','+(Math.random()*0.3+0.1)+')';
+    c.appendChild(s);
+  }
+})();
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');}
+function notify(msg,type){type=type||'normal';const el=document.getElementById('notif');el.textContent=msg;el.className='notif show '+(type==='normal'?'':type);setTimeout(function(){el.classList.remove('show')},3000);}
+function newGame(){G=defaultState();showScreen('create');renderCreation();}
+function loadGame(){var d=localStorage.getItem('xiuxian_save');if(!d){notify('没有找到存档','negative');return}G=JSON.parse(d);showScreen('game');renderHub();renderStats();if(G.currentScene){playScene(G.currentScene)}}
+function saveGame(){localStorage.setItem('xiuxian_save',JSON.stringify(G));notify('存档成功！','positive')}
+function toTitle(){showScreen('title')}
+function getLeadName(){return MALE_LEADS.find(function(m){return m.id===G.maleLead})?MALE_LEADS.find(function(m){return m.id===G.maleLead}).name:'???'}
+function getBgName(){return BACKGROUNDS.find(function(b){return b.id===G.background})?BACKGROUNDS.find(function(b){return b.id===G.background}).title:'???'}
+function getLeadTitle(){return MALE_LEADS.find(function(m){return m.id===G.maleLead})?MALE_LEADS.find(function(m){return m.id===G.maleLead}).title:'???'}
+function renderCreation(){
+  var bgDiv=document.getElementById('bgOptions');
+  var bgHTML='';
+  BACKGROUNDS.forEach(function(b){bgHTML+='<div class="option-card" data-bg="'+b.id+'" onclick="selectBg(\''+b.id+'\')"><div class="opt-title">'+b.title+'</div><div class="opt-desc">'+b.desc+'</div></div>'});
+  bgDiv.innerHTML=bgHTML;
+  var trDiv=document.getElementById('traitOptions');
+  var trHTML='';
+  TRAITS.forEach(function(t){trHTML+='<div class="trait-card" data-trait="'+t.id+'" onclick="selectTrait(\''+t.id+'\')"><div>'+t.title+'</div><div style="font-size:0.75em;color:#a78bfa">'+t.desc+'</div></div>'});
+  trDiv.innerHTML=trHTML;
+  var mlDiv=document.getElementById('maleLeadOptions');
+  var mlHTML='';
+  MALE_LEADS.forEach(function(m){mlHTML+='<div class="male-lead-card" data-lead="'+m.id+'" onclick="selectLead(\''+m.id+'\')"><div class="lead-name" style="color:'+m.color+'">'+m.name+'</div><div class="lead-title">'+m.title+'</div><div class="lead-desc">'+m.desc+'</div></div>'});
+  mlDiv.innerHTML=mlHTML;
+  checkCreateReady();
+}
+function selectBg(id){G.background=id;document.querySelectorAll('#bgOptions .option-card').forEach(function(c){c.classList.toggle('selected',c.dataset.bg===id)});checkCreateReady()}
+function selectTrait(id){G.trait=id;document.querySelectorAll('#traitOptions .trait-card').forEach(function(c){c.classList.toggle('selected',c.dataset.trait===id)});checkCreateReady()}
+function selectLead(id){G.maleLead=id;document.querySelectorAll('#maleLeadOptions .male-lead-card').forEach(function(c){c.classList.toggle('selected',c.dataset.lead===id)});checkCreateReady()}
+document.getElementById('playerName').addEventListener('input',checkCreateReady);
+function checkCreateReady(){var nameOk=document.getElementById('playerName').value.trim().length>0;document.getElementById('confirmCreate').disabled=!(nameOk&&G.background&&G.trait&&G.maleLead)}
+function confirmCreation(){
+  G.playerName=document.getElementById('playerName').value.trim();
+  if(!G.playerName)return notify('请输入名字','negative');
+  var bg=BACKGROUNDS.find(function(b){return b.id===G.background});
+  if(bg&&bg.bonus)for(var k in bg.bonus)G.stats[k]=(G.stats[k]||0)+bg.bonus[k];
+  G.currentScene='prologue';G.sceneData={};G.flags={};G.affection=10;G.day=1;G.cultivationProgress=0;
+  showScreen('game');renderHub();renderStats();playScene('prologue');
+}
+
 function renderStats(){
-var el=document.getElementById("stats-grid");
-el.style.display="grid";el.style.gridTemplateColumns="repeat(4,1fr)";
-el.innerHTML='<div class=st2><div class=sn>💎 灵力</div><div class=sv>'+(S.spirit||0)+'</div></div><div class=st2><div class=sn>⚔️ 战力</div><div class=sv>'+(S.combat||0)+'</div></div><div class=st2><div class=sn>🧠 智慧</div><div class=sv>'+(S.wit||0)+'</div></div><div class=st2><div class=sn>💰 银两</div><div class=sv>'+(S.gold||0)+'</div></div><div class=st2><div class=sn>⭐ 声望</div><div class=sv>'+(S.repute||0)+'</div></div><div class=st2><div class=sn>🏷 境界</div><div class=sv>'+(S.realm||'凡人之躯')+'</div></div><div class=st2><div class=sn>📅 第</div><div class=sv>'+S.day+'天</div></div>';
+  var bars=document.getElementById('statsBar');
+  var entries=Object.entries(G.stats).filter(function(e){return['灵力','战力','智慧','银两','声望'].indexOf(e[0])>-1});
+  var realmName=REALMS[G.stats.境界]||'凡躯';
+  var html='';
+  entries.forEach(function(e){
+    var pct=Math.min(100,Math.round((e[1]/STAT_MAX[e[0]])*100));
+    html+='<div class="stat-item"><div><span class="stat-label">'+e[0]+'</span> <span class="stat-val">'+e[1]+'</span></div><div class="stat-bar-outer"><div class="stat-bar-inner" style="width:'+pct+'%"></div></div></div>';
+  });
+  html+='<div class="stat-item"><div><span class="stat-label">境界</span> <span class="stat-val">'+realmName+'</span></div></div>';
+  bars.innerHTML=html;
 }
-function updateAff(){
-if(!S.husband)return;
-var a=Math.round(S.husband.affection||50);
-document.getElementById("aff-num").textContent=a;
-document.getElementById("aff-bar").style.width=a+"%";
+
+function renderHub(){
+  document.getElementById('dayBadge').textContent='第 '+G.day+' 天';
+  var lead=MALE_LEADS.find(function(m){return m.id===G.maleLead});
+  var heartPct=Math.min(100,G.affection);
+  var heartLabel=heartPct<30?'陌路':heartPct<50?'好感':heartPct<70?'心动':heartPct<90?'深情':'命定';
+  document.getElementById('hubArea').innerHTML='<div class="romance-panel"><div class="romance-title">与 '+getLeadName()+' 的羁绊</div><div class="heart-bar"><div class="heart-fill" style="width:'+heartPct+'%"></div></div><div class="heart-text">好感度：'+G.affection+' / 100 【'+heartLabel+'】</div></div><div class="hub-grid"><button class="hub-btn" onclick="hubCultivate()"><span class="hub-icon">&#9733;</span>修炼<span class="hub-desc">提升灵力与境界</span></button><button class="hub-btn" onclick="hubAdventure()"><span class="hub-icon">&#9876;</span>历练<span class="hub-desc">闯荡江湖</span></button><button class="hub-btn" onclick="hubRomance()"><span class="hub-icon">&#128149;</span>培养感情<span class="hub-desc">与'+getLeadName()+'独处</span></button><button class="hub-btn" onclick="hubMain()"><span class="hub-icon">&#128220;</span>主线<span class="hub-desc">推进故事剧情</span></button></div>';
+  document.getElementById('choicesArea').innerHTML='';
+  document.getElementById('sceneArea').innerHTML='';
 }
-function addLog(m){
-S.log.push(m);
-var le=document.getElementById("log");
-var e=document.createElement("div");e.className="le";e.textContent=m;le.appendChild(e);
-le.scrollTop=le.scrollHeight;
-while(le.children.length>25)le.removeChild(le.firstChild);
+
+function applyEffect(eff,aff){
+  if(!eff)return;
+  for(var k in eff){
+    if(k==='境界'){
+      if(eff[k]>0&&G.stats.境界<REALMS.length-1){
+        G.stats.境界+=1;
+        notify('突破成功！晋升为 '+REALMS[G.stats.境界]+'！','positive');
+      }
+    }else{
+      G.stats[k]=(G.stats[k]||0)+eff[k];
+      if(G.stats[k]<0)G.stats[k]=0;
+    }
+  }
+  if(aff)G.affection=Math.max(0,Math.min(100,G.affection+aff));
+  renderStats();
 }
-function saveGame(){localStorage.setItem("xyj_v1",JSON.stringify(S));addLog("已存档");}
-function loadGame(){
-var d=localStorage.getItem("xyj_v1");
-if(d){S=JSON.parse(d);showGame();document.getElementById("aff-wrap").classList.add("on");document.getElementById("sbar").classList.add("on");document.getElementById("log-wrap").classList.add("on");renderStats();updateAff();addLog("读档成功");}else{addLog("无存档");}
+
+var SCENES={};
+
+function buildScenes(){
+  var lead=getLeadName();
+  var bg=getBgName();
+  var leadTitle=getLeadTitle();
+
+  SCENES={
+    prologue:{
+      text:'夜风如刀，山林间隐约传来厮杀声。\n\n你本是'+bg+'，今夜途经这片荒山，却见前方火光冲天——\n\n一道白衣身影正被数道黑影围攻，鲜血染红了他的衣襟。他的剑法凌厉却已凌乱，身上伤口纵横，显然已是强弩之末。\n\n围攻他的，是三只噬魂魔物，正发出刺耳的嘶吼步步紧逼。\n\n那白衣男子似乎察觉到了你的目光，微微侧头，露出一张苍白而冷峻的面容——\n\n「……过路之人，速速离去，莫要送死。」\n\n他的声音沙哑，却带着不容置疑的威严。',
+      choices:[
+        {text:'[risky] 出手相助，以身挡在男子身前',type:'risky',next:'prologue_fight',effect:{声望:3,战力:-2},affection:15,flag:'helped_wounded'},
+        {text:'[safe] 躲入树后屏息凝神，静观其变',type:'safe',next:'prologue_hide',effect:{},affection:0},
+        {text:'[love] 轻声询问：公子可还能支撑？我略通医术',type:'love',next:'prologue_heal',effect:{银两:-5},affection:20,flag:'showed_care'},
+        {text:'[smart] 观察四周地形，寻找脱身或偷袭的机会',type:'smart',next:'prologue_smart',effect:{智慧:2},affection:5},
+      ]
+    },
+    prologue_fight:{
+      text:'你没有犹豫，一个箭步冲上前去，挡在那白衣男子身前。\n\n噬魂魔物被你突然的举动激怒，尖啸着扑来。你自幼习武，此刻爆发出前所未有的潜力——\n\n「快走！」你大喊。\n\n那男子微微一怔，却并未离开。他咬牙起身，剑上寒光大盛，与你背靠背迎敌。\n\n一番苦战，魔物终于被击退。你浑身是伤，眼前一阵发黑，膝盖一软便要倒下——\n\n一双有力的手臂扶住了你。\n\n「……愚蠢。」他低声道，声音却并无责怪之意，「但，多谢。」\n\n他将一枚温热的丹药塞入你口中，随即抱起你向来路掠去。\n\n再次醒来时，你已身处一座古朴的山庄之中。',
+      choices:[
+        {text:'[love] 轻声问他姓名与来历',type:'love',next:'prologue_meet',effect:{},affection:10},
+        {text:'[safe] 先养伤，静待事态发展',type:'safe',next:'prologue_rest',effect:{灵力:5},affection:5},
+      ]
+    },
+    prologue_hide:{
+      text:'你压低身形，藏入一株古树之后，屏住呼吸。\n\n那白衣男子独战三只噬魂魔物，剑光如练，即便重伤之下依然凌厉无匹。然而魔物数量太多，他渐渐力竭——\n\n就在此时，一道紫雷从天而降，轰然击中一只魔物！\n\n「无痕！速退！」\n\n一声清叱，一道青衣女子凌空而来，手中拂尘挥出万千银丝，将剩余魔物尽数困住。\n\n那白衣男子趁势出剑，一剑斩灭两只魔物。最后一只惨叫一声，化为黑烟逃窜。\n\n「哪里走！」青衣女子追去。\n\n那男子踉跄几步，望向你藏身的方向，目光复杂。\n\n「……出来吧。」\n\n你知道自己已被发现，只好现身。他看了你一眼，似乎对你的隐匿之术颇为欣赏。\n\n「你倒是……谨慎。」他淡淡道，「今日之事，不宜外传。」',
+      choices:[
+        {text:'[love] 诚恳表示不会泄露，愿与他同行一段',type:'love',next:'prologue_meet',effect:{},affection:8},
+        {text:'[smart] 询问那些魔物与他的来历',type:'smart',next:'prologue_ask',effect:{智慧:2},affection:5},
+      ]
+    },
+    prologue_heal:{
+      text:'你上前几步，从袖中取出随身携带的金创药。\n\n「公子莫动，我来为你止血。」\n\n你的手轻柔地覆上他的伤口，指尖微凉。他身体微微一僵，却没有躲开。\n\n「……你不怕？」他低声问，「那可是噬魂魔物，沾上便是死。」\n\n「怕。」你坦然道，手下动作却愈发轻柔，「但见死不救，非我所愿。」\n\n他沉默片刻，忽然轻笑一声——那是今夜他第一次笑。\n\n「有趣。」\n\n他任由你为他包扎伤口，视线始终落在你专注的面容上。\n\n「我叫'+lead+'。」他顿了顿，「记住了？」\n\n他服下你递来的丹药，伤势迅速稳定。而后他站起身，向你伸出手。\n\n「走吧，我带你去一个安全的地方。」',
+      choices:[
+        {text:'[love] 将手放入他的掌心',type:'love',next:'prologue_meet',effect:{},affection:15,flag:'hold_hand'},
+        {text:'[safe] 自己站稳，无功不受禄',type:'safe',next:'prologue_modest',effect:{声望:2},affection:5},
+      ]
+    },
+    prologue_smart:{
+      text:'你没有冲动，而是冷静地观察四周。\n\n你发现右侧有一处陡峭的山崖，崖下灌木丛生——正是设伏的好地方。而那些魔物似乎畏惧山涧中隐隐流动的水汽。\n\n你弯腰拾起一块石头，瞄准魔物聚集的方向，用力掷向崖边——\n\n石头滚落，发出巨响！\n\n魔物惊恐四散，那白衣男子趁机出剑，一剑斩落一只！\n\n「好计谋！」他低喝一声，剑势愈发凌厉。\n\n你趁乱又引开一只魔物的注意，为他创造了绝佳的出剑时机。\n\n片刻之后，三只魔物尽数伏诛。\n\n他收剑入鞘，向你走来，眼中带着几分赞赏。\n\n「隐忍、冷静、心思缜密……」他打量着你，「你是什么人？」',
+      choices:[
+        {text:'[love] 如实相告，并表示愿意帮他疗伤',type:'love',next:'prologue_meet',effect:{},affection:12},
+        {text:'[smart] 只透露姓名，反问他为何被追杀',type:'smart',next:'prologue_ask',effect:{智慧:2},affection:8},
+      ]
+    },
+    prologue_rest:{
+      text:'你沉沉睡去，梦里似乎有人在为你掖好被角。\n\n翌日醒来，你发现枕边多了一枚温润的玉佩，上面刻着一个「寒」字。\n\n——看来他已离开，但那枚玉佩却留了下来。这似乎是某种信物……\n\n你正要起身细看，房门却被轻轻叩响。\n\n「姑娘，您醒了？」一个青衣侍女端着洗漱用具进来，「阁主吩咐，请您醒了之后去前厅一叙。」\n\n你随她来到前厅，却见一名气质出尘的白衣男子端坐于上座——正是昨夜那人。\n\n他今日气色好了许多，目光落在你身上时，带了一丝复杂的意味。',
+      choices:[
+        {text:'[love] 轻声问他姓名与来历',type:'love',next:'prologue_meet',effect:{},affection:10},
+        {text:'[smart] 向他询问昨夜那些魔物的来历',type:'smart',next:'prologue_ask',effect:{智慧:2},affection:8},
+      ]
+    },
+    prologue_ask:{
+      text:'「那些是噬魂魔物。」他淡淡道，似乎不愿多提，「我与它们有些旧怨，今夜不过是凑巧遇上。」\n\n他看了你一眼，目光幽深。\n\n「你倒是胆子不小，明知是魔物还敢暗中窥视。」\n\n「我……」\n\n「罢了，不必解释。」他打断你，「你既救了我一命，便是我的恩人。我'+lead+'从不欠人情。」\n\n他从袖中取出一枚令牌，递给你。\n\n「此物可入我寒渊剑宗。若有一日遇到困难，凭此牌可来找我。」\n\n他的目光在你脸上停留了片刻，似乎有些话想说却没有说出口。',
+      choices:[
+        {text:'[love] 郑重收下，并询问他的名讳',type:'love',next:'prologue_meet',effect:{},affection:10},
+        {text:'[safe] 收下令牌，道谢后离去',type:'safe',next:'sect_join',effect:{声望:5,银两:10},affection:5},
+      ]
+    },
+    prologue_modest:{
+      text:'你微微一笑，自己站稳了身形。\n\n「举手之劳，公子不必挂怀。」\n\n他微微一怔，似乎对你的反应有些意外。\n\n「……你倒是淡泊。」\n\n月光下，他仔细打量着你，眼中闪过一丝复杂的光芒。\n\n「我叫'+lead+'，'+leadTitle+'。」他轻声道，「你叫什么名字？」',
+      choices:[
+        {text:'[love] 报上姓名，并表示愿与他同行',type:'love',next:'prologue_meet',effect:{},affection:15},
+        {text:'[safe] 只报姓名，不多透露',type:'safe',next:'prologue_part',effect:{声望:2},affection:5},
+      ]
+    },
+    prologue_part:{
+      text:'「'+(G.playerName||'???')+'。」你淡淡道。\n\n他点点头，目光中带着几分玩味。\n\n「'+G.playerName+'……有意思。」\n\n他从袖中取出一枚令牌，放在你掌心。\n\n「此物可入我寒渊剑宗。若有一日需要帮助，凭此来找我。」\n\n他的指尖触碰你掌心时微微一滞，旋即若无其事地收回手。\n\n「后会有期。」\n\n言罢，他踏月而去，只留下一阵清风。\n\n你望着他远去的背影，手中握着那枚温热的令牌，心中泛起一丝涟漪……',
+      choices:[
+        {text:'[main] 前往寒渊剑宗',type:'risky',next:'sect_join',effect:{},affection:0},
+        {text:'[safe] 先四处游历，日后再做打算',type:'safe',next:'wander_start',effect:{智慧:3,银两:5},affection:0},
+      ]
+    },
+    prologue_meet:{
+      text:'「'+(G.playerName||'???')+'。」你轻声道。\n\n「'+(G.playerName||'???')+'……」他低声重复了一遍你的名字，似乎在品味什么。\n\n「'+G.playerName+'，你可愿随我回宗门？」\n\n他看着你，月光落在他清冷的眉眼间，竟显出几分柔和。\n\n「你救了我一命，我'+lead+'从不愿欠人情。你若愿意，可入我寒渊剑宗为记名弟子，修习上乘法门。」\n\n他顿了顿，声音低了几分。\n\n「当然……你若不愿，我也不会强求。只是想说……」\n\n他的目光与你相触，又迅速移开。\n\n「你是个有趣的人。我希望……能再见到你。」',
+      choices:[
+        {text:'[love] 愿意，愿与公子同行',type:'love',next:'sect_join',effect:{},affection:20,flag:'accepted_invite'},
+        {text:'[safe] 容我考虑，三日后给你答复',type:'safe',next:'prologue_wait',effect:{智慧:2},affection:5},
+        {text:'[risky] 贸然答应，随他同去',type:'risky',next:'sect_join',effect:{},affection:10},
+      ]
+    },
+    prologue_wait:{
+      text:'三日后，你如约来到那片山林。\n\n远远地，便看见一道白衣身影立于崖边，似在等你。\n\n「你来了。」\n\n他转过身，目光中似有几分释然。\n\n「我原以为你不会来了。」\n\n他走近几步，月光下，他的面容比三日前柔和了许多。\n\n「这三日，我一直在想……」他顿了顿，「你究竟是什么样的人。」\n\n他的目光落在你身上，带着几分连他自己都未曾察觉的温度。',
+      choices:[
+        {text:'[love] 坦诚相告，我一直在犹豫是否该来',type:'love',next:'sect_join',effect:{},affection:15},
+        {text:'[safe] 笑了笑，说：既然答应了，自然要来',type:'safe',next:'sect_join',effect:{声望:2},affection:8},
+      ]
+    },
+    sect_join:{
+      text:'你随'+lead+'来到了寒渊剑宗。\n\n巍峨的山门矗立于云海之上，白鹤盘旋，古松苍翠。剑修弟子穿梭其间，剑光霍霍。\n\n「从今日起，你便是寒渊剑宗的弟子了。」\n\n他将你交给一位师姐，转身欲走，却又停下脚步。\n\n「好好修炼。」他没有回头，声音却清晰传来，「若有难处，可以来找我。」\n\n他的身影消失在云雾之中。\n\n师姐笑着拍了拍你的肩：「新来的师妹，欢迎来到寒渊剑宗！我是你大师姐慕容清雪。」\n\n「你的住处在东苑，今日先好好休息，明日我带你去见掌门，正式拜师！」',
+      choices:[
+        {text:'[main] 前往主界面',type:'safe',next:'hub_return',effect:{灵力:5},affection:5},
+      ]
+    },
+    wander_start:{
+      text:'你开始四处游历。\n\n江湖之大，超乎你的想象。这一路上，你见过达官贵人的奢华，也见过贫苦百姓的艰辛。\n\n这日，你来到一座小镇，正遇上一群恶霸欺负一个卖艺的老者。\n\n你路见不平，拔刀相助。却不料那群恶霸竟是当地一霸的手下，惹来了更多麻烦——\n\n「哪里来的小丫头，敢管我们青云帮的闲事！」\n\n就在此时，一道白衣身影从天而降，剑光一闪，那群恶霸便被尽数击退。\n\n「你没事吧？」\n\n你抬头，对上了一双熟悉的眼睛——\n\n是'+lead+'！\n\n「'+G.playerName+'？」他微微一怔，「怎么是你？」',
+      choices:[
+        {text:'[love] 欣喜地告诉他，你也一直在游历',type:'love',next:'sect_join',effect:{},affection:20,flag:'reunion'},
+        {text:'[safe] 解释事情经过，然后道谢',type:'safe',next:'sect_join',effect:{声望:3},affection:8},
+      ]
+    }
+  };
 }
-function resetGame(){localStorage.removeItem("xyj_v1");location.reload();}
-function showGame(){document.getElementById("scene").classList.add("on");document.getElementById("stats-bar").style.display="block";}
-function showScene(title,text,choices,etag){
-document.getElementById("scene-title-text").textContent=title;
-document.getElementById("day-num").textContent="第 "+S.day+" 天";
-document.getElementById("event-tag").innerHTML=etag?'<span class=et>'+etag+'</span>':'';
-var t=Array.isArray(text)?text.map(function(p){return'<p>'+p+'</p>';}).join(''):text;
-document.getElementById("scene-text").innerHTML=t;
-var h='';
-if(choices){choices.forEach(function(c){
-var tp=c.type||'safe';
-var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖'};
-var cm={safe:'safe',risky:'risky',love:'love',smart:'smart'};
-var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart'};
-h+='<button class="chc '+cm[tp]+'" data-next="'+c.next+'" data-type="'+tp+'"><span class="tag '+tcm[tp]+'">'+tm[tp]+'</span> '+c.text+'</button>';
-});}
-document.getElementById("choices").innerHTML=h;
-document.getElementById("choices").onclick=function(e){
-var btn=e.target.closest('.chc');
-if(btn){go(btn.getAttribute("data-next"),btn.getAttribute("data-type"));}
-};
+
+
+function playScene(sceneId){
+  buildScenes();
+  var scene=SCENES[sceneId];
+  if(!scene){notify('场景加载失败：'+sceneId,'negative');return}
+  G.currentScene=sceneId;
+  document.getElementById('hubArea').innerHTML='';
+  document.getElementById('sceneArea').innerHTML='<div class="scene-box"><div class="scene-text">'+scene.text.replace(/\n/g,'<br>')+'</div></div>';
+  var choicesHTML='<div class="choices">';
+  scene.choices.forEach(function(c,i){
+    var label=c.type==='safe'?'[safe]':c.type==='risky'?'[risky]':c.type==='love'?'[love]':c.type==='smart'?'[smart]':'';
+    var cleanText=c.text.replace(/\[(safe|risky|love|smart)\]\s*/,'');
+    choicesHTML+='<button class="choice-btn '+c.type+'" onclick="makeChoice('+i+')">'+label+cleanText+'</button>';
+  });
+  choicesHTML+='</div>';
+  document.getElementById('choicesArea').innerHTML=choicesHTML;
 }
-function initS(){
-if(!S.log)S.log=[];
-if(!S.spirit)S.spirit=0;if(!S.combat)S.combat=0;if(!S.wit)S.wit=0;
-if(!S.repute)S.repute=0;if(!S.gold)S.gold=0;if(!S.heal)S.heal=0;
-if(!S.evil)S.evil=0;if(!S.social)S.social=0;
-if(!S.day)S.day=1;if(!S.realm)S.realm="凡人之躯";
-if(!S.flags)S.flags={};
+
+function makeChoice(idx){
+  buildScenes();
+  var scene=SCENES[G.currentScene];
+  var choice=scene.choices[idx];
+  if(!choice)return;
+  if(choice.flag)G.flags[choice.flag]=true;
+  if(choice.effect)applyEffect(choice.effect,choice.affection||0);
+  else if(choice.affection)G.affection=Math.max(0,Math.min(100,G.affection+choice.affection));
+  if(choice.next==='hub_return'){G.day+=1;renderHub();renderStats();return}
+  playScene(choice.next);
 }
-window.s1=function(){
-document.getElementById("cover").style.display="none";
-document.getElementById("step1").classList.add("on");
-var h='';BGS.forEach(function(b,i){h+='<div class=cc data-i='+i+'><div class=cn>'+b.name+'</div><div class=cd>'+b.desc+'</div><div class=ct>';b.tags.forEach(function(t){h+='<span class=ch>'+t+'</span>';});h+='</div></div>';});
-document.getElementById("bg-grid").innerHTML=h;
-document.getElementById("bg-grid").onclick=function(e){var card=e.target.closest('.cc');if(card){_selBG(parseInt(card.getAttribute("data-i")));}};
-};
-window._selBG=function(i){
-S.bg=BGS[i];var b=S.bg;
-if(b.init.spirit)S.spirit=b.init.spirit;if(b.init.combat)S.combat=b.init.combat;
-if(b.init.wit)S.wit=b.init.wit;if(b.init.repute)S.repute=b.init.repute;
-if(b.init.heal)S.heal=b.init.heal||0;if(b.init.evil)S.evil=b.init.evil||0;
-if(b.init.social)S.social=b.init.social||0;if(b.init.gold)S.gold=b.init.gold;
-document.getElementById("sel-bg").innerHTML='<div class=sel>✓ 已选择：<strong>'+b.name+'</strong></div><button class=cbtn onclick="s2()">下一步 →</button>';
-};
-window.s2=function(){
-document.getElementById("step1").classList.remove("on");document.getElementById("step2").classList.add("on");
-var h='';TRAITS.forEach(function(t,i){h+='<div class=cc data-i='+i+'><div class=cn>'+t.name+'</div><div class=cd>'+t.desc+'</div><div class=ct>';t.tags.forEach(function(tag){h+='<span class=ch>'+tag+'</span>';});h+='</div></div>';});
-document.getElementById("trait-grid").innerHTML=h;
-document.getElementById("trait-grid").onclick=function(e){var card=e.target.closest('.cc');if(card){_selTrait(parseInt(card.getAttribute("data-i")));}};
-};
-window._selTrait=function(i){
-S.trait=TRAITS[i];var t=S.trait;
-if(t.effect.spirit)S.spirit+=t.effect.spirit;if(t.effect.combat)S.combat+=t.effect.combat||0;
-if(t.effect.wit)S.wit+=t.effect.wit;if(t.effect.repute)S.repute+=t.effect.repute;
-if(t.effect.heal)S.heal+=t.effect.heal||0;if(t.effect.evil)S.evil+=t.effect.evil||0;
-if(t.effect.social)S.social+=t.effect.social||0;
-document.getElementById("sel-trait").innerHTML='<div class=sel>✓ 已选择：<strong>'+t.name+'</strong></div><button class=cbtn onclick="s3()">下一步 →</button>';
-};
-window.s3=function(){
-document.getElementById("step2").classList.remove("on");document.getElementById("step3").classList.add("on");
-var h='';HUSBANDS.forEach(function(hs,i){h+='<div class=cc data-i='+i+'><div class=cn>'+hs.name+'</div><div class=cd>'+hs.desc+'</div><div class=ct><span class=ch>'+hs.bg+'</span></div></div>';});
-h+='<div id=sel-husband></div>';document.getElementById("husband-grid").innerHTML=h;
-document.getElementById("husband-grid").onclick=function(e){var card=e.target.closest('.cc');if(card){_selH(parseInt(card.getAttribute("data-i")));}};
-};
-window._selH=function(i){
-S.husband=HUSBANDS[i];S.husband.affection=50;
-document.getElementById("sel-husband").innerHTML='<div class=sel>✓ 已选择道侣：<strong>'+S.husband.name+'</strong> — '+S.husband.traits.join("、")+'</div><button class=cbtn onclick="s4()">下一步 →</button>';
-document.getElementById("sel-husband").scrollIntoView({behavior:"smooth"});
-};
-window.s4=function(){
-document.getElementById("step3").classList.remove("on");document.getElementById("step4").classList.add("on");
-var names=["云霄","天涯","凌风","破军","忘尘","无心","长歌","明月"];var dn=names[Math.floor(Math.random()*names.length)];
-var h='<div class=sel>来历：<strong>'+(S.bg?S.bg.name:"")+'</strong>　心性：<strong>'+(S.trait?S.trait.name:"")+'</strong></div>';
-h+='<div class=nw><label class=nl>为你取个名号</label><input class=ni type=text id=player-name value="'+dn+'" placeholder="输入你的名号…"></div>';
-h+='<button class=cbtn onclick="startGame()">✓ 确认，踏入江湖</button>';
-document.getElementById("sel-name").innerHTML=h;
-};
-window.startGame=function(){
-initS();
-var ni=document.getElementById("player-name");S.playerName=(ni&&ni.value.trim())||"云霄";
-addLog("角色："+S.playerName+"（"+S.bg.name+"·"+S.trait.name+"）");addLog("道侣："+S.husband.name);
-document.getElementById("step4").classList.remove("on");showGame();
-document.getElementById("stats-bar").style.display="block";document.getElementById("sbar").classList.add("on");
-document.getElementById("log-wrap").classList.add("on");document.getElementById("aff-wrap").classList.add("on");
-renderStats();updateAff();introScene();
-};
-function introScene(){
-addLog("🌟 踏入江湖");
-showScene("序章 · 山野奇遇",[
-"青牛镇外的荒野，你正赶路。天色将晚，乌云压顶，远处传来几声妖兽的嚎叫。",
-"忽然，一道剑光从天际划过，在你身前不远处轰然坠落——那是一个浑身浴血的白衣剑客，单膝跪地，以剑支撑。",
-"他抬起头，看了你一眼，目光如冰。「走……魔修……就在后面……不想死，就快走。」",
-"话音未落，天边又飘来三道黑影，阴森的气息笼罩四野。"
-],[
-{text:"拔刀相助，与他并肩作战",next:"intro_fight",type:"risky"},
-{text:"先躲起来，观察形势",next:"intro_hide",type:"smart"},
-{text:"丢下他独自逃走",next:"intro_run",type:"risky"},
-{text:"用医术/丹药尝试救治他",next:"intro_heal",type:"love"}
-],"🌟 序章");
+
+function hubCultivate(){
+  document.getElementById('hubArea').innerHTML='';
+  document.getElementById('sceneArea').innerHTML='<div class="scene-box cultivate-effect"><div class="scene-text" id="cultText">正在运转周天，吸纳天地灵气……</div></div>';
+  document.getElementById('choicesArea').innerHTML='';
+  var progress=G.cultivationProgress||0;
+  var gain=Math.floor(Math.random()*5)+3+(G.stats.智慧/20);
+  G.cultivationProgress=progress+1;
+  G.stats.灵力=Math.min(100,G.stats.灵力+gain);
+  var msgs=['你盘膝而坐，感受天地灵气缓缓流入体内……','你闭目冥想，丹田处渐渐泛起温热……','你运转功法，一缕灵气在经脉中流转……','你屏息凝神，灵台渐渐清明……'];
+  document.getElementById('cultText').textContent=msgs[Math.floor(Math.random()*msgs.length)];
+  setTimeout(function(){
+    notify('灵力提升 +'+Math.round(gain),'positive');
+    if(G.cultivationProgress>=3&&G.stats.境界<REALMS.length-1){
+      var rng=Math.random();
+      var threshold=0.4+(G.stats.灵力/500);
+      if(rng<threshold){
+        G.stats.境界+=1;
+        G.cultivationProgress=0;
+        notify('恭喜突破！晋升为 '+REALMS[G.stats.境界]+'！','positive');
+      } else {
+        notify('此次修炼略有精进，突破尚需时日','normal');
+        G.cultivationProgress=0;
+      }
+    }
+    G.day+=1;
+    renderStats();
+    renderHub();
+  },1500);
 }
-function intro_fight(){
-var win=S.combat>=3||S.spirit>=3;
-if(win){
-S.repute+=2;S.husband.affection+=10;addLog("并肩作战 声望+2 好感+10");
-showScene("激战魔修",[
-"你没有退却，拔刀迎上！",
-"那白衣剑客微微挑眉，与你背靠背。",
-"你这才看清他的剑法——凌厉、狠辣，每一剑都直取要害。",
-"然而魔修人多势众，渐渐占据上风。",
-"就在你即将力竭之时——天边一道金光破空而至！",
-"「孽障！」白发老者踏剑而来，浩然正气瞬间压制全场。",
-"魔修化作黑烟遁走。老者捻须而笑：「好一对少年英雄。」
-"+S.husband.name+"看了你一眼，目光中似乎多了几分认可。"
-],[
-{text:"上前行礼，询问前辈来历",next:"join_sect",type:"smart"},
-{text:"关心白衣剑客的伤势",next:"intro_care_him",type:"love"}
-],"⚔️ 战斗胜利");
-}else{
-S.gold-=10;S.husband.affection+=5;addLog("战败 银两-10 好感+5");
-showScene("激战魔修",[
-"你拔刀迎上，但魔修实力远超于你。一掌拍来，你口吐鲜血，倒飞而出。",
-"就在危急关头，白发老者再次出现，一道金光将魔修震退。",
-"「带他们走。」老者袖袍一挥，「这孩子根骨不错，带回宗门救治。」
-"],[{text:"先养伤，之后再说",next:"join_sect",type:"safe"}],"⚔️ 苦战");
-}renderStats();updateAff();
+
+function hubAdventure(){
+  var events=[
+    {title:'遭遇妖兽',desc:'山林中发现一只受伤的妖兽',type:'risky',effect:{战力:-5,银两:15,声望:5},msg:'击败妖兽，获得银两与声望'},
+    {title:'采药奇遇',desc:'在山林深处发现珍贵灵药',type:'safe',effect:{灵力:8,银两:5},msg:'采得灵药，灵力与银两增加'},
+    {title:'路见不平',desc:'遇到恶霸欺负百姓',type:'smart',effect:{声望:8,战力:-3},msg:'仗义出手，声望提升'},
+    {title:'市集偶遇',desc:'镇上集市热闹非凡',type:'safe',effect:{银两:-10,声望:3,灵力:3},msg:'采购物资，提升声望'},
+    {title:'神秘遗迹',desc:'发现一处上古遗迹',type:'smart',effect:{智慧:5,灵力:10},msg:'遗迹探查，智慧与灵力提升'},
+    {title:'师兄切磋',desc:'同门师兄邀请切磋剑法',type:'risky',effect:{战力:8,声望:3},msg:'切磋中有所领悟，战力提升'},
+    {title:'魔物伏击',desc:'遭遇魔物埋伏',type:'risky',effect:{战力:-8,声望:2},msg:'苦战脱身，获得实战经验'},
+    {title:'奇花异草',desc:'灵田中发现一株异花',type:'safe',effect:{灵力:12},msg:'异花蕴含充沛灵气'},
+  ];
+  var ev=events[Math.floor(Math.random()*events.length)];
+  document.getElementById('hubArea').innerHTML='';
+  var riskColor=ev.type==='safe'?'#22c55e':ev.type==='smart'?'#a78bfa':'#ef4444';
+  document.getElementById('sceneArea').innerHTML='<div class="scene-box"><div class="scene-text" style="text-align:center"><div style="font-size:1.5em;margin-bottom:10px">&#9876;</div><strong style="color:'+riskColor+'">'+ev.title+'</strong><br><br>'+ev.desc+'</div></div>';
+  document.getElementById('choicesArea').innerHTML='<div class="choices"><button class="choice-btn '+ev.type+'" onclick="doAdventure('+JSON.stringify(ev).replace(/"/g,'&quot;')+')">'+ev.type==='safe'?'[safe] 稳妥应对':ev.type==='smart'?'[smart] 智取周旋':ev.type==='risky'?'[risky] 正面迎敌':'[???] 应对'} +'</button><button class="choice-btn safe" onclick="renderHub()">[safe] 放弃离开</button></div>';
 }
-function intro_hide(){
-S.wit+=1;addLog("静观其变 智慧+1");
-showScene("暗中观察",[
-"你躲入灌木丛中，屏住呼吸。",
-"那白衣剑客独战三道黑影，身法如电——即便身负重伤，实力仍令人惊叹。",
-"然而魔修的阵法诡异歹毒，渐渐将他困住。",
-"就在他要落败之际，天边金光破空——白发老者踏剑而至，一招震退魔修。",
-"「……这小子根骨不俗，带回青云宗吧……」老者的话随风飘来。",
-"他们御剑而去，你从灌木丛中钻出，心跳如鼓。"
-],[
-{text:"追上去，请求拜入青云宗",next:"join_sect_ask",type:"risky"},
-{text:"算了，继续你的旅程",next:"wander_alone",type:"safe"}
-],"🌫️ 静观其变");renderStats();
+
+function doAdventure(evStr){
+  var ev=typeof evStr==='string'?JSON.parse(evStr):evStr;
+  applyEffect(ev.effect,0);
+  notify(ev.msg,ev.type==='safe'?'positive':ev.type==='risky'?'negative':'normal');
+  G.day+=1;
+  renderStats();
+  renderHub();
 }
-function intro_run(){
-S.evil+=1;S.husband.affection-=10;addLog("独自逃走 魔性+1 好感-10");
-showScene("仓皇逃窜",[
-"你转身就跑，身后传来白衣剑客的一声冷哼：「懦夫。」",
-"你没有回头，一路狂奔，直到再也听不见任何声音。",
-"那一夜，你缩在破庙里，辗转难眠。",
-"不知为何，那一声轻轻的「懦夫」，比任何嘲讽都让你难受。"
-],[
-{text:"算了，江湖险恶，明哲保身没有错",next:"wander_alone",type:"safe"},
-{text:"回去看看，或许还能帮上忙",next:"intro_return",type:"risky"}
-],"💨 独自逃走");renderStats();updateAff();
+
+function hubRomance(){
+  var lead=getLeadName();
+  var events=[
+    {title:'月下漫步',desc:'与'+lead+'在庭院中月下漫步，夜风轻柔……',type:'love',effect:{},affection:12,text:'他与你并肩而行，月光洒在他的眉眼间。你们聊了很多——关于剑道，关于修行，关于从前……分别时，他轻声道：「今晚月色很美。」'},
+    {title:'请教剑法',desc:lead+'主动提出指点你剑法',type:'safe',effect:{战力:5},affection:8,text:lead+'手持长剑，身形如风。「看好了。」他的剑光凌厉却不失温柔一招一式尽数展示给你看。「记住，剑在人在。」他的目光落在你身上，久久不曾移开。'},
+    {title:'心意暗藏',desc:'发现'+lead+'独自在窗前沉思',type:'love',effect:{},affection:15,text:'你轻叩房门，他回过头，眼中闪过一丝惊讶。「……你怎么来了？」他的声音比平日柔和了几分。「睡不着，出来走走。」你说。他轻笑一声：「那便陪我坐坐吧。」那夜，你们聊了很久很久。'},
+    {title:'煮茶论道',desc:'与'+lead+'一同品茗论道',type:'smart',effect:{智慧:3},affection:8,text:lead+'亲自动手煮茶，茶香袅袅。你们从修仙之道聊到人间百态，他见多识广，言谈间尽显风雅。「与你聊天，很轻松。」他忽然说道，耳根似乎有些发红。'},
+    {title:'突发危机',desc:lead+'旧伤发作，你悉心照料',type:'love',effect:{银两:-5},affection:18,text:'你发现'+lead+'独自在房中，眉头紧锁，似乎极为痛苦。「你怎么了？」你上前扶住他。他的身体在颤抖，却强撑着道：「……无事。」你不顾他的推辞，为他运功疗伤，熬煮汤药。他沉默良久，轻声道：「……多谢。」目光中，多了一丝从未有过的柔软。'},
+  ];
+  var ev=events[Math.floor(Math.random()*events.length)];
+  document.getElementById('hubArea').innerHTML='';
+  document.getElementById('sceneArea').innerHTML='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6;font-size:1.2em">&#128149; '+ev.title+' &#128149;</span></div><div style="color:#a78bfa;margin-bottom:12px">'+ev.desc+'</div><div class="narrator" style="margin-top:15px">'+ev.text.replace(/\n/g,'<br>')+'</div></div></div>';
+  var affGain=ev.affection||0;
+  if(ev.effect)applyEffect(ev.effect,0);
+  G.affection=Math.max(0,Math.min(100,G.affection+affGain));
+  notify('好感度 '+((affGain>=0)?'+':'')+affGain,affGain>=10?'love':'positive');
+  G.day+=1;
+  renderStats();
+  document.getElementById('choicesArea').innerHTML='<div class="choices"><button class="choice-btn love" onclick="renderHub()">[love] 返回主界面</button></div>';
 }
-function intro_heal(){
-if(S.heal>=1){
-S.husband.affection+=15;S.repute+=1;addLog("救治剑客 好感+15 声望+1");
-showScene("济世救人",[
-"你没有退走，快步上前，从怀中取出药囊。",
-"三两下，银针封穴，药丸化水，喂入他口中。他的脸色渐渐好转。",
-"「药王谷的人？」他低声道。",
-"白发老者破空而至，见状大笑：「好！有情有义！」",
-"「我是青云宗长老清虚，你可愿拜入我门下？」",
-S.husband.name+"站在一旁，目光落在你身上，似乎在等待你的回答。"
-],[
-{text:"欣然拜师",next:"join_sect",type:"safe"},
-{text:"先问冷夜寒可愿同行",next:"intro_ask_together",type:"love"}
-],"💊 医术救命");
-}else{
-S.husband.affection+=5;
-showScene("无力救治",[
-"你想上前帮忙，但并非医者，胡乱喂了些草药，反而让伤势加重。",
-"好在那白发老者及时赶到，以灵力为他疗伤。",
-"老者叹了口气：「心是好的，可惜本事不够。罢了，带回宗门再说。」
-"],[{text:"跟他们回青云宗",next:"join_sect",type:"safe"}],"💊 徒劳无功");
-}renderStats();updateAff();
+
+function hubMain(){
+  var lead=getLeadName();
+  document.getElementById('hubArea').innerHTML='';
+  var mainScenes=[
+    {id:'main_sect1',title:'宗门日常',desc:'参加宗门晨课，与众弟子一起修炼基础功法。掌门会在今日宣布一件大事……'},
+    {id:'main_sect2',title:'深夜密谈',desc:'你发现'+lead+'独自在悬崖边，似乎心事重重。上前询问，还是悄然离开？'},
+    {id:'main_sect3',title:'论剑大会',desc:'一年一度的论剑大会即将开始，这是提升声望与实力的好机会。'},
+    {id:'main_sect4',title:'旧敌来袭',desc:'+'那夜追杀'+lead+'的势力似乎找到了寒渊剑宗的踪迹，山门之外杀气腾腾！'},
+  ];
+  var html='<div style="margin-bottom:15px"><button class="back-btn" onclick="renderHub()">&#8592; 返回</button></div>';
+  html+='<div class="scene-box" style="margin-bottom:15px"><div class="scene-title" style="color:#c084fc;margin-bottom:12px;border-bottom:1px solid rgba(192,132,252,0.2);padding-bottom:8px;letter-spacing:2px">主线剧情</div>';
+  mainScenes.forEach(function(ms){
+    html+='<div class="event-card" onclick="playMainScene(\''+ms.id+'\')"><div class="evt-title">'+ms.title+'</div><div class="evt-type">'+ms.desc+'</div></div>';
+  });
+  html+='</div>';
+  document.getElementById('sceneArea').innerHTML=html;
+  document.getElementById('choicesArea').innerHTML='';
 }
-function intro_care_him(){
-S.husband.affection+=8;addLog("关心道侣 好感+8");
-showScene("情愫暗生",[
-"你快步上前，扶住摇摇欲坠的"+S.husband.name+"。",
-"「你……」他似乎想说什么，却被剧烈的咳嗽打断。",
-"鲜血染红了他雪白的衣襟，但他的目光依然清冽。",
-"「不必管我。我习惯了。」",
-"你没有松手，只是静静地扶着他。",
-"沉默片刻，他忽然轻声笑了：「……你叫什么名字？」
-"],[
-{text:"通报姓名，表达关心",next:"intro_name_share",type:"love"},
-{text:"先不说，等他缓过来再说",next:"join_sect",type:"safe"}
-],"💕 情愫暗生");renderStats();updateAff();
+
+function playMainScene(id){
+  var lead=getLeadName();
+  var scenes={
+    main_sect1:{
+      text:'晨钟敲响，寒渊剑宗的弟子们汇聚于演武场。\n\n掌门玄清真人端坐于上首，目光扫过众人。\n\n「今日有一事宣布——」\n\n他顿了顿，目光落在人群中某处。\n\n「三月之后，便是我五十年一度的论剑大典。届时四大剑宗齐聚，争夺【天剑榜】之位。」\n\n「此次大典，关乎我寒渊剑宗的荣辱。我希望尔等勤加修炼，不负宗门期望。」\n\n'+lead+'站在人群前方，神色淡漠，似乎对这消息并不意外。\n\n会后，他忽然走到你面前。\n\n「你来了多久了？」他问。\n\n「回师兄，已有数日。」\n\n他点点头，目光中闪过一丝不易察觉的温度。\n\n「好好修炼。论剑大典……我期待看到你的表现。」\n\n言罢，他便转身离去，背影依旧清冷孤绝。',
+      choices:[
+        {text:'[risky] 追上去问他：你似乎有心事？',type:'risky',next:'main_sect1_ask',effect:{},affection:10},
+        {text:'[safe] 默默记下他的话，加紧修炼',type:'safe',next:'hub_return',effect:{战力:3,灵力:3},affection:3},
+        {text:'[smart] 向师姐打听'+lead+'的过去',type:'smart',next:'main_sect1_gossip',effect:{智慧:2},affection:0},
+      ]
+    },
+    main_sect1_ask:{
+      text:'你快步追上他。\n\n「师兄！」\n\n他脚步一顿，微微侧身。\n\n「何事？」\n\n「你方才的神色……似乎并不为论剑大典感到高兴？」\n\n他沉默良久，月光下，他的面容半明半暗。\n\n「……你倒是观察入微。」\n\n他忽然转过身，正视着你。月光落在他眼中，深邃如渊。\n\n「五年前的论剑大典，寒渊剑宗出了叛徒。那人……」他顿了顿，「是我的师兄。」\n\n「他背叛宗门，投靠了魔道。论剑大典上，他一剑刺穿了师父的心脉。」\n\n「师父至今未愈。」\n\n他的声音很轻，却字字如刀。\n\n「而三月后的论剑大典，我与他……终有一战。」',
+      choices:[
+        {text:'[love] 轻声道：我会陪你一起面对',type:'love',next:'hub_return',effect:{},affection:20,flag:'sworn_to_him'},
+        {text:'[safe] 默默退开，给他空间',type:'safe',next:'hub_return',effect:{声望:2},affection:5},
+        {text:'[smart] 询问那叛徒的弱点',type:'smart',next:'hub_return',effect:{智慧:5},affection:8},
+      ]
+    },
+    main_sect1_gossip:{
+      text:'你找上了大师姐慕容清雪。\n\n「大师姐，我想请教一些事……」\n\n慕容清雪看了你一眼，目光中带着几分深意。\n\n「你想问的，是少宗主的事吧？」\n\n你微微一怔，点点头。\n\n她叹了口气，神色变得有些复杂。\n\n「少宗主他……五年前失去了最敬重的师兄。那人是他一手带大的，如兄如父。」\n\n「可那人却背叛了宗门，还重伤了掌门。少宗主从此性情大变，从前他还会笑……」\n\n她看了看你，忽然轻声道：\n\n「不过最近，我好像看见他嘴角动过几次。或许是因为……」\n\n她意味深长地笑了笑，没有说下去。',
+      choices:[
+        {text:'[love] 心中泛起暖意，决心更靠近他',type:'love',next:'hub_return',effect:{},affection:12},
+        {text:'[safe] 谢过大师姐，先行离去',type:'safe',next:'hub_return',effect:{声望:2},affection:5},
+      ]
+    },
+    main_sect2:{
+      text:'夜深了，你经过悬崖边时，看见了'+lead+'的身影。\n\n他负手立于崖边，衣袂被夜风吹得猎猎作响。\n\n月光下，他的背影显得格外孤寂。\n\n他似乎察觉到了你的存在，却没有回头。\n\n「……睡不着？」\n\n他的声音淡淡的，随夜风飘来。',
+      choices:[
+        {text:'[love] 走上前去，与他并肩而立',type:'love',next:'main_sect2_stay',effect:{},affection:15},
+        {text:'[smart] 轻声询问：师兄可是在想那论剑大典之事？',type:'smart',next:'main_sect2_ask',effect:{智慧:2},affection:10},
+        {text:'[safe] 不打扰，悄然退开',type:'safe',next:'hub_return',effect:{},affection:0},
+      ]
+    },
+    main_sect2_stay:{
+      text:'你轻轻走上前去，在他身旁站定。\n\n两人一时无话，只有夜风呜咽。\n\n过了良久，他忽然开口：\n\n「你知道吗……很久没有人愿意站在这里陪我了。」\n\n他的声音很轻，带着一丝连他自己都未曾察觉的落寞。\n\n「……」\n\n「五年前的事之后，我以为我这辈子都不会再信任任何人了。」\n\n他转过头，看着你。月光落在他眼中，幽深如渊，却又似有星光闪烁。\n\n「但你出现了。」\n\n「'+G.playerName+'……」他低低唤了一声你的名字，「谢谢你。」\n\n他的手轻轻抬起，似乎想要触碰你的脸，却在半空中顿住。\n\n「……夜深了。回去休息吧。」\n\n他转身离去，却在走出几步后回头：\n\n「明日，我教你一套剑法。」',
+      choices:[
+        {text:'[love] 心中涌起暖意，轻声道好',type:'love',next:'hub_return',effect:{战力:5},affection:20},
+        {text:'[safe] 目送他离去，心中感慨万千',type:'safe',next:'hub_return',effect:{声望:2},affection:8},
+      ]
+    },
+    main_sect2_ask:{
+      text:'「你在担心三月后的论剑大典？」你轻声问。\n\n他沉默了片刻。\n\n「……你倒是什么都知道。」\n\n他转过身，月光照在他的面容上，神色复杂。\n\n「那一战，我等了很久了。」\n\n「五年前，他刺伤师父后逃入魔道。这五年来，我日夜苦修，只为有朝一日能亲手将他……」\n\n他顿了顿，声音变得冰冷。\n\n「伏诛。」\n\n他看着你，目光中带着一丝复杂的温度。\n\n「你……为何要关心这些？」',
+      choices:[
+        {text:'[love] 因为我想帮你',type:'love',next:'hub_return',effect:{},affection:18,flag:'wants_to_help'},
+        {text:'[smart] 因为我想了解将要面对的敌人',type:'smart',next:'hub_return',effect:{智慧:3},affection:8},
+        {text:'[safe] 只是路过，无意冒犯',type:'safe',next:'hub_return',effect:{},affection:0},
+      ]
+    },
+    main_sect3:{
+      text:'论剑大会的海选已经开始！\n\n寒渊剑宗的演武场上，弟子们轮番比试，剑光交错。\n\n你也报名参加了此次大典。\n\n第一轮海选，你的对手是一位筑基期的师兄。\n\n他的剑法凌厉，出招狠辣，显然是有备而来。',
+      choices:[
+        {text:'[risky] 全力出击，以攻代守',type:'risky',next:'main_sect3_fight',effect:{战力:-5},affection:0},
+        {text:'[smart] 以柔克刚，寻找破绽',type:'smart',next:'main_sect3_smart',effect:{智慧:3},affection:5},
+        {text:'[safe] 稳扎稳打，不求有功但求无过',type:'safe',next:'main_sect3_safe',effect:{},affection:3},
+      ]
+    },
+    main_sect3_fight:{
+      text:'你全力出击，剑光如暴雨倾泻！\n\n然而那师兄经验老道，抓住你一招破绽，反手一剑！\n\n你踉跄后退，被逼入死角——\n\n就在此时，一道白衣身影忽然掠入场中，剑光一闪，将那师兄的攻势尽数拦下。\n\n「够了。」\n\n是'+lead+'！\n\n「少、少宗主？」那师兄大惊，连忙收剑。\n\n'+lead+'没有理会他，只是淡淡看了你一眼。\n\n「……下次，不要这样冲动。」\n\n他转身离去，声音却清晰地传来：\n\n「明日，来剑阁找我。」\n\n你输了比赛，却赢得了他的关注。',
+      choices:[
+        {text:'[love] 心中暗喜，明日一定要去',type:'love',next:'hub_return',effect:{声望:5,战力:3},affection:15},
+      ]
+    },
+    main_sect3_smart:{
+      text:'你没有硬拼，而是以退为进。\n\n那师兄招招凌厉，却渐渐急躁。\n\n你看出他左路剑法有一处细微的破绽——\n\n就是现在！\n\n你身形一转，剑走偏锋，精准地击中他的破绽！\n\n那师兄身形一晃，大惊之下连忙后退。\n\n「好！」人群中爆发出一阵喝彩。\n\n你胜了！\n\n'+lead+'不知何时出现在场边，目光中带着几分赞许。\n\n「不错。」他淡淡道，「有脑子。」',
+      choices:[
+        {text:'[love] 向他请教：师兄可否指点我几招？',type:'love',next:'hub_return',effect:{战力:5,声望:8},affection:15},
+        {text:'[safe] 道谢后继续观战',type:'safe',next:'hub_return',effect:{声望:5},affection:5},
+      ]
+    },
+    main_sect3_safe:{
+      text:'你稳扎稳打，以防守为主。\n\n那师兄攻得猛烈，却始终无法突破你的防线。\n\n然而时间一久，你的灵力渐渐不支——\n\n最终，你与那师兄战成平手，双双晋级。\n\n虽然没有惊艳的表现，却也中规中矩。\n\n'+lead+'站在人群中，目光淡淡扫过你，似乎对你的策略并不以为然。',
+      choices:[
+        {text:'[safe] 胜不骄败不馁，继续准备下一场',type:'safe',next:'hub_return',effect:{声望:3},affection:3},
+      ]
+    },
+    main_sect4:{
+      text:'这一夜，山门之外忽然传来惊天动地的轰鸣！\n\n「敌袭！敌袭！」\n\n警钟长鸣，寒渊剑宗上下震动！\n\n你冲出房门，却见山门之外，黑压压一片魔影！\n\n为首的，是一道浑身缠绕黑气的身影。\n\n「哈哈哈哈——」\n\n那身影发出刺耳的笑声。\n\n「五年了，寒渊老儿，你还没死吗？」\n\n掌门玄清真人脸色铁青，'+lead+'已拔剑在手，杀气冲天。\n\n「萧无痕！你终于来了！」\n\n等等……萧无痕？那不是……\n\n你忽然想起，这是'+lead+'的化名。\n\n——原来，追杀他的，竟是他的亲师兄！',
+      choices:[
+        {text:'[risky] 拔剑冲向'+lead+'身旁，与他并肩作战',type:'risky',next:'main_sect4_fight',effect:{战力:-10,声望:5},affection:10,flag:'fought_beside_him'},
+        {text:'[smart] 立刻去保护受伤的弟子们',type:'smart',next:'main_sect4_protect',effect:{声望:8,智慧:3},affection:5},
+        {text:'[safe] 寻找机会偷袭那魔影的破绽',type:'safe',next:'main_sect4_flank',effect:{战力:5},affection:8},
+      ]
+    },
+    main_sect4_fight:{
+      text:'你拔剑冲上前，毫不犹豫地站在了'+lead+'身旁。\n\n「你！」他微微一怔，「你来做什么！」\n\n「我说过——」你握紧剑柄，「我会陪你一起面对！」\n\n他愣了一瞬，眼中闪过一丝复杂的光芒。\n\n「……好。」\n\n他忽然握住了你的手，在你掌心轻轻一捏。\n\n「跟紧我，别死。」\n\n剑光亮起，你们并肩迎敌！\n\n那魔影——萧无痕的师兄，实力深不可测。\n\n然而两人联手，竟一时与他战成平手！\n\n「哈哈哈！」那魔影大笑，「好！好！没想到寒渊老儿还收了个小师妹！」\n\n他目光一转，忽然向你袭来——\n\n「小心！」\n\n'+lead+'猛地将你护在身后，硬生生接下了那一击！\n\n鲜血从他嘴角溢出，他的背脊却挺得笔直。\n\n「……我说过，」他低声道，「别死。」',
+      choices:[
+        {text:'[love] 心中大恸，不顾一切冲上前',type:'love',next:'main_sect4_rescue',effect:{},affection:25},
+        {text:'[smart] 强忍悲痛，与他联手反击',type:'smart',next:'hub_return',effect:{战力:8},affection:15},
+      ]
+    },
+    main_sect4_protect:{
+      text:'你没有冲动，而是迅速组织受伤的弟子们撤退。\n\n「往内殿撤！我来断后！」\n\n你挥剑挡住了几只追上来的魔物，为弟子们争取了撤离的时间。\n\n战斗中，你展现出了超乎寻常的冷静与果决。\n\n等一切平息后，'+lead+'找到了你。\n\n「……你做得很好。」\n\n他的目光中，带着几分复杂的温度。\n\n「虽然我希望你能在战场上，但……保护同门，也很重要。」\n\n他顿了顿。\n\n「三月后的论剑大典，我们再见。」',
+      choices:[
+        {text:'[love] 认真道：我会变强，不再让你担心',type:'love',next:'hub_return',effect:{声望:8,战力:5},affection:18},
+        {text:'[safe] 点头，心中暗暗下定决心',type:'safe',next:'hub_return',effect:{声望:5},affection:8},
+      ]
+    },
+    main_sect4_flank:{
+      text:'你借着混乱，悄悄绕到了那魔影的侧翼。\n\n你的目光如炬，正在寻找破绽——\n\n终于，你发现了！那魔影左肩有一处旧伤，出招时左路明显迟缓半拍！\n\n你屏息凝神，在他再次出招时，猛地从侧翼出击！\n\n剑尖精准地刺中了他的左肩！\n\n「啊——！」\n\n那魔影惨叫一声，身形一晃。\n\n'+lead+'趁机出剑，一道惊虹贯穿夜空！\n\n「萧无痕！你——！」\n\n那魔影踉跄后退，目光中满是不可置信。\n\n「师弟……你竟然……」\n\n「够了。」'+lead+'冷声道，「五年了，师兄。这一切……该结束了。」',
+      choices:[
+        {text:'[love] 冲上前，握住他的手',type:'love',next:'hub_return',effect:{声望:10,战力:5},affection:20,flag:'fought_together'},
+      ]
+    },
+    main_sect4_rescue:{
+      text:'你心中大恸，不顾一切地冲上前去。\n\n「不要过来！」他嘶声喊道，却已无力阻拦。\n\n你扶住他摇摇欲坠的身形，眼泪夺眶而出。\n\n「你这个笨蛋……为什么要替我挡……」\n\n他勉强笑了笑，抬手擦去你脸上的泪。\n\n「别哭……」他的声音很轻，「我不想……看见你哭……」\n\n他的手轻轻垂落，却仍紧紧握着你的手。\n\n你感受到他掌心的温度，心中涌起一股前所未有的力量。\n\n「我不许你死！」\n\n你将全身灵力灌注入他的体内，与他气息相连——\n\n这一刻，你与他，生死与共。\n\n（好感度突破临界——命定羁绊达成）',
+      choices:[
+        {text:'[love] 与他气息交融，共抗强敌',type:'love',next:'hub_return',effect:{灵力:-20,战力:10},affection:30,flag:'destined_bond'},
+      ]
+    }
+  };
+  var s=scenes[id]||scenes['main_sect1'];
+  document.getElementById('hubArea').innerHTML='';
+  document.getElementById('sceneArea').innerHTML='<div class="scene-box"><div class="scene-text">'+s.text.replace(/\n/g,'<br>')+'</div></div>';
+  var html='<div class="choices">';
+  (s.choices||[]).forEach(function(c,i){
+    var label=c.type?'['+c.type+'] ':'';
+    var cleanText=c.text.replace(/^\[(safe|risky|love|smart)\]\s*/,'');
+    html+='<button class="choice-btn '+(c.type||'')+'" onclick="makeChoice('+i+')">'+label+cleanText+'</button>';
+  });
+  html+='</div>';
+  document.getElementById('choicesArea').innerHTML=html;
+  window._mainSceneChoices=s.choices||[];
 }
-function intro_ask_together(){
-S.husband.affection+=12;addLog("邀请同行 好感+12");
-showScene("邀请同行",[
-"你转向"+S.husband.name+"，轻声道：「你愿意……和我一起吗？」",
-"他微微一愣，似乎没想到你会这么问。",
-"沉默良久，他别过头去：「……随你。」",
-"白发老者在一旁看得真切，捻须大笑：「有意思！都带回去！」
-"],[{text:"进入青云宗",next:"join_sect",type:"safe"}],"💕 携手同行");renderStats();updateAff();
+
+window._mainSceneChoices=window._mainSceneChoices||[];
+function makeChoice(idx){
+  buildScenes();
+  var scene=SCENES[G.currentScene];
+  if(!scene||!scene.choices||!scene.choices[idx]){
+    // fallback for main scenes stored in window
+    var ms=window._mainSceneChoices;
+    if(ms&&ms[idx]){
+      var c=ms[idx];
+      if(c.flag)G.flags[c.flag]=true;
+      if(c.effect)applyEffect(c.effect,c.affection||0);
+      else if(c.affection)G.affection=Math.max(0,Math.min(100,G.affection+c.affection));
+      if(c.next==='hub_return'){G.day+=1;renderHub();renderStats();return}
+      playScene(c.next);
+      return;
+    }
+    return;
+  }
+  var choice=scene.choices[idx];
+  if(choice.flag)G.flags[choice.flag]=true;
+  if(choice.effect)applyEffect(choice.effect,choice.affection||0);
+  else if(choice.affection)G.affection=Math.max(0,Math.min(100,G.affection+choice.affection));
+  if(choice.next==='hub_return'){G.day+=1;renderHub();renderStats();return}
+  playScene(choice.next);
 }
-function intro_name_share(){
-S.husband.affection+=10;addLog("互通姓名 好感+10");
-showScene("互通姓名",[
-"「我叫"+S.playerName+"。」你报上名号，「你呢？」",
-"「……」他顿了顿，「冷夜寒。」",
-"「冷夜寒……记住了。」",
-"他忽然轻笑了一声——那是你第一次见他笑，虽然转瞬即逝。"
-"],[{text:"进入青云宗",next:"join_sect",type:"safe"}],"💕 互通姓名");renderStats();updateAff();
-}
-function intro_return(){
-showScene("折返",[
-"你终究还是折返了。",
-"远远地，你看见那白发老者正为"+S.husband.name+"疗伤。",
-"他抬起头，看见了你，眼中闪过一丝意外，随即化为平静。",
-"「……你不是走了吗？」你没有回答，只是走上前，静静地站在一旁。",
-"老者哈哈大笑：「好！不逃避，不放弃！这样的心性，最适合修真！」
-"],[{text:"拜入青云宗",next:"join_sect",type:"safe"}],"🌟 折返");renderStats();
-}
-function join_sect(){
-S.realm="练气期";S.day=1;
-addLog("拜入青云宗 境界：练气期");
-showScene("青云宗",[
-"清虚长老将你们带回青云宗。",
-"云雾缭绕的山门上，「青云宗」三个大字熠熠生辉。",
-S.husband.name+"被带去疗伤，你则被安排在外门弟子居。",
-"「先在这里修炼，」清虚长老说，「等你踏入练气期，再正式拜师。」
-"],[{text:"打坐修炼，感应灵气",next:"cultivate_start",type:"safe"}],"🌟 新的开始");renderStats();
-}
-function join_sect_ask(){
-S.repute+=1;S.husband.affection+=5;addLog("主动拜师 声望+1 好感+5");
-showScene("主动请缨",[
-"你追了上去，跪在老者面前：「前辈，我想拜入青云宗！」",
-"老者打量你一番，捻须而笑：「根骨不错，心性也可嘉。」",
-S.husband.name+"看了你一眼，目光微微
-function cultivate_start(){var gain=(S.spirit||0)+1;addLog("修炼 灵力+"+gain);showScene("修炼",["你在外门弟子居打坐修炼，感受着天地灵气的流动。","七日之后，你隐隐感觉到了灵气的存在——那是一种微妙的感觉，仿佛与天地合一。","「很好，」清虚长老路过，点了点头，「你已经有了感应，继续努力。」"],[{text:"继续修炼",next:"cultivate_2",type:"safe"}],"🧘 修炼中");renderStats();}
-function cultivate_2(){S.spirit=(S.spirit||0)+2;if((S.spirit||0)>=5){S.realm="筑基初期";addLog("突破！境界：筑基初期");showScene("突破成功",["你感觉到体内的灵气达到了临界点——要突破了！","你引导灵气冲破壁垒，只觉得浑身一震，眼前豁然开朗。","「筑基成功！」清虚长老的声音从门外传来，带着一丝欣慰。"],{text:"继续新的修炼",next:"main_quest",type:"safe"},"🌟 突破！");}else{showScene("继续修炼",["七日修炼，你的灵力有了增长，但还不足以突破。","「不要心急，」清虚长老说，「修炼一途，急不得。」","你继续打坐，等待下一次突破的契机。"],[{text:"继续修炼",next:"cultivate_3",type:"safe"}]);}renderStats();}
-function cultivate_3(){S.spirit=(S.spirit||0)+1;addLog("修炼 灵力+1");if((S.spirit||0)>=5){S.realm="筑基初期";addLog("突破！境界：筑基初期");showScene("突破成功",["经过漫长的修炼，你终于触碰到了筑基的门槛！","你引导灵气冲破壁垒，踏入了一个全新的境界。","「不错，」清虚长老说，「从今日起，你就是青云宗的内门弟子了。」"],{text:"进入主线剧情",next:"main_quest",type:"safe"},"🌟 突破！");}else{showScene("继续修炼",["你继续打坐修炼，灵力渐渐增长。","但筑基的门槛似乎还遥遥无期……"],[{text:"继续修炼",next:"cultivate_3",type:"safe"}]);}renderStats();}
-function main_quest(){S.day=1;addLog("=== 主线开启 ===");showScene("内门弟子",["成为内门弟子后，你的修炼生活变得充实起来。","每日清晨的早课，每夜的例行修炼，还有不定期的门派任务……","这一日，清虚长老找到了你：「徒儿，有一件事需要你去办。」","「山下清溪镇附近的妖兽活动频繁，扰乱了百姓。你去探查一番，相机行事。」"],[{text:"接受任务",next:"quest_accept",type:"safe"},{text:"询问详情",next:"quest_detail",type:"smart"}],"📜 主线任务");renderStats();}
-function quest_accept(){S.day=1;addLog("接受主线任务");showScene("下山",["你收拾行囊，告别青云宗，下山前往清溪镇。",S.husband.name+"因伤未愈，仍在宗门休养。","「小心。」他只说了两个字，但你能感觉到其中的关切。","你点点头，转身踏上了征程。"],[{text:"前往清溪镇",next:"qinxi_town",type:"safe"}],"🚶 下山");renderStats();}
-function quest_detail(){showScene("任务详情",["清虚长老展开一幅地图：「清溪镇往东三十里，有一座小山，名叫青峰岭。","「近来，那山上出现了一窝妖兽，已经伤了十几条人命。","「你的任务是探查情况，若能斩杀最好，若不能，就回来禀报。」","他递给你一瓶丹药：「这是疗伤丹，拿去吧。」"],{text:"接受任务，下山",next:"quest_accept",type:"safe"}]);renderStats();}
-function qinxi_town(){showScene("清溪镇",["清溪镇是一个山间小镇，民风淳朴。","但最近因为妖兽的事，大家都人心惶惶，天一黑都不敢出门。","你在镇口的老槐树下停下，打量着这个陌生的地方。"],[{text:"去客栈打听消息",next:"qx_inn",type:"smart"},{text:"直接去青峰岭探查",next:"qx_mountain",type:"risky"},{text:"去县衙了解情况",next:"qx_yamen",type:"smart"}]);renderStats();}
-function qx_inn(){S.wit=(S.wit||0)+1;addLog("打听消息 智慧+1");showScene("客栈打听",["你走进镇上唯一的客栈，要了些酒菜。","掌柜是个热心肠，见你是外地人，便多说了几句：「那妖兽可凶了！上个月王猎户带人上山，到现在都没回来，怕是凶多吉少了。」","「不过……」他压低声音，「我听说那妖兽是因为有人偷了它的蛋，才发狂的。」"],{text:"继续去青峰岭",next:"qx_mountain",type:"safe"},{text:"去县衙一趟",next:"qx_yamen",type:"smart"}],"📖 情报");renderStats();}
-function qx_yamen(){showScene("县衙",["你来到县衙，出示了青云宗的令牌。","县令是个中年男子，为官倒还清正。他叹了口气：「那妖兽为祸，本官也是焦头烂额啊。」","「若能斩杀妖兽，本官愿出纹银百两相谢！」"],{text:"接受县令委托",next:"qx_mountain",type:"safe"}]);renderStats();}
-function qx_mountain(){var c=(S.combat||0);var s=(S.spirit||0);if(c>=4||s>=4){showScene("青峰岭",["你循着山路摸上山，藏在一块巨石后观察。","果然，那窝妖兽正在酣睡——是一窝成精的山狼，领头的是一头白狼，体型巨大，灵气逼人。","你屏住呼吸，待它们放松警惕后，突然出手——一剑斩杀了白狼！","狼群大乱，四散而去。你取得了白狼的内丹，这可是一件炼器的好材料！"],[{text:"回镇上复命",next:"qx_return",type:"safe"}],"⚔️ 斩杀妖兽");}else if(c>=2||s>=2){showScene("青峰岭苦战",["你摸上山，却发现妖兽比你想象的更强——是一头成精的白狼，体型巨大，灵气逼人。","你与它苦战了一场，身上添了几道伤口，最终勉强将它斩杀。","你取得了白狼内丹，但伤势不轻，需要休养。"],[{text:"回镇上养伤",next:"qx_return",type:"safe"}],"⚔️ 苦战");}else{showScene("青峰岭",["你摸上山，却被妖兽发现了——是一头成精的白狼！","你奋力一战，但实力差距太大，被它一爪拍飞。","好在你机灵，顺势滚下山坡，捡回一条命。","看来还是需要更强的实力才能挑战它。"],[{text:"回镇上想办法",next:"qx_return",type:"safe"}],"⚔️ 不敌");}renderStats();}
-function qx_return(){S.gold=(S.gold||0)+100;S.repute=(S.repute||0)+5;addLog("任务完成 银两+100 声望+5");showScene("凯旋",["你带着白狼内丹回到镇上，县令大喜，当即付了百两纹银。","「壮士高义！本官代全镇百姓谢过！」","消息传开后，镇民们都对你感激不尽。","你感觉自己在这一战中成长了不少。"],[{text:"返回青云宗",next:"return_sect",type:"safe"}],"🏆 任务完成");renderStats();}
-function return_sect(){addLog("=== 第一章完成 ===");showScene("归宗",["你带着战利品和银两回到了青云宗。",S.husband.name+"站在山门前，似乎在等你。","「回来了？」他的语气一如既往的淡，但眼底似乎闪过一丝光亮。","你的修真之路，才刚刚开始……"],[{text:"继续修炼",next:"cultivate_2",type:"safe"}],"🌟 第一章完");renderStats();}
-function wander_alone(){S.realm="凡人之躯";S.day=1;addLog("独自闯荡 境界：凡人之躯");showScene("江湖路",["你没有追随任何人，而是选择了独自闯荡。","没有宗门庇护，没有师长指点，江湖路漫漫，一切都要靠自己。","但你有一样东西——不服命的心。","夜色渐深，你走进了一家小镇客栈，打算在这里歇歇脚。"],[{text:"向掌柜打听消息",next:"inn_ask",type:"smart"},{text:"要壶酒，独自喝闷酒",next:"inn_drink",type:"risky"},{text:"直接上楼休息",next:"inn_sleep",type:"safe"}],"🏠 客栈");renderStats();}
-function inn_ask(){S.wit=(S.wit||0)+1;addLog("打听消息 智慧+1");showScene("客栈打听",["你叫了一壶茶，向掌柜打听消息。","掌柜压低声音：「最近山里闹妖兽，伤了几条人命。县衙贴了告示，征召能打之人，赏金颇丰。」","「另外，镇上来了个百草门的游方郎中，据说是来采药的。这位姑娘要是懂医术，说不定能结交一二。」"],[{text:"去打探妖兽的消息",next:"monster_quest",type:"risky"},{text:"去找百草门郎中",next:"find_healer",type:"smart"},{text:"算了，不关我事",next:"inn_done",type:"safe"}],"📖 打听");renderStats();}
-function inn_drink(){S.gold=Math.max(0,(S.gold||0)-5);addLog("喝闷酒 银两-5");showScene("喝闷酒",["你叫了一壶烈酒，仰头灌下。","辛辣的酒液滑过喉咙，却烧不尽心里的郁结。","江湖路难走，而你连个同行之人都没有。","窗外月色清冷，你抬头望了一眼，喃喃自语：「那一声懦夫……我真的错了吗？」","不知不觉，一壶酒已见底。你有些醉了，踉跄着上楼，沉沉睡去。"],[{text:"睡醒后再说",next:"inn_sleep",type:"safe"}],"🍶 醉酒");renderStats();}
-function inn_sleep(){S.day++;addLog("第"+S.day+"天开始");showScene("翌日清晨",["清晨的阳光透过破旧的窗纸洒进来。","你从陌生客栈的床上醒来，头还有些昏沉。","昨夜的一切仿佛一场梦，但那白衣剑客的身影，却清晰地印在脑海里。"],[{text:"继续闯荡江湖",next:"wander_day",type:"safe"}]);renderStats();}
-function inn_done(){showScene("不关我事",["你摇摇头，决定不多管闲事。","江湖上每天都有事，你一个人管不过来的。","先休息一晚，明日再说。"],[{text:"睡吧",next:"inn_sleep",type:"safe"}]);renderStats();}
-function monster_quest(){if((S.combat||0)>=4){S.gold=(S.gold||0)+50;S.repute=(S.repute||0)+3;addLog("击杀妖兽 银两+50 声望+3");showScene("山中遇妖",["你循着血迹追入山中，果然遇见一头为祸的妖兽——是一头成精的野猪，獠牙如刀。","你没有退缩，经过一番恶战，终于将它斩于刀下！","村民们欢呼雀跃，将你当作英雄一般簇拥起来。","县衙的赏金五十两纹银入账，你第一次靠自己的实力赚了钱。"],[{text:"继续旅程",next:"wander_day",type:"safe"}],"🏆 斩妖成功");}else{S.gold=Math.max(0,(S.gold||0)-10);S.combat=(S.combat||0)+1;addLog("打不过妖兽 银两-10 战力+1");showScene("山中遇妖",["你循着血迹追入山中，遇见那头妖兽——一头成精的野猪。","你挥刀迎战，但实力不济，被它一獠牙撞飞出去。","好在村民及时赶到，将你救回。你养了三日伤，花了十两银子。","虽然失败了，但你记住了妖兽的弱点，下次必能斩杀。"],[{text:"继续旅程",next:"wander_day",type:"safe"}],"⚔️ 苦战");}renderStats();}
-function find_healer(){S.husband.affection=(S.husband.affection||50)+5;addLog("结识百草门 好感+5");showScene("百草门郎中",["你在镇外的小溪边找到了那位百草门郎中。","他正在溪边采药，抬头看了你一眼，微微一笑：「姑娘气质不凡，可是来寻我？」","你与他交谈了几句，他对你的想法颇为欣赏。","「你这性子，倒像我认识的一个人。」他从药筐里取出一本小册子，「这是我早年整理的《百草录》，就送给你吧。」","你学会了一些基本的药理知识。"],[{text:"继续旅程",next:"wander_day",type:"safe"}],"🌿 结识贵人");renderStats();}
-function wander_day(){S.day++;addLog("第"+S.day+"天开始");showScene("江湖日常",["新的一天。你走在官道上，远方是连绵的山脉。","江湖很大，而你只是其中一粒细砂。但总有一天，你要让天下人记住你的名字。"],[{text:"继续漫游",next:"wander_random",type:"safe"}]);renderStats();}
-function wander_random(){var evs=[{tag:"🌟 随机奇遇",title:"深山古洞",text:["你在深山中迷了路，却意外发现一个隐蔽的古洞。","洞壁上刻着模糊的文字，似乎是某位前辈留下的修炼心得。你仔细研读，收获颇丰。"],choices:[{text:"记录下来，继续探索",next:"cave_explore",type:"smart"}]},{tag:"⚠️ 江湖险恶",title:"遇到劫匪",text:["山路上突然跳出几个劫匪，手中刀刃闪着寒光。","「此路是我开，此树是我栽！要打此路过，留下买路财！」"],choices:[{text:"拼死一战",next:"robber_fight",type:"risky"},{text:"乖乖交钱",next:"robber_pay",type:"safe"},{text:"智退劫匪",next:"robber_trick",type:"smart"}]},{tag:"💰 意外之财",title:"捡到钱袋",text:["路边有一个鼓鼓囊囊的钱袋，看样子是谁遗失的。","你打开一看，里面至少有五十两银子！"],choices:[{text:"占为己有",next:"found_greed",type:"risky"},{text:"原地等候失主",next:"found_honest",type:"safe"}]},{tag:"🌿 贵人相助",title:"老药师",text:["你遇见一位采药的老者，他看你根骨不错，想收你为徒。","「小子，我看你有几分灵气，可愿跟我学习药理？」"],choices:[{text:"拜他为师",next:"herb_master",type:"love"},{text:"婉拒，继续赶路",next:"herb_refuse",type:"smart"}]}];var ev=evs[Math.floor(Math.random()*evs.length)];showScene(ev.title,ev.text,ev.choices,ev.tag);}
-function cave_explore(){S.spirit=(S.spirit||0)+2;addLog("古洞修炼 灵力+2");showScene("古洞修炼",["你在古洞中修炼了三日，参悟前人心得。","你的灵力修为有了长进，对修真的理解也更深了一层。","境界虽未突破，但根基更加稳固。"],[{text:"继续旅程",next:"wander_day",type:"safe"}],"📖 修炼");renderStats();}
-function robber_fight(){if((S.combat||0)>=3){S.gold=(S.gold||0)+20;S.repute=(S.repute||0)+1;addLog("击退劫匪 银两+20 声望+1");showScene("击退劫匪",["你拔刀迎战，三两下将劫匪打翻在地！","「好汉饶命！」劫匪们跪地求饶，你搜走他们身上的银子，拂袖而去。"],{text:"继续旅程",next:"wander_day",type:"safe"}],"⚔️ 战斗胜利");}else{S.gold=Math.max(0,(S.gold||0)-20);addLog("战败被抢 银两-20");showScene("不敌劫匪",["你奋力一战，但还是被劫匪制服。","他们抢走了你身上所有的银子，只给你留了一条命。","你狼狈地逃离，心里暗暗发誓：一定要变强！"],{text:"继续旅程",next:"wander_day",type:"safe"}],"⚔️ 战败");}renderStats();}
-function robber_pay(){S.gold=Math.max(0,(S.gold||0)-15);addLog("交过路费 银两-15");showScene("息事宁人",["你叹了口气，掏出十五两银子换平安。","劫匪们满意地离去，你继续赶路。","花钱消灾，也算是江湖生存之道吧。"],[{text:"继续旅程",next:"wander_day",type:"safe"}],"💰 消灾");renderStats();}
-function robber_trick(){S.wit=(S.wit||0)+1;addLog("智退劫匪 智慧+1");showScene("智退劫匪",["你微微一笑，故作神秘：「你们可知我是谁？」","「我乃青云宗清虚长老座下弟子！你们敢动我，不想活了吗？」","劫匪们面面相觑，最终还是不敢冒险，灰溜溜地跑了。","你捡回了一条命，还白得了十五两银子——从他们慌乱中掉落的。"],{text:"继续旅程",next:"wander_day",type:"safe"}],"🧠 智取");renderStats();}
-function found_greed(){S.evil=(S.evil||0)+2;addLog("贪财 魔性+2");showScene("贪心之祸",["你将银子收入囊中，继续赶路。","但不知为何，心里总有一丝不安。","走了不远，你突然腹痛如绞——似乎中了什么毒？","那钱袋里布满了毒粉！这银子，来路不正啊！"],[{text:"想办法解毒",next:"poison_deal",type:"risky"}],"⚠️ 贪心之祸");renderStats();}
-function found_honest(){S.repute=(S.repute||0)+2;addLog("拾金不昧 声望+2");showScene("拾金不昧",["你坐在路边，等候失主。","不多时，一个商人模样的中年男子焦急地找来。","他看到你手中的钱袋，激动得差点落泪：「这是我的救命钱啊！姑娘真是当世好人！」","他执意要给你二十两银子作为酬谢，你推辞不过，只好收下。"],[{text:"继续旅程",next:"wander_day",type:"safe"}],"⭐ 好人好报");renderStats();}
-function herb_master(){S.heal=(S.heal||0)+2;addLog("拜师药理 医术+2");showScene("拜师学艺",["你跪下拜师，跟随老者学习药理。","一个月后，你学会了基本的丹药炼制，还得到了一瓶他亲手炼制的疗伤丹。","「去吧，」老者笑道，「以你的资质，日后成就必在老夫之上。」"],[{text:"继续旅程",next:"wander_day",type:"safe"}],"🌿 拜师");renderStats();}
-function herb_refuse(){showScene("婉拒",["你婉拒了老者的好意，继续赶路。","老者也不恼，只是笑着摇摇头，目送你离去。","江湖缘分，有深有浅，不必强求。"],[{text:"继续旅程",next:"wander_day",type:"safe"}]);renderStats();}
-function poison_deal(){if((S.heal||0)>=1){S.heal=(S.heal||0)+1;addLog("自我解毒 医术+1");showScene("自我解毒",["你用《百草录》里的知识，给自己配了一剂解毒药。","虽然解了毒，但身体还是虚了几分。","吃一堑长一智，以后不能再贪小便宜了。"],{text:"继续旅程",next:"wander_day",type:"safe"}],"💊 解毒");}else{S.gold=Math.max(0,(S.gold||0)-20);addLog("中毒请大夫 银两-20");showScene("中毒求医",["你强撑着找到一位游方郎中，花了二十两银子才解了毒。","「年轻人，不义之财不可取啊！」郎中叹道。"],{text:"继续旅程",next:"wander_day",type:"safe"}],"💊 教训");}renderStats();}
-window.go=function(n){switch(n){case"cultivate_start":cultivate_start();break;case"cultivate_2":cultivate_2();break;case"cultivate_3":cultivate_3();break;case"main_quest":main_quest();break;case"quest_accept":quest_accept();break;case"quest_detail":quest_detail();break;case"qinxi_town":qinxi_town();break;case"qx_inn":qx_inn();break;case"qx_yamen":qx_yamen();break;case"qx_mountain":qx_mountain();break;case"qx_return":qx_return();break;case"return_sect":return_sect();break;case"wander_alone":wander_alone();break;case"inn_ask":inn_ask();break;case"inn_drink":inn_drink();break;case"inn_sleep":inn_sleep();break;case"inn_done":inn_done();break;case"monster_quest":monster_quest();break;case"find_healer":find_healer();break;case"wander_day":wander_day();break;case"wander_random":wander_random();break;case"cave_explore":cave_explore();break;case"robber_fight":robber_fight();break;case"robber_pay":robber_pay();break;case"robber_trick":robber_trick();break;case"found_greed":found_greed();break;case"found_honest":found_honest();break;case"herb_master":herb_master();break;case"herb_refuse":herb_refuse();break;case"poison_deal":poison_deal();break;default:wander_day();}};go=function(n){eval(n+"()");};
-</script></body></html>
+</script>
+</body>
+</html>
