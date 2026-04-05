@@ -431,14 +431,19 @@ function hubCultivate(){
 
 function hubAdventure(){
   var events=[
-    {title:'遭遇妖兽',desc:'山林中发现一只受伤的妖兽',type:'risky',effect:{战力:-5,银两:15,声望:5},msg:'击败妖兽，获得银两与声望'},
-    {title:'采药奇遇',desc:'在山林深处发现珍贵灵药',type:'safe',effect:{灵力:8,银两:5},msg:'采得灵药，灵力与银两增加'},
-    {title:'路见不平',desc:'遇到恶霸欺负百姓',type:'smart',effect:{声望:8,战力:-3},msg:'仗义出手，声望提升'},
-    {title:'市集偶遇',desc:'镇上集市热闹非凡',type:'safe',effect:{银两:-10,声望:3,灵力:3},msg:'采购物资，提升声望'},
-    {title:'神秘遗迹',desc:'发现一处上古遗迹',type:'smart',effect:{智慧:5,灵力:10},msg:'遗迹探查，智慧与灵力提升'},
-    {title:'师兄切磋',desc:'同门师兄邀请切磋剑法',type:'risky',effect:{战力:8,声望:3},msg:'切磋中有所领悟，战力提升'},
-    {title:'魔物伏击',desc:'遭遇魔物埋伏',type:'risky',effect:{战力:-8,声望:2},msg:'苦战脱身，获得实战经验'},
-    {title:'奇花异草',desc:'灵田中发现一株异花',type:'safe',effect:{灵力:12},msg:'异花蕴含充沛灵气'},
+    {title:'街头救人',desc:'闹市中有人被恶霸欺负',type:'safe',effect:{声望:8,战力:-2},msg:'仗义相助，声望提升'},
+    {title:'集市遇骗',desc:'有人在高价卖假丹药',type:'smart',effect:{银两:-15,智慧:5},msg:'识破骗局，但损失了银两'},
+    {title:'山洞奇遇',desc:'山洞深处发现前辈遗宝',type:'smart',effect:{灵力:15,银两:20},msg:'获得前辈遗宝，修为大进！'},
+    {title:'师妹求助',desc:'同门师妹前来借灵石',type:'safe',effect:{银两:-10},msg:'借出灵石，师妹十分感激'},
+    {title:'妖兽攻城',desc:'妖兽群袭击城镇！',type:'risky',effect:{战力:-10,声望:10},msg:'守城战斗，身负轻伤但声望大涨'},
+    {title:'仙缘抽奖',desc:'路过抽奖摊，抽一次需要银两',type:'safe',effect:{银两:-20},msg:'抽奖获得稀有灵器！'},
+    {title:'酒楼听闻',desc:'酒楼里有人在议论大事',type:'smart',effect:{声望:5,智慧:3},msg:'打听到重要情报'},
+    {title:'河边救人',desc:'有人不慎落水',type:'safe',effect:{声望:5,灵力:3},msg:'及时救人，获得称赞'},
+    {title:'矿山探索',desc:'废弃矿山中有灵石矿脉',type:'smart',effect:{银两:25,战力:5},msg:'挖矿收获颇丰'},
+    {title:'路见不平2',desc:'有人被抢劫',type:'risky',effect:{战力:-5,声望:8},msg:'击退劫匪，声望大涨'},
+    {title:'灵兽结缘',desc:'一只灵兽想要跟随你',type:'safe',effect:{战力:8,灵力:5},msg:'灵兽认主，实力提升'},
+    {title:'邪修伏击',desc:'遭遇邪修埋伏',type:'risky',effect:{战力:-8,灵力:-5},msg:'苦战脱身，负伤而退'},
+    {title:'高人指点',desc:'偶遇隐世高人',type:'smart',effect:{战力:10,灵力:10,智慧:5},msg:'高人传授绝技，修为大涨！'},
   ];
   var ev=events[Math.floor(Math.random()*events.length)];
   document.getElementById('hubArea').innerHTML='';
@@ -456,15 +461,69 @@ function doAdventure(evStr){
   renderHub();
 }
 
+
+function getLeadSpecificRomanceScenes(){
+  var scenes=[];
+  var lead=G.maleLead;
+  if(lead==="lengyehan"){
+    scenes=[
+      {title:"冰山融化",desc:"他竟主动来找你聊天",type:"love",text:"夜深时分，你正准备休息，房门却被轻轻叩响。开门一看，竟是冷夜寒负手立于门外。「……睡不着。」他淡淡道，「想找人说说话。」那一夜，你们聊了很久。他望着月色道：「你知道吗，我已经很久没有这样……和人说过话了。」分别时，他回头看你：「多谢你愿意听我说。」",affection:18},
+      {title:"论剑指导",desc:"他手把手教你剑法",type:"safe",text:"演武场上，冷夜寒持剑而立。「出剑。」他忽然上前握住你持剑的手，调整你的姿势。「这里，角度错了。」他的声音就在你耳畔。你感受到他胸膛传来的温度，心跳不由得加快了几分。「记住，剑如流水，讲究顺势而为。」他松开手时，你发现他的耳根微微泛红。",effect:{战力:8},affection:15},
+      {title:"深夜长谈",desc:"他向你吐露过去",type:"love",text:"那夜月色如水，冷夜寒忽然来找你。他望着夜空，讲述了五年前师兄背叛的往事。「从那以后，我便不再信任任何人。」他闭上眼，「直到……你出现。」「谢谢你愿意留在我身边。」他转头看你，目光中带着从未有过的温柔。",affection:22},
+      {title:"并肩作战",desc:"一起迎敌的战斗",type:"risky",text:"山门外忽然传来厮杀声——有敌袭！你冲出房门，正见冷夜寒被数道黑影包围。没有犹豫，你拔剑冲上前去，与他背靠背站在一起。「你来做什么！」他低喝，眼中却闪过一丝复杂的光芒。「我会陪你一起面对！」你握紧剑柄。他握住你的手，在你掌心轻轻一捏：「跟紧我，别死。」那夜，你们并肩作战，剑光如虹。",effect:{战力:5},affection:20},
+      {title:"温泉偶遇",desc:"尴尬的温泉相遇",type:"safe",text:"宗门后山温泉，你夜半前去沐浴。却不料，冷夜寒也正在此处。他只穿着单衣，发丝沾着水汽。见你来了，他神色慌乱。「你……」他欲言又止，耳根却已红透。你连忙转身，却听见他低声道：「下次……先看清楚再进来。」你分明听出了他声音里的一丝颤抖。",affection:12},
+      {title:"生日惊喜",desc:"你记得他的生辰",type:"love",text:"今日是冷夜寒生辰。你悄悄准备了亲手绣的香囊。他手持香囊，神色复杂：「你怎么知道今日是我的生辰？」你微微一笑。他沉默良久，忽然走近你：「从来没有人……记得这个日子。谢谢你。」那目光里的温度，让你心跳漏了一拍。",affection:20},
+      {title:"醉酒真言",desc:"他醉酒后说出心里话",type:"love",text:"那夜宗门庆功，他难得饮了几杯。他忽然拉住你的衣袖，声音沙哑：「你知道吗……我好怕。」「怕什么？」「怕你……也会离开。」他将头靠在你肩上：「别走……求你……」你感受到他话语中的真挚。这一刻，冰山彻底融化。",affection:25},
+      {title:"冰雪送炭",desc:"暗中帮助陷入困境的你",type:"safe",text:"你近日银两紧缺。这日你发现房门上挂着钱袋，里面装着沉甸甸的灵石，袋上系着他的随身玉佩。你去寻他，他却淡淡道：「我不知道你在说什么。」但你分明看见他眼中闪过的一丝紧张。这个口是心非的人，明明在关心你，却偏偏不肯承认。",effect:{银两:30},affection:15},
+    ];
+  } else if(lead==="xiaowuhen"){
+    scenes=[
+      {title:"江湖八卦",desc:"他说起以前的江湖见闻",type:"smart",text:"月光下，萧无痕靠在栏杆上，手中把玩着玉佩。「想听故事吗？」他开始讲述大漠佳人、东海龙宫、北疆雪原……你听得入神，不知不觉靠近了几分。他忽然停下，刮了刮你的鼻尖：「小傻瓜。」眼中却闪过一丝认真。",effect:{智慧:5},affection:12},
+      {title:"醉酒调戏",desc:"他微醺时对你撒娇",type:"love",text:"那夜他微醺，面色微红，斜倚在榻上。「过来。」他拉着你坐在身旁。「你知道吗，你是我见过最有趣的人。」他凑近你，气息喷洒在你耳畔。你心跳如鼓，他却忽然笑了：「逗你的。」但你分明看见他眼中一闪而过的认真。",affection:18},
+      {title:"神秘任务",desc:"他带你去看萤火虫星河",type:"smart",text:"「想不想看点有趣的？」萧无痕神秘兮兮拉你来到一处山谷。漫天萤火虫组成璀璨星河。「这是我的秘密基地，现在也分享给你。」他躺在草地上：「以前，我想一个人走完这条路。但现在……我想让你也在这里。」",affection:20},
+      {title:"浪子回头",desc:"他突然认真问你一个问题",type:"love",text:"那夜他没有嬉皮笑脸，而是静静望着夜空。「一个人浪惯了之后，还能收心吗？」他转头看你，目光前所未有地认真：「如果我有一个人让我想停下来，你会相信吗？」你还未回答，他已站起身来恢复玩世不恭的笑容：「开玩笑的。」但你分明看见他眼中的一丝期待和认真。",affection:22},
+      {title:"月下共饮",desc:"两人月下对饮",type:"safe",text:"庭院中月色如水，萧无痕席地而坐，递给你一壶酒。「来，陪我喝一杯。」你们在月光下对饮，他谈论江湖趣事，你被逗得笑个不停。他望着你的笑容：「知道吗，你笑起来真好看。」",effect:{灵力:5},affection:15},
+      {title:"假戏真做",desc:"假装情侣避开麻烦",type:"love",text:"「什么？她是你女朋友？」萧无痕忽然揽过你的肩，笑得邪魅：「当然。」走到无人处，他才松开你，眼中闪过歉意：「抱歉，刚才情况紧急。」顿了顿，他又轻声补了一句：「不过……假戏真做的话，我倒是不介意。」",affection:20},
+      {title:"赌坊奇遇",desc:"赌场里的默契配合",type:"smart",text:"他带着你来到赌坊，你们配合得天衣无缝。结束后他带你翻窗而出，笑道：「以后，有乐子一起享。」",effect:{银两:35,智慧:5},affection:12},
+      {title:"离别礼物",desc:"他送你一份临别礼物",type:"love",text:"他即将外出办事，临行前送来一枚玉佩：「这是我娘留给我的，现在给你。」「这太贵重了——」「收着。它会保佑你平安。」他认真道：「等着我回来，我的小傻瓜。」",effect:{灵力:10},affection:25},
+    ];
+  } else if(lead==="subaiyi"){
+    scenes=[
+      {title:"药圃采摘",desc:"两人一起采药的温馨时光",type:"safe",text:"药王谷灵药圃中，苏白衣提篮而行，亲手教你辨认各种灵药。「这是七叶草。」他蹲在药圃边，动作轻柔。「你的手真巧。」微风拂过，他望着你的目光中满是柔情。",effect:{灵力:10,智慧:3},affection:12},
+      {title:"温柔诊治",desc:"他为你调理身体",type:"love",text:"你近日精神不济，苏白衣亲自为你把脉。「近日操劳过度，需好好调理。」他熬了汤药端到你面前：「乖，趁热喝。」你皱眉嫌苦，他却从袖中取出一颗蜜饯：「喝完可以吃这个。」",effect:{灵力:15},affection:18},
+      {title:"伤心往事",desc:"他的身世揭秘",type:"love",text:"那夜月色清冷，苏白衣讲述了自己的身世——幼年家族被灭门，只有他被师父救下。「说出来之后，感觉好多了。」他望着你，目光中带着一丝脆弱：「谢谢你愿意听我说。」",affection:22},
+      {title:"月下抚琴",desc:"他为你弹奏一曲",type:"love",text:"月光如水，他坐于琴前，修长手指轻轻拨动琴弦。琴声悠扬，如泣如诉。一曲终了，他抬眸看你：「这是我娘教我的曲子。很久没有人愿意听我弹了。」他忽然握住你的手：「谢谢你。」",affection:18},
+      {title:"师门责任",desc:"他被迫要做一件不愿的事",type:"risky",text:"苏白衣的师父病重，他必须外出寻找稀世灵药。他将你拥入怀中：「等我回来。我一定会回来。」",affection:15},
+      {title:"温柔守护",desc:"你受伤后他彻夜照顾",type:"love",text:"你受伤昏迷，苏白衣守在床边寸步不离。你醒来时，他憔悴的面容映入眼帘。「你终于醒了……」他递过温热的粥：「饿了吧。」你感受到他掌心的温度，心中满是感动。",effect:{灵力:10},affection:20},
+      {title:"远方来信",desc:"收到他的信和包裹",type:"safe",text:"你收到苏白衣的来信，信中附着他亲手画的药圃，旁边写着：「见此如见我。」包裹中还有药丸、灵药和一条他亲手编织的手绳。你将信读了一遍又一遍。",effect:{灵力:15,银两:20},affection:15},
+      {title:"心意暗表",desc:"他写了一首诗给你",type:"love",text:"那日你在他房中发现诗稿：「春风不解相思意，吹落桃花满地红。」他站在门口：「那是……我写给你的。」他走近你，目光温柔而认真：「你愿意……让我一直陪在你身边吗？」",affection:25},
+    ];
+  } else {
+    scenes=[
+      {title:"部落美食",desc:"他展示家乡的奇特食物",type:"safe",text:"熊蛮儿端来一碗颜色奇异的东西。「这是我们家乡的美食！」他满脸期待看你尝。你尝了一口——味道出乎意料地好！他笑得像个孩子：「好吃吧！我就知道好吃！」",effect:{灵力:5},affection:12},
+      {title:"笨拙送礼",desc:"他不懂送礼物但很用心",type:"love",text:"那天他涨红脸递给你一个包裹。里面是一块刻着歪歪扭扭「喜欢」二字的石头。你笑出声来。他紧张：「你、你不满意吗？」你摇摇头，将石头捧在手心：「这是我收到过最好的礼物。」他笑得眼睛都眯成了一条缝。",affection:18},
+      {title:"撒娇求助",desc:"他遇到不懂的事来问你",type:"safe",text:"「这个……这个字怎么读？」熊蛮儿捧着本书，满脸困惑。你耐心地教他，他却心不在焉，只盯着你看。「怎么了？」他忽然别过脸：「就是觉得……你认真的样子真好看。」",effect:{智慧:5},affection:12},
+      {title:"真心话",desc:"他有话想说但说不出口",type:"love",text:"那天他把你拉到一边，涨红了脸支支吾吾了半天。「我、我就是想说——」他深吸一口气，忽然握住你的双手：「你就是最好的！」说完他转身跑开，耳朵红得像要滴血。",affection:20},
+      {title:"蛮荒风光",desc:"给你看他家乡的描述",type:"safe",text:"熊蛮儿拿出家乡的照片。「这是我们部落的篝火节！」他指着照片，眼中满是怀念。「等以后……我带你回去看看，好不好？」他忽然认真道。",affection:15},
+      {title:"摔跤比赛",desc:"他邀请你比试力气",type:"risky",text:"「来！我们比试比试！」熊蛮儿摆好架势。你被他轻松举起——但他稳稳接住了你。「你真的好轻……我会保护你的，永远都不会让你受伤！」",effect:{战力:8},affection:15},
+      {title:"护你周全",desc:"战斗中他挡在你前面",type:"risky",text:"遭遇突袭时，熊蛮儿毫不犹豫挡在你身前。「想伤她？先过我这关！」战斗结束后，你发现他身上多了好几道伤口。「小伤而已，不疼的。只要你没事就好。」",effect:{战力:5},affection:20},
+      {title:"承诺守护",desc:"他认真许下承诺",type:"love",text:"那夜星光满天，他牵着你的手。「我熊蛮儿这辈子没对谁说过这种话——但我想说——我会永远保护你。」他从怀中取出一枚粗糙的骨戒：「这是我们部落的信物，等我回去禀告阿妈，就来娶你！」",affection:25},
+    ];
+  }
+  return scenes;
+}
+
 function hubRomance(){
   var lead=getLeadName();
-  var events=[
+  var baseEvents=[
     {title:'月下漫步',desc:'与'+lead+'在庭院中月下漫步，夜风轻柔……',type:'love',effect:{},affection:12,text:'他与你并肩而行，月光洒在他的眉眼间。你们聊了很多——关于剑道，关于修行，关于从前……分别时，他轻声道：「今晚月色很美。」'},
     {title:'请教剑法',desc:lead+'主动提出指点你剑法',type:'safe',effect:{战力:5},affection:8,text:lead+'手持长剑，身形如风。「看好了。」他的剑光凌厉却不失温柔一招一式尽数展示给你看。「记住，剑在人在。」他的目光落在你身上，久久不曾移开。'},
     {title:'心意暗藏',desc:'发现'+lead+'独自在窗前沉思',type:'love',effect:{},affection:15,text:'你轻叩房门，他回过头，眼中闪过一丝惊讶。「……你怎么来了？」他的声音比平日柔和了几分。「睡不着，出来走走。」你说。他轻笑一声：「那便陪我坐坐吧。」那夜，你们聊了很久很久。'},
     {title:'煮茶论道',desc:'与'+lead+'一同品茗论道',type:'smart',effect:{智慧:3},affection:8,text:lead+'亲自动手煮茶，茶香袅袅。你们从修仙之道聊到人间百态，他见多识广，言谈间尽显风雅。「与你聊天，很轻松。」他忽然说道，耳根似乎有些发红。'},
     {title:'突发危机',desc:lead+'旧伤发作，你悉心照料',type:'love',effect:{银两:-5},affection:18,text:'你发现'+lead+'独自在房中，眉头紧锁，似乎极为痛苦。「你怎么了？」你上前扶住他。他的身体在颤抖，却强撑着道：「……无事。」你不顾他的推辞，为他运功疗伤，熬煮汤药。他沉默良久，轻声道：「……多谢。」目光中，多了一丝从未有过的柔软。'},
   ];
+  var leadScenes=getLeadSpecificRomanceScenes();
+  var events=baseEvents.concat(leadScenes);
   var ev=events[Math.floor(Math.random()*events.length)];
   document.getElementById('hubArea').innerHTML='';
   document.getElementById('sceneArea').innerHTML='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6;font-size:1.2em">&#128149; '+ev.title+' &#128149;</span></div><div style="color:#a78bfa;margin-bottom:12px">'+ev.desc+'</div><div class="narrator" style="margin-top:15px">'+ev.text.replace(/\n/g,'<br>')+'</div></div></div>';
@@ -485,6 +544,10 @@ function hubMain(){
     {id:'main_sect2',title:'深夜密谈',desc:'你发现'+lead+'独自在悬崖边，似乎心事重重。上前询问，还是悄然离开？'},
     {id:'main_sect3',title:'论剑大会',desc:'一年一度的论剑大会即将开始，这是提升声望与实力的好机会。'},
     {id:'main_sect4',title:'旧敌来袭',desc:'那夜追杀'+lead+'的势力似乎找到了寒渊剑宗的踪迹，山门之外杀气腾腾！'},
+    {id:'main_sect5',title:'宗门大选',desc:'一年一度的宗门大选开始，这是提升宗门地位的关键时刻！'},
+    {id:'main_sect6',title:'外出历练',desc:'被选中前往东海蓬莱仙岛历练！'},
+    {id:'main_sect7',title:'魔修线索',desc:'发现当年叛徒与魔修宗门的关联，追寻真相！'},
+    {id:'main_sect8',title:'身世之谜',desc:'你的真实身份竟然与上古宗门有着深厚渊源……'},
   ];
   var html='<div style="margin-bottom:15px"><button class="back-btn" onclick="renderHub()">&#8592; 返回</button></div>';
   html+='<div class="scene-box" style="margin-bottom:15px"><div class="scene-title" style="color:#c084fc;margin-bottom:12px;border-bottom:1px solid rgba(192,132,252,0.2);padding-bottom:8px;letter-spacing:2px">主线剧情</div>';
@@ -605,7 +668,107 @@ function playMainScene(id){
       choices:[
         {text:'[love] 与他气息交融，共抗强敌',type:'love',next:'hub_return',effect:{灵力:-20,战力:10},affection:30,flag:'destined_bond'},
       ]
-    }
+  },
+    main_sect5:{
+      text:'一年一度的宗门大选终于到来！这是提升你在宗门地位的关键时刻。大选分为修为考核、心性考核、以及擂台赛。'+lead+'也出现在大选现场，微微点头：「好好发挥。」虽然只是简短的一句话，却让你心中涌起一股暖流。',
+      choices:[
+        {text:'[risky] 全力以赴，冲击前十',type:'risky',next:'main_sect5_fight',effect:{战力:5,声望:5},affection:5},
+        {text:'[smart] 稳扎稳打，先保住晋级名额',type:'smart',next:'main_sect5_safe',effect:{声望:3},affection:3},
+        {text:'[love] 向他请教，他是否会答应？',type:'love',next:'main_sect5_ask',effect:{},affection:10},
+      ]
+    },
+    main_sect5_fight:{
+      text:'你全力发挥，在修为考核中表现出色！心性考核对答如流。擂台赛一路过关斩将，杀入前十！'+lead+'看着你，眼中闪过一丝赞许：「不错。」你分明看见他嘴角那一丝几不可察的微笑。',
+      choices:[
+        {text:'[love] 向'+lead+'道谢，心中欣喜',type:'love',next:'hub_return',effect:{声望:10,战力:8},affection:18},
+      ]
+    },
+    main_sect5_ask:{
+      text:'大选前夕，你鼓起勇气去找'+lead+'。「师兄，能否指点我几招？」他沉默片刻：「……好。」那一夜他单独指点你，从出剑力道到脚步配合，无不尽心尽力。「剑道的极致，不在于杀伐，而在于守护。我希望你能明白这个道理。」',
+      choices:[
+        {text:'[love] 心中感动，认真点头',type:'love',next:'hub_return',effect:{战力:10,声望:5},affection:20},
+      ]
+    },
+    main_sect5_safe:{
+      text:'你没有冒险，稳扎稳打。修为考核发挥稳定，擂台赛以第八名晋级。虽然没有惊艳表现，却也展现了你稳健的一面。',
+      choices:[
+        {text:'[safe] 稳定发挥，已是满意的结果',type:'safe',next:'hub_return',effect:{声望:5},affection:5},
+      ]
+    },
+    main_sect6:{
+      text:'宗门大选后，你被选中外出历练！目的地是东海蓬莱仙岛——那里有无尽的机缘与危险。更让你欣喜的是，'+lead+'也将同行！掌门道：「此行凶险，也是磨砺心志的好机会。」'+lead+'走到你身边，低声道：「跟紧我，别乱跑。」语气冷淡，你却分明听出了其中的关切。',
+      choices:[
+        {text:'[love] 点头，心中涌起一股暖流',type:'love',next:'main_sect6_go',effect:{},affection:15},
+        {text:'[smart] 询问蓬莱仙岛的情况',type:'smart',next:'main_sect6_info',effect:{智慧:3},affection:5},
+        {text:'[safe] 表示会听从安排',type:'safe',next:'hub_return',effect:{声望:3},affection:3},
+      ]
+    },
+    main_sect6_go:{
+      text:'你们出发了！一路上'+lead+'对你颇为照顾。休息时他将干粮分给你，夜晚他在外守夜。「师兄，你也休息吧。」「我习惯了。」那一夜你醒来，却见他独自坐在篝火旁，望着火焰出神。火光映照在他的脸上，那张总是冷淡的面容，此刻柔和了几分。',
+      choices:[
+        {text:'[love] 走过去，坐在他身旁',type:'love',next:'hub_return',effect:{灵力:5},affection:18},
+        {text:'[safe] 继续装睡，给他独处的空间',type:'safe',next:'hub_return',effect:{},affection:5},
+      ]
+    },
+    main_sect6_info:{
+      text:'你向师姐打听蓬莱仙岛。「那是传说中的仙家圣地！有缘者能一夜突破境界！」但也有人说，那里危机四伏。'+lead+'在一旁听着，忽然开口：「怕了？」',
+      choices:[
+        {text:'[love] 摇头：只要师兄在，我什么都不怕',type:'love',next:'hub_return',effect:{},affection:20},
+        {text:'[smart] 坦诚：有一点点，但我会努力的',type:'smart',next:'hub_return',effect:{智慧:5},affection:10},
+      ]
+    },
+    main_sect7:{
+      text:'历练中，你无意间发现了一个惊人的秘密！那本泛黄的日记上记载着当年寒渊剑宗与魔道宗门的一段往事——掌门玄清真人的师兄，竟与魔修有过密约！那个叛徒，并非真正的叛徒，而是发现了这个秘密想要揭发……你心中震动。',
+      choices:[
+        {text:'[smart] 将日记交给'+lead+'',type:'smart',next:'main_sect7_tell',effect:{智慧:5},affection:10},
+        {text:'[safe] 先自己调查清楚再说',type:'safe',next:'main_sect7_investigate',effect:{声望:3},affection:5},
+        {text:'[risky] 立刻去找掌门对质',type:'risky',next:'main_sect7_confront',effect:{战力:-5},affection:0},
+      ]
+    },
+    main_sect7_tell:{
+      text:'你找到了'+lead+'，将日记交给了他。他一页页翻看，神色渐渐变得复杂。「……原来如此。我一直以为他背叛了师门。」他合上日记，忽然握住了你的手：「谢谢你。如果不是你，我可能永远都不知道真相。」',
+      choices:[
+        {text:'[love] 握紧他的手：我们一起',type:'love',next:'hub_return',effect:{声望:10},affection:22,flag:'truth_revealed'},
+      ]
+    },
+    main_sect7_investigate:{
+      text:'你暗中走访，收集更多线索。渐渐地，你发现了一个惊天阴谋——当年寒渊剑宗内部，有人为了争夺掌门之位，勾结石魔修，设计陷害忠良！那个所谓的叛徒，其实是受害者！',
+      choices:[
+        {text:'[love] 轻声道：我们会还他清白的',type:'love',next:'hub_return',effect:{声望:8,智慧:5},affection:20},
+      ]
+    },
+    main_sect7_confront:{
+      text:'你直接去找掌门对质。掌门听完你的质问，忽然大笑，出手将你困住！危急时刻，一道剑光破空而至——「掌门，住手！」是'+lead+'！',
+      choices:[
+        {text:'[love] 危急之中，有他救我',type:'love',next:'hub_return',effect:{声望:10},affection:25,flag:'narrowly_escaped'},
+      ]
+    },
+    main_sect8:{
+      text:'历练结束，你回到寒渊剑宗。一个更加惊人的秘密浮出水面。掌门将你召去，取出一枚玉佩——与你身上的一模一样！「你的父亲，是我的关门弟子。你，才是寒渊剑宗真正的继承者。」你呆立当场。'+lead+'站在一旁，看着你的眼神十分复杂。',
+      choices:[
+        {text:'[smart] 追问关于父亲的详情',type:'smart',next:'main_sect8_father',effect:{智慧:5},affection:5},
+        {text:'[love] 看向'+lead+'，想知道他的想法',type:'love',next:'main_sect8_feeling',effect:{},affection:15},
+        {text:'[risky] 这会不会是某种阴谋？',type:'risky',next:'main_sect8_suspect',effect:{},affection:0},
+      ]
+    },
+    main_sect8_father:{
+      text:'掌门讲述你父亲的故事：「他是老夫最出色的弟子，天赋绝伦。然而在即将接任掌门之位时，他选择离开调查往事。他在调查中发现了惊天秘密，为保护你和你母亲，他选择隐姓埋名。」掌门叹道：「你不该承受这一切，但命运弄人，你终究还是回来了。」',
+      choices:[
+        {text:'[love] 询问'+lead+'的想法',type:'love',next:'hub_return',effect:{声望:8},affection:18},
+      ]
+    },
+    main_sect8_feeling:{
+      text:'你转向'+lead+'。他沉默了许久。「……我不在乎你是不是什么继承者。」他的声音低沉却坚定。「我只在乎你。不管你是谁，你就是我想要守护的人。」他伸出手，轻轻抚上你的脸颊。「这一点，永远不会变。」',
+      choices:[
+        {text:'[love] 心中感动，主动握住他的手',type:'love',next:'hub_return',effect:{灵力:10},affection:30,flag:'destined_forever'},
+      ]
+    },
+    main_sect8_suspect:{
+      text:'你没有轻信，掌门大笑：「好！不愧是她的孩子，有警觉是好事！」他认真道：「你怀疑我，我不怪你。但这里，才是你真正的家。」他看了'+lead+'一眼：「而且，这里还有想要守护你的人。」',
+      choices:[
+        {text:'[safe] 稍微放心，决定留待观察',type:'safe',next:'hub_return',effect:{声望:5},affection:10},
+      ]
+    },
   };
   var s=scenes[id]||scenes['main_sect1'];
   document.getElementById('hubArea').innerHTML='';
