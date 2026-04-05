@@ -503,8 +503,8 @@ window.startGame=function(){
   document.getElementById('sbar').classList.add('on');
   document.getElementById('aff-wrap').classList.add('on');
   renderStats();updateAff();
-  // 媒婆介绍夫君（玩家在媒婆流程中选择）
-  // introMatchmaker removed - marriage now optional
+  // 直接进入第一日清晨（婚姻为可选路线）
+  showMorning();
 };
 
 function introMatchmaker(){
