@@ -169,19 +169,13 @@ function showScene(title,text,choices,etag){
       var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov'};
       var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov'};
       var dis=c.disabled?'disabled ':'';
-      h+='<button class="chc '+cm[tp]+'" '+dis+'data-next="'+c.next+'" data-type="'+tp+'"><span class="tag '+tcm[tp]+'">'+tm[tp]+'</span> '+c.text+'</button>';
+      h+='<button class="chc '+cm[tp]+'" '+dis+'data-next="'+c.next+'" data-type="'+tp+'" onclick="go(\''+c.next+'\',\''+tp+'\')"><span class="tag '+tcm[tp]+'">'+tm[tp]+'</span> '+c.text+'</button>';
     });
   }
   document.getElementById('choices').innerHTML=h;
-  document.getElementById('choices').onclick=function(e){
-    var btn=e.target.closest('.chc');
-    if(btn&&!btn.disabled){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
-  };
-  // 清除旧夜间事件处理器，防止隐藏后仍被触发导致重复go()调用
+  // 清除旧夜间事件处理器，防止隐藏后仍被触发
   document.getElementById('night-choices').onclick=null;
   document.getElementById('night-panel').classList.remove('on');
-  // 诊断日志
-  console.log('showScene done, choices innerHTML:', document.getElementById('choices').innerHTML.substring(0,100));
 }
 function showNight(){
   document.getElementById('scene').classList.remove('on');
