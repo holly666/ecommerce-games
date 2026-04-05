@@ -461,21 +461,18 @@ window.s3=function(){
   var dn=names[Math.floor(Math.random()*names.length)];
   var h='<div class=sel>身世：<strong>'+(S.bg?S.bg.name:'?')+'</strong>　心性：<strong>'+(S.trait?S.trait.name:'?')+'</strong></div>';
   h+='<div class=nw><label class=nl>为自己取个名字</label><input class=ni type=text id=player-name value="'+dn+'" placeholder="输入你的名字…"></div>';
-  h+='<div style="color:#7a6a50;font-size:0.82em;margin:10px 0 4px">请选择你的夫君：</div><div class=cg id=h-grid>';
-  HUSBANDS.forEach(function(hs,i){h+='<div class=cc data-i='+i+'><div class=cn>'+hs.name+'</div><div class=cd>'+hs.desc+'</div><div class=ct><span class=ch>'+hs.bg+'</span></div></div>';});
-  h+='</div><div id=sel-h></div>';
+  h+='<div style="color:#7a6a50;font-size:0.82em;margin:10px 0 4px">你的夫君将由媒人介绍，缘分天定。</div>';
+  h+='<div id=sel-h></div>';
   document.getElementById('sel-confirm').innerHTML=h;
-  document.getElementById('h-grid').onclick=function(e){var card=e.target.closest('.cc');if(card){window._selH(parseInt(card.getAttribute('data-i')));}};
-};
-window._selH=function(i){
-  S.husband=HUSBANDS[i];
-  S.affection=50;
-  document.getElementById('sel-h').innerHTML='<div class=sel>✓ 已选择夫君：<strong>'+S.husband.name+'</strong> — '+S.husband.traits.join('、')+'</div><button class=cbtn onclick="startGame()">✓ 确认，进入新婚</button>';
+  document.getElementById('sel-h').innerHTML='<button class=cbtn onclick="startGame()">✓ 确认，进入新婚</button>';
 };
 window.startGame=function(){
   initS();
   var ni=document.getElementById('player-name');
   S.playerName=(ni&&ni.value.trim())||'念卿';
+  // 缘分天定，随机分配夫君（introMatchmaker会覆盖）
+  S.husband=HUSBANDS[Math.floor(Math.random()*HUSBANDS.length)];
+  S.affection=50;
   addLog('角色：'+S.playerName+'（'+(S.bg?S.bg.name:'')+'·'+(S.trait?S.trait.name:'')+'）');
   addLog('婚配：'+S.husband.name);
   S.flags.husbandBirthdayDay=45+Math.floor(Math.random()*21);
@@ -486,6 +483,7 @@ window.startGame=function(){
   document.getElementById('sbar').classList.add('on');
   document.getElementById('aff-wrap').classList.add('on');
   renderStats();updateAff();
+  // 媒婆介绍夫君（玩家在媒婆流程中选择）
   introMatchmaker();
 };
 
@@ -502,9 +500,13 @@ function introMatchmaker(){
   if(tid==='fierce'){extraNote='（泼辣的你直接切入正题，倒也痛快）';}
   showScene('议亲',['天刚蒙蒙亮，破旧的小院外便传来一阵敲门声。','媒婆李婶笑盈盈地推门进来，身后跟着几个提着礼盒的妇人。她上下打量着你，眼里闪着精明的光。','「好俊的姑娘！」李婶笑道，「你娘托我说合的亲事，我可费了好大劲。这镇上四户人家，个个人中龙凤——」'+extraNote,'她拍了拍手，身后的小厮抬上来四幅画像。'],choices,'🌟 重点剧情');
 }
-function m_detail(){addLog('详听媒婆介绍');showScene('四户人家',['李婶闻言，眼底闪过一丝赞许，拉过板凳坐下——','「这第一户，顾家，书香门第，祖上出过秀才，如今虽家道中落，但顾家公子生得俊俏，性子也稳重……」','「这第二户，柳家，镇上布商柳老板的独子，家里有钱，人也活络，就是爱玩了些……」','「第三户，沈家，武勋世家，祖上跟过先帝打过仗，沈家公子话不多，但心思细腻……」','「第四户，楚家——」李婶顿了顿，「寒门子弟，孤儿寡弟。模样倒是好的，就是性子有些别扭。」'],[{text:'选顾长卿（书香门第·才华文静）',next:'m_choose',type:'safe'},{text:'选柳云舟（商贾之家·人缘活泼）',next:'m_choose',type:'safe'},{text:'选沈墨白（武勋世家·细腻机敏）',next:'m_choose',type:'safe'},{text:'选楚灼（寒门子弟·傲娇别扭）',next:'m_choose',type:'risky'}],'🌟 重点剧情');}
-function m_money(){addLog('询问家境');showScene('四户人家',['李婶会心一笑，压低声音：','「要论家境，柳家最厚，布庄生意遍布三县，柳公子又是独子——啧啧。」','「但若论门第，顾家瘦死骆驼比马大，交往的都是读书人。」','「沈家名头响亮，可不复当年勇了。至于楚家——」她摇摇头，「孤儿寡弟的，能有什么好日子？」','她递上四幅画像，笑眯眯地等你自己挑。共同'],[{text:'选柳云舟（商贾之家有钱）',next:'m_choose',type:'safe'},{text:'选顾长卿（书香门第）',next:'m_choose',type:'safe'},{text:'选沈墨白（武勋世家）',next:'m_choose',type:'safe'},{text:'选楚灼（寒门子弟）',next:'m_choose',type:'risky'}],'🌟 重点剧情');}
-function m_hasty(){S.bravo+=1;addLog('催促婚期 魄力+1');showScene('四户人家',['你不耐烦地摆摆手。李婶讪讪一笑，直接把四位公子的画像铺在你面前。','「好好好，姑娘爽快！那就让我老李直说了——」','她指着四幅画像，一一报出名号家世，末了补了一句：','「这婚期嘛，女尊王朝，男子及笄便要婚配。姑娘既已年过及笈，亲事——宜早不宜迟。」'],[{text:'选顾长卿（书香门第）',next:'m_choose',type:'safe'},{text:'选柳云舟（商贾之家）',next:'m_choose',type:'safe'},{text:'选沈墨白（武勋世家）',next:'m_choose',type:'safe'},{text:'选楚灼（寒门子弟）',next:'m_choose',type:'risky'}],'🌟 重点剧情');}
+function m_detail(){addLog('详听媒婆介绍');showScene('四户人家',['李婶闻言，眼底闪过一丝赞许，拉过板凳坐下——','「这第一户，顾家，书香门第，祖上出过秀才，如今虽家道中落，但顾家公子生得俊俏，性子也稳重……」','「这第二户，柳家，镇上布商柳老板的独子，家里有钱，人也活络，就是爱玩了些……」','「第三户，沈家，武勋世家，祖上跟过先帝打过仗，沈家公子话不多，但心思细腻……」','「第四户，楚家——」李婶顿了顿，「寒门子弟，孤儿寡弟。模样倒是好的，就是性子有些别扭。」'],[{text:'选顾长卿（书香门第·才华文静）',next:'m_pick_scholar',type:'safe'},{text:'选柳云舟（商贾之家·人缘活泼）',next:'m_pick_outgoing',type:'safe'},{text:'选沈墨白（武勋世家·细腻机敏）',next:'m_pick_quiet',type:'safe'},{text:'选楚灼（寒门子弟·傲娇别扭）',next:'m_pick_tsundere',type:'risky'}],'🌟 重点剧情');}
+function m_money(){addLog('询问家境');showScene('四户人家',['李婶会心一笑，压低声音：','「要论家境，柳家最厚，布庄生意遍布三县，柳公子又是独子——啧啧。」','「但若论门第，顾家瘦死骆驼比马大，交往的都是读书人。」','「沈家名头响亮，可不复当年勇了。至于楚家——」她摇摇头，「孤儿寡弟的，能有什么好日子？」','她递上四幅画像，笑眯眯地等你自己挑。共同'],[{text:'选柳云舟（商贾之家有钱）',next:'m_pick_outgoing',type:'safe'},{text:'选顾长卿（书香门第）',next:'m_pick_scholar',type:'safe'},{text:'选沈墨白（武勋世家）',next:'m_pick_quiet',type:'safe'},{text:'选楚灼（寒门子弟）',next:'m_pick_tsundere',type:'risky'}],'🌟 重点剧情');}
+function m_hasty(){S.bravo+=1;addLog('催促婚期 魄力+1');showScene('四户人家',['你不耐烦地摆摆手。李婶讪讪一笑，直接把四位公子的画像铺在你面前。','「好好好，姑娘爽快！那就让我老李直说了——」','她指着四幅画像，一一报出名号家世，末了补了一句：','「这婚期嘛，女尊王朝，男子及笄便要婚配。姑娘既已年过及笈，亲事——宜早不宜迟。」'],[{text:'选顾长卿（书香门第）',next:'m_pick_scholar',type:'safe'},{text:'选柳云舟（商贾之家）',next:'m_pick_outgoing',type:'safe'},{text:'选沈墨白（武勋世家）',next:'m_pick_quiet',type:'safe'},{text:'选楚灼（寒门子弟）',next:'m_pick_tsundere',type:'risky'}],'🌟 重点剧情');}
+function m_pick_scholar(){S.husband=HUSBANDS.find(function(h){return h.id==='scholar';});m_choose();}
+function m_pick_outgoing(){S.husband=HUSBANDS.find(function(h){return h.id==='outgoing';});m_choose();}
+function m_pick_quiet(){S.husband=HUSBANDS.find(function(h){return h.id==='quiet';});m_choose();}
+function m_pick_tsundere(){S.husband=HUSBANDS.find(function(h){return h.id==='tsundere';});m_choose();}
 function m_choose(){showScene('新婚之夜',['三日后，大婚之日。','红烛摇曳，喜帕之下，你第一次见到他——你的夫君，'+S.husband.name+'。','他微微侧过头，目光与你相触。那一瞬间，你心里对他的第一印象是——'],[{text:'他的眼神让我心安，仿佛找到了依靠',next:'fi_0',type:'love'},{text:'他看起来和镇上其他人不太一样……',next:'fi_1',type:'smart'},{text:'我暂时看不出他的深浅，得慢慢观察',next:'fi_2',type:'smart'}],'🌟 新婚之夜');}
 function fi_0(){S.affection=65;S.wit+=1;addLog('第一印象：心安');fi_end('他的眼神让我心安，仿佛找到了依靠。');}
 function fi_1(){S.affection=58;S.social+=1;addLog('第一印象：好奇');fi_end('他看起来和镇上其他人不太一样……那种若即若离的感觉，让人心生好奇。');}
@@ -2604,6 +2606,10 @@ window.go=function(n,t){
     case 'm_detail':m_detail();break;
     case 'm_money':m_money();break;
     case 'm_hasty':m_hasty();break;
+    case 'm_pick_scholar':m_pick_scholar();break;
+    case 'm_pick_outgoing':m_pick_outgoing();break;
+    case 'm_pick_quiet':m_pick_quiet();break;
+    case 'm_pick_tsundere':m_pick_tsundere();break;
     case 'm_choose':m_choose();break;
     case 'fi_0':fi_0();break;
     case 'fi_1':fi_1();break;
