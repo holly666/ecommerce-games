@@ -1755,14 +1755,44 @@ function n_preg_final(){
   updateAff();
 }
 function pregnancy_random_event(){
-  var hname=S.husband.name;
-  var events=[
-    ['今日害喜厉害，'+hname+'吃什么吐什么，整个人瘦了一圈。',hname+'苦笑着说：「娘子……对不起，这身子真不争气……」你心疼地给他炖了碗清粥，喂他喝下。'],
-    ['今日害喜稍好，'+hname+'突然说想吃酸的。你二话不说跑遍全镇，终于寻到一筐上好的青梅。',hname+'接过时眼眶都红了：「娘子待我如此……我这辈子值了。」'],
-    ['夜里'+hname+'腿抽筋，被痛醒了。你连忙爬起来，帮他轻轻揉着小腿。',hname+'握住你的手：「娘子……有你在，我什么都不怕。」'],
-    ['今日收到了柳夫人送来的补品，说是给有孕夫君养身子用的。'+hname+'感激涕零，连声道谢，你心里也觉得暖暖的。'],
-  ];
-  var ev=events[Math.floor(Math.random()*events.length)];
+  var hname=S.husband.name;var hid=S.husband.id;
+  if(hid==='outgoing'){
+    pool=[
+      ['今日害喜厉害，'+hname+'吃什么吐什么，却还是勉强笑着说：「娘子别担心！我就是……就是最近吃太好了而已！」',hname+'躺在床上，却还在念叨：「娘子，等我好了，带我去吃那个新开的糕点铺子好不好？我请客！」'],
+      ['今日'+hname+'突然说想吃酸的，然后又想吃辣的，最后想吃甜的——「娘子！我想要天上的月亮！如果可以的话！」',hname+'不好意思地笑：「我现在满脑子都是奇怪的想法……但是就是想吃！娘子你会帮我找的对吧！」'],
+      ['夜里'+hname+'拉着你的手，兴奋地说：「娘子！我刚才梦见我们的孩子了！是个小姑娘！特别可爱！像你！」',hname+'眼睛亮晶晶的：「我要教她唱歌！教她跳舞！还要给她扎最漂亮的发髻！」'],
+      [hname+'收到了柳夫人送来的补品，眼睛一亮：「哇！柳夫人对我也太好了吧！娘子，我们以后一定要好好报答她！」他已经开始盘算要送什么回礼了。'],
+    ];
+  } else if(hid==='scholar'){
+    pool=[
+      ['今日害喜厉害，'+hname+'脸色苍白，却还是轻声说：「娘子……委屈你了，我这身子……不成样子。」',hname+'躺在床边，手里还拿着一本书：「我方才读到一首写给孩子的诗……你想听吗？我念给你听。」'],
+      ['害喜稍好，'+hname+'坐在窗边，轻声说：「娘子，我这些日子在想——我们的孩子以后会是什么样的人呢？」',hname+'的眼神温柔：「我希望他正直、善良、有担当。无论男女，我都会教他读书明理。」'],
+      ['夜里'+hname+'辗转难眠，轻声说：「娘子……我从前总觉得自己是孤独的。但现在，有你，有这个孩子……」他的声音微微颤抖。',hname+'：「我真的很幸福。」'],
+      [hname+'收到补品后，仔细地看说明：「这是上好的燕窝……娘子，我们以后有钱了，也这样善待别人。」他的眼神里满是温柔和感恩。'],
+    ];
+  } else if(hid==='quiet'){
+    pool=[
+      ['今日害喜厉害，'+hname+'一个字都不说，只是紧紧抓着你的袖子。',hname+'难受得厉害，却还是轻声道：「娘子……你别担心。我……没事的。」他的难受都藏在眼神里。'],
+      ['害喜稍好，'+hname+'安静地坐在窗边，望着窗外发呆。',hname+'轻声说：「娘子……这样的日子，真好。」他没有多说，但他的眼神里满是感激和满足。'],
+      ['夜里'+hname+'辗转难眠，却也不吵你，只是静静地依偎在你身边。',hname+'在黑暗中轻声说：「娘子……谢谢你。」就这一句，却重过千言万语。'],
+      [hname+'收到了柳夫人送来的补品，只是微微点头：「多谢了。」他比谁都记得谁对他们好，只是不善言辞。'],
+    ];
+  } else if(hid==='tsundere'){
+    pool=[
+      ['今日害喜厉害，'+hname+'躺在床上，嘴硬地说：「我……我才没有不舒服！你别、别担心！」',hname+'转过头去，但他的手紧紧抓着你的袖子不肯放：「你就、就坐一会儿不行吗！谁、谁要你陪了！」'],
+      ['害喜稍好，'+hname+'突然说想吃酸的。「才、才不是因为怀孕才想吃的！就是我刚好想吃而已！」',hname+'吃着你找来的酸梅，嘴上还说：「凑合……凑合能吃吧。」但他吃得很开心。'],
+      ['夜里'+hname+'拉着你的袖子，小声说：「娘子……你、你能不能陪我一会儿？就一会儿！」',hname+'赶紧补充：「才、才不是害怕呢！就是……就是担心孩子而已！你、你快过来！」'],
+      [hname+'收到了补品，别扭地说：「哼，谁、谁要她送东西了！我自己也能买到！」但他小心翼翼地把补品收好，明显很感动。'],
+    ];
+  } else {
+    pool=[
+      ['今日害喜厉害，'+hname+'吃什么吐什么，整个人瘦了一圈。',hname+'苦笑着说：「娘子……对不起，这身子真不争气……」你心疼地给他炖了碗清粥，喂他喝下。'],
+      ['今日害喜稍好，'+hname+'突然说想吃酸的。你二话不说跑遍全镇，终于寻到一筐上好的青梅。',hname+'接过时眼眶都红了：「娘子待我如此……我这辈子值了。」'],
+      ['夜里'+hname+'腿抽筋，被痛醒了。你连忙爬起来，帮他轻轻揉着小腿。',hname+'握住你的手：「娘子……有你在，我什么都不怕。」'],
+      ['今日收到了柳夫人送来的补品，说是给有孕夫君养身子用的。'+hname+'感激涕零，连声道谢，你心里也觉得暖暖的。'],
+    ];
+  }
+  var ev=pool[Math.floor(Math.random()*pool.length)];
   S.affection=Math.min(100,S.affection+2);
   addLog('孕期小事 好感+2');
   showScene('孕期日常',ev,[{text:'继续养胎',next:'n_sleep',type:'safe'}],'🤰 孕期');
@@ -1785,7 +1815,7 @@ function makeChild(name,gender,motherId){
   };
 }
 function give_birth(){
-  var hname=S.husband.name;
+  var hname=S.husband.name;var hid=S.husband.id;
   S.goodEventToday=true;
   var isBoy=Math.random()>0.5;
   var childName=isBoy?['霖儿','昭儿','煜儿','安儿','麒儿'][Math.floor(Math.random()*5)]:['婉儿','婷儿','晴儿','月儿','瑶儿'][Math.floor(Math.random()*5)];
@@ -1794,21 +1824,45 @@ function give_birth(){
   S.children=S.children||[];
   var child=makeChild(childName,isBoy?'男':'女',null);
   S.children.push(child);
-  // 有孩子后正夫更顾家
   S.affection=Math.min(100,S.affection+15+5);
   addLog('孩子出生！'+childName+'（'+child.personality+'）好感+20');
   var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
-  showScene('临盆',['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……谢谢你让我有了这个孩子……」','孩子取名「'+childName+'」，是个'+child.personality+'的孩子。（'+statLine+'）'], [{text:'抱抱我们的孩子',next:'child_scene',type:'love'}],'🎉 生产：'+childName);
+  var sceneTexts=[];
+  if(hid==='outgoing'){
+    sceneTexts=['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。',hname+'虽然痛得厉害，却还在笑：「娘子……我、我没事……你不用担心……」','经过一夜的努力，窗外第一缕阳光照进来时——「哇——」一声清亮的啼哭打破了寂静！','「是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'虚弱地躺在床上，但眼睛亮亮的：「娘子！！让我看看！！是我们的孩子！！」他激动得泣不成声，却还在笑：「谢谢你娘子！！谢谢你！！我好幸福！！」'];
+  } else if(hid==='scholar'){
+    sceneTexts=['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。',hname+'紧紧抓着床单，咬着牙不让自己叫出声来，每一次阵痛来临时轻声念着诗句。','经过一夜的努力，清晨的第一缕阳光照进窗内时——「哇——」一声清亮的啼哭打破了寂静。','「恭喜公子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'虚弱地躺在床上，但看到孩子的那一刻，眼里满是柔情。他轻声说：「娘子……谢谢你……这个家，因为有了你和孩子，完整了。」'];
+  } else if(hid==='quiet'){
+    sceneTexts=['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。',hname+'全程没有叫喊，只是紧紧抓着你的手，每一次阵痛都让他额头上布满汗珠，一声都没有哼。','当孩子终于生下来时——「哇——」一声啼哭，'+hname+'紧紧地抱住了你，把头埋在你的肩上：「娘子……谢谢你……」他哭了，却一句话都没有多说。','「是个'+(isBoy?'小公子':'小千金')+'！」产婆抱着孩子。'+hname+'接过孩子，抱了很久很久，轻轻地亲了他/她的额头。'];
+  } else if(hid==='tsundere'){
+    sceneTexts=['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。',hname+'痛得忍不住叫出声，却又强撑着说：「我、我才没有很痛呢！你、你别大惊小怪的！」但他紧紧抓着你的手，指节都发白了。','经过一夜的努力，当孩子终于生下来时——「哇——」一声啼哭，'+hname+'完全忍不住了，眼泪哗哗地流。',hname+'虚弱地说：「才、才不是感动呢！就是……就是太累了！」但他抱着孩子不肯撒手，一边哭一边笑：「我有孩子了……我的孩子……」'];
+  } else {
+    sceneTexts=['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……谢谢你让我有了这个孩子……」','孩子取名「'+childName+'」，是个'+child.personality+'的孩子。（'+statLine+'）'];
+  }
+  showScene('临盆',sceneTexts,[{text:'抱抱我们的孩子',next:'child_scene',type:'love'}],'🎉 生产：'+childName);
   updateAff();
 }
+
 function child_scene(){
-  var hname=S.husband.name;
+  var hname=S.husband.name;var hid=S.husband.id;
   var child=S.children[S.children.length-1];
   var gender=child.gender==='男'?'小公子':'小千金';
   S.affection=Math.min(100,S.affection+5);
   addLog('一家三口 好感+5');
   var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
-  showScene('有了孩子的生活',[hname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。','他常常抱着孩子，轻声唱着歌，歌声虽然不怎么好听，却无比温柔。',gender+'「'+child.name+'」（'+child.personality+'）渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。（'+statLine+'）'], [{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
+  var texts=[];
+  if(hid==='outgoing'){
+    texts=[hname+'每天都围着孩子转，笑声不断：「娘子你看！'+child.name+'会拍手了！」',hname+'常常抱着孩子去集市上显摆：「快来看我儿子/女儿！可爱吧！像不像我！」路人纷纷侧目，他却浑然不觉，只顾着炫耀自己的孩子。',gender+'「'+child.name+'」（'+child.personality+'）在'+hname+'的熏陶下，也变得爱说爱笑，整天家里都热热闹闹的。（'+statLine+'）'];
+  } else if(hid==='scholar'){
+    texts=[hname+'每天都陪着孩子，轻声念诗给他/她听：「人之初，性本善」',hname+'在灯下给孩子写成长日记：「今日'+child.name+'第一次喊人——喊的是『娘』。」他抬头看你，眼里满是柔情。',gender+'「'+child.name+'」（'+child.personality+'）在'+hname+'的熏陶下，也爱上了书本，常常安静地依偎在父亲身边。（'+statLine+'）'];
+  } else if(hid==='quiet'){
+    texts=[hname+'每天都安安静静地照顾孩子，虽然话不多，但每一个动作都饱含深情。',hname+'常常抱着孩子坐在窗边，望着外面的世界，轻声给孩子讲这是什么、那是什么。',gender+'「'+child.name+'」（'+child.personality+'）也学会了安静地依偎在父亲身边，不需要言语，一个眼神就能懂彼此。（'+statLine+'）'];
+  } else if(hid==='tsundere'){
+    texts=[hname+'每天都围着孩子转，嘴上却说：「哼，谁、谁稀罕照顾他/她了！我就是顺手而已！」',hname+'常常抱着孩子亲了又亲，但见你来了又赶紧放下：「我、我才没有过度溺爱呢！他/她哭了我才抱的！」但孩子的笑容说明了一切。',gender+'「'+child.name+'」（'+child.personality+'）在'+hname+'的照顾下健康成长，整天粘着父亲，'+hname+'嘴上说烦，却总是第一个迎上去。（'+statLine+'）'];
+  } else {
+    texts=[hname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。','他常常抱着孩子，轻声唱着歌，歌声虽然不怎么好听，却无比温柔。',gender+'「'+child.name+'」（'+child.personality+'）渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。（'+statLine+'）'];
+  }
+  showScene('有了孩子的生活',texts,[{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
   updateAff();
 }
 
