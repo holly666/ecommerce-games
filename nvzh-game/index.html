@@ -177,7 +177,11 @@ function showScene(title,text,choices,etag){
     var btn=e.target.closest('.chc');
     if(btn&&!btn.disabled){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
   };
+  // 清除旧夜间事件处理器，防止隐藏后仍被触发导致重复go()调用
+  document.getElementById('night-choices').onclick=null;
   document.getElementById('night-panel').classList.remove('on');
+  // 诊断日志
+  console.log('showScene done, choices innerHTML:', document.getElementById('choices').innerHTML.substring(0,100));
 }
 function showNight(){
   document.getElementById('scene').classList.remove('on');
