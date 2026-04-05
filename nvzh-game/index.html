@@ -144,7 +144,7 @@ var S={};
 var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
 var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
 function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
-function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.concubinePregnant)S.concubinePregnant={};if(!S.concubinePregnancyDay)S.concubinePregnancyDay={};if(S._currentConcubine===undefined)S._currentConcubine=null;if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(!S.examDay)S.examDay=0;if(!S.interviewPassed)S.interviewPassed=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}}
+function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.concubinePregnant)S.concubinePregnant={};if(!S.concubinePregnancyDay)S.concubinePregnancyDay={};if(S._currentConcubine===undefined)S._currentConcubine=null;if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(!S.examDay)S.examDay=0;if(!S.interviewPassed)S.interviewPassed=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}if(!S.husbandMood)S.husbandMood='neutral';if(!S.goodEventToday)S.goodEventToday=false;if(!S.touchedConcubineToday)S.touchedConcubineToday=false;}
 function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
 function toggleLog(){var lw=document.getElementById('log-wrap');if(lw)lw.classList.toggle('on');}
 function saveGame(){localStorage.setItem('nvzh_v5',JSON.stringify(S));addLog('已存档');}
@@ -251,6 +251,17 @@ function showNight(){
       opts.push({text:'去'+cn0+ptag+'房里坐坐',next:'n_concubine_do_'+c0,type:'love',tag:'🌸'});
     } else {
       opts.push({text:'去妾室房中（'+cids.length+'人）',next:'n_concubine_select',type:'love',tag:'🌸'});
+    }
+  }
+
+  // 孩子选项
+  if(S.children&&S.children.length>0){
+    if(S.children.length===1){
+      var ch=S.children[0];
+      var chAge=ch.age||0;
+      opts.push({text:'去看看'+ch.name+'（'+chAge+'天）',next:'n_child_do_0',type:'love',tag:'👶'});
+    } else {
+      opts.push({text:'去看孩子们（'+S.children.length+'人）',next:'n_child_select',type:'love',tag:'👶'});
     }
   }
 
@@ -388,6 +399,15 @@ function showMorning(){
   var weather=['晴朗的早晨','薄云遮日','微风轻拂','天色阴沉'][Math.floor(Math.random()*4)];
   var greet=getMorningGreeting();
   var choices=[];
+  // 仕途入口：只要还不是官员，就可以看到
+  var govOpt=null;
+  if(!S.isOfficial){
+    if(S.examDay>0&&!S.interviewPassed&&S.day>=S.examDay+3){
+      govOpt={text:'去县衙参加面试！',next:'gov_interview',type:'gov',tag:'🏛'};
+    } else {
+      govOpt={text:'去县衙看看（仕途入口）',next:'gov_enlist',type:'gov',tag:'🏛'};
+    }
+  }
   if(idt===1){
     choices=[
       {text:'去集市逛逛，看有没有商机',next:'go_market',type:'safe'},
@@ -395,13 +415,8 @@ function showMorning(){
       {text:'和'+hname+'聊聊天',next:'talk_husband_early',type:'love'},
       {text:'去镇上打听消息',next:'go_town',type:'smart'},
     ];
-    // 笔试通过但未面试：提示面试
-    if(S.examDay>0&&!S.interviewPassed&&S.day>=S.examDay+3){
-      choices.unshift({text:'去县衙参加面试！',next:'gov_interview',type:'gov',tag:'🏛'});
-    } else {
-      choices.push({text:'去县衙报名女吏（仕途入口）',next:'gov_enlist',type:'gov'});
-    }
-  } else if(idt>=2&&S.isMerchant){
+    if(govOpt)choices.push(govOpt);
+  } else if(S.isMerchant){
     choices=[
       {text:'经营布庄（老板模式）',next:'manage_shop',type:'safe'},
       {text:'查看今日有无生意要谈',next:'merchant_negotiate',type:'smart'},
@@ -410,7 +425,8 @@ function showMorning(){
       {text:'去镇上打听行情',next:'go_town',type:'smart'},
       {text:'参加社交活动',next:'social_event',type:'love'},
     ];
-  } else if(idt>=2&&S.isOfficial){
+    if(govOpt)choices.push(govOpt);
+  } else if(S.isOfficial){
     choices=[
       {text:'去县衙办公务',next:'gov_work',type:'gov'},
       {text:'处理纠纷',next:'gov_dispute',type:'gov'},
@@ -424,6 +440,7 @@ function showMorning(){
       {text:'和'+hname+'聊聊',next:'talk_husband_early',type:'love'},
       {text:'去镇上打听消息',next:'go_town',type:'smart'},
     ];
+    if(govOpt)choices.push(govOpt);
   }
     // 随机在清晨遇到新人
   if(S.identity>=2&&Math.random()<0.12){
@@ -1035,6 +1052,21 @@ function n_sleep(){
     });
   }
 
+  // 孩子成长：每日age++，每10天触发育儿事件（每次最多触发一个）
+  if(S.children&&S.children.length>0&&!S.flags.childEventShown){
+    S.flags.childEventShown=true;
+    for(var ci=0;ci<S.children.length;ci++){
+      var ch=S.children[ci];
+      ch.age=(ch.age||0)+1;
+      if(ch.age>0&&ch.age%10===0){
+        S._currentChild=ci;
+        raise_child_event(ci);
+        return; // 事件会暂停流程，等用户交互结束后再继续
+      }
+    }
+    S.flags.childEventShown=false;
+  }
+
   addLog('第'+S.day+'日开始');
   renderStats();updateAff();
   showMorning();
@@ -1141,17 +1173,36 @@ function pregnancy_random_event(){
   showScene('孕期日常',ev,[{text:'继续养胎',next:'n_sleep',type:'safe'}],'🤰 孕期');
   updateAff();
 }
+function makeChild(name,gender,motherId){
+  var personalities=['活泼','安静','倔强','乖巧','好奇','胆小','机灵','慢热'];
+  var pers=personalities[Math.floor(Math.random()*personalities.length)];
+  return {
+    name:name,
+    gender:gender,
+    dayBorn:S.day,
+    motherId:motherId||null,
+    personality:pers,
+    physique:30+Math.floor(Math.random()*50),
+    intelligence:30+Math.floor(Math.random()*50),
+    empathy:30+Math.floor(Math.random()*50),
+    martial:20+Math.floor(Math.random()*40),
+    age:0
+  };
+}
 function give_birth(){
   var hname=S.husband.name;
   var isBoy=Math.random()>0.5;
-  var childName=isBoy?['霖儿','昭儿','煜儿'][Math.floor(Math.random()*3)]:['婉儿','婷儿','晴儿'][Math.floor(Math.random()*3)];
+  var childName=isBoy?['霖儿','昭儿','煜儿','安儿','麒儿'][Math.floor(Math.random()*5)]:['婉儿','婷儿','晴儿','月儿','瑶儿'][Math.floor(Math.random()*5)];
   S.husband.isPregnant=false;
   S.husband.pregnancyDay=0;
   S.children=S.children||[];
-  S.children.push({name:childName,gender:isBoy?'男':'女',dayBorn:S.day});
-  S.affection=Math.min(100,S.affection+15);
-  addLog('孩子出生！'+childName+(isBoy?'男孩':'女孩')+'！好感+15');
-  showScene('临盆',['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……谢谢你让我有了这个孩子……」'], [{text:'抱抱我们的孩子',next:'child_scene',type:'love'}],'🎉 生产');
+  var child=makeChild(childName,isBoy?'男':'女',null);
+  S.children.push(child);
+  // 有孩子后正夫更顾家
+  S.affection=Math.min(100,S.affection+15+5);
+  addLog('孩子出生！'+childName+'（'+child.personality+'）好感+20');
+  var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
+  showScene('临盆',['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……谢谢你让我有了这个孩子……」','孩子取名「'+childName+'」，是个'+child.personality+'的孩子。（'+statLine+'）'], [{text:'抱抱我们的孩子',next:'child_scene',type:'love'}],'🎉 生产：'+childName);
   updateAff();
 }
 function child_scene(){
@@ -1160,7 +1211,8 @@ function child_scene(){
   var gender=child.gender==='男'?'小公子':'小千金';
   S.affection=Math.min(100,S.affection+5);
   addLog('一家三口 好感+5');
-  showScene('有了孩子的生活',[hname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。','他常常抱着孩子，轻声唱着歌，歌声虽然不怎么好听，却无比温柔。',gender+'「'+child.name+'」渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。'], [{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
+  var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
+  showScene('有了孩子的生活',[hname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。','他常常抱着孩子，轻声唱着歌，歌声虽然不怎么好听，却无比温柔。',gender+'「'+child.name+'」（'+child.personality+'）渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。（'+statLine+'）'], [{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
   updateAff();
 }
 
@@ -1418,14 +1470,16 @@ function concubine_give_birth(){
   var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
   var mname=man?man.name:cid;
   var isBoy=Math.random()>0.5;
-  var childName=isBoy?['霖儿','昭儿','煜儿'][Math.floor(Math.random()*3)]:['婉儿','婷儿','晴儿'][Math.floor(Math.random()*3)];
+  var childName=isBoy?['霖儿','昭儿','煜儿','安儿','麒儿'][Math.floor(Math.random()*5)]:['婉儿','婷儿','晴儿','月儿','瑶儿'][Math.floor(Math.random()*5)];
   S.concubinePregnant[cid]=false;
   S.concubinePregnancyDay[cid]=0;
   S.children=S.children||[];
-  S.children.push({name:childName,gender:isBoy?'男':'女',dayBorn:S.day,motherId:cid});
-  S.concubineAffection[cid]=Math.min(100,(S.concubineAffection[cid]||50)+15);
-  addLog('妾室'+mname+'生子！'+childName+(isBoy?'男孩':'女孩')+'！好感+15');
-  showScene('临盆',['夜里，'+mname+'突然感到阵痛袭来，你连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',mname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……我们的孩子……」'], [{text:'抱抱我们的孩子',next:'concubine_child_scene',type:'love'}],'🎉 妾室生产');
+  var child=makeChild(childName,isBoy?'男':'女',cid);
+  S.children.push(child);
+  S.concubineAffection[cid]=Math.min(100,(S.concubineAffection[cid]||50)+15+5);
+  addLog('妾室'+mname+'生子！'+childName+'（'+child.personality+'）好感+20');
+  var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
+  showScene('临盆',['夜里，'+mname+'突然感到阵痛袭来，你连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',mname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……我们的孩子……」','孩子取名「'+childName+'」，是个'+child.personality+'的孩子。（'+statLine+'）'], [{text:'抱抱我们的孩子',next:'concubine_child_scene',type:'love'}],'🎉 妾室生产：'+childName);
 }
 function concubine_child_scene(){
   var cid=S._currentConcubine||(S.concubines&&S.concubines[0]);
@@ -1435,7 +1489,148 @@ function concubine_child_scene(){
   var gender=child.gender==='男'?'小公子':'小千金';
   S.concubineAffection[cid]=Math.min(100,(S.concubineAffection[cid]||50)+5);
   addLog('妾室一家 好感+5');
-  showScene('有了孩子的生活',[mname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。',gender+'「'+child.name+'」渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。'],[{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
+  var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
+  showScene('有了孩子的生活',[mname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。',gender+'「'+child.name+'」（'+child.personality+'）渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。（'+statLine+'）'],[{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
+}
+
+// ========== 育儿系统 ==========
+// 多孩子选择
+function n_child_select(){
+  var choices=S.children.map(function(ch,i){
+    var gender=ch.gender==='男'?'男孩':'女孩';
+    return {text:ch.name+'（'+gender+'·'+ch.personality+'·'+ch.age+'天）— 查看',next:'n_child_do_'+i,type:'love'};
+  });
+  choices.push({text:'返回',next:'n_sleep',type:'safe'});
+  showScene('选择孩子',S.children.map(function(ch){
+    return ch.name+': 体质'+ch.physique+' 悟性'+ch.intelligence+' 情商'+ch.empathy+' 武力'+ch.martial;
+  }).join('\n'),choices);
+}
+
+// 育儿事件（每10天触发）
+function raise_child_event(idx){
+  var ch=S.children[idx];
+  if(!ch)return;
+  var hname=S.husband.name;
+  var childAge=ch.age||0;
+  var gender=ch.gender==='男'?'小公子':'小千金';
+
+  // 决定由谁来触发（取决于孩子母亲）
+  var parentName=ch.motherId?(AVAILABLE_MEN.find(function(m){return m.id===ch.motherId;})||{name:ch.motherId}).name:hname;
+  var statLine='体质:'+ch.physique+' 悟性:'+ch.intelligence+' 情商:'+ch.empathy+' 武力:'+ch.martial;
+  var intro=parentName+'抱着'+gender+'「'+ch.name+'」来找你：「娘子，'+ch.name+'满'+childAge+'天了，今日想和娘子一起带孩子。」\n'+gender+'「'+ch.name+'」是个'+ch.personality+'的孩子，当前：'+statLine;
+
+  var choices=[
+    {text:'陪孩子玩耍（+体质）',next:'child_play_'+idx,type:'safe'},
+    {text:'教孩子认字（+悟性）',next:'child_study_'+idx,type:'smart'},
+    {text:'带孩子见人（+情商）',next:'child_social_'+idx,type:'love'},
+    {text:'陪孩子练功（+武力）',next:'child_train_'+idx,type:'risky'},
+  ];
+  showScene(parentName+'带孩子来（满'+childAge+'天）',[intro],choices,'👶 育儿事件：'+ch.name);
+}
+
+// 陪孩子玩耍 → 体质
+function child_play(idx){
+  var ch=S.children[idx];
+  if(!ch){go('n_sleep','safe');return;}
+  ch.physique=Math.min(100,ch.physique+3+Math.floor(Math.random()*4));
+  addLog(ch.name+'体质+'+Math.min(100-ch.physique+3+Math.floor(Math.random()*4),7));
+  var gender=ch.gender==='男'?'小公子':'小千金';
+  var scenes=[
+    [gender+'「'+ch.name+'」在院子里追着蝴蝶跑，摔了一跤也不哭，爬起来继续追。','你陪他玩了一下午，他的脸红扑扑的，晚饭吃得格外香。','体质上升！'],
+    ['你带着'+ch.name+'去河边捡石头，他捡到一块特别光滑的，如获至宝。','「娘子你看！这是我的宝贝！」他举着石头，眼睛亮亮的。','体质上升！'],
+    ['你带'+ch.name+'在院子里踢球，他跑得飞快，笑得咯咯响。',ch.name+'是个'+ch.personality+'的孩子，精力充沛得让你都赶不上。','体质上升！'],
+  ];
+  var sc=scenes[Math.floor(Math.random()*scenes.length)];
+  showScene('育儿：陪'+ch.name+'玩耍',sc.concat(['（体质现为'+ch.physique+'）']),[{text:'今日育儿结束',next:'n_sleep',type:'safe'}],'👶 体质');
+}
+
+// 教孩子认字 → 悟性
+function child_study(idx){
+  var ch=S.children[idx];
+  if(!ch){go('n_sleep','safe');return;}
+  ch.intelligence=Math.min(100,ch.intelligence+3+Math.floor(Math.random()*4));
+  var gender=ch.gender==='男'?'小公子':'小千金';
+  var scenes=[
+    [gender+'「'+ch.name+'」歪着小脑袋，认真地跟着你念：「天地人……」',ch.name+'记性很好，一遍就记住了。你心里暗暗惊奇：这孩子是块读书的料。'],
+    ['你拿树枝在地上写字，'+ch.name+'蹲在旁边看得出神。',ch.name+'虽然还不会写，但已经在心里默默记下了每个字的形状。'],
+    ['你给'+ch.name+'讲故事，他听得眼睛都不眨。',ch.name+'突然问：「娘子，天空外面是什么？」你一时答不上来，忍不住笑了。'],
+  ];
+  var sc=scenes[Math.floor(Math.random()*scenes.length)];
+  showScene('育儿：教'+ch.name+'认字',sc.concat(['（悟性现为'+ch.intelligence+'）']),[{text:'今日育儿结束',next:'n_sleep',type:'safe'}],'👶 悟性');
+}
+
+// 带孩子见人 → 情商
+function child_social(idx){
+  var ch=S.children[idx];
+  if(!ch){go('n_sleep','safe');return;}
+  ch.empathy=Math.min(100,ch.empathy+3+Math.floor(Math.random()*4));
+  var gender=ch.gender==='男'?'小公子':'小千金';
+  var scenes=[
+    [gender+'「'+ch.name+'」跟着你出门，遇见邻居王婶。',ch.name+'主动打招呼：「王婶好！」王婶笑着塞给他一块糕点，他高兴地回头看你。'],
+    ['你带'+ch.name+'去集市，他好奇地看着来来往往的人群。',ch.name+'突然拉住你的袖子：「娘子，那个婆婆好像迷路了。」你一看，果然是一位找不到家的老人。'],
+    ['你带着'+ch.name+'去布庄，他安安静静地坐在一旁，不吵不闹。',ch.name+'看到你忙不过来，主动端茶给客人，客人夸他懂事。'],
+  ];
+  var sc=scenes[Math.floor(Math.random()*scenes.length)];
+  showScene('育儿：带'+ch.name+'见人',sc.concat(['（情商现为'+ch.empathy+'）']),[{text:'今日育儿结束',next:'n_sleep',type:'safe'}],'👶 情商');
+}
+
+// 陪孩子练功 → 武力
+function child_train(idx){
+  var ch=S.children[idx];
+  if(!ch){go('n_sleep','safe');return;}
+  ch.martial=Math.min(100,ch.martial+3+Math.floor(Math.random()*4));
+  var gender=ch.gender==='男'?'小公子':'小千金';
+  var scenes=[
+    [gender+'「'+ch.name+'」拿着木棍，模仿武者的样子挥来挥去。',ch.name+'虽然力气小，但一招一式有模有样。你在旁边拍手叫好，他舞得更起劲了。'],
+    ['你带'+ch.name+'在院子里蹲马步，他做得有模有样。',ch.name+'虽然只坚持了一小会儿，但眼里那股认真劲，让你忍不住笑了。'],
+    [gender+'「'+ch.name+'」拉着你比赛跑步，他跑得气喘吁吁却不肯停。',ch.name+'虽然输了，却不服气：「娘子，下次我一定跑赢你！」'],
+  ];
+  var sc=scenes[Math.floor(Math.random()*scenes.length)];
+  showScene('育儿：陪'+ch.name+'练功',sc.concat(['（武力现为'+ch.martial+'）']),[{text:'今日育儿结束',next:'n_sleep',type:'safe'}],'👶 武力');
+}
+
+// 看望孩子（晚间选项）
+function n_child_do(idx){
+  if(!S.children||!S.children[idx]){go('n_sleep','safe');return;}
+  S._currentChild=idx;
+  var ch=S.children[idx];
+  var childAge=ch.age||0;
+  var gender=ch.gender==='男'?'小公子':'小千金';
+  var parentName=ch.motherId?(AVAILABLE_MEN.find(function(m){return m.id===ch.motherId;})||{name:ch.motherId}).name:S.husband.name;
+  var statLine='体质:'+ch.physique+' 悟性:'+ch.intelligence+' 情商:'+ch.empathy+' 武力:'+ch.martial;
+
+  // 根据年龄说不同的话
+  var ageText;
+  if(childAge<10){
+    ageText=gender+'「'+ch.name+'」还在襒褓之中，睡着居多。偶尔睡醒，就眨着大眼睛看着你。';
+  } else if(childAge<30){
+    ageText=gender+'「'+ch.name+'」正满地乱爬，看到你进来，伸出小手要你抱：「娘子——」'+parentName+'在旁边笑着说：「这孩子开始学说话了。」';
+  } else if(childAge<60){
+    ageText=gender+'「'+ch.name+'」已经会走路了，见你就扑过来：「娘子！抱！」\n'+ch.name+'是个'+ch.personality+'的孩子，正在院子里追鸡玩。';
+  } else {
+    ageText=gender+'「'+ch.name+'」见你来了，蹦蹦跳跳地跑过来：「娘子！你来看我了！」\n'+ch.name+'是个'+ch.personality+'的孩子，缠着你要你讲故事。（'+statLine+'）';
+  }
+
+  var opts=[
+    {text:'陪'+ch.name+'玩耍',next:'child_play_'+idx,type:'safe'},
+    {text:'教'+ch.name+'认字',next:'child_study_'+idx,type:'smart'},
+    {text:'带'+ch.name+'出门见人',next:'child_social_'+idx,type:'love'},
+    {text:'陪'+ch.name+'练功',next:'child_train_'+idx,type:'risky'},
+    {text:'返回',next:'n_sleep',type:'safe'},
+  ];
+
+  document.getElementById('night-panel').classList.remove('on');
+  showScene('去看'+ch.name,['你在孩子房里，'+parentName+'正哄着'+ch.name+'。',ageText],null);
+  var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov'};
+  var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov'};
+  var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖',gov:'🏛'};
+  var h='';
+  opts.forEach(function(o){h+='<button class="chc '+cm[o.type]+'" data-next="'+o.next+'" data-type="'+o.type+'"><span class="tag '+tcm[o.type]+'">'+tm[o.type]+'</span> '+o.text+'</button>';});
+  document.getElementById('choices').innerHTML=h;
+  document.getElementById('choices').onclick=function(e){
+    var btn=e.target.closest('.chc');
+    if(btn){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
+  };
 }
 
 // ========== 在社交事件中遇到新人 ==========
@@ -1574,6 +1769,22 @@ window.go=function(n,t){
     case 'n_concubine_do_artisan_lin':n_concubine_do('artisan_lin');break;
     case 'n_concubine_do_scholar_lei':n_concubine_do('scholar_lei');break;
     case 'n_concubine_do_priest_ye':n_concubine_do('priest_ye');break;
+    case 'n_child_select':n_child_select();break;
+    case 'n_child_do_0':n_child_do(0);break;
+    case 'n_child_do_1':n_child_do(1);break;
+    case 'n_child_do_2':n_child_do(2);break;
+    case 'child_play_0':child_play(0);break;
+    case 'child_play_1':child_play(1);break;
+    case 'child_play_2':child_play(2);break;
+    case 'child_study_0':child_study(0);break;
+    case 'child_study_1':child_study(1);break;
+    case 'child_study_2':child_study(2);break;
+    case 'child_social_0':child_social(0);break;
+    case 'child_social_1':child_social(1);break;
+    case 'child_social_2':child_social(2);break;
+    case 'child_train_0':child_train(0);break;
+    case 'child_train_1':child_train(1);break;
+    case 'child_train_2':child_train(2);break;
     case 'meet_new_man':meet_new_man(S._lastManId||'');break;
 
     // 认识新人路由（按id动态分发）
