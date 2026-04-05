@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏷️ 客户标签分类挑战</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#1a1a2e;color:#eee;min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:20px}
+
+/* 通用按钮 */
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;padding:14px 40px;font-size:1.05em;border-radius:50px;cursor:pointer;transition:all .2s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(102,126,234,.4)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* 开始页 */
+#start-screen{text-align:center;padding-top:40px}
+.title{font-size:2.4em;color:#ffd700;margin-bottom:8px;text-shadow:0 2px 10px rgba(255,215,0,.3)}
+.subtitle{color:#a78bfa;font-size:1.1em;margin-bottom:6px;letter-spacing:2px}
+.desc-box{background:rgba(255,255,255,.05);border-radius:16px;padding:24px;margin:24px auto;max-width:600px;text-align:left;line-height:1.8}
+.desc-box h3{color:#ffd700;margin-bottom:12px}
+.desc-box li{margin-bottom:8px;color:#ccc}
+.tag-info{background:rgba(102,126,234,.15);border:1px solid #667eea;border-radius:12px;padding:16px;margin:16px 0;text-align:left}
+.tag-info span{color:#a78bfa}
+.progress-note{color:#888;font-size:.9em;margin-top:20px}
+
+/* 游戏区 */
+#game-screen{display:none}
+.screen-title{color:#ffd700;font-size:1.5em;text-align:center;margin-bottom:16px}
+.level-badge{display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:4px 16px;border-radius:20px;font-size:.85em;margin-bottom:12px}
+.level-intro{text-align:center;color:#a78bfa;margin-bottom:20px;font-size:.95em}
+
+/* 判断题 */
+.tf-container{display:flex;flex-direction:column;gap:16px;max-width:700px;margin:0 auto}
+.tf-card{background:#16213e;border:2px solid #334;border-radius:16px;padding:20px 24px;cursor:pointer;transition:all .2s;position:relative}
+.tf-card:hover{border-color:#667eea;transform:translateX(4px)}
+.tf-card.selected{border-color:#ffd700;background:rgba(255,215,0,.08)}
+.tf-card.correct{border-color:#51cf66;background:rgba(81,207,102,.1)}
+.tf-card.wrong{border-color:#ff6b6b;background:rgba(255,107,107,.1)}
+.tf-text{font-size:1.05em;line-height:1.6;padding-right:60px}
+.tf-icons{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.8em;opacity:.6}
+.tf-card.correct .tf-icons,.tf-card.wrong .tf-icons{opacity:1}
+.tf-btns{display:flex;gap:16px;justify-content:center;margin-top:16px}
+.tf-btn{width:80px;height:80px;border-radius:50%;border:2px solid #667eea;background:#16213e;color:#fff;font-size:1.1em;cursor:pointer;transition:all .2s}
+.tf-btn:hover{background:#667eea;transform:scale(1.08)}
+.tf-btn.selected{background:#667eea;border-color:#ffd700}
+
+/* 反馈框 */
+.feedback-box{border-radius:16px;padding:20px;margin-top:16px;text-align:center;font-size:.95em;line-height:1.7;display:none}
+.feedback-box.show{display:block}
+.feedback-correct{background:rgba(81,207,102,.15);border:1px solid #51cf66;color:#51cf66}
+.feedback-wrong{background:rgba(255,107,107,.15);border:1px solid #ff6b6b;color:#ff6b6b}
+
+/* 拖拽归类 */
+.drag-area{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;min-height:60px;padding:16px;background:rgba(255,255,255,.03);border-radius:12px;border:2px dashed #334}
+.drag-area .tag-chip{display:inline-block;background:#16213e;border:2px solid #667eea;color:#ddd;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:.92em;transition:all .2s;user-select:none}
+.drag-area .tag-chip:hover{border-color:#ffd700;transform:translateY(-2px)}
+.drag-area .tag-chip.selected{border-color:#ffd700;background:rgba(255,215,0,.15);transform:scale(1.05)}
+.drag-area .tag-chip.placed{opacity:.3;cursor:not-allowed;border-color:#334}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:700px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+.cat-box{border-radius:12px;padding:14px;min-height:100px;cursor:pointer;transition:all .2s;position:relative}
+.cat-box:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.cat-box.target-hover{transform:scale(1.03);box-shadow:0 0 20px rgba(255,215,0,.4)}
+.cat-name{font-weight:bold;font-size:.95em;margin-bottom:6px}
+.cat-hint{font-size:.75em;opacity:.7}
+.cat-box .placed-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.placed-chip{display:inline-block;padding:4px 10px;border-radius:14px;font-size:.78em;background:rgba(255,255,255,.2);cursor:pointer;transition:all .15s}
+.placed-chip:hover{background:rgba(255,255,255,.35)}
+
+/* 进度条 */
+.progress-bar{height:6px;background:#334;border-radius:3px;margin:16px 0;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);border-radius:3px;transition:width .4s}
+.round-indicator{text-align:center;color:#888;font-size:.85em;margin-bottom:20px}
+
+/* 结果页 */
+#result-screen{display:none;text-align:center;padding-top:30px}
+.result-card{background:#16213e;border-radius:16px;padding:24px;margin-bottom:20px;text-align:left;max-width:700px;margin-left:auto;margin-right:auto}
+.result-title{color:#ffd700;font-size:1.3em;margin-bottom:16px;text-align:center}
+.result-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #2a2a4a}
+.result-row:last-child{border-bottom:none}
+.score-big{font-size:3em;color:#ffd700;text-align:center;margin:20px 0}
+.score-big span{font-size:.4em;color:#888;display:block}
+.retry-btn{background:linear-gradient(135deg,#ff6b6b,#ee5a24);border:none;color:#fff;padding:12px 32px;font-size:1em;border-radius:50px;cursor:pointer}
+.next-btn{background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;padding:12px 32px;font-size:1em;border-radius:50px;cursor:pointer}
+.action-row{display:flex;gap:16px;justify-content:center;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 开始页面 -->
+<div id="start-screen">
+  <h1 class="title">🏷️ 客户标签分类挑战</h1>
+  <p class="subtitle">电商运营 · 标签体系</p>
+  <div class="desc-box">
+    <h3>📚 知识点</h3>
+    <ul>
+      <li>★★ 理解标签的定义</li>
+      <li>★★ 了解标签体系的作用</li>
+      <li>★★★ 客户标签的定义、作用、类型</li>
+      <li>★★★ 建立客户标签的方法</li>
+    </ul>
+    <div class="tag-info">
+      <strong>📖 标签定义：</strong>用于描述和分类对象（客户、商品、内容等）的<span>关键词或短语</span>。
+    </div>
+    <p class="progress-note">⏱️ 课堂时间：40分钟 &nbsp;|&nbsp; 📍 共4关</p>
+  </div>
+  <button class="btn-primary" onclick="startGame()">🚀 开始挑战</button>
+</div>
+
+<!-- 游戏页面 -->
+<div id="game-screen">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="round-indicator" id="round-indicator">第 1 / 4 关</div>
+  <div style="text-align:center">
+    <span class="level-badge" id="level-badge">第1关</span>
+  </div>
+  <h2 class="screen-title" id="screen-title"></h2>
+  <p class="level-intro" id="level-intro"></p>
+
+  <!-- 判断题区域 -->
+  <div id="tf-area" style="display:none">
+    <div class="tf-container" id="tf-container"></div>
+    <div id="tf-feedback" class="feedback-box"></div>
+    <div class="tf-btns" id="tf-btns">
+      <button class="tf-btn" onclick="submitTF(true)">✓ 对</button>
+      <button class="tf-btn" onclick="submitTF(false)">✗ 错</button>
+    </div>
+  </div>
+
+  <!-- 拖拽归类区域 -->
+  <div id="drag-area" style="display:none">
+    <div class="drag-area" id="tag-pool"></div>
+    <div class="cat-grid" id="cat-grid"></div>
+    <div id="drag-feedback" class="feedback-box"></div>
+    <div style="text-align:center;margin-top:16px">
+      <button class="btn-primary" id="submit-btn" onclick="submitDrag()">📋 提交答案</button>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:20px" id="game-actions">
+    <button class="btn-primary" id="next-btn" onclick="nextRound()" style="display:none">下一关 →</button>
+  </div>
+</div>
+
+<!-- 结果页面 -->
+<div id="result-screen">
+  <h1 class="title" style="font-size:2em;margin-bottom:20px">🎉 挑战完成！</h1>
+  <div class="result-card">
+    <div class="result-title">📊 答题详情</div>
+    <div id="result-rows"></div>
+  </div>
+  <div class="score-big" id="score-big"></div>
+  <div class="action-row">
+    <button class="retry-btn" onclick="retryGame()">🔄 再来一次</button>
+    <button class="next-btn" onclick="retryGame()">✅ 返回首页</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ============ 游戏数据 ============
+const GD = {
+  rounds: [
+    {
+      id: 1,
+      type: "concept",
+      levelTitle: "第1关 · 标签是什么？",
+      intro: "判断以下说法的对错：",
+      questions: [
+        {
+          text: "「标签」是用于描述和分类对象（如客户、商品、内容等）的关键词或短语。",
+          answer: true,
+          feedbackCorrect: "✅ 正确！标签的定义就是：用于描述和分类对象的关键词或短语。",
+          feedbackWrong: "⚠️ 这句话是正确的哦。标签的定义就是：用于描述和分类对象的关键词或短语。"
+        },
+        {
+          text: "建立标签体系没什么用，只是让数据看起来整齐。",
+          answer: false,
+          feedbackCorrect: "✅ 你答对了！标签体系的作用包括：精准营销、个性化推荐、优化客户关系、数据驱动决策、提升运营效率、促进产品优化。",
+          feedbackWrong: "⚠️ 错！标签体系的作用包括：精准营销、个性化推荐、优化客户关系、数据驱动决策、提升运营效率、促进产品优化。"
+        },
+        {
+          text: "标签体系可以帮助商家实现精准营销和个性化推荐。",
+          answer: true,
+          feedbackCorrect: "✅ 正确！标签体系的核心作用之一就是精准触达目标客户。",
+          feedbackWrong: "⚠️ 这句话是正确的！"
+        }
+      ]
+    },
+    {
+      id: 2,
+      type: "concept",
+      levelTitle: "第2关 · 客户标签的定义与作用",
+      intro: "判断以下说法的对错：",
+      questions: [
+        {
+          text: "客户标签是用于描述客户基础信息、行为特征和偏好特征等的关键词或短语。",
+          answer: true,
+          feedbackCorrect: "✅ 正确！这就是客户标签的定义。",
+          feedbackWrong: "⚠️ 错！这就是客户标签的准确定义。"
+        },
+        {
+          text: "通过客户标签，商家可以精准定位推广目标受众，开展个性化和精准化推广。",
+          answer: true,
+          feedbackCorrect: "✅ 正确！客户标签的核心作用就是精准定位目标客户群体。",
+          feedbackWrong: "⚠️ 这句话正确！"
+        },
+        {
+          text: "客户标签只能描述客户的基础信息，不能描述行为和偏好。",
+          answer: false,
+          feedbackCorrect: "✅ 对！客户标签包括：基础信息、行为特征、偏好特征等多个维度。",
+          feedbackWrong: "⚠️ 错！客户标签包括：基础信息、行为特征、偏好特征等多个维度。"
+        }
+      ]
+    },
+    {
+      id: 3,
+      type: "drag",
+      levelTitle: "第3关 · 客户标签归类",
+      intro: "将下方标签卡片点击选中，再点击对应的分类框进行归类（3大类）：",
+      categories: [
+        { id: "basic", name: "基础信息类", color: "#4a9eff", hint: "性别/年龄/职业/地域" },
+        { id: "behavior", name: "行为特征类", color: "#ff9f43", hint: "购买频率/金额/支付方式" },
+        { id: "preference", name: "偏好特征类", color: "#a55eea", hint: "品类/品牌/功能偏好" }
+      ],
+      tags: [
+        { id: "t1", text: "女性", category: "basic" },
+        { id: "t2", text: "月均购买3次", category: "behavior" },
+        { id: "t3", text: "偏爱美妆护肤", category: "preference" },
+        { id: "t4", text: "28岁", category: "basic" },
+        { id: "t5", text: "客单价200元", category: "behavior" }
+      ]
+    },
+    {
+      id: 4,
+      type: "drag",
+      levelTitle: "第4关 · 6大类型综合挑战",
+      intro: "全部6种类型！将12个标签正确归类：",
+      categories: [
+        { id: "basic", name: "基础信息类", color: "#4a9eff", hint: "性别/年龄/职业/地域" },
+        { id: "behavior", name: "行为特征类", color: "#ff9f43", hint: "购买频率/金额/支付方式" },
+        { id: "preference", name: "偏好特征类", color: "#a55eea", hint: "品类/品牌/功能偏好" },
+        { id: "value", name: "价值类", color: "#26de81", hint: "客户价值/忠诚度/活跃度" },
+        { id: "social", name: "社交类", color: "#fd79a8", hint: "社交关系/话题/影响力" },
+        { id: "feedback", name: "反馈类", color: "#74b9ff", hint: "商品质量/物流服务" }
+      ],
+      tags: [
+        { id: "t1", text: "女性", category: "basic" },
+        { id: "t2", text: "上海浦东", category: "basic" },
+        { id: "t3", text: "月均购买3次", category: "behavior" },
+        { id: "t4", text: "习惯用微信支付", category: "behavior" },
+        { id: "t5", text: "偏爱韩系护肤品", category: "preference" },
+        { id: "t6", text: "关注休闲运动风", category: "preference" },
+        { id: "t7", text: "年度消费TOP5%", category: "value" },
+        { id: "t8", text: "复购率超过80%", category: "value" },
+        { id: "t9", text: "小红书活跃用户", category: "social" },
+        { id: "t10", text: "微信好友500+", category: "social" },
+        { id: "t11", text: "好评率99%", category: "feedback" },
+        { id: "t12", text: "多次反馈快递慢", category: "feedback" }
+      ]
+    }
+  ]
+};
+
+// ============ 游戏状态 ============
+let state = {
+  currentRound: 0,
+  selectedTag: null,
+  placements: {}, // tagId -> catId
+  results: [],
+  submitted: false
+};
+
+// ============ 工具函数 ============
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function updateProgress() {
+  const pct = ((state.currentRound) / GD.rounds.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('round-indicator').textContent = '第 ' + (state.currentRound + 1) + ' / ' + GD.rounds.length + ' 关';
+}
+
+// ============ 开始 ============
+function startGame() {
+  state = { currentRound: 0, selectedTag: null, placements: {}, results: [], submitted: false };
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('result-screen').style.display = 'none';
+  loadRound(0);
+}
+
+function retryGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+// ============ 加载关卡 ============
+function loadRound(idx) {
+  state.currentRound = idx;
+  state.selectedTag = null;
+  state.placements = {};
+  state.submitted = false;
+
+  const round = GD.rounds[idx];
+  document.getElementById('level-badge').textContent = '第' + (idx + 1) + '关';
+  document.getElementById('screen-title').textContent = round.levelTitle;
+  document.getElementById('level-intro').textContent = round.intro;
+  document.getElementById('next-btn').style.display = 'none';
+
+  updateProgress();
+
+  if (round.type === 'concept') {
+    loadConceptRound(round);
+  } else {
+    loadDragRound(round);
+  }
+}
+
+// ============ 判断题 ============
+function loadConceptRound(round) {
+  document.getElementById('tf-area').style.display = 'block';
+  document.getElementById('drag-area').style.display = 'none';
+  document.getElementById('tf-feedback').className = 'feedback-box';
+  document.getElementById('tf-feedback').style.display = 'none';
+  document.getElementById('tf-btns').style.display = 'flex';
+  document.getElementById('next-btn').style.display = 'none';
+
+  const container = document.getElementById('tf-container');
+  container.innerHTML = '';
+  // 一次只显示一道题
+  round.questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'tf-card';
+    card.dataset.qi = qi;
+    card.dataset.answer = q.answer;
+    card.innerHTML = '<div class="tf-text">' + (qi + 1) + '. ' + q.text + '</div><div class="tf-icons"></div>';
+    card.onclick = function() {
+      if (state.submitted) return;
+      document.querySelectorAll('.tf-card').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+    };
+    container.appendChild(card);
+  });
+
+  window.currentQuestion = 0;
+  window.currentAnswer = null;
+  showQuestionTF(0);
+}
+
+function showQuestionTF(qi) {
+  const round = GD.rounds[state.currentRound];
+  const cards = document.querySelectorAll('.tf-card');
+  cards.forEach((c, i) => {
+    c.style.display = i === qi ? 'block' : 'none';
+    c.classList.remove('selected', 'correct', 'wrong');
+  });
+  document.getElementById('tf-feedback').className = 'feedback-box';
+  document.getElementById('tf-feedback').style.display = 'none';
+  document.getElementById('tf-btns').style.display = 'flex';
+}
+
+function submitTF(userAnswer) {
+  if (state.submitted) return;
+  const round = GD.rounds[state.currentRound];
+  const qi = window.currentQuestion || 0;
+  const q = round.questions[qi];
+  const card = document.querySelector('.tf-card');
+  const correct = userAnswer === q.answer;
+
+  card.classList.remove('selected');
+  card.classList.add(correct ? 'correct' : 'wrong');
+
+  const fb = document.getElementById('tf-feedback');
+  fb.className = 'feedback-box show ' + (correct ? 'feedback-correct' : 'feedback-wrong');
+  fb.innerHTML = correct ? '<strong>' + q.feedbackCorrect + '</strong>' : '<strong>' + q.feedbackWrong + '</strong>';
+
+  state.results.push({ round: state.currentRound, correct });
+  document.getElementById('tf-btns').style.display = 'none';
+
+  if (qi < round.questions.length - 1) {
+    window.currentQuestion = qi + 1;
+    setTimeout(() => {
+      showQuestionTF(qi + 1);
+    }, 1200);
+  } else {
+    document.getElementById('next-btn').style.display = 'inline-block';
+    state.submitted = true;
+  }
+}
+
+// ============ 拖拽归类 ============
+function loadDragRound(round) {
+  document.getElementById('tf-area').style.display = 'none';
+  document.getElementById('drag-area').style.display = 'block';
+  document.getElementById('drag-feedback').className = 'feedback-box';
+  document.getElementById('drag-feedback').style.display = 'none';
+  document.getElementById('submit-btn').style.display = 'inline-block';
+  state.submitted = false;
+
+  // 打乱标签
+  const shuffled = shuffle(round.tags);
+
+  // 渲染标签池
+  const pool = document.getElementById('tag-pool');
+  pool.innerHTML = '';
+  shuffled.forEach(tag => {
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.dataset.id = tag.id;
+    chip.dataset.cat = tag.category;
+    chip.textContent = tag.text;
+    chip.onclick = function() {
+      if (state.submitted) return;
+      if (this.classList.contains('placed')) return;
+      document.querySelectorAll('.tag-chip').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+      state.selectedTag = tag.id;
+    };
+    pool.appendChild(chip);
+  });
+
+  // 渲染分类框
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+  grid.style.gridTemplateColumns = round.categories.length <= 3
+    ? 'repeat(3, 1fr)'
+    : 'repeat(3, 1fr)';
+  round.categories.forEach(cat => {
+    const box = document.createElement('div');
+    box.className = 'cat-box';
+    box.dataset.cat = cat.id;
+    box.style.background = cat.color + '33';
+    box.style.border = '2px solid ' + cat.color;
+    box.innerHTML = '<div class="cat-name" style="color:' + cat.color + '">' + cat.name + '</div>' +
+      '<div class="cat-hint">' + cat.hint + '</div>' +
+      '<div class="placed-tags" id="placed-' + cat.id + '"></div>';
+    box.onclick = function() {
+      if (state.submitted) return;
+      if (!state.selectedTag) return;
+      placeTag(state.selectedTag, cat.id);
+    };
+    grid.appendChild(box);
+  });
+}
+
+function placeTag(tagId, catId) {
+  const chip = document.querySelector('.tag-chip[data-id="' + tagId + '"]');
+  if (!chip || chip.classList.contains('placed')) return;
+
+  // 从原分类移除（如果有）
+  Object.keys(state.placements).forEach(k => {
+    if (k === tagId) delete state.placements[k];
+  });
+
+  chip.classList.add('placed');
+  chip.classList.remove('selected');
+  state.placements[tagId] = catId;
+  state.selectedTag = null;
+
+  // 更新分类框显示
+  document.querySelectorAll('.cat-box .placed-chip').forEach(pc => {
+    if (pc.dataset.id === tagId) pc.remove();
+  });
+  const placedDiv = document.getElementById('placed-' + catId);
+  const chip2 = document.createElement('span');
+  chip2.className = 'placed-chip';
+  chip2.dataset.id = tagId;
+  chip2.textContent = chip.textContent;
+  chip2.onclick = function(e) {
+    e.stopPropagation();
+    if (state.submitted) return;
+    // 撤回标签
+    delete state.placements[tagId];
+    chip.classList.remove('placed');
+    this.remove();
+  };
+  placedDiv.appendChild(chip2);
+}
+
+function submitDrag() {
+  if (state.submitted) return;
+  const round = GD.rounds[state.currentRound];
+  const allPlaced = round.tags.every(t => state.placements[t.id]);
+  if (!allPlaced) {
+    alert('请将所有标签都归类后再提交！');
+    return;
+  }
+
+  state.submitted = true;
+  document.getElementById('submit-btn').style.display = 'none';
+
+  let correct = 0;
+  let wrong = 0;
+  const chips = document.querySelectorAll('.tag-chip');
+  chips.forEach(chip => {
+    const tagId = chip.dataset.id;
+    const tag = round.tags.find(t => t.id === tagId);
+    const placedCat = state.placements[tagId];
+    const isCorrect = placedCat === tag.category;
+    if (isCorrect) {
+      correct++;
+      chip.style.borderColor = '#51cf66';
+      chip.style.color = '#51cf66';
+    } else {
+      wrong++;
+      chip.style.borderColor = '#ff6b6b';
+      chip.style.color = '#ff6b6b';
+    }
+  });
+
+  // 正确率反馈
+  const total = round.tags.length;
+  const pct = Math.round(correct / total * 100);
+  const fb = document.getElementById('drag-feedback');
+  fb.className = 'feedback-box show ' + (pct >= 80 ? 'feedback-correct' : (pct >= 50 ? 'feedback-wrong' : 'feedback-wrong'));
+  fb.innerHTML = '<strong>正确率 ' + pct + '%（' + correct + '/' + total + '）</strong><br>' +
+    (pct === 100 ? '🎉 全部正确！' : (pct >= 80 ? '👍 很不错！' : (pct >= 50 ? '💪 再接再厉！' : '📖 请回顾知识点后再试一次！')));
+
+  state.results.push({ round: state.currentRound, correct, total });
+  document.getElementById('next-btn').style.display = 'inline-block';
+}
+
+// ============ 下一关 / 结算 ============
+function nextRound() {
+  if (state.currentRound < GD.rounds.length - 1) {
+    loadRound(state.currentRound + 1);
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const rows = document.getElementById('result-rows');
+  rows.innerHTML = '';
+  GD.rounds.forEach((r, i) => {
+    const res = state.results[i];
+    const div = document.createElement('div');
+    div.className = 'result-row';
+    if (r.type === 'concept') {
+      const correct = res.correct ? '✓' : '✗';
+      div.innerHTML = '<span>' + r.levelTitle + '</span><span style="color:' + (res.correct ? '#51cf66' : '#ff6b6b') + '">' + correct + '</span>';
+    } else {
+      const pct = Math.round(res.correct / res.total * 100);
+      div.innerHTML = '<span>' + r.levelTitle + '</span><span style="color:' + (pct >= 80 ? '#51cf66' : (pct >= 50 ? '#ffd700' : '#ff6b6b')) + '">' + res.correct + '/' + res.total + ' (' + pct + '%)</span>';
+    }
+    rows.appendChild(div);
+  });
+
+  // 总分
+  const conceptCorrect = state.results.filter((r, i) => GD.rounds[i].type === 'concept').length;
+  const dragCorrect = state.results.filter((r, i) => GD.rounds[i].type === 'drag').reduce((s, r) => s + r.correct, 0);
+  const dragTotal = state.results.filter((r, i) => GD.rounds[i].type === 'drag').reduce((s, r) => s + r.total, 0);
+  const totalScore = Math.round((conceptCorrect / 2 + dragCorrect / (state.results.length > 2 ? 17 : 5)) / 2 * 100);
+
+  document.getElementById('score-big').innerHTML = totalScore + '<span>综合得分</span>';
+}
+</script>
+</body>
+</html>
