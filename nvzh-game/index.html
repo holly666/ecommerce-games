@@ -144,7 +144,7 @@ var S={};
 var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
 var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
 function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
-function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false}
+function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(!S.examDay)S.examDay=0;if(!S.interviewPassed)S.interviewPassed=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}}
 function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
 function toggleLog(){var lw=document.getElementById('log-wrap');if(lw)lw.classList.toggle('on');}
 function saveGame(){localStorage.setItem('nvzh_v5',JSON.stringify(S));addLog('已存档');}
@@ -196,7 +196,7 @@ function showNight(){
   if(aff>=71)opts.push({text:'听他说说心事',next:'n_secret',type:'love',tag:'🌙'});
 
   // 亲密度解锁（71+）
-  if(aff>=71&&!S.isPregnant){
+  if(aff>=71&&!S.husband.isPregnant){
     opts.push({text:'和'+hname+'温存片刻',next:'n_intimate',type:'love',tag:'💋'});
   }
   if(aff>=81&&!S.husbandProposalDone){
@@ -204,24 +204,24 @@ function showNight(){
   }
 
   // 备孕选项（86+，未怀孕）
-  if(aff>=86&&!S.isPregnant&&!S.fertilityTreatment){
-    opts.push({text:'商量备孕的事',next:'n_try_baby',type:'love',tag:'👶'});
+  if(aff>=86&&!S.husband.isPregnant&&!S.fertilityTreatment){
+    opts.push({text:'和'+hname+'商量备孕的事',next:'n_try_baby',type:'love',tag:'👶'});
   }
-  if(S.fertilityTreatment&&!S.isPregnant){
-    opts.push({text:'期待好消息……',next:'n_fertility_wait',type:'love',tag:'🤱'});
+  if(S.fertilityTreatment&&!S.husband.isPregnant){
+    opts.push({text:'期待'+hname+'的好消息……',next:'n_fertility_wait',type:'love',tag:'🤱'});
   }
 
-  // 孕期专属（怀孕中）
-  if(S.isPregnant){
-    var pday=S.pregnancyDay||0;
+  // 孕期专属（夫君怀孕中）
+  if(S.husband.isPregnant){
+    var pday=S.husband.pregnancyDay||0;
     if(pday>=1&&pday<=30){
-      opts.push({text:'让他帮忙揉揉腰（孕期不适）',next:'n_preg_relief',type:'love',tag:'🤰'});
+      opts.push({text:hname+'害喜厉害，多照顾他',next:'n_preg_relief',type:'love',tag:'🤰'});
       opts.push({text:'一起给宝宝取个小名',next:'n_name_baby',type:'love',tag:'💕'});
     } else if(pday>=31&&pday<=90){
-      opts.push({text:'产检日，陪我去医馆',next:'n_preg_checkup',type:'love',tag:'🏥'});
+      opts.push({text:'陪'+hname+'去医馆产检',next:'n_preg_checkup',type:'love',tag:'🏥'});
       opts.push({text:'一起听宝宝的心跳',next:'n_heartbeat',type:'love',tag:'💗'});
     } else if(pday>=91){
-      opts.push({text:'临近产期，请他多陪陪我',next:'n_preg_final',type:'love',tag:'🌸'});
+      opts.push({text:hname+'临近产期，多陪陪他',next:'n_preg_final',type:'love',tag:'🌸'});
     }
   }
 
@@ -231,8 +231,8 @@ function showNight(){
   // 节日
   if(S.nearFestival)opts.push({text:S.nearFestival+'将至，一起过节吧',next:'n_festival',type:'love',tag:'🏮'});
 
-  // 丈夫烦恼
-  if(S.husbandProblems&&S.husbandProblems.length>0)opts.push({text:'关心他的烦恼',next:'n_problem',type:'love',tag:'💞'});
+  // 丈夫烦恼（好感71+）
+  if(aff>=71&&S.husbandProblems&&S.husbandProblems.length>0)opts.push({text:'关心他的烦恼',next:'n_problem',type:'love',tag:'💞'});
 
   // 生日
   if(S.flags.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent&&S.day===S.flags.husbandBirthdayDay){
@@ -385,8 +385,13 @@ function showMorning(){
       {text:'去找点活干，赚些银两',next:'go_work',type:'safe'},
       {text:'和'+hname+'聊聊天',next:'talk_husband_early',type:'love'},
       {text:'去镇上打听消息',next:'go_town',type:'smart'},
-      {text:'去县衙报名女吏（仕途入口）',next:'gov_enlist',type:'gov'},
     ];
+    // 笔试通过但未面试：提示面试
+    if(S.examDay>0&&!S.interviewPassed&&S.day>=S.examDay+3){
+      choices.unshift({text:'去县衙参加面试！',next:'gov_interview',type:'gov',tag:'🏛'});
+    } else {
+      choices.push({text:'去县衙报名女吏（仕途入口）',next:'gov_enlist',type:'gov'});
+    }
   } else if(idt>=2&&S.isMerchant){
     choices=[
       {text:'经营布庄（老板模式）',next:'manage_shop',type:'safe'},
@@ -504,7 +509,13 @@ function go_town(){
 
 // ========== 仕途入口 ==========
 function gov_enlist(){
-  if(S.eventsTriggered.gov_enlist_told){showScene('县衙门口',['你再次来到县衙。门口的告示还贴着：「招募女吏若干，择优录取。」'], [{text:'进去报名',next:'gov_enlist_signup',type:'gov'},{text:'再考虑考虑',next:'go_home',type:'safe'}],'🏛 县衙');return;}
+  if(S.eventsTriggered.gov_enlist_told){
+    // 笔试通过但未面试：提示面试
+    if(S.examDay>0&&!S.interviewPassed&&S.day>=S.examDay+3){
+      showScene('县衙门口',['你再次来到县衙。告示旁多了一张红纸：「女吏招募——笔试合格者，三日后面试。」','你已经等了三天，是时候参加面试了。'], [{text:'参加面试',next:'gov_interview',type:'gov'},{text:'再准备准备',next:'go_home',type:'safe'}],'🏛 面试');
+      return;
+    }
+    showScene('县衙门口',['你再次来到县衙。门口的告示还贴着：「招募女吏若干，择优录取。」'], [{text:'进去报名',next:'gov_enlist_signup',type:'gov'},{text:'再考虑考虑',next:'go_home',type:'safe'}],'🏛 县衙');return;}
   S.eventsTriggered.gov_enlist_told=true;
   addLog('发现仕途入口');
   showScene('县衙门口',['你路过县衙，看见门口贴着一张告示。围观的百姓议论纷纷——','「听说了吗？县衙要招女吏了！以前可从没有过这样的先例！」','「谁家的姑娘要是能考上，那可是光耀门楣的大事啊……」','告示上写着：招募女吏三名，笔试加面试，择优录取。你心里一动——这条路，或许值得一试。'], [{text:'进去报名',next:'gov_enlist_signup',type:'gov'},{text:'回去再想想',next:'go_home',type:'safe'}],'🏛 县衙');
@@ -525,8 +536,23 @@ function gov_exam_result(){
   // 简单处理，答对给奖励
   S.prestige+=2;S.wit+=1;
   S.officialProbation.push('exam_passed');
-  addLog('笔试通过 声望+2 智慧+1');
-  showScene('笔试结果',['你答完卷子，小吏接过看了看，微微点头：「不错，有点见识。三日后来面试。」','这关算是过了！接下来还有面试。'],[{text:'回去等面试通知',next:'go_home',type:'safe'}],'✅ 笔试通过');
+  S.examDay=S.day;
+  addLog('笔试通过 声望+2 智慧+1 面试在3天后');
+  showScene('笔试结果',['你答完卷子，小吏接过看了看，微微点头：「不错，有点见识。三日后来面试。」','这关算是过了！接下来还有面试。记住，三日后一早，来县衙参加面试。'],[{text:'回去好好准备',next:'go_home',type:'safe'}],'✅ 笔试通过');
+}
+function gov_interview(){
+  S.interviewPassed=true;
+  S.prestige+=3;
+  S.wit+=1;
+  addLog('面试通过 声望+3 智慧+1');
+  showScene('面试',['你走进县衙正堂，县丞亲自坐堂。','「你就是通过了笔试的小姑娘？」县丞上下打量你，「我出一道题——」','「镇上李家和王家因宅基地起纠纷，两家各执一词。你如何断？」','你沉吟片刻，将两家情况和利弊娓娓道来，提出了一个双方都能接受的折中方案。','县丞微微点头：「不错，有见识，有肚量。明日来报到，正式试用三个月。」'], [{text:'回家休息，明日上任！',next:'go_home',type:'safe'}],'🎉 面试通过');
+}
+function gov_onboard(){
+  S.isOfficial=true;
+  S.identity=2;
+  S.cls='县衙试用小吏';
+  addLog('正式入职县衙！身份升级为试用小吏');
+  showScene('正式入职',['翌日清晨，你换上崭新的吏员服，来到县衙报到。','县丞指着一个角落的桌子说：「那是你的位置。先从试用小吏做起，三个月内完成三件公务，便可转正。」','「是！」你心中暗喜——从这一天起，你正式踏上了仕途之路。'], [{text:'开始新的一天',next:'go_home',type:'safe'}],'🏛 正式入职');
 }
 // ========== 市场/事件 ==========
 function ev_market_buy(){if(Math.random()<0.6){S.money+=50;addLog('低买高卖 +50文');showScene('投资成功',['你大胆吃进二十匹布，果然布价持续走高，转手卖出后赚了五十两！虽然有风险，但这钱来得快。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📈 投资成功');}else{S.money-=15;addLog('囤货亏损 -15文');showScene('投资失败',['你吃进了布，却发现消息有误，价格不涨反跌。咬牙低价脱手，亏了十五文。吃一堑长一智。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📉 投资失败');}renderStats();}
@@ -747,6 +773,12 @@ function n_problem_solve(){
 
 // ========== 回家与结算 ==========
 function go_home(){
+  // 面试通过后次日入职
+  if(S.interviewPassed&&!S.isOfficial){
+    S.interviewPassed=false;
+    gov_onboard();
+    return;
+  }
   // 赏花宴触发检测
   if(S.invitationAccepted&&S.day>=S.invitationDay&&!S.eventsTriggered.invitation_event){
     S.eventsTriggered.invitation_event=true;
@@ -779,11 +811,11 @@ function n_sleep(){
   S.day++;
   checkIdentity();
 
-  // 孕期推进
-  if(S.isPregnant){
-    S.pregnancyDay=(S.pregnancyDay||0)+1;
-    addLog('孕期第'+(S.pregnancyDay)+'天');
-    if(S.pregnancyDay>=120){
+  // 孕期推进（夫君怀孕）
+  if(S.husband.isPregnant){
+    S.husband.pregnancyDay=(S.husband.pregnancyDay||0)+1;
+    addLog('夫君孕期第'+(S.husband.pregnancyDay)+'天');
+    if(S.husband.pregnancyDay>=120){
       give_birth();return;
     }
     // 孕期随机事件
@@ -794,13 +826,14 @@ function n_sleep(){
   }
 
   // 求子治疗检测
-  if(S.fertilityTreatment&&!S.isPregnant){
+  if(S.fertilityTreatment&&!S.husband.isPregnant){
     if(Math.random()<0.25){
-      S.isPregnant=true;
-      S.pregnancyDay=1;
+      S.husband.isPregnant=true;
+      S.husband.pregnancyDay=1;
       S.fertilityTreatment=false;
-      addLog('🎉 有喜了！');
-      showScene('喜讯',['月事迟迟未到，你心中隐隐有了预感。','你去医馆把脉，大夫恭喜你：「娘子，是喜脉！」',hname+'得知消息，眼眶都红了：「真的？太好了……太好了……」'], [{text:'回家养胎',next:'n_sleep',type:'safe'}],'🎉 喜讯');
+      addLog('🎉 夫君有喜了！');
+      var hname=S.husband.name;
+      showScene('喜讯',[hname+'这些日子总觉得身子有些不适，今日你去医馆请大夫来给他把脉。','大夫笑眯眯地说：「恭喜娘子，夫君是有喜了！」',hname+'得知消息，眼泪一下子就涌了出来：「真的？太好了……太好了……娘子，我们有孩子了……」'], [{text:'回家好好照顾他',next:'n_sleep',type:'safe'}],'🎉 喜讯');
       return;
     }
   }
@@ -888,17 +921,18 @@ function n_try_baby(){
   S.fertilityTreatment=true;
   S.affection=Math.min(100,S.affection+5);
   addLog('备孕计划 好感+5');
-  showScene('备孕',[hname+'得知你想备孕的消息，眼眶一下子就红了。',hname+'紧紧握住你的手：「娘子……真的吗？我、我要当爹了？」他激动得声音都在发抖。','「我一定会好好照顾你的！」他认真地说，那神情既认真又有些傻气，让你忍不住笑了出来。'], [{text:'顺其自然，等待好消息',next:'n_sleep',type:'safe'}],'👶 备孕');
+  showScene('备孕',[hname+'得知你想让他备孕的消息，脸上闪过一丝羞怯的红晕。',hname+'低下头，轻声说：「娘子……你是说，我……我能为你……」他的声音越来越小，却字字带着颤抖的欢喜。','他抬起头，眼里闪着微微的泪光：「娘子，我愿意。我……我会好好调养身子的。」'], [{text:'顺其自然，等待好消息',next:'n_sleep',type:'safe'}],'👶 备孕');
   updateAff();
 }
 function n_fertility_wait(){
-  showScene('期待',['你和'+S.husband.name+'都在等待着好消息。',S.husband.name+'每次看到你，都会小心翼翼地问：「娘子，身体可有什么变化？」他的紧张和期待溢于言表。','再等等……也许很快就会有消息了。'], [{text:'继续等待',next:'n_sleep',type:'safe'}],'🤱 期待');
+  var hname=S.husband.name;
+  showScene('期待',['你和'+hname+'都在等待着好消息。',hname+'每次看到你，都会悄悄观察自己的身子，既紧张又期待：「娘子……这几日我总觉得身子有些不一样，不知是不是……」他的眼神里满是忐忑与渴望。','再等等……也许很快就会有消息了。'], [{text:'继续等待',next:'n_sleep',type:'safe'}],'🤱 期待');
 }
 function n_preg_relief(){
   var hname=S.husband.name;
   S.affection=Math.min(100,S.affection+3);
   addLog('孕期不适被照顾 好感+3');
-  showScene('孕期不适',['怀孕初期，你总觉得身子有些沉，还时不时地犯恶心。',hname+'在一旁心疼地看着，不知从哪里弄来了一碗酸梅汤：「娘子，喝点这个，会舒服些。」','他笨手笨脚地帮你揉着腰，嘴里念叨着：「辛苦娘子了……我以后一定好好伺候。」'], [{text:'让他继续揉揉',next:'n_sleep',type:'safe'}],'🤰 孕期');
+  showScene('孕期不适',['有身子之后，'+hname+'总是犯恶心，吃什么都没胃口。',hname+'有气无力地靠在床边，脸色有些苍白：「娘子……对不起，今日身子不爽，没能给你做晚饭……」','你心疼地端来一碗热粥：「先吃这个养养胃，别想太多。」'], [{text:'陪他多说说话',next:'n_sleep',type:'safe'}],'🤰 孕期');
   updateAff();
 }
 function n_name_baby(){
@@ -913,27 +947,28 @@ function n_preg_checkup(){
   var hname=S.husband.name;
   var result=Math.random()>0.2?'一切正常':'需要静养几天';
   S.affection=Math.min(100,S.affection+3);
-  addLog('产检 好感+3');
-  showScene('产检',['你挺着微微隆起的肚子，在'+hname+'的陪同下去了医馆。','老大夫把脉后，笑眯眯地说：「脉象平稳，是喜脉。母子安康。」','「太好了！」'+hname+'激动得差点跳起来，一旁的护士连忙提醒他安静。'], [{text:'回家养胎',next:'n_sleep',type:'safe'}],'🏥 产检');
+  addLog('陪夫君产检 好感+3');
+  showScene('产检',[hname+'挺着微微隆起的肚子，在你的陪同下去了医馆。','老大夫把脉后，笑眯眯地说：「脉象平稳，是喜脉，母子安康。注意多休息，别让他太操劳。」','「太好了！」你激动得差点跳起来，握住'+hname+'的手：「听到了吗？一切都好！」'], [{text:'回家好好养胎',next:'n_sleep',type:'safe'}],'🏥 产检');
   updateAff();
 }
 function n_heartbeat(){
   var hname=S.husband.name;
-  showScene('听心跳',['大夫拿出一个奇怪的器具，放在你的肚子上。',hname+'凑近去听，听到一阵「噗嗒噗嗒」的声音，他的眼泪一下子就涌了出来。',hname+'哽咽着说：「娘子，你听到了吗？这是宝宝的心跳……我们的孩子……」'], [{text:'一起感受这份幸福',next:'n_sleep',type:'safe'}],'💗 心跳');
+  showScene('听心跳',['大夫拿出一个奇怪的器具，放在'+hname+'的肚子上。',hname+'紧紧握着你的手，既紧张又期待地听。当那一阵「噗嗒噗嗒」的声音传来时，他的眼泪一下子就涌了出来。',hname+'哽咽着说：「娘子……你听到了吗？这是宝宝的心跳……我们的孩子……」'], [{text:'一起感受这份幸福',next:'n_sleep',type:'safe'}],'💗 心跳');
 }
 function n_preg_final(){
   var hname=S.husband.name;
   S.affection=Math.min(100,S.affection+5);
   addLog('产前相伴 好感+5');
-  showScene('产前',[hname+'这些日子几乎寸步不离地守在你身边。',hname+'轻轻摸着你的肚子，轻声说：「快了，快了……再忍忍，我的好娘子。」','他每天都会给你讲故事、唱歌，只为了让你心情舒畅。','「等孩子生下来，我一定更努力，让你们娘俩过上好日子。」'], [{text:'安心等待',next:'n_sleep',type:'safe'}],'🌸 产前');
+  showScene('产前',[hname+'这些日子身子越来越重，你几乎寸步不离地守在他身边。',hname+'轻轻握着你的手，眼神里满是期待与不舍：「娘子……再过些日子，我们就要和宝宝见面了。」','他每天都会轻声哼着歌，只为了让你安心。','「等孩子生下来，我们就是一家三口了……谢谢你，娘子。」'], [{text:'安心等待',next:'n_sleep',type:'safe'}],'🌸 产前');
   updateAff();
 }
 function pregnancy_random_event(){
+  var hname=S.husband.name;
   var events=[
-    ['今天特别想吃酸的，'+S.husband.name+'跑遍了整个镇子，终于找到了一筐上好的青梅。','他累得满头大汗，却笑着说：「只要娘子想吃，我跑再远都值得。」'],
-    ['你今天心情烦躁，不知为何发了脾气。'+S.husband.name+'愣了一会儿，然后轻轻抱住你：「娘子怀着孩子辛苦了，骂我两句也行。」','你又好气又好笑，最后还是忍不住笑了出来。'],
-    ['夜里抽筋，'+S.husband.name+'被你的呻吟惊醒，连忙爬起来帮你揉腿。','「疼不疼？哪里不舒服？」他紧张得像只无头苍蝇。'],
-    ['今天收到了柳夫人送来的补品，说是给孕妇养身子用的。'+S.husband.name+'感激涕零，连声道谢。'],
+    ['今日害喜厉害，'+hname+'吃什么吐什么，整个人瘦了一圈。',hname+'苦笑着说：「娘子……对不起，这身子真不争气……」你心疼地给他炖了碗清粥，喂他喝下。'],
+    ['今日害喜稍好，'+hname+'突然说想吃酸的。你二话不说跑遍全镇，终于寻到一筐上好的青梅。',hname+'接过时眼眶都红了：「娘子待我如此……我这辈子值了。」'],
+    ['夜里'+hname+'腿抽筋，被痛醒了。你连忙爬起来，帮他轻轻揉着小腿。',hname+'握住你的手：「娘子……有你在，我什么都不怕。」'],
+    ['今日收到了柳夫人送来的补品，说是给有孕夫君养身子用的。'+hname+'感激涕零，连声道谢，你心里也觉得暖暖的。'],
   ];
   var ev=events[Math.floor(Math.random()*events.length)];
   S.affection=Math.min(100,S.affection+2);
@@ -945,13 +980,13 @@ function give_birth(){
   var hname=S.husband.name;
   var isBoy=Math.random()>0.5;
   var childName=isBoy?['霖儿','昭儿','煜儿'][Math.floor(Math.random()*3)]:['婉儿','婷儿','晴儿'][Math.floor(Math.random()*3)];
-  S.isPregnant=false;
-  S.pregnancyDay=0;
+  S.husband.isPregnant=false;
+  S.husband.pregnancyDay=0;
   S.children=S.children||[];
   S.children.push({name:childName,gender:isBoy?'男':'女',dayBorn:S.day});
   S.affection=Math.min(100,S.affection+15);
   addLog('孩子出生！'+childName+(isBoy?'男孩':'女孩')+'！好感+15');
-  showScene('临盆',['夜里，你突然感到阵痛袭来。',hname+'惊慌失措，连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'冲进房间，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……谢谢你……」'], [{text:'抱抱我们的孩子',next:'child_scene',type:'love'}],'🎉 生产');
+  showScene('临盆',['夜里，'+hname+'突然感到阵痛袭来，你惊慌失措，连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……谢谢你让我有了这个孩子……」'], [{text:'抱抱我们的孩子',next:'child_scene',type:'love'}],'🎉 生产');
   updateAff();
 }
 function child_scene(){
@@ -1165,6 +1200,8 @@ window.go=function(n,t){
     case 'gov_dispute_fair':gov_dispute_fair();break;
     case 'gov_dispute_split':gov_dispute_split();break;
     case 'gov_dispute_up':gov_dispute_up();break;
+    case 'gov_interview':gov_interview();break;
+    case 'gov_onboard':gov_onboard();break;
     case 'n_eat':n_eat();break;
     case 'n_talk':n_talk();break;
     case 'n_heart':n_heart();break;
