@@ -131,11 +131,20 @@ var HUSBANDS=[
   {id:'quiet',name:'沈墨白',bg:'武勋世家',desc:'话不多，喜怒不形于色。心思细腻，往往能注意到别人忽略的细节。',traits:['细腻','机敏']},
   {id:'tsundere',name:'楚灼',bg:'寒门子弟',desc:'嘴硬心软，明明在意却偏要装作不在乎。相处久了会发现意外的温柔。',traits:['傲娇','别扭']}
 ];
+var AVAILABLE_MEN=[
+  {id:'doc_yan',name:'言墨',bg:'游方郎中',desc:'背着药箱走南闯北，见多识广，笑容温和。不知为何对你格外留意。',traits:['神秘','温柔'],meetEvent:'social_event',meetScene:'柳府赏花宴'},
+  {id:'rich_xu',name:'徐子衿',bg:'富商之子',desc:'家中豪富，却不愿受束缚。温文尔雅，诗词歌赋无一不通。性格有些慵懒。',traits:['才华','慵懒'],meetEvent:'social_event_2',meetScene:'柳府赏花宴'},
+  {id:'martial_pei',name:'裴轻尘',bg:'武学世家',desc:'出身武学世家，却不愿习武，偏爱琴棋书画。外表冷峻，内心柔软。性格有些别扭，但对你很真诚。',traits:['傲气','内敛'],meetEvent:'gov_dispute_fair',meetScene:'县衙事务'},
+  {id:'artisan_lin',name:'林小川',bg:'工匠之子',desc:'心灵手巧，编织、木工、剪纸样样精通。性格开朗，常自嘲没出息，但其实很有生活智慧。',traits:['开朗','多才'],meetEvent:'shop_restock',meetScene:'集市进货'},
+  {id:'scholar_lei',name:'雷子鸣',bg:'落魄书生',desc:'家道中落的书生，满腹经纶却时运不济。性格有些孤傲，但和你很聊得来。',traits:['孤傲','才学'],meetEvent:'go_town',meetScene:'镇上偶遇'},
+  {id:'priest_ye',name:'叶清羽',bg:'云游道医',desc:'年轻的游方道医，医术精湛，言语清淡。总是带着淡淡的笑，让人捉摸不透。',traits:['清淡','神秘'],meetEvent:'go_work',meetScene:'药铺打工'}
+];
+
 var S={};
 var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
 var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
 function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
-function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;}
+function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false}
 function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
 function toggleLog(){var lw=document.getElementById('log-wrap');if(lw)lw.classList.toggle('on');}
 function saveGame(){localStorage.setItem('nvzh_v5',JSON.stringify(S));addLog('已存档');}
@@ -178,20 +187,76 @@ function showNight(){
   var hname=S.husband.name;
   var trait=S.trait?S.trait.id:'';
   var opts=[];
+
+  // 基础选项
   opts.push({text:'和'+hname+'一起吃晚饭',next:'n_eat',type:'safe',tag:'🍚'});
+
+  // 好感度解锁
   if(aff>=31)opts.push({text:'和他聊聊天',next:'n_talk',type:'love',tag:'💬'});
   if(aff>=51)opts.push({text:'说些体己话',next:'n_heart',type:'love',tag:'💕'});
   if(aff>=71)opts.push({text:'听他说说心事',next:'n_secret',type:'love',tag:'🌙'});
+
+  // 亲密度解锁（71+）
+  if(aff>=71&&!S.isPregnant){
+    opts.push({text:'和'+hname+'温存片刻',next:'n_intimate',type:'love',tag:'💋'});
+  }
+  if(aff>=81&&!S.husbandProposalDone){
+    opts.push({text:'他似乎有话想说……',next:'n_husband_propose',type:'love',tag:'💍'});
+  }
+
+  // 备孕选项（86+，未怀孕）
+  if(aff>=86&&!S.isPregnant&&!S.fertilityTreatment){
+    opts.push({text:'商量备孕的事',next:'n_try_baby',type:'love',tag:'👶'});
+  }
+  if(S.fertilityTreatment&&!S.isPregnant){
+    opts.push({text:'期待好消息……',next:'n_fertility_wait',type:'love',tag:'🤱'});
+  }
+
+  // 孕期专属（怀孕中）
+  if(S.isPregnant){
+    var pday=S.pregnancyDay||0;
+    if(pday>=1&&pday<=30){
+      opts.push({text:'让他帮忙揉揉腰（孕期不适）',next:'n_preg_relief',type:'love',tag:'🤰'});
+      opts.push({text:'一起给宝宝取个小名',next:'n_name_baby',type:'love',tag:'💕'});
+    } else if(pday>=31&&pday<=90){
+      opts.push({text:'产检日，陪我去医馆',next:'n_preg_checkup',type:'love',tag:'🏥'});
+      opts.push({text:'一起听宝宝的心跳',next:'n_heartbeat',type:'love',tag:'💗'});
+    } else if(pday>=91){
+      opts.push({text:'临近产期，请他多陪陪我',next:'n_preg_final',type:'love',tag:'🌸'});
+    }
+  }
+
+  // 性格限定
   if(trait==='sharp')opts.push({text:'一起算算家里的账',next:'n_account',type:'smart',tag:'📖'});
+
+  // 节日
   if(S.nearFestival)opts.push({text:S.nearFestival+'将至，一起过节吧',next:'n_festival',type:'love',tag:'🏮'});
+
+  // 丈夫烦恼
   if(S.husbandProblems&&S.husbandProblems.length>0)opts.push({text:'关心他的烦恼',next:'n_problem',type:'love',tag:'💞'});
+
+  // 生日
   if(S.flags.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent&&S.day===S.flags.husbandBirthdayDay){
     opts.push({text:'今天是他的生日！给他送礼物',next:'n_birthday',type:'love',tag:'🎂'});
   }
+
+  // 妾室选项（如果有纳妾）
+  if(S.concubines&&S.concubines.length>0){
+    var cname=S.concubines[0];
+    opts.push({text:'去'+cname+'房里坐坐',next:'n_concubine',type:'love',tag:'🌸'});
+  }
+
+  // 认识新人入口（社交场合）
+  if(S.availableMen&&S.availableMen.length>0){
+    var man=S.availableMen[0];
+    opts.push({text:'打听'+AVAILABLE_MEN.find(function(m){return m.id===man;}).name+'的下落',next:'man_detail_'+man,type:'love',tag:'👤'});
+  }
+
   opts.push({text:'各自休息，明日再见',next:'n_sleep',type:'safe',tag:'🌙'});
-  var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov'};
-  var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov'};
-  var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖',gov:'🏛'};
+
+  var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov',conc:'love'};
+  var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov',conc:'t-love'};
+  var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖',gov:'🏛',conc:'🌸'};
   opts.forEach(function(o){h+='<button class="chc '+cm[o.type]+'" data-next="'+o.next+'" data-type="'+o.type+'"><span class="tag '+tcm[o.type]+'">'+tm[o.type]+'</span> '+o.text+'</button>';});
   document.getElementById('night-choices').innerHTML=h;
   document.getElementById('night-choices').onclick=function(e){
@@ -199,6 +264,7 @@ function showNight(){
     if(btn){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
   };
 }
+
 window.s1=function(){
   document.getElementById('cover').style.display='none';
   document.getElementById('step1').classList.add('on');
@@ -345,6 +411,10 @@ function showMorning(){
       {text:'去镇上打听消息',next:'go_town',type:'smart'},
     ];
   }
+    // 随机在清晨遇到新人
+  if(S.identity>=2&&Math.random()<0.12){
+    if(checkMeetNewMan())return;
+  }
   showScene('第'+S.day+'日 · 清晨',[weather+'。阳光从窗纸透进来，在地上投下斑驳的光影。',greet,'新的一天开始了。今日，你打算……'],choices);
 }
 
@@ -384,6 +454,7 @@ function go_work(){
   if(extraText)job.text+=' '+extraText;
   renderStats();
   showScene('打工归来',[job.text,'暮色渐沉，你拖着疲惫的身体往家走。今天虽然辛苦，但银两实实在在多了几文。'],[{text:'回家休息',next:'go_home',type:'safe'}]);
+  if(checkMeetNewMan())return;
 }
 
 function talk_husband_early(){
@@ -426,9 +497,11 @@ function go_town(){
   var t=infos[Math.floor(Math.random()*infos.length)];
   S.social+=1;
   addLog('人脉+1');
+  if(checkMeetNewMan())return;
   renderStats();
   showScene('镇上见闻',[t],[{text:'天色不早了，回家',next:'go_home',type:'safe'}]);
 }
+
 
 // ========== 仕途入口 ==========
 function gov_enlist(){
@@ -489,6 +562,7 @@ function shop_restock(){
   S.money-=50;
   S.shopReputation=Math.min(10,(S.shopReputation||0)+2);
   addLog('进货 -50文 店铺声望+2');
+  if(checkMeetNewMan())return;
   showScene('进货',['你去了镇外的集市，精挑细选了一批布料。','「老板娘好眼光，这批货品质不错！」进货商笑道。','回来的路上，你盘算着怎么定价才能多赚些。'], [{text:'回家',next:'go_home',type:'safe'}],'🏪 进货');
   renderStats();
 }
@@ -523,13 +597,15 @@ function shop_worker_chat(){
 }
 function social_event(){
   if(S.prestige>=10){
+    if(checkMeetNewMan())return;
     showScene('赏花宴',['你受邀来到柳府，满园的花开得正盛。柳夫人热情地拉着你介绍给众宾客：「这位就是我跟你们说的，新来的小媳妇，人又能干又机灵！」','你举止得体，谈笑风生，给众人留下了极好的印象。'], [{text:'结交新朋友',next:'social_event_2',type:'love'},{text:'和柳夫人深谈',next:'social_event_liu',type:'love'}],'🌸 柳府赏花宴');
   } else {
+    if(checkMeetNewMan())return;
     showScene('街头偶遇',['你在镇上遇到了柳夫人。她看见你，笑着点了点头：「哟，小媳妇，最近可好？改天来府上坐坐？」'], [{text:'寒暄几句',next:'go_home',type:'safe'}],'💬 偶遇');
   }
 }
-function social_event_2(){S.prestige+=2;S.social+=1;addLog('赏花宴结交 声望+2 人脉+1');showScene('结交名流',['你在赏花宴上与几位镇上名流交谈甚欢。分别时，她们纷纷邀请你日后多来往。'], [{text:'回家',next:'go_home',type:'safe'}],'🌟 赏花宴');renderStats();}
-function social_event_liu(){S.social+=2;S.prestige+=1;addLog('柳夫人深谈 人脉+2 声望+1');showScene('柳夫人',['柳夫人拉着你说了很久。她对你的布庄经营颇感兴趣，临走时说：「小媳妇，我有个生意想和你谈谈。下次来府上，我们细说。」'], [{text:'回家',next:'go_home',type:'safe'}],'💬 深谈');renderStats();}
+function social_event_2(){S.prestige+=2;S.social+=1;addLog('赏花宴结交 声望+2 人脉+1');if(checkMeetNewMan())return;showScene('结交名流',['你在赏花宴上与几位镇上名流交谈甚欢。分别时，她们纷纷邀请你日后多来往。'], [{text:'回家',next:'go_home',type:'safe'}],'🌟 赏花宴');renderStats();}
+function social_event_liu(){S.social+=2;S.prestige+=1;addLog('柳夫人深谈 人脉+2 声望+1');if(checkMeetNewMan())return;showScene('柳夫人',['柳夫人拉着你说了很久。她对你的布庄经营颇感兴趣，临走时说：「小媳妇，我有个生意想和你谈谈。下次来府上，我们细说。」'], [{text:'回家',next:'go_home',type:'safe'}],'💬 深谈');renderStats();}
 
 // ========== 仕途模式 ==========
 function gov_work(){
@@ -544,7 +620,7 @@ function gov_work(){
 function gov_dispute(){
   showScene('纠纷调解',['镇上两家因摊位问题起了争执，双方各执一词，闹到了县衙。','「大人！是她先占了我的位置！」', '「明明是你诬赖我！」','作为女吏，你需要公正地处理这起纠纷。'], [{text:'实地勘察，明辨是非',next:'gov_dispute_fair',type:'gov'},{text:'各打五十大板，各让一步',next:'gov_dispute_split',type:'safe'},{text:'上报县丞定夺',next:'gov_dispute_up',type:'smart'}],'⚖️ 纠纷');
 }
-function gov_dispute_fair(){S.wit+=2;S.prestige+=2;S.govTaskDone+=1;addLog('公正裁决 智慧+2 声望+2');showScene('公正裁决',['你亲自去实地查看，很快弄清了来龙去脉——是后来的商贩占了先来者的位置。你秉公而断，众人心服口服。'], [{text:'回家',next:'go_home',type:'safe'}],'✅ 公正裁决');renderStats();checkIdentity();}
+function gov_dispute_fair(){S.wit+=2;S.prestige+=2;S.govTaskDone+=1;addLog('公正裁决 智慧+2 声望+2');if(checkMeetNewMan())return;showScene('公正裁决',['你亲自去实地查看，很快弄清了来龙去脉——是后来的商贩占了先来者的位置。你秉公而断，众人心服口服。'], [{text:'回家',next:'go_home',type:'safe'}],'✅ 公正裁决');renderStats();checkIdentity();}
 function gov_dispute_split(){S.prestige+=1;S.govTaskDone+=1;addLog('各让一步 声望+1');showScene('各让一步',['你各打五十大板，两家各让一步。虽不算完美，但总算是平息了争端。'], [{text:'回家',next:'go_home',type:'safe'}],'⚖️ 调解');renderStats();}
 function gov_dispute_up(){S.social+=1;addLog('上报县丞 人脉+1');showScene('上报县丞',['你将情况如实上报县丞。县丞赞赏你「知道轻重，不擅自做主」，也算加了一分印象分。'], [{text:'回家',next:'go_home',type:'safe'}],'🏛 明智');renderStats();}
 
@@ -702,27 +778,346 @@ function go_home_return(){showNight();}
 function n_sleep(){
   // 结算
   S.day++;
-  // 身份检测
   checkIdentity();
+
+  // 孕期推进
+  if(S.isPregnant){
+    S.pregnancyDay=(S.pregnancyDay||0)+1;
+    addLog('孕期第'+(S.pregnancyDay)+'天');
+    if(S.pregnancyDay>=120){
+      give_birth();return;
+    }
+    // 孕期随机事件
+    if(Math.random()<0.15){
+      pregnancy_random_event();
+      return;
+    }
+  }
+
+  // 求子治疗检测
+  if(S.fertilityTreatment&&!S.isPregnant){
+    if(Math.random()<0.25){
+      S.isPregnant=true;
+      S.pregnancyDay=1;
+      S.fertilityTreatment=false;
+      addLog('🎉 有喜了！');
+      showScene('喜讯',['月事迟迟未到，你心中隐隐有了预感。','你去医馆把脉，大夫恭喜你：「娘子，是喜脉！」',hname+'得知消息，眼眶都红了：「真的？太好了……太好了……」'], [{text:'回家养胎',next:'n_sleep',type:'safe'}],'🎉 喜讯');
+      return;
+    }
+  }
+
+  // 亲密次数积累（影响怀孕概率）
+  if(S.intimacyCount>0)S.intimacyCount--;
+
   // 随机事件触发（丈夫心情波动）
   if(Math.random()<0.2){
     var delta=(Math.random()<0.5)?1:-1;
     S.affection=Math.max(0,Math.min(100,S.affection+delta));
   }
+
   // 每月随机给丈夫一个烦恼
   if(S.day%10===0){
     var problems=['镇上新开了一家布庄，我想去学学他们的经营。','我最近有些心事……娘子，你有空吗？','街上的地痞又来骚扰了，我有些担心。','我想……给娘子添一件新衣裳。'];
     S.husbandProblems.push(problems[Math.floor(Math.random()*problems.length)]);
   }
+
   // 仕途试用转正检测
   if(S.isOfficial&&S.govTaskDone>=3&&!S.officialTaskCount>=5){
     S.officialTaskCount=5;
     S.cls='县衙正式吏员';
     addLog('仕途转正！身份升级');
   }
+
+  // 妾室感情积累
+  if(S.concubines){
+    S.concubines.forEach(function(cid){
+      var caff=S.concubineAffection[cid]||50;
+      if(Math.random()<0.15){
+        S.concubineAffection[cid]=Math.min(100,caff+1);
+      }
+    });
+  }
+
   addLog('第'+S.day+'日开始');
   renderStats();updateAff();
   showMorning();
+}
+
+
+
+// ========== 亲密度系统（71+） ==========
+function n_intimate(){
+  var hname=S.husband.name;
+  var hid=S.husband.id;
+  var texts=[];
+  if(hid==='tsundere'){
+    texts=['夜深了，烛火摇曳。'+hname+'坐在床边，神色有些紧张。',hname+'轻声说：「娘子……我、我……」他的话还没说完，脸已经红透了。','你伸手轻轻覆上他的手，他的手指微微颤抖，却没有躲开。',hname+'抬起头，眼里映着烛光：「娘子……我……我其实一直想……」'];
+  } else if(hid==='outgoing'){
+    texts=['烛光下，'+hname+'的眼神比平时柔和了许多。',hname+'拉着你的手，轻声说：「娘子，今天……就我们两个。」他的笑容带着几分羞涩，却也有几分期待。','窗外月色如水，屋内烛影摇红。这一刻，万籁俱寂，只有彼此的呼吸声。'];
+  } else if(hid==='quiet'){
+    texts=[hname+'没有说话，只是轻轻握住了你的手。','他的手指修长而温暖，在你的掌心轻轻摩挲。','他微微俯身，在你耳边轻声说：「娘子……今夜，让我多陪你一会儿。」','烛火渐渐暗了下去，月光洒满了整个房间。'];
+  } else if(hid==='scholar'){
+    texts=['月色如水，洒在窗台上。'+hname+'轻声念了一句诗：「春宵一刻值千金……」他念完，自己先笑了：「娘子，我可不是只会读书的呆子。」','他的笑容温柔，让你一时有些恍惚。','两人相拥而眠，窗外月色如钩，屋内温情脉脉。'];
+  } else {
+    texts=['夜深了，你和'+hname+'依偎在一起。','他的怀抱温暖而踏实，让你觉得无比安心。','你们就这样静静地躺着，偶尔说一两句话，却比任何言语都更让人心动。'];
+  }
+  S.affection=Math.min(100,S.affection+5);
+  S.intimacyCount=Math.min(10,S.intimacyCount+2);
+  addLog('亲密时刻 好感+5');
+  showScene('温情时刻',texts,[{text:'相拥入眠',next:'n_sleep',type:'safe'}],'💋 温情');
+  updateAff();
+}
+function n_husband_propose(){
+  var hname=S.husband.name;
+  S.husbandProposalDone=true;
+  S.affection=Math.min(100,S.affection+10);
+  addLog('丈夫真心告白 好感+10');
+  showScene('他的告白',[hname+'拉住你的手，神色前所未有地认真。',hname+'深吸一口气，轻声说：「娘子，我们成亲这么久，我一直……我一直有一句话想对你说。」','「我知道这门亲事是父母之命，一开始我也不敢奢望什么。」他的眼眶微微泛红。',hname+'抬起头，目光灼灼地看着你：「娘子，我想跟你……真的在一起。不是因为婚约，是因为我……我喜欢你。」'], [{text:'握紧他的手，什么都不必说',next:'n_husband_propose_2',type:'love'}],'💍 告白');
+  updateAff();
+}
+function n_husband_propose_2(){
+  var hname=S.husband.name;
+  S.affection=86;
+  addLog('命定之人！好感锁定86+');
+  showScene('心意相通',[hname+'看到你的回应，眼泪终于落了下来。',hname+'破涕为笑：「娘子……我就知道，我这辈子没有娶错人。」','他紧紧握住你的手，仿佛要把所有的情意都倾注在这一握之中。','窗外夜风轻拂，吹散了最后一缕烛烟。你们就这样十指相扣，在月光下静静相拥。'], [{text:'这一夜，格外温柔',next:'n_sleep',type:'safe'}],'💍 命定之人');
+  updateAff();
+}
+
+// ========== 备孕与孕期 ==========
+function n_try_baby(){
+  var hname=S.husband.name;
+  S.fertilityTreatment=true;
+  S.affection=Math.min(100,S.affection+5);
+  addLog('备孕计划 好感+5');
+  showScene('备孕',[hname+'得知你想备孕的消息，眼眶一下子就红了。',hname+'紧紧握住你的手：「娘子……真的吗？我、我要当爹了？」他激动得声音都在发抖。','「我一定会好好照顾你的！」他认真地说，那神情既认真又有些傻气，让你忍不住笑了出来。'], [{text:'顺其自然，等待好消息',next:'n_sleep',type:'safe'}],'👶 备孕');
+  updateAff();
+}
+function n_fertility_wait(){
+  showScene('期待',['你和'+S.husband.name+'都在等待着好消息。',S.husband.name+'每次看到你，都会小心翼翼地问：「娘子，身体可有什么变化？」他的紧张和期待溢于言表。','再等等……也许很快就会有消息了。'], [{text:'继续等待',next:'n_sleep',type:'safe'}],'🤱 期待');
+}
+function n_preg_relief(){
+  var hname=S.husband.name;
+  S.affection=Math.min(100,S.affection+3);
+  addLog('孕期不适被照顾 好感+3');
+  showScene('孕期不适',['怀孕初期，你总觉得身子有些沉，还时不时地犯恶心。',hname+'在一旁心疼地看着，不知从哪里弄来了一碗酸梅汤：「娘子，喝点这个，会舒服些。」','他笨手笨脚地帮你揉着腰，嘴里念叨着：「辛苦娘子了……我以后一定好好伺候。」'], [{text:'让他继续揉揉',next:'n_sleep',type:'safe'}],'🤰 孕期');
+  updateAff();
+}
+function n_name_baby(){
+  var hname=S.husband.name;
+  var names=['小团子','阿福','元宝','安安','康康','念儿','惜福','小花生'];
+  var boyNames=['璟儿','霖儿','昭儿','煜儿','安儿','宁儿','瑞儿','麒儿'];
+  var girlNames=['婉儿','婷儿','晴儿','月儿','雪儿','灵儿','瑶儿','璐儿'];
+  var chosen=names[Math.floor(Math.random()*names.length)];
+  showScene('取小名',['夜灯下，你和'+hname+'商量着宝宝的小名。',hname+'歪着脑袋想了想：「要不叫「'+chosen+'」？我希望我们的孩子一生平安顺遂。」','你笑着点点头。无论男女，都先叫这个小名吧。'], [{text:'好，就叫'+chosen,next:'n_sleep',type:'safe'}],'💕 取名');
+}
+function n_preg_checkup(){
+  var hname=S.husband.name;
+  var result=Math.random()>0.2?'一切正常':'需要静养几天';
+  S.affection=Math.min(100,S.affection+3);
+  addLog('产检 好感+3');
+  showScene('产检',['你挺着微微隆起的肚子，在'+hname+'的陪同下去了医馆。','老大夫把脉后，笑眯眯地说：「脉象平稳，是喜脉。母子安康。」','「太好了！」'+hname+'激动得差点跳起来，一旁的护士连忙提醒他安静。'], [{text:'回家养胎',next:'n_sleep',type:'safe'}],'🏥 产检');
+  updateAff();
+}
+function n_heartbeat(){
+  var hname=S.husband.name;
+  showScene('听心跳',['大夫拿出一个奇怪的器具，放在你的肚子上。',hname+'凑近去听，听到一阵「噗嗒噗嗒」的声音，他的眼泪一下子就涌了出来。',hname+'哽咽着说：「娘子，你听到了吗？这是宝宝的心跳……我们的孩子……」'], [{text:'一起感受这份幸福',next:'n_sleep',type:'safe'}],'💗 心跳');
+}
+function n_preg_final(){
+  var hname=S.husband.name;
+  S.affection=Math.min(100,S.affection+5);
+  addLog('产前相伴 好感+5');
+  showScene('产前',[hname+'这些日子几乎寸步不离地守在你身边。',hname+'轻轻摸着你的肚子，轻声说：「快了，快了……再忍忍，我的好娘子。」','他每天都会给你讲故事、唱歌，只为了让你心情舒畅。','「等孩子生下来，我一定更努力，让你们娘俩过上好日子。」'], [{text:'安心等待',next:'n_sleep',type:'safe'}],'🌸 产前');
+  updateAff();
+}
+function pregnancy_random_event(){
+  var events=[
+    ['今天特别想吃酸的，'+S.husband.name+'跑遍了整个镇子，终于找到了一筐上好的青梅。','他累得满头大汗，却笑着说：「只要娘子想吃，我跑再远都值得。」'],
+    ['你今天心情烦躁，不知为何发了脾气。'+S.husband.name+'愣了一会儿，然后轻轻抱住你：「娘子怀着孩子辛苦了，骂我两句也行。」','你又好气又好笑，最后还是忍不住笑了出来。'],
+    ['夜里抽筋，'+S.husband.name+'被你的呻吟惊醒，连忙爬起来帮你揉腿。','「疼不疼？哪里不舒服？」他紧张得像只无头苍蝇。'],
+    ['今天收到了柳夫人送来的补品，说是给孕妇养身子用的。'+S.husband.name+'感激涕零，连声道谢。'],
+  ];
+  var ev=events[Math.floor(Math.random()*events.length)];
+  S.affection=Math.min(100,S.affection+2);
+  addLog('孕期小事 好感+2');
+  showScene('孕期日常',ev,[{text:'继续养胎',next:'n_sleep',type:'safe'}],'🤰 孕期');
+  updateAff();
+}
+function give_birth(){
+  var hname=S.husband.name;
+  var isBoy=Math.random()>0.5;
+  var childName=isBoy?['霖儿','昭儿','煜儿'][Math.floor(Math.random()*3)]:['婉儿','婷儿','晴儿'][Math.floor(Math.random()*3)];
+  S.isPregnant=false;
+  S.pregnancyDay=0;
+  S.children=S.children||[];
+  S.children.push({name:childName,gender:isBoy?'男':'女',dayBorn:S.day});
+  S.affection=Math.min(100,S.affection+15);
+  addLog('孩子出生！'+childName+(isBoy?'男孩':'女孩')+'！好感+15');
+  showScene('临盆',['夜里，你突然感到阵痛袭来。',hname+'惊慌失措，连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',hname+'冲进房间，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……谢谢你……」'], [{text:'抱抱我们的孩子',next:'child_scene',type:'love'}],'🎉 生产');
+  updateAff();
+}
+function child_scene(){
+  var hname=S.husband.name;
+  var child=S.children[S.children.length-1];
+  var gender=child.gender==='男'?'小公子':'小千金';
+  S.affection=Math.min(100,S.affection+5);
+  addLog('一家三口 好感+5');
+  showScene('有了孩子的生活',[hname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。','他常常抱着孩子，轻声唱着歌，歌声虽然不怎么好听，却无比温柔。',gender+'「'+child.name+'」渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。'], [{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
+  updateAff();
+}
+
+// ========== 认识新人 ==========
+function meet_new_man(manId){
+  // 在AVAILABLE_MEN中找一个未遇到的
+  var man=AVAILABLE_MEN.find(function(m){return m.id===manId;});
+  if(!man)return;
+  S.metMen[manId]=true;
+  if(!S.availableMen)S.availableMen=[];
+  if(S.availableMen.indexOf(manId)<0)S.availableMen.push(manId);
+  addLog('遇见'+man.name);
+  var texts=[
+    '今日在'+man.meetScene+'，你遇见了一位意想不到的人——'+man.name+'。',
+    man.desc,
+    '他似乎也注意到了你，微微点头致意后，便匆匆离去。',
+    '但你总觉得，这不会是你们最后一次见面……'
+  ];
+  showScene('偶遇',texts,[{text:'记住他的名字',next:'go_home',type:'safe'}],'👤 新面孔');
+}
+function man_detail(manId){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===manId;});
+  if(!man){showScene('打听',['此人信息不详。'],[{text:'返回',next:'go_home',type:'safe'}]);return;}
+  var canRecruit=S.identity>=2&&S.cls!=='无业'&&S.affection>=60;
+  var choices=[
+    {text:'和他多聊几句',next:'man_chat_'+manId,type:'love',tag:'💬'},
+  ];
+  if(canRecruit&&S.concubines.indexOf(manId)<0){
+    choices.push({text:'请他常来坐坐（纳妾）',next:'recruit_'+manId,type:'love',tag:'🌸'});
+  }
+  if(S.concubines.indexOf(manId)>=0){
+    choices.push({text:'已是纳入门下，改日再去探望',next:'go_home',type:'safe',tag:'🌸'});
+  }
+  choices.push({text:'就此别过',next:'go_home',type:'safe',tag:'🌙'});
+  showScene(man.name,[man.desc,'你对他产生了好奇——他究竟是什么样的人？'],choices,'👤 '+man.name);
+}
+function man_chat(manId){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===manId;});
+  if(!man){go('go_home','safe');return;}
+  var chats={};
+  chats['doc_yan']=[man.name+'谈起他走南闯北的经历，说起各种奇闻异事，让你大开眼界。','他临走时笑着说：「有缘再见，娘子。」'];
+  chats['rich_xu']=[man.name+'温文尔雅，谈起诗词歌赋来头头是道。他说：「我没什么大志向，只想活得自在。」','你忽然觉得，他活出了你想要却没有的生活。'];
+  chats['martial_pei']=[man.name+'外表冷峻，但一聊起来，发现他其实很有趣。他不喜欢舞刀弄枪，却偏爱琴棋书画。','「在这个时代，男子不习武是要被嘲笑的。」他苦笑。'];
+  chats['artisan_lin']=[man.name+'手很巧，现场给你编了一个小玩意儿。他的笑容灿烂得像阳光。','「娘子要是喜欢，我再给你编个更好看的！」'];
+  chats['scholar_lei']=[man.name+'满腹经纶，说起话来引经据典。你和他聊了很久，发现他其实很有见地。','「知音难觅。」他看着你，眼里带着几分欣赏。'];
+  chats['priest_ye']=[man.name+'说话淡淡的，却句句在点。他送你一个小香包：「道家秘方，安神用的。」','你接过香包，却看不清他眼底的神色。'];
+  var txt=chats[manId]||['你们聊了很久。'];
+  S.concubineAffection[manId]=(S.concubineAffection[manId]||30)+5;
+  addLog(man.name+'好感+5');
+  showScene(man.name+'的对话',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💬 '+man.name);
+  renderStats();
+}
+function recruit_man(manId){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===manId;});
+  if(!man){go('go_home','safe');return;}
+  S.concubines=S.concubines||[];
+  if(S.concubines.indexOf(manId)<0)S.concubines.push(manId);
+  S.concubineAffection[manId]=50;
+  S.availableMen=S.availableMen.filter(function(m){return m!==manId;});
+  addLog('纳妾：'+man.name);
+  showScene('纳妾',[man.name+'闻言，微微一愣，随即笑了。','「娘子抬爱，我……我愿意。」他轻声说，眼里闪着微微的光。','从此，'+man.name+'便入了你家门下。'], [{text:'好好待他',next:'go_home',type:'safe'}],'🌸 纳妾：'+man.name);
+}
+
+// ========== 妾室系统 ==========
+function n_concubine(){
+  if(!S.concubines||S.concubines.length===0){go('n_sleep','safe');return;}
+  var cname=S.concubines[0];
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cname;});
+  var mname=man?man.name:cname;
+  var aff=S.concubineAffection[cname]||50;
+  var opts=[
+    {text:'陪'+mname+'说说话',next:'concubine_chat',type:'love',tag:'💬'},
+    {text:'送他点小礼物',next:'concubine_gift',type:'love',tag:'🎁'},
+  ];
+  if(aff>=60){
+    opts.push({text:'和'+mname+'共度一夜',next:'concubine_night',type:'love',tag:'🌙'});
+  }
+  opts.push({text:'今日就到这里',next:'n_sleep',type:'safe',tag:'🌙'});
+  var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov'};
+  var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov'};
+  var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖',gov:'🏛'};
+  var h='';
+  opts.forEach(function(o){h+='<button class="chc '+cm[o.type]+'" data-next="'+o.next+'" data-type="'+o.type+'"><span class="tag '+tcm[o.type]+'">'+tm[o.type]+'</span> '+o.text+'</button>';});
+  document.getElementById('night-panel').classList.remove('on');
+  showScene('去'+mname+'房中',[mname+'见到你，眼里闪着喜悦的光：「娘子今日怎么得空来了？」','他的房间里收拾得整整齐齐，桌上还放着一壶温好的茶。'],null);
+  document.getElementById('choices').innerHTML=h;
+  document.getElementById('choices').onclick=function(e){
+    var btn=e.target.closest('.chc');
+    if(btn){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
+  };
+}
+function concubine_chat(){
+  if(!S.concubines||S.concubines.length===0){go('n_sleep','safe');return;}
+  var cname=S.concubines[0];
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cname;});
+  var mname=man?man.name:cname;
+  var aff=S.concubineAffection[cname]||50;
+  var texts=[
+    mname+'坐在你对面，聊起他的过去、他的喜好、他的梦想。',
+    '他说：「能遇到娘子，是我这辈子最大的福气。」',
+    '他的笑容真诚而温暖，让这寒冷的夜也多了几分暖意。'
+  ];
+  S.concubineAffection[cname]=Math.min(100,aff+3);
+  addLog(mname+'好感+3');
+  showScene(mname+'的故事',texts,[{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'💬 '+mname);
+}
+function concubine_gift(){
+  if(!S.concubines||S.concubines.length===0){go('n_sleep','safe');return;}
+  if(S.money<15){showScene('小礼物',['你没有足够的银两买礼物。'],[{text:'算了',next:'n_sleep',type:'safe'}]);return;}
+  S.money-=15;
+  var cname=S.concubines[0];
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cname;});
+  var mname=man?man.name:cname;
+  var aff=S.concubineAffection[cname]||50;
+  S.concubineAffection[cname]=Math.min(100,aff+8);
+  addLog('送礼物给'+mname+' -15文 好感+8');
+  showScene('小礼物',['你在街上买了一支精致的发簪，递给了'+mname+'。',mname+'接过礼物，眼眶微微泛红：「娘子……谢谢你。」','他小心翼翼地把发簪收好，像是收到了什么珍贵的宝贝。'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🎁 '+mname);
+  renderStats();
+}
+function concubine_night(){
+  if(!S.concubines||S.concubines.length===0){go('n_sleep','safe');return;}
+  var cname=S.concubines[0];
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cname;});
+  var mname=man?man.name:cname;
+  var aff=S.concubineAffection[cname]||50;
+  var texts=[
+    '夜深了，烛火摇曳。'+mname+'轻轻靠在你身边，神色带着几分娇羞。',
+    '「娘子……」他的声音轻轻的，带着几分期待。',
+    '这一夜，你们相依而眠，他的手指紧紧握着你的衣角，像是生怕你会消失一般。'
+  ];
+  S.concubineAffection[cname]=Math.min(100,aff+5);
+  addLog('与'+mname+'共度一夜 好感+5');
+  showScene(mname+'房中',texts,[{text:'相拥入眠',next:'n_sleep',type:'safe'}],'🌸 '+mname);
+  renderStats();
+}
+
+// ========== 在社交事件中遇到新人 ==========
+function checkMeetNewMan(){
+  // 随机在社交/集市/公务事件中遇到新男性
+  if(!S.availableMen)S.availableMen=[];
+  var unmet=AVAILABLE_MEN.filter(function(m){return !S.metMen[m.id];});
+  if(unmet.length===0)return;
+  // 身份要求：赏花宴需要声望>=10
+  var eligible=unmet.filter(function(m){
+    if(m.meetEvent==='social_event'||m.meetEvent==='social_event_2')return S.prestige>=10;
+    if(m.meetEvent==='gov_dispute_fair')return S.isOfficial;
+    return true;
+  });
+  if(eligible.length===0)return;
+  // 30%概率遇到
+  if(Math.random()<0.3){
+    var man=eligible[Math.floor(Math.random()*eligible.length)];
+    meet_new_man(man.id);
+    return true;
+  }
+  return false;
 }
 
 // ========== 路由 ==========
@@ -789,6 +1184,45 @@ window.go=function(n,t){
     case 'flower_party_3':flower_party_3();break;
     case 'flower_party_refuse':flower_party_refuse();break;
     case 'go_home_return':go_home_return();break;
+
+    case 'n_intimate':n_intimate();break;
+    case 'n_husband_propose':n_husband_propose();break;
+    case 'n_husband_propose_2':n_husband_propose_2();break;
+    case 'n_try_baby':n_try_baby();break;
+    case 'n_fertility_wait':n_fertility_wait();break;
+    case 'n_preg_relief':n_preg_relief();break;
+    case 'n_name_baby':n_name_baby();break;
+    case 'n_preg_checkup':n_preg_checkup();break;
+    case 'n_heartbeat':n_heartbeat();break;
+    case 'n_preg_final':n_preg_final();break;
+    case 'pregnancy_random_event':pregnancy_random_event();break;
+    case 'give_birth':give_birth();break;
+    case 'child_scene':child_scene();break;
+    case 'n_concubine':n_concubine();break;
+    case 'concubine_chat':concubine_chat();break;
+    case 'concubine_gift':concubine_gift();break;
+    case 'concubine_night':concubine_night();break;
+    case 'meet_new_man':meet_new_man(S._lastManId||'');break;
+
+    // 认识新人路由（按id动态分发）
+    case 'man_detail_doc_yan':man_detail('doc_yan');break;
+    case 'man_chat_doc_yan':man_chat('doc_yan');break;
+    case 'recruit_doc_yan':recruit_man('doc_yan');break;
+    case 'man_detail_rich_xu':man_detail('rich_xu');break;
+    case 'man_chat_rich_xu':man_chat('rich_xu');break;
+    case 'recruit_rich_xu':recruit_man('rich_xu');break;
+    case 'man_detail_martial_pei':man_detail('martial_pei');break;
+    case 'man_chat_martial_pei':man_chat('martial_pei');break;
+    case 'recruit_martial_pei':recruit_man('martial_pei');break;
+    case 'man_detail_artisan_lin':man_detail('artisan_lin');break;
+    case 'man_chat_artisan_lin':man_chat('artisan_lin');break;
+    case 'recruit_artisan_lin':recruit_man('artisan_lin');break;
+    case 'man_detail_scholar_lei':man_detail('scholar_lei');break;
+    case 'man_chat_scholar_lei':man_chat('scholar_lei');break;
+    case 'recruit_scholar_lei':recruit_man('scholar_lei');break;
+    case 'man_detail_priest_ye':man_detail('priest_ye');break;
+    case 'man_chat_priest_ye':man_chat('priest_ye');break;
+    case 'recruit_priest_ye':recruit_man('priest_ye');break;
     default:go_home();
   }
 };
