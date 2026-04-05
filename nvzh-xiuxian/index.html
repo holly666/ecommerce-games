@@ -506,26 +506,124 @@ function getLeadRomanceScenes(){
     ];
   }
 }
-function hubRomance(){
-  var baseEvents=[
-    {title:'月下漫步',desc:'与他庭院月下漫步',type:'love',effect:{},affection:12,text:'他与你并肩而行，月光洒在他的眉眼间。你们聊了很多——关于剑道，关于修行，关于从前……分别时，他轻声道：「今晚月色很美。」'},
-    {title:'请教切磋',desc:'他主动提出指点你',type:'safe',effect:{战力:5},affection:8,text:'他手持长剑，身形如风。「看好了。」他的剑光凌厉却不失温柔，一招一式尽数展示给你看。「记住，剑在人在。」他的目光落在你身上，久久不曾移开。'},
-    {title:'心意暗藏',desc:'发现他独自在窗前沉思',type:'love',effect:{},affection:15,text:'你轻叩房门，他回过头，眼中闪过一丝惊讶。「……你怎么来了？」他的声音比平日柔和了几分。「睡不着，出来走走。」你说。他轻笑一声：「那便陪我坐坐吧。」那夜，你们聊了很久很久。'},
-    {title:'煮茶论道',desc:'与他一同品茗论道',type:'smart',effect:{智慧:3},affection:8,text:'他亲自动手煮茶，茶香袅袅。你们从修仙之道聊到人间百态，他见多识广，言谈间尽显风雅。「与你聊天，很轻松。」他忽然说道，耳根似乎有些发红。'},
-    {title:'突发危机',desc:'他旧伤发作，你悉心照料',type:'love',effect:{银两:-5},affection:18,text:'你发现他独自在房中，眉头紧锁，似乎极为痛苦。你不顾他的推辞，为他运功疗伤，熬煮汤药。他沉默良久，轻声道：「……多谢。」目光中，多了一丝从未有过的柔软。'},
+// LEAD-SPECIFIC ROMANCE SCENES (expanded, immersive)
+
+function getLengyehanRomance(){
+  return [
+    {title:"雪夜长谈",desc:"他罕见地打开心门，诉说五年前的往事",type:"love",effect:{},affection:20,
+     text:"那夜，大雪纷飞，天地一片苍茫。你在回廊处寻到冷夜寒，他独立于檐下，肩头已积了薄薄一层雪。\n「……你怎么来了？」他没有回头，声音却比平日轻了几分。\n你走近几步，轻声道：「睡不着，出来走走。」\n他终于转过身。月光下，他的眉眼间少了往日的冰冷，取而代之的是一种你从未见过的脆弱。\n「五年前的今夜……」他忽然开口，目光望向远处的剑冢方向，「我的师兄，在那场大雪中，背负着叛徒的骂名离开宗门。」\n你屏住呼吸，不敢出声。\n「我一直恨他。恨他抛下我，恨他背叛师门，恨他让我独自承受这一切。」他的声音微微颤抖，「可有时候……我又会想，如果那晚我追出去，一切会不会不同？」\n风雪中，他白衣猎猎，神情却恍惚得像一个迷路的孩子。\n「谢谢你愿意听我说这些。」他忽然看向你，目光前所未有的柔和，「五年了，从没有人……愿意听我说这些。」",
+     choices:[{text:"[love] 轻轻握住他冰凉的手，什么也不说",type:"love",affection:18},{text:"[smart] 静静地站在他身旁，陪伴他看这场雪",type:"safe",affection:12},{text:"[risky] 问他：「如果重来一次，你会追出去吗？」",type:"risky",affection:8}]}
   ];
-  var leadScenes=getLeadRomanceScenes();
-  var events=baseEvents.concat(leadScenes);
+}
+
+function getXiaowuhenRomance(){
+  return [
+    {title:"海夜月下",desc:"他教你踏浪舞步，月光洒满甲板",type:"love",effect:{},affection:22,
+     text:"碧落仙岛的夜海，美得让人忘记呼吸。月光如练，在海面上铺开一条银色的路。\n\n萧无痕今日一反常态，没有嬉皮笑脸地调侃你，而是郑重地邀请你到甲板。\n\n「来，我教你一样东西。」\n\n你好奇地走过去，却见他从袖中取出一只小巧的铃鼓，轻轻一晃，便发出悦耳的声响。\n\n「我们部落有个传统——」他一边说，一边轻敲铃鼓，「月圆之夜，男女在海边踏浪而舞。若舞得好，便能得到海神的祝福。」\n\n「可我……不会跳舞啊。」\n\n「没关系。」他笑着拉起你的手，「跟着节奏，踏浪就行。」\n\n铃鼓声响起，他一手持鼓，一手轻轻扶着你的腰，引导你在甲板上踏步。海风吹起他的发丝，月光将他的侧脸勾勒得格外温柔。\n\n「萧无痕……」\n\n「嗯？」\n\n「你以前教过别人吗？」\n\n他轻轻一笑，凑近你耳边低声道：「只教过一个人。那个人……现在就在我眼前。」\n\n海浪声与铃鼓声交织，他忽然停下脚步，认真地看着你：「我以前觉得，一个人过也挺好。可现在……我只想与你跳这支舞，一直跳到天荒地老。」",
+     choices:[
+       {text:"[love] 踮起脚尖，在他唇边印下一个轻吻",type:"love",affection:20},
+       {text:"[smart] 笑着继续踏浪，享受这美好的夜晚",type:"safe",affection:12},
+       {text:"[risky] 故意踩他一脚：「油嘴滑舌！」",type:"risky",affection:8}
+     ]}
+  ];
+}
+
+function getSubaiyiRomance(){
+  return [
+    {title:"药圃日常",desc:"他手把手教你辨认灵药，温柔地为拂去你发间的花瓣",type:"safe",effect:{灵力:8,智慧:3},affection:18,
+     text:"天医谷的药圃，四季如春，漫山遍野开满了各色灵药。苏白衣今日有空，便带你到药圃中，一边走一边教你辨认各种草药。\n\n「这是七叶草，专治内伤。这是雪莲花，可解百毒。这是……」\n\n你跟在他身后，认真地记着。他见你如此用功，唇角微微上扬。\n\n忽然，一阵风吹过，带起漫天花瓣。粉色的花瓣纷纷扬扬，落在你的发间、肩头。\n\n苏白衣停下脚步，目光落在你身上。\n\n「怎么了？」你疑惑地问。\n\n他没有说话，而是轻轻走近你，抬手——\n\n你屏住呼吸，以为他要做什么。\n\n却见他只是慢慢地、小心翼翼地将你发间的花瓣一片片拈下，神情专注得像在对待什么珍贵的宝物。\n\n「花瓣落在头发里，会伤到发丝。」他轻声解释，耳根却悄悄泛红。\n\n你发现，他拈花瓣时，指尖偶尔会擦过你的发梢。那触感轻得像羽毛，却让你的心跳漏了半拍。\n\n「好了。」他收回手，目光温柔，「继续走吧，今天还有十几种药草要认。」\n\n可你分明看见，他看向你的眼神里，多了一些说不清道不明的东西。",
+     choices:[
+       {text:"[love] 轻声道：「苏大哥，你对我真好」",type:"love",affection:15},
+       {text:"[smart] 认真地继续学习，不想辜负他的教导",type:"safe",affection:10},
+       {text:"[risky] 故意问：「你帮别人也这样细心吗？」",type:"risky",affection:8}
+     ]}
+  ];
+}
+
+function getXiongmanrRomance(){
+  return [
+    {title:"篝火晚会",desc:"部落里的篝火节，他教你跳部落战舞",type:"safe",effect:{},affection:20,
+     text:"那是蛮荒部落一年一度的篝火节。\n\n夜幕降临，部落广场上燃起了巨大的篝火。族人们围成一圈，敲着战鼓，跳着粗犷豪放的舞蹈。火光映照着每个人的脸庞，欢乐的气氛感染着每一个人。\n\n熊蛮儿拉着你的手，把你带到圈子中央。\n\n「来，我教你跳舞！」\n\n「可我不会……」\n\n「没关系！」他大手一挥，「我们族里人人都会跳舞，你是我的人，当然也要会！」\n\n说着，他已经拉着你进入了圈子中央，随着鼓点跳了起来。他的舞步粗犷有力，每一个动作都充满了力量感，却又意外地照顾着你——每当你要跟不上节奏，他就会放慢脚步，等你跟上。\n\n「对，就是这样！」他大声鼓励，「再用力一点！你能行的！」\n\n族人们都看着你们，有人吹起了口哨，有人拍起了巴掌。熊蛮儿却完全不在意，目光只看着你，眼中满是笑意。\n\n一曲结束，他忽然伸手将你抱起，在空中转了一圈。\n\n「你跳得真棒！」他笑得像个孩子，「我就知道你能行的！」\n\n篝火映照着他的脸庞，他的笑容比火焰还要热烈。你忽然觉得，这个粗犷的汉子，心里其实比谁都温柔。",
+     choices:[
+       {text:"[love] 踮起脚尖，在他脸上亲了一下",type:"love",affection:18},
+       {text:"[smart] 笑着拍拍他的肩膀，说他教得好",type:"safe",affection:10},
+       {text:"[risky] 故意说：「你跳舞还不如打架厉害呢！」",type:"risky",affection:8}
+     ]}
+  ];
+}
+
+function getDefaultRomance(){
+  return [
+    {title:"月下漫步",desc:"与他庭院月下漫步",type:"love",effect:{},affection:12,
+     text:"他与你并肩而行，月光洒在他的眉眼间。你们聊了很多——分别时，他轻声道：「今晚月色很美。」",
+     choices:[
+       {text:"[love] 轻轻挽住他的手臂",type:"love",affection:10},
+       {text:"[smart] 微笑点头道别",type:"safe",affection:6}
+     ]},
+    {title:"请教切磋",desc:"他主动提出指点你",type:"safe",effect:{战力:5},affection:8,
+     text:"他手持长剑，身形如风。「看好了。」他的剑光凌厉却不失温柔，一招一式尽数展示给你看。",
+     choices:[
+       {text:"[love] 认真记下每一个动作",type:"love",affection:8},
+       {text:"[smart] 请教他剑法的要领",type:"smart",affection:6}
+     ]},
+    {title:"心意暗藏",desc:"发现他独自在窗前沉思",type:"love",effect:{},affection:15,
+     text:"你轻叩房门，他回过头，眼中闪过一丝惊讶。「睡不着，出来走走。」你说。他轻笑一声：「那便陪我坐坐吧。」那夜，你们聊了很久很久。",
+     choices:[
+       {text:"[love] 静静地坐在他身边",type:"love",affection:12},
+       {text:"[smart] 轻声问他有什么心事",type:"smart",affection:8}
+     ]},
+    {title:"煮茶论道",desc:"与他一同品茗论道",type:"smart",effect:{智慧:3},affection:8,
+     text:"他亲自动手煮茶，茶香袅袅。你们从修仙之道聊到人间百态，他见多识广，言谈间尽显风雅。",
+     choices:[
+       {text:"[love] 微笑看着他",type:"love",affection:8},
+       {text:"[smart] 继续和他探讨修行之道",type:"smart",affection:6}
+     ]},
+    {title:"突发危机",desc:"他旧伤发作，你悉心照料",type:"love",effect:{银两:-5},affection:18,
+     text:"你发现他独自在房中，眉头紧锁，似乎极为痛苦。你不顾他的推辞，为他运功疗伤，熬煮汤药。他沉默良久，轻声道：「多谢。」",
+     choices:[
+       {text:"[love] 轻声安慰他",type:"love",affection:15},
+       {text:"[smart] 认真地照顾他直到康复",type:"smart",affection:10}
+     ]}
+  ];
+}
+
+function hubRomance(){
+  var lid=G.maleLead;
+  var events=[];
+  if(lid==='lengyehan')events=getLengyehanRomance();
+  else if(lid==='xiaowuhen')events=getXiaowuhenRomance();
+  else if(lid==='subaiyi')events=getSubaiyiRomance();
+  else if(lid==='xiongmanr')events=getXiongmanrRomance();
+  else events=getDefaultRomance();
+
   var ev=events[Math.floor(Math.random()*events.length)];
   document.getElementById('hubArea').innerHTML='';
-  document.getElementById('sceneArea').innerHTML='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6;font-size:1.2em">&#128149; '+ev.title+' &#128149;</span></div><div style="color:#a78bfa;margin-bottom:12px">'+ev.desc+'</div><div class="narrator" style="margin-top:15px">'+ev.text.replace(/\n/g,'<br>')+'</div></div></div>';
+
+  var html='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6;font-size:1.2em">&#128149; '+ev.title+' &#128149;</span></div><div style="color:#a78bfa;margin-bottom:12px">'+ev.desc+'</div><div class="narrator" style="margin-top:15px">'+ev.text.replace(/\n/g,'<br>')+'</div></div></div>';
+  document.getElementById('sceneArea').innerHTML=html;
+
   var ag=ev.affection||0;
   if(ev.effect)applyEffect(ev.effect,0);
   G.affection=Math.max(0,Math.min(100,G.affection+ag));
   notify('好感度 '+(ag>=0?'+':'')+ag,ag>=10?'love':'positive');
   G.day+=1;
   renderStats();
-  document.getElementById('choicesArea').innerHTML='<div class="choices"><button class="choice-btn love" onclick="renderHub()">[love] 返回主界面</button></div>';
+
+  var choicesHtml='<div class="choices">';
+  if(ev.choices&&ev.choices.length>0){
+    ev.choices.forEach(function(c){
+      choicesHtml+='<button class="choice-btn '+c.type+'" onclick="doRomanceChoice('+c.affection+','+(c.effect?JSON.stringify(c.effect):'null')+',\''+c.type+'\')">'+c.text+'</button>';
+    });
+  }
+  choicesHtml+='<button class="choice-btn love" onclick="renderHub()">[love] 返回主界面</button></div>';
+  document.getElementById('choicesArea').innerHTML=choicesHtml;
+}
+
+function doRomanceChoice(affection,effect,ctype){
+  if(affection)G.affection=Math.max(0,Math.min(100,G.affection+affection));
+  if(effect)applyEffect(effect,0);
+  notify('好感度 +'+affection,'love');
+  renderHub();
 }
 // ── MAIN QUESTS (lead-specific) ───────────────────────────────────
 function hubMain(){
