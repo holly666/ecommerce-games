@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>浮生绘卷：尘缘劫</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #e8d5b7; min-height: 100vh; }
+#game { max-width: 700px; margin: 0 auto; padding: 20px; }
+
+/* 封面 */
+#cover { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; text-align: center; }
+#cover h2 { color: #c9a96e; font-size: 2.2em; margin-bottom: 8px; letter-spacing: 6px; }
+#cover .subtitle { color: #a89070; font-size: 1em; margin-bottom: 30px; letter-spacing: 2px; }
+#cover .desc { color: #7a6a50; font-size: 0.9em; max-width: 460px; line-height: 1.9; margin-bottom: 40px; }
+#cover button.start-btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 14px 48px; border-radius: 8px; cursor: pointer; font-size: 1.05em; font-weight: bold; letter-spacing: 4px; transition: background 0.2s; }
+#cover button.start-btn:hover { background: #e0c080; }
+
+/* 属性条 */
+#stats { display: none; background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 12px 15px; margin-bottom: 16px; }
+#stats.show { display: block; }
+#stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.stat { background: #0f3460; border-radius: 6px; padding: 6px 8px; text-align: center; }
+.stat-name { font-size: 0.7em; color: #a89070; }
+.stat-val { font-size: 1.1em; color: #c9a96e; font-weight: bold; }
+#s-affection-wrap { grid-column: span 4; background: #2a1a3e; border: 1px solid #9a4a6a; border-radius: 6px; padding: 8px 12px; text-align: center; display: none; }
+#s-affection-wrap.show { display: block; }
+#s-daoist-wrap { grid-column: span 4; background: #1a2a3e; border: 1px solid #4a6a9a; border-radius: 6px; padding: 6px 12px; text-align: center; font-size: 0.8em; color: #8ab0d0; display: none; }
+#s-daoist-wrap.show { display: block; }
+#s-realm-wrap { grid-column: span 4; background: #1a1a2e; border: 1px solid #4a4a6a; border-radius: 6px; padding: 6px 12px; display: none; }
+#s-realm-wrap.show { display: block; }
+.daoist-name { color: #c9a96e; font-weight: bold; }
+.aff-bar-bg { background: #1a0a2e; border-radius: 10px; height: 8px; margin-top: 4px; }
+.aff-bar-fill { background: linear-gradient(90deg, #9a4a6a, #c96a8a); border-radius: 10px; height: 8px; transition: width 0.5s; }
+.realm-tags { display: flex; justify-content: center; gap: 12px; font-size: 0.78em; }
+.realm-tag { padding: 2px 8px; border-radius: 4px; }
+.realm-tag.heaven { background: #2a3a5a; color: #8ab0d0; }
+.realm-tag.mortal { background: #3a2a2a; color: #d08080; }
+
+/* 场景 */
+#scene { display: none; background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 18px; margin-bottom: 14px; }
+#scene.show { display: block; }
+#scene-title { color: #c9a96e; font-size: 1.05em; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 8px; }
+#scene-text { line-height: 1.85; color: #d4c4a8; font-size: 0.92em; margin-bottom: 14px; }
+#scene-text p { margin-bottom: 8px; }
+
+/* 选项按钮 */
+.choice { display: block; width: 100%; background: #0f3460; border: 2px solid #5a4a3a; color: #e8d5b7; padding: 12px 14px; margin: 7px 0; border-radius: 8px; cursor: pointer; text-align: left; font-size: 0.92em; line-height: 1.5; transition: all 0.2s; }
+.choice:hover { background: #1a4a7a; transform: translateX(3px); }
+.choice.safe { border-color: #4a8a4a; }
+.choice.safe:hover { background: #1a3a1a; }
+.choice.risky { border-color: #8a3a3a; }
+.choice.risky:hover { background: #3a1a1a; }
+.choice.love { border-color: #8a4a6a; }
+.choice.love:hover { background: #3a1a2a; }
+.choice.smart { border-color: #4a4a8a; }
+.choice.smart:hover { background: #1a1a3a; }
+.choice .tag { display: inline-block; font-size: 0.75em; padding: 1px 6px; border-radius: 3px; margin-right: 5px; font-weight: bold; }
+.tag-safe { background: #2a4a2a; color: #8aca8a; }
+.tag-risky { background: #4a2a2a; color: #ca8a8a; }
+.tag-love { background: #4a2a4a; color: #ca8aca; }
+.tag-smart { background: #2a2a4a; color: #8a8aca; }
+
+/* 存档栏 */
+#save-bar { display: none; text-align: center; margin: 12px 0; }
+#save-bar.show { display: block; }
+button.btn-sm { background: #c9a96e; color: #1a1a2e; border: none; padding: 7px 16px; border-radius: 5px; cursor: pointer; font-size: 0.85em; font-weight: bold; margin: 0 4px; transition: background 0.2s; }
+button.btn-sm:hover { background: #e0c080; }
+button.btn-ghost { background: transparent; color: #7a6a50; border: 1px solid #3a3a3a; padding: 7px 16px; border-radius: 5px; cursor: pointer; font-size: 0.85em; margin: 0 4px; }
+
+/* 角色创建 */
+.step-page { display: none; }
+.step-page.show { display: block; }
+.step-indicator { text-align: center; margin-bottom: 20px; color: #7a6a50; font-size: 0.8em; letter-spacing: 2px; }
+.step-dots { display: flex; justify-content: center; gap: 8px; margin-top: 6px; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: #3a3a3a; }
+.step-dot.active { background: #c9a96e; }
+.step-dot.done { background: #4a8a4a; }
+
+.char-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.char-card { background: #0f3460; border: 2px solid #3a3a5a; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; text-align: left; }
+.char-card:hover { border-color: #c9a96e; transform: translateY(-2px); }
+.char-card.selected { border-color: #c9a96e; background: #1a3a5a; }
+.char-card .c-name { color: #c9a96e; font-size: 1em; font-weight: bold; margin-bottom: 4px; }
+.char-card .c-desc { color: #a89070; font-size: 0.78em; line-height: 1.5; margin-bottom: 6px; }
+.char-card .c-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.char-tag { background: #1a2a4a; color: #7a9aca; font-size: 0.7em; padding: 2px 6px; border-radius: 3px; }
+
+.talent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+.talent-card { background: #0f3460; border: 2px solid #3a3a5a; border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; text-align: left; }
+.talent-card:hover { border-color: #c9a96e; }
+.talent-card.selected { border-color: #c9a96e; background: #1a3a5a; }
+.talent-card .t-name { color: #c9a96e; font-size: 0.95em; font-weight: bold; margin-bottom: 3px; }
+.talent-card .t-desc { color: #a89070; font-size: 0.75em; line-height: 1.4; }
+.talent-card .t-effect { color: #8aca8a; font-size: 0.72em; margin-top: 4px; }
+
+.selected-note { background: #1a2a1a; border: 1px solid #4a8a4a; border-radius: 6px; padding: 10px; margin: 8px 0; font-size: 0.85em; color: #8aca8a; }
+
+.confirm-btn { display: block; width: 100%; background: #4a8a4a; color: #fff; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; letter-spacing: 2px; margin-top: 12px; transition: background 0.2s; }
+.confirm-btn:hover { background: #5a9a5a; }
+.confirm-btn:disabled { background: #3a5a3a; color: #6a6a6a; cursor: not-allowed; }
+
+.name-input-wrap { background: #0f3460; border: 1px solid #c9a96e; border-radius: 8px; padding: 14px; margin: 12px 0; }
+.name-input-wrap label { color: #a89070; font-size: 0.8em; display: block; margin-bottom: 6px; }
+.name-input-wrap input { width: 100%; background: #16213e; border: 1px solid #5a4a3a; color: #e8d5b7; padding: 10px 12px; border-radius: 6px; font-size: 1em; }
+.name-row { display: flex; gap: 10px; }
+.name-row .name-input-wrap { flex: 1; margin: 0; }
+
+.stat-panel { background: #0f3460; border: 1px solid #c9a96e; border-radius: 10px; padding: 16px; margin: 12px 0; }
+.stat-panel-title { color: #c9a96e; font-size: 1em; font-weight: bold; margin-bottom: 12px; text-align: center; }
+.stat-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #2a3a5a; font-size: 0.85em; }
+.stat-row:last-child { border-bottom: none; }
+.stat-row .s-label { color: #a89070; }
+.stat-row .s-value { color: #c9a96e; font-weight: bold; }
+.talent-display { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.talent-badge { background: #2a3a5a; color: #8ab0d0; font-size: 0.75em; padding: 3px 8px; border-radius: 4px; }
+
+.time-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 8px 12px; background: #0f3460; border-radius: 6px; font-size: 0.8em; color: #a89070; }
+
+.next-btn { display: block; width: 100%; background: #c9a96e; color: #1a1a2e; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; letter-spacing: 2px; margin-top: 12px; transition: background 0.2s; }
+.next-btn:hover { background: #e0c080; }
+
+#log-wrap { display: none; background: #0d1b2a; border: 1px solid #333; border-radius: 8px; padding: 10px; margin-top: 14px; max-height: 130px; overflow-y: auto; font-size: 0.78em; color: #7a6a50; line-height: 1.6; }
+#log-wrap.show { display: block; }
+.log-entry { border-bottom: 1px solid #222; padding: 3px 0; }
+
+.daoist-card { background: #0f3460; border: 2px solid #3a3a5a; border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; text-align: left; margin-bottom: 10px; }
+.daoist-card:hover { border-color: #c9a96e; transform: translateY(-2px); }
+.daoist-card.selected { border-color: #c9a96e; background: #1a3a5a; }
+.daoist-card .d-name { color: #c9a96e; font-size: 1.1em; font-weight: bold; margin-bottom: 4px; }
+.daoist-card .d-type { color: #c96a8a; font-size: 0.78em; margin-bottom: 6px; }
+.daoist-card .d-desc { color: #a89070; font-size: 0.8em; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div id="game">
+
+  <div id="cover">
+    <h2>🌀 浮生绘卷</h2>
+    <div class="subtitle">尘 缘 劫</div>
+    <div class="desc">
+      修仙界，万族林立，大道沉浮。<br>
+      你本是凡尘一粟，偶入仙门，踏上漫漫修行路。<br>
+      红尘炼心，道途多舛，情之一字，最是难渡。<br><br>
+      命盘已定，道心何往？<br>
+      是顺应天道，还是逆天改命？<br>
+      是入世红尘，还是出世忘情？<br><br>
+      一切，从今日开始。
+    </div>
+    <button class="start-btn" onclick="startGame()">踏入仙途</button>
+  </div>
+
+  <!-- 属性条 -->
+  <div id="stats">
+    <div id="stats-grid">
+      <div class="stat"><div class="stat-name">💎 灵石</div><div class="stat-val" id="s-lingshi">100</div></div>
+      <div class="stat"><div class="stat-name">⭐ 声望</div><div class="stat-val" id="s-prestige">0</div></div>
+      <div class="stat"><div class="stat-name">🤝 人脉</div><div class="stat-val" id="s-social">0</div></div>
+      <div class="stat"><div class="stat-name">📖 智慧</div><div class="stat-val" id="s-wit">0</div></div>
+      <div class="stat"><div class="stat-name">⚔️ 魄力</div><div class="stat-val" id="s-bravo">0</div></div>
+      <div class="stat"><div class="stat-name">📅</div><div class="stat-val" id="s-day">1</div></div>
+      <div class="stat"><div class="stat-name">🌙</div><div class="stat-val" id="s-phase">清晨</div></div>
+      <div class="stat"><div class="stat-name">🏷️</div><div class="stat-val" id="s-sect">散修</div></div>
+      <div id="s-daoist-wrap">道侣：<span class="daoist-name" id="s-daoist-name">—</span></div>
+      <div id="s-affection-wrap">
+        <div style="color:#c96a8a;font-size:0.78em">💕 道侣好感 <span id="s-affection-num">50</span>/100</div>
+        <div class="aff-bar-bg"><div class="aff-bar-fill" id="s-affection-bar" style="width:50%"></div></div>
+      </div>
+      <div id="s-realm-wrap">
+        <div class="realm-tags">
+          <span class="realm-tag heaven">天道 <span id="s-heaven">0</span></span>
+          <span class="realm-tag mortal">逆天 <span id="s-mortal">0</span></span>
+          <span style="color:#7a6a50">|</span>
+          <span class="realm-tag" style="background:#1a2a1a;color:#8aca8a" id="s-worldly-text">出世·0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景 -->
+  <div id="scene">
+    <div id="scene-title"></div>
+    <div id="scene-text"></div>
+    <div id="choices"></div>
+  </div>
+
+  <!-- 存档栏 -->
+  <div id="save-bar">
+    <button class="btn-sm" onclick="saveGame()">💾 存档</button>
+    <button class="btn-sm" onclick="loadGame()">📂 读档</button>
+    <button class="btn-ghost" onclick="confirmReset()">🔄 重开</button>
+  </div>
+
+  <!-- 日志 -->
+  <div id="log-wrap"><div id="log"></div></div>
+
+  <!-- 角色创建步骤容器 -->
+  <div id="step-pages"></div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// 数据
+// ═══════════════════════════════════════════════════════
+
+var S = {};
+var _step = 0; // 0=封面 1~4=角色创建 5=选道侣 6=命名 7=游戏中
+
+var APPEARANCES = [
+  { id: 'moon', name: '清冷孤月', desc: '肌肤胜雪，眉目如星河淡漠，气质疏离出尘', tags: ['冷艳', '高岭之花'] },
+  { id: 'rose', name: '明艳玫瑰', desc: '容色照人，一颦一笑皆动人心弦，艳而不俗', tags: ['明艳', '万人迷'] },
+  { id: 'deer', name: '无辜白鹿', desc: '清澈眼眸，我见犹怜，天真中带几分娇憨', tags: ['无辜', '软萌'] },
+  { id: 'begonia', name: '温婉海棠', desc: '举止温婉，柔声细语，如春风拂面', tags: ['温婉', '知礼'] },
+  { id: 'lotus', name: '娇憨芙蓉', desc: '甜美娇俏，带点不讲道理的可爱', tags: ['娇憨', '直率'] },
+  { id: 'bamboo', name: '飒爽青竹', desc: '眉宇间英气勃勃，行事爽利，不让须眉', tags: ['飒爽', '干练'] },
+  { id: 'bloodlotus', name: '妖异血莲', desc: '异域风情，眉心红莲印记，美艳中透危险', tags: ['妖异', '神秘'] },
+  { id: 'jasmine', name: '邻家茉莉', desc: '清新淡雅，亲切可人，毫无攻击性', tags: ['清新', '亲切'] },
+  { id: 'orchid', name: '空谷幽兰', desc: '清雅高洁，寡言少语，孤芳自赏', tags: ['清雅', '高洁'] },
+  { id: 'jade', name: '璞玉未琢', desc: '质朴天然，全无修饰，却有动人灵气', tags: ['天然', '纯朴'] },
+];
+
+var PERSONALITIES = [
+  { id: 'proud', name: '娇纵大小姐', desc: '生来金贵，享惯荣华，脾气大但心里有数', tags: ['娇纵', '聪颖'] },
+  { id: 'white lotus', name: '心机小白莲', desc: '柔弱外表下，城府极深，善于以退为进', tags: ['城府', '柔弱'] },
+  { id: 'lively', name: '活泼邻家女', desc: '大大咧咧，人来熟，从不给自己设限', tags: ['活泼', '社牛'] },
+  { id: 'gentle', name: '温婉知性姐', desc: '饱读诗书，通情达理，是非分明', tags: ['知性', '稳重'] },
+  { id: 'ice', name: '冰山高冷花', desc: '拒人于千里之外，冷面热心，不善表达', tags: ['高冷', '外冷内热'] },
+];
+
+var SECTS = [
+  { id: 'qingyun', name: '青云宗', type: '剑道', desc: '以剑证道，剑意通神。青云宗弟子皆为剑痴，一剑破万法。', tags: ['剑道', '战斗'] },
+  { id: 'xuantian', name: '玄天阁', type: '术法', desc: '研习天机术数，阵法符箓，手段诡谲多变。', tags: ['术法', '谋略'] },
+  { id: 'wanbao', name: '万宝阁', type: '商道', desc: '天下商贾汇聚，奇珍异宝尽在掌中，以商入道。', tags: ['商道', '财富'] },
+  { id: 'baicao', name: '百草堂', type: '丹道', desc: '炼丹制药，悬壶济世，丹道一途独步天下。', tags: ['丹道', '治愈'] },
+  { id: 'yushou', name: '御兽山', type: '驭兽', desc: '驭使灵兽，与万兽为伴，以心换心。', tags: ['驭兽', '自然'] },
+];
+
+var TALENTS = [
+  { id: 'sword', name: '天生剑骨', desc: '天生与剑意相融，剑道悟性远超常人', effect: '剑道修炼效率+50%' },
+  { id: 'linglong', name: '七窍玲珑', desc: '心窍玲珑，感知敏锐，洞察人心', effect: '智慧+3，人脉+2' },
+  { id: 'miaoyu', name: '妙语解颐', desc: '言辞机敏，善于化解尴尬与冲突', effect: '人脉+3，避免纷争' },
+  { id: 'hongyun', name: '鸿运当头', desc: '福缘深厚，常有奇遇，逢凶化吉', effect: '每日灵石+20' },
+  { id: 'tian_sha', name: '天煞孤星', desc: '命犯孤星，注定道途多舛，却也磨练心志', effect: '魄力+5，境界突破-1小节' },
+  { id: 'wanren', name: '万人迷', desc: '天生魅惑，男女老少皆喜欢你', effect: '声望+3，道侣好感+10' },
+  { id: 'bing', name: '病美人', desc: '体弱多病但容色惊人，激发他人保护欲', effect: '道侣好感+15，体力-1档' },
+];
+
+var DAOISTS = [
+  { id: 'gu', name: '顾长卿', type: '清冷禁欲·师兄', desc: '青云宗大弟子，剑道天才，清冷出尘，禁欲克制，却为你一人破例', bg: '青云宗大弟子', tags: ['清冷', '剑道', '克制'] },
+  { id: 'liu', name: '柳云舟', type: '邪魅狷狂·魔修', desc: '魔道散修，亦正亦邪，玩世不恭，却对你一见倾心', bg: '魔道散修', tags: ['邪魅', '狂傲', '深情'] },
+  { id: 'shen', name: '沈墨白', type: '温柔腹黑·丹师', desc: '药王谷弟子，城府极深，表面温润如玉，内里算计周密', bg: '药王谷弟子', tags: ['温柔', '腹黑', '丹道'] },
+  { id: 'chu', name: '楚灼', type: '阳光开朗·体修', desc: '炼体修士，重情重义，笑容如烈日，心思却极细腻', bg: '炼体修士', tags: ['阳光', '热血', '忠诚'] },
+];
+
+var REALMS = [
+  { name: '练气期', min: 0 },
+  { name: '筑基期', min: 10 },
+  { name: '金丹期', min: 30 },
+  { name: '元婴期', min: 60 },
+  { name: '化神期', min: 100 },
+];
+
+// 10种每日事件
+var EVENTS = [
+  {
+    id: 'recruit',
+    title: '📜 宗门招募',
+    text: '宗门告示：门下弟子紧缺，诚招新人协助。有三名求仙者正在候审，你奉命主考。',
+    choices: [
+      { text: '严格考核，只取最优', type: 'smart', effects: { prestige: 2, wit: 1 }, log: '严格考核，声望+2，智慧+1' },
+      { text: '宽松录取，广结善缘', type: 'safe', effects: { social: 2, prestige: -1 }, log: '宽容录取，人脉+2，声望-1' },
+      { text: '私下收受，放其入场', type: 'risky', effects: { lingshi: 30, prestige: -2 }, log: '收受贿赂，灵石+30，声望-2' },
+    ]
+  },
+  {
+    id: 'treasure',
+    title: '💎 秘境探宝',
+    text: '外出历练时，你发现了一处隐蔽的秘境入口。传闻里面有上古机缘，但也有未知凶险。',
+    choices: [
+      { text: '呼朋引伴，共同探索', type: 'safe', effects: { social: 2, lingshi: 15 }, log: '结伴探秘，人脉+2，灵石+15' },
+      { text: '独自潜入，先探虚实', type: 'smart', effects: { wit: 2, prestige: 1 }, log: '谨慎独探，智慧+2，声望+1' },
+      { text: '冒险深入，直取机缘', type: 'risky', effects: { lingshi: 50, prestige: 3, bravo: 1 }, log: '冒险得宝，灵石+50/声望+3/魄力+1', failEffects: { lingshi: -20, bravo: 1 }, failLog: '遇险受伤，灵石-20，魄力+1' },
+    ]
+  },
+  {
+    id: 'pill',
+    title: '🔥 炼丹突破',
+    text: '闭关炼丹三日，终于到了开炉的关键时刻。这一炉若成，修为可更进一层。',
+    choices: [
+      { text: '稳妥降温，缓缓开炉', type: 'safe', effects: { prestige: 1, wit: 1 }, log: '稳妥开炉，声望+1，智慧+1' },
+      { text: '依古法炼制，不冒险', type: 'smart', effects: { realm: 1 }, log: '古法炼丹，境界+1' },
+      { text: '加入珍材，搏一把', type: 'risky', effects: { realm: 3, prestige: 2 }, log: '珍材炼丹，境界+3/声望+2', failEffects: { lingshi: -30, prestige: -1 }, failLog: '炼丹失败，灵石-30，声望-1' },
+    ]
+  },
+  {
+    id: 'beast',
+    title: '🐉 灵兽对峙',
+    text: '一只受伤的高阶灵兽闯入宗门范围，众人皆不敢轻举妄动——它正虎视眈眈盯着你。',
+    choices: [
+      { text: '以德报怨，尝试驯服', type: 'love', effects: { social: 2, prestige: 2, affection: 3 }, log: '以德驯服，人脉+2/声望+2/道侣好感+3' },
+      { text: '联合出击，强行镇压', type: 'risky', effects: { prestige: 3, bravo: 2, lingshi: 20 }, log: '镇压灵兽，声望+3/魄力+2/灵石+20', failEffects: { bravo: -1, social: -1 }, failLog: '镇压失败，魄力-1，人脉-1' },
+      { text: '布下困阵，智取捕获', type: 'smart', effects: { wit: 2, lingshi: 25 }, log: '智取灵兽，智慧+2，灵石+25' },
+    ]
+  },
+  {
+    id: 'rival',
+    title: '⚔️ 同门挑衅',
+    text: '一名师兄对你冷嘲热讽，说你不过是靠运气走到今天。众目睽睽之下，你如何应对？',
+    choices: [
+      { text: '不屑一顾，拂袖而去', type: 'safe', effects: { wit: 1, heaven: 1 }, log: '不屑应对，智慧+1，天道+1' },
+      { text: '言语反击，揭其短处', type: 'risky', effects: { bravo: 2, prestige: 2, affection: -2 }, log: '言语反击，魄力+2/声望+2/道侣好感-2' },
+      { text: '含笑不语，以实力说话', type: 'smart', effects: { prestige: 3, wit: 1, heaven: 1 }, log: '实力服人，声望+3/智慧+1/天道+1' },
+    ]
+  },
+  {
+    id: 'night',
+    title: '🌙 道侣夜话',
+    text: '夜深人静，你的道侣轻声唤你，说有心里话想讲。今夜月色正好……',
+    choices: [
+      { text: '温柔相迎，细听心事', type: 'love', effects: { affection: 8, mortal: 1 }, log: '温情夜话，道侣好感+8，逆天+1' },
+      { text: '静心相陪，以行动表达', type: 'safe', effects: { affection: 5, worldly: 1 }, log: '以行代言，道侣好感+5，入世+1' },
+      { text: '把酒言欢，共论仙道', type: 'smart', effects: { affection: 4, wit: 1, heaven: 1 }, log: '论道交心，智慧+1/天道+1/好感+4' },
+    ]
+  },
+  {
+    id: 'disciple',
+    title: '👤 新弟子拜师',
+    text: '一名天赋不俗的年轻人请求拜入你门下修行。你观察他片刻，心中已有计较。',
+    choices: [
+      { text: '收入门下，倾囊相授', type: 'safe', effects: { social: 2, prestige: 2, lingshi: -10 }, log: '收徒授业，人脉+2/声望+2/灵石-10' },
+      { text: '考验三月，再定去留', type: 'smart', effects: { wit: 1, prestige: 1, social: 1 }, log: '设下考验，智慧+1/声望+1/人脉+1' },
+      { text: '收为记名，留有余地', type: 'love', effects: { social: 3, affection: 3 }, log: '记名弟子，人脉+3，道侣好感+3' },
+    ]
+  },
+  {
+    id: 'trade',
+    title: '🏮 市集采购',
+    text: '每逢大集，万宝阁的拍卖场便热闹非凡。今日有几件心头好待价而沽，你的灵石不太够……',
+    choices: [
+      { text: '量入为出，只买必需的', type: 'safe', effects: { lingshi: 10, prestige: 1 }, log: '理性采购，灵石+10，声望+1' },
+      { text: '低价吃进，高价卖出', type: 'smart', effects: { lingshi: 40, wit: 1 }, log: '商海获利，灵石+40，智慧+1', failEffects: { lingshi: -20 }, failLog: '投资失误，灵石-20' },
+      { text: '典当珍物，换取心头好', type: 'risky', effects: { prestige: 3, realm: 1, lingshi: -25 }, log: '豪掷千金，声望+3/境界+1/灵石-25' },
+    ]
+  },
+  {
+    id: 'cultivation',
+    title: '📿 闭关修炼',
+    text: '你决定闭关冲击更高境界。灵气汇聚于丹田，你能感觉到突破的契机正在靠近……',
+    choices: [
+      { text: '稳扎稳打，徐徐图之', type: 'safe', effects: { realm: 1, heaven: 1 }, log: '稳中求进，境界+1，天道+1' },
+      { text: '心无旁骛，全力冲击', type: 'risky', effects: { realm: 2, mortal: 1, prestige: 1 }, log: '全力突破，境界+2/逆天+1/声望+1', failEffects: { realm: -1, bravo: 1 }, failLog: '突破受挫，境界-1，魄力+1' },
+      { text: '借丹药辅助，一举成功', type: 'smart', effects: { realm: 2, lingshi: -20 }, log: '丹道辅助，境界+2，灵石-20' },
+    ]
+  },
+  {
+    id: 'tianji',
+    title: '⚡ 天机感悟',
+    text: '冥冥中似有天道指引，你于梦中窥见一线天机——似与你的命格有关。醒来后，你努力回想那模糊的启示。',
+    choices: [
+      { text: '顺其自然，不强求参悟', type: 'safe', effects: { heaven: 1, wit: 1 }, log: '顺其自然，天道+1，智慧+1' },
+      { text: '强行追溯梦中真相', type: 'risky', effects: { mortal: 2, wit: 2 }, log: '逆天追索，逆天+2，智慧+2', failEffects: { mortal: 1, wit: -1 }, failLog: '追索失败，逆天+1，智慧-1' },
+      { text: '记录下来，日后再参详', type: 'smart', effects: { wit: 1, prestige: 1 }, log: '记录天机，智慧+1，声望+1' },
+    ]
+  },
+];
+
+var PHASES = ['清晨', '午后', '黄昏', '子夜'];
+
+// ═══════════════════════════════════════════════════════
+// 工具函数
+// ═══════════════════════════════════════════════════════
+
+function rnd(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function rndInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function getRealmName() {
+  var realm = S.realm || 0;
+  for (var i = REALMS.length - 1; i >= 0; i--) {
+    if (realm >= REALMS[i].min) return REALMS[i].name;
+  }
+  return REALMS[0].name;
+}
+
+function getWorldlyText() {
+  var w = S.worldly || 0;
+  if (w >= 20) return '入世·' + w + '（红尘炼心）';
+  if (w >= 10) return '入世·' + w;
+  if (w >= 0) return '出世·' + Math.abs(w);
+  return '出世·' + Math.abs(w);
+}
+
+function updateStatsUI() {
+  document.getElementById('s-lingshi').textContent = S.lingshi;
+  document.getElementById('s-prestige').textContent = S.prestige;
+  document.getElementById('s-social').textContent = S.social;
+  document.getElementById('s-wit').textContent = S.wit;
+  document.getElementById('s-bravo').textContent = S.bravo;
+  document.getElementById('s-day').textContent = S.day;
+  document.getElementById('s-phase').textContent = PHASES[S.phase];
+  document.getElementById('s-sect').textContent = S.sect || '散修';
+  document.getElementById('s-heaven').textContent = S.heaven || 0;
+  document.getElementById('s-mortal').textContent = S.mortal || 0;
+  document.getElementById('s-worldly-text').textContent = getWorldlyText();
+  if (S.daoist) {
+    document.getElementById('s-daoist-name').textContent = S.daoist;
+    document.getElementById('s-daoist-wrap').classList.add('show');
+    document.getElementById('s-affection-wrap').classList.add('show');
+    document.getElementById('s-affection-num').textContent = S.affection;
+    document.getElementById('s-affection-bar').style.width = S.affection + '%';
+  }
+}
+
+function showScene(title, text, choices) {
+  var scene = document.getElementById('scene');
+  var titleEl = document.getElementById('scene-title');
+  var textEl = document.getElementById('scene-text');
+  var choicesEl = document.getElementById('choices');
+  titleEl.textContent = title;
+  textEl.innerHTML = text.split('\n').map(function(p) { return '<p>' + p + '</p>'; }).join('');
+  choicesEl.innerHTML = '';
+  choices.forEach(function(c) {
+    var btn = document.createElement('button');
+    btn.className = 'choice ' + (c.type || '');
+    var tagClass = { safe: 'tag-safe', risky: 'tag-risky', love: 'tag-love', smart: 'tag-smart' }[c.type] || 'tag-safe';
+    var typeText = { safe: '稳健', risky: '冒险', love: '情感', smart: '智慧' }[c.type] || '选择';
+    btn.innerHTML = '<span class="tag ' + tagClass + '">' + typeText + '</span>' + c.text;
+    btn.onclick = function() { c.fn(); };
+    choicesEl.appendChild(btn);
+  });
+  scene.classList.add('show');
+  document.getElementById('save-bar').classList.add('show');
+  document.getElementById('log-wrap').classList.add('show');
+}
+
+function addLog(text) {
+  var log = document.getElementById('log');
+  var entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.textContent = '第' + S.day + '天·' + PHASES[S.phase] + '：' + text;
+  log.insertBefore(entry, log.firstChild);
+}
+
+function applyEffects(effects) {
+  if (!effects) return;
+  Object.keys(effects).forEach(function(k) {
+    S[k] = (S[k] || 0) + effects[k];
+  });
+  updateStatsUI();
+}
+
+function applyTalentEffects() {
+  if (!S.talents) return;
+  if (S.talents.indexOf('linglong') >= 0) { S.wit += 3; S.social += 2; }
+  if (S.talents.indexOf('miaoyu') >= 0) { S.social += 3; }
+  if (S.talents.indexOf('wanren') >= 0) { S.prestige += 3; S.affection += 10; }
+  if (S.talents.indexOf('bing') >= 0) { S.affection += 15; }
+  if (S.talents.indexOf('tian_sha') >= 0) { S.bravo += 5; }
+  if (S.talents.indexOf('hongyun') >= 0) { S.lingshi += 20; }
+}
+
+function nextPhase() {
+  S.phase++;
+  if (S.phase >= PHASES.length) {
+    S.phase = 0;
+    S.day++;
+    if (S.talents && S.talents.indexOf('hongyun') >= 0) {
+      S.lingshi += 20;
+    }
+  }
+  updateStatsUI();
+  doRandomEvent();
+}
+
+function doRandomEvent() {
+  var pool = EVENTS.slice();
+  var ev1 = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+  var ev2 = pool[Math.floor(Math.random() * pool.length)];
+  if (!ev2) ev2 = ev1;
+  doEvent(ev1, function() {
+    doEvent(ev2, function() {
+      afterEvent();
+    });
+  });
+}
+
+function doEvent(ev, cb) {
+  var title = ev.title;
+  var text = ev.text;
+  var choices = ev.choices.map(function(c) {
+    return {
+      text: c.text,
+      type: c.type,
+      fn: (function(ch) {
+        return function() {
+          var fail = ch.failEffects && Math.random() < 0.4;
+          var eff = fail ? ch.failEffects : ch.effects;
+          var logText = fail ? ch.failLog : ch.log;
+          applyEffects(eff);
+          addLog(logText);
+          showEventResult(ev.title, logText, cb);
+        };
+      })(c)
+    };
+  });
+  showScene(title, text, choices);
+}
+
+function showEventResult(title, result, cb) {
+  var scene = document.getElementById('scene');
+  var titleEl = document.getElementById('scene-title');
+  var textEl = document.getElementById('scene-text');
+  var choicesEl = document.getElementById('choices');
+  titleEl.textContent = '📋 ' + title;
+  textEl.innerHTML = '<p style="color:#8aca8a;line-height:2">' + result + '</p>';
+  choicesEl.innerHTML = '';
+  var btn = document.createElement('button');
+  btn.className = 'next-btn';
+  btn.textContent = '继续下一个小事件 →';
+  btn.onclick = cb;
+  choicesEl.appendChild(btn);
+}
+
+// ═══════════════════════════════════════════════════════
+// 角色创建流程
+// ═══════════════════════════════════════════════════════
+
+var _selections = {
+  appearance: null,
+  personality: null,
+  sect: null,
+  talents: []
+};
+
+function renderStepDots(total, current) {
+  var dots = '';
+  for (var i = 1; i <= total; i++) {
+    if (i < current) dots += '<div class="step-dot done"></div>';
+    else if (i === current) dots += '<div class="step-dot active"></div>';
+    else dots += '<div class="step-dot"></div>';
+  }
+  return '<div class="step-indicator">' + (current - 1) + ' / ' + total + '</div><div class="step-dots">' + dots + '</div>';
+}
+
+function hideCover() {
+  document.getElementById('cover').style.display = 'none';
+}
+
+function showStep1() {
+  _step = 1;
+  var html = '<div id="step-1" class="step-page show">' +
+    renderStepDots(4, 1) +
+    '<div class="stat-panel"><div class="stat-panel-title">第一步：定格容貌</div></div>' +
+    '<div class="char-grid" id="app-grid"></div>' +
+    '<div id="app-selected"></div>' +
+    '<button class="confirm-btn" id="app-confirm" onclick="confirmStep1()" disabled>确认容貌</button>' +
+    '</div>';
+  document.getElementById('step-pages').innerHTML = html;
+
+  var grid = document.getElementById('app-grid');
+  APPEARANCES.forEach(function(a) {
+    var card = document.createElement('div');
+    card.className = 'char-card';
+    card.dataset.id = a.id;
+    card.innerHTML = '<div class="c-name">' + a.name + '</div>' +
+      '<div class="c-desc">' + a.desc + '</div>' +
+      '<div class="c-tags">' + a.tags.map(function(t) { return '<span class="char-tag">' + t + '</span>'; }).join('') + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll('#app-grid .char-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      _selections.appearance = a;
+      document.getElementById('app-selected').innerHTML = '<div class="selected-note">已选：「' + a.name + '」' + a.desc + '</div>';
+      document.getElementById('app-confirm').disabled = false;
+    };
+    grid.appendChild(card);
+  });
+}
+
+function confirmStep1() {
+  if (!_selections.appearance) return;
+  document.getElementById('step-1').classList.remove('show');
+  showStep2();
+}
+
+function showStep2() {
+  _step = 2;
+  var html = '<div id="step-2" class="step-page show">' +
+    renderStepDots(4, 2) +
+    '<div class="stat-panel"><div class="stat-panel-title">第二步：择定性格</div></div>' +
+    '<div class="char-grid" id="pers-grid"></div>' +
+    '<div id="pers-selected"></div>' +
+    '<button class="confirm-btn" id="pers-confirm" onclick="confirmStep2()" disabled>确认性格</button>' +
+    '</div>';
+  document.getElementById('step-pages').innerHTML = html;
+
+  var grid = document.getElementById('pers-grid');
+  PERSONALITIES.forEach(function(p) {
+    var card = document.createElement('div');
+    card.className = 'char-card';
+    card.dataset.id = p.id;
+    card.innerHTML = '<div class="c-name">' + p.name + '</div>' +
+      '<div class="c-desc">' + p.desc + '</div>' +
+      '<div class="c-tags">' + p.tags.map(function(t) { return '<span class="char-tag">' + t + '</span>'; }).join('') + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll('#pers-grid .char-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      _selections.personality = p;
+      document.getElementById('pers-selected').innerHTML = '<div class="selected-note">已选：「' + p.name + '」' + p.desc + '</div>';
+      document.getElementById('pers-confirm').disabled = false;
+    };
+    grid.appendChild(card);
+  });
+}
+
+function confirmStep2() {
+  if (!_selections.personality) return;
+  document.getElementById('step-2').classList.remove('show');
+  showStep3();
+}
+
+function showStep3() {
+  _step = 3;
+  var html = '<div id="step-3" class="step-page show">' +
+    renderStepDots(4, 3) +
+    '<div class="stat-panel"><div class="stat-panel-title">第三步：择取宗门</div></div>' +
+    '<div class="char-grid" id="sect-grid"></div>' +
+    '<div id="sect-selected"></div>' +
+    '<button class="confirm-btn" id="sect-confirm" onclick="confirmStep3()" disabled>确认宗门</button>' +
+    '</div>';
+  document.getElementById('step-pages').innerHTML = html;
+
+  var grid = document.getElementById('sect-grid');
+  SECTS.forEach(function(s) {
+    var card = document.createElement('div');
+    card.className = 'char-card';
+    card.dataset.id = s.id;
+    card.innerHTML = '<div class="c-name">' + s.name + ' <span style="color:#8ab0d0;font-size:0.85em">— ' + s.type + '</span></div>' +
+      '<div class="c-desc">' + s.desc + '</div>' +
+      '<div class="c-tags">' + s.tags.map(function(t) { return '<span class="char-tag">' + t + '</span>'; }).join('') + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll('#sect-grid .char-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      _selections.sect = s;
+      document.getElementById('sect-selected').innerHTML = '<div class="selected-note">已选：「' + s.name + '·' + s.type + '」' + s.desc + '</div>';
+      document.getElementById('sect-confirm').disabled = false;
+    };
+    grid.appendChild(card);
+  });
+}
+
+function confirmStep3() {
+  if (!_selections.sect) return;
+  document.getElementById('step-3').classList.remove('show');
+  showStep4();
+}
+
+function showStep4() {
+  _step = 4;
+  var html = '<div id="step-4" class="step-page show">' +
+    renderStepDots(4, 4) +
+    '<div class="stat-panel"><div class="stat-panel-title">第四步：天命命盘（选3项天赋）</div></div>' +
+    '<div class="talent-grid" id="talent-grid"></div>' +
+    '<div id="talent-selected"></div>' +
+    '<button class="confirm-btn" id="talent-confirm" onclick="confirmStep4()" disabled>确认命盘</button>' +
+    '</div>';
+  document.getElementById('step-pages').innerHTML = html;
+
+  var grid = document.getElementById('talent-grid');
+  TALENTS.forEach(function(t) {
+    var card = document.createElement('div');
+    card.className = 'talent-card';
+    card.dataset.id = t.id;
+    card.innerHTML = '<div class="t-name">' + t.name + '</div>' +
+      '<div class="t-desc">' + t.desc + '</div>' +
+      '<div class="t-effect">' + t.effect + '</div>';
+    card.onclick = (function(tal) {
+      return function() {
+        var sel = _selections.talents;
+        var idx = sel.indexOf(tal.id);
+        if (idx >= 0) {
+          sel.splice(idx, 1);
+          card.classList.remove('selected');
+        } else if (sel.length < 3) {
+          sel.push(tal.id);
+          card.classList.add('selected');
+        }
+        var names = sel.map(function(id) {
+          var found = TALENTS.find(function(t) { return t.id === id; });
+          return found ? found.name : id;
+        });
+        document.getElementById('talent-selected').innerHTML = sel.length > 0
+          ? '<div class="selected-note">已选（' + sel.length + '/3）：' + names.join('、') + '</div>'
+          : '<div class="selected-note" style="color:#7a6a50">请选择3项天赋</div>';
+        document.getElementById('talent-confirm').disabled = sel.length !== 3;
+      };
+    })(t);
+    grid.appendChild(card);
+  });
+}
+
+function confirmStep4() {
+  if (_selections.talents.length !== 3) return;
+  document.getElementById('step-4').classList.remove('show');
+  showStatPanel();
+}
+
+function showStatPanel() {
+  var html = '<div id="step-stat" class="step-page show">' +
+    '<div class="stat-panel"><div class="stat-panel-title">📜 命盘已定</div>' +
+    '<div class="stat-row"><div class="s-label">容貌</div><div class="s-value">' + _selections.appearance.name + '</div></div>' +
+    '<div class="stat-row"><div class="s-label">性格</div><div class="s-value">' + _selections.personality.name + '</div></div>' +
+    '<div class="stat-row"><div class="s-label">宗门</div><div class="s-value">' + _selections.sect.name + '·' + _selections.sect.type + '</div></div>' +
+    '<div class="stat-row"><div class="s-label">命格</div><div class="s-value">' + _selections.talents.map(function(id) { var t = TALENTS.find(function(x) { return x.id === id; }); return t ? t.name : id; }).join('、') + '</div></div>' +
+    '<div class="talent-display">' + _selections.talents.map(function(id) { var t = TALENTS.find(function(x) { return x.id === id; }); return '<span class="talent-badge">' + (t ? t.name : id) + '</span>'; }).join('') + '</div>' +
+    '</div>' +
+    '<button class="next-btn" onclick="showDaoistSelect()">前往缘定之人 →</button>' +
+    '</div>';
+  document.getElementById('step-pages').innerHTML = html;
+}
+
+function showDaoistSelect() {
+  _step = 5;
+  var html = '<div id="step-daoist" class="step-page show">' +
+    '<div class="stat-panel"><div class="stat-panel-title">🌟 缘定道侣</div><div style="color:#7a6a50;font-size:0.82em;text-align:center;margin-bottom:8px">修仙路漫漫，道侣相伴，方能不负此生</div></div>' +
+    '<div id="daoist-list"></div>' +
+    '<div id="daoist-selected"></div>' +
+    '<button class="confirm-btn" id="daoist-confirm" onclick="confirmDaoist()" disabled>确认道侣</button>' +
+    '</div>';
+  document.getElementById('step-pages').innerHTML = html;
+
+  var list = document.getElementById('daoist-list');
+  DAOISTS.forEach(function(d) {
+    var card = document.createElement('div');
+    card.className = 'daoist-card';
+    card.dataset.id = d.id;
+    card.innerHTML = '<div class="d-name">' + d.name + '</div>' +
+      '<div class="d-type">' + d.type + '</div>' +
+      '<div class="d-desc">' + d.desc + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll('.daoist-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      _selections.daoist = d;
+      document.getElementById('daoist-selected').innerHTML = '<div class="selected-note">已选道侣：「' + d.name + '」' + d.type + '</div>';
+      document.getElementById('daoist-confirm').disabled = false;
+    };
+    list.appendChild(card);
+  });
+}
+
+function confirmDaoist() {
+  if (!_selections.daoist) return;
+  document.getElementById('step-daoist').classList.remove('show');
+  showNameInput();
+}
+
+function showNameInput() {
+  _step = 6;
+  var html = '<div id="step-name" class="step-page show">' +
+    '<div class="stat-panel"><div class="stat-panel-title">✒️ 定名入道</div></div>' +
+    '<div class="name-row">' +
+    '<div class="name-input-wrap"><label>你的道号</label><input id="input-player" placeholder="例如：云浅、念卿"></div>' +
+    '<div class="name-input-wrap"><label>道侣道号</label><input id="input-daoist" value="' + _selections.daoist.name + '" placeholder="他的道号"></div>' +
+    '</div>' +
+    '<button class="confirm-btn" onclick="confirmNames()">正式踏入仙途</button>' +
+    '</div>';
+  document.getElementById('step-pages').innerHTML = html;
+}
+
+function confirmNames() {
+  var playerName = document.getElementById('input-player').value.trim();
+  var daoistName = document.getElementById('input-daoist').value.trim();
+  if (!playerName) { alert('请输入你的道号！'); return; }
+  if (!daoistName) { alert('请输入道侣的道号！'); return; }
+
+  S = {
+    lingshi: 100,
+    prestige: 0,
+    social: 0,
+    wit: 0,
+    bravo: 0,
+    realm: 0,
+    heaven: 0,
+    mortal: 0,
+    worldly: 0,
+    day: 1,
+    phase: 0,
+    daoist: daoistName,
+    daoistId: _selections.daoist.id,
+    affection: 50,
+    appearance: _selections.appearance,
+    personality: _selections.personality,
+    sect: _selections.sect,
+    talents: _selections.talents,
+    playerName: playerName,
+    started: true
+  };
+
+  applyTalentEffects();
+  document.getElementById('step-pages').innerHTML = '';
+  document.getElementById('stats').classList.add('show');
+  _step = 7;
+
+  updateStatsUI();
+  addLog('踏入仙途，与' + daoistName + '结为道侣');
+  showIntroScene();
+}
+
+function showIntroScene() {
+  var intro = '「' + S.playerName + '」，你本是凡尘一粟，偶入' + S.sect.name + '，从此踏上漫漫修行路。\n' +
+    '你的容貌是' + S.appearance.name + '，性情' + S.personality.name + '。\n' +
+    '而你的道侣' + S.daoist + '，将与你携手，共赴这场红尘劫难。\n\n' +
+    '修行路漫漫，且行且珍惜。';
+  showScene('🌟 浮生绘卷·尘缘劫', intro, [
+    { text: '第一日清晨，开始修炼！', type: 'safe', fn: function() { nextPhase(); } }
+  ]);
+}
+
+// ═══════════════════════════════════════════════════════
+// 每日游戏主循环
+// ═══════════════════════════════════════════════════════
+
+function afterEvent() {
+  nextPhase();
+}
+
+// ═══════════════════════════════════════════════════════
+// 存档系统
+// ═══════════════════════════════════════════════════════
+
+function saveGame() {
+  if (!S.started) return;
+  localStorage.setItem('xiuxian_save', JSON.stringify(S));
+  addLog('💾 存档成功');
+}
+
+function loadGame() {
+  var data = localStorage.getItem('xiuxian_save');
+  if (!data) { addLog('📂 暂无存档'); return; }
+  S = JSON.parse(data);
+  document.getElementById('stats').classList.add('show');
+  document.getElementById('save-bar').classList.add('show');
+  document.getElementById('log-wrap').classList.add('show');
+  updateStatsUI();
+  document.getElementById('log').innerHTML = '';
+  addLog('📂 读档成功');
+  _step = 7;
+  showScene('📂 继续修行', '欢迎回来，' + S.playerName + '。今日是修行的第' + S.day + '天，' + PHASES[S.phase] + '。', [
+    { text: '继续今日修行', type: 'safe', fn: function() { doRandomEvent(); } }
+  ]);
+}
+
+function confirmReset() {
+  if (!confirm('确定要重新开始吗？当前进度将丢失。')) return;
+  resetGameState();
+  localStorage.removeItem('xiuxian_save');
+  document.getElementById('cover').style.display = 'flex';
+  document.getElementById('stats').classList.remove('show');
+  document.getElementById('scene').classList.remove('show');
+  document.getElementById('save-bar').classList.remove('show');
+  document.getElementById('log-wrap').classList.remove('show');
+  document.getElementById('step-pages').innerHTML = '';
+  _step = 0;
+}
+
+function resetGameState() {
+  S = {};
+  _selections = { appearance: null, personality: null, sect: null, talents: [] };
+  _step = 0;
+}
+
+// ═══════════════════════════════════════════════════════
+// 启动
+// ═══════════════════════════════════════════════════════
+
+function startGame() {
+  resetGameState();
+  hideCover();
+  showStep1();
+}
+</script>
+</body>
+</html>

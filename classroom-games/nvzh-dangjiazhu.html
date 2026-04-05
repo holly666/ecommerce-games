@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>女尊世界当家主</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #e8d5b7; min-height: 100vh; }
+#game { max-width: 700px; margin: 0 auto; padding: 20px; }
+
+/* ==== 封面 ==== */
+#cover { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; text-align: center; }
+#cover h2 { color: #c9a96e; font-size: 2.2em; margin-bottom: 8px; letter-spacing: 6px; }
+#cover .subtitle { color: #a89070; font-size: 1em; margin-bottom: 30px; letter-spacing: 2px; }
+#cover .desc { color: #7a6a50; font-size: 0.9em; max-width: 460px; line-height: 1.9; margin-bottom: 40px; }
+#cover button.start-btn { background: #c9a96e; color: #1a1a2e; border: none; padding: 14px 48px; border-radius: 8px; cursor: pointer; font-size: 1.05em; font-weight: bold; letter-spacing: 4px; transition: background 0.2s; }
+#cover button.start-btn:hover { background: #e0c080; }
+
+/* ==== 属性条（默认隐藏） ==== */
+#stats { display: none; background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 12px 15px; margin-bottom: 16px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.stat { background: #0f3460; border-radius: 6px; padding: 6px 8px; text-align: center; }
+.stat-name { font-size: 0.7em; color: #a89070; }
+.stat-val { font-size: 1.1em; color: #c9a96e; font-weight: bold; }
+#s-affection-wrap { display: none; grid-column: span 4; background: #2a1a3e; border: 1px solid #9a4a6a; border-radius: 6px; padding: 8px 12px; text-align: center; }
+#s-affection-wrap.show { display: block; }
+.aff-bar-bg { background: #1a0a2e; border-radius: 10px; height: 8px; margin-top: 4px; }
+.aff-bar-fill { background: linear-gradient(90deg, #9a4a6a, #c96a8a); border-radius: 10px; height: 8px; transition: width 0.5s; }
+
+/* ==== 场景 ==== */
+#scene { display: none; background: #16213e; border: 1px solid #c9a96e; border-radius: 10px; padding: 18px; margin-bottom: 14px; }
+#scene.show { display: block; }
+#scene-title { color: #c9a96e; font-size: 1.05em; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 8px; }
+#scene-text { line-height: 1.85; color: #d4c4a8; font-size: 0.92em; margin-bottom: 14px; }
+#scene-text p { margin-bottom: 8px; }
+
+/* ==== 选项按钮（按类型配色） ==== */
+.choice { display: block; width: 100%; background: #0f3460; border: 2px solid #5a4a3a; color: #e8d5b7; padding: 12px 14px; margin: 7px 0; border-radius: 8px; cursor: pointer; text-align: left; font-size: 0.92em; line-height: 1.5; transition: all 0.2s; }
+.choice:hover { background: #1a4a7a; transform: translateX(3px); }
+.choice.safe { border-color: #4a8a4a; }       /* 稳健：绿色 */
+.choice.safe:hover { background: #1a3a1a; }
+.choice.risky { border-color: #8a3a3a; }      /* 冒险：红色 */
+.choice.risky:hover { background: #3a1a1a; }
+.choice.love { border-color: #8a4a6a; }        /* 情感：粉紫 */
+.choice.love:hover { background: #3a1a2a; }
+.choice.smart { border-color: #4a4a8a; }       /* 智慧：蓝紫 */
+.choice.smart:hover { background: #1a1a3a; }
+.choice .tag { display: inline-block; font-size: 0.75em; padding: 1px 6px; border-radius: 3px; margin-right: 5px; font-weight: bold; }
+.tag-safe { background: #2a4a2a; color: #8aca8a; }
+.tag-risky { background: #4a2a2a; color: #ca8a8a; }
+.tag-love { background: #4a2a4a; color: #ca8aca; }
+.tag-smart { background: #2a2a4a; color: #8a8aca; }
+
+/* ==== 存档栏 ==== */
+#save-bar { display: none; text-align: center; margin: 12px 0; }
+#save-bar.show { display: block; }
+button.btn-sm { background: #c9a96e; color: #1a1a2e; border: none; padding: 7px 16px; border-radius: 5px; cursor: pointer; font-size: 0.85em; font-weight: bold; margin: 0 4px; transition: background 0.2s; }
+button.btn-sm:hover { background: #e0c080; }
+button.btn-ghost { background: transparent; color: #7a6a50; border: 1px solid #3a3a3a; padding: 7px 16px; border-radius: 5px; cursor: pointer; font-size: 0.85em; margin: 0 4px; }
+
+/* ==== 角色创建页专属样式 ==== */
+.step-page { display: none; }
+.step-page.show { display: block; }
+.step-indicator { text-align: center; margin-bottom: 20px; color: #7a6a50; font-size: 0.8em; letter-spacing: 2px; }
+.step-dots { display: flex; justify-content: center; gap: 8px; margin-top: 6px; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: #3a3a3a; }
+.step-dot.active { background: #c9a96e; }
+.step-dot.done { background: #4a8a4a; }
+
+/* 角色卡片网格 */
+.char-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.char-card { background: #0f3460; border: 2px solid #3a3a5a; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; text-align: left; }
+.char-card:hover { border-color: #c9a96e; transform: translateY(-2px); }
+.char-card .c-name { color: #c9a96e; font-size: 1em; font-weight: bold; margin-bottom: 4px; }
+.char-card .c-desc { color: #a89070; font-size: 0.78em; line-height: 1.5; margin-bottom: 6px; }
+.char-card .c-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.char-tag { background: #1a2a4a; color: #7a9aca; font-size: 0.7em; padding: 2px 6px; border-radius: 3px; }
+
+/* 第一印象选项 */
+.impress-grid { display: flex; flex-direction: column; gap: 10px; margin: 10px 0; }
+.impress-card { background: #0f3460; border: 2px solid #3a3a5a; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; text-align: left; }
+.impress-card:hover { border-color: #c9a96e; }
+.impress-card .i-text { color: #e8d5b7; font-size: 0.95em; line-height: 1.5; margin-bottom: 6px; }
+.impress-card .i-effect { color: #8aca8a; font-size: 0.78em; }
+
+/* 名称输入 */
+.name-input-wrap { background: #0f3460; border: 1px solid #c9a96e; border-radius: 8px; padding: 14px; margin: 12px 0; }
+.name-input-wrap label { color: #a89070; font-size: 0.8em; display: block; margin-bottom: 6px; }
+.name-input-wrap input { width: 100%; background: #16213e; border: 1px solid #5a4a3a; color: #e8d5b7; padding: 10px 12px; border-radius: 6px; font-size: 1em; }
+.confirm-btn { display: block; width: 100%; background: #4a8a4a; color: #fff; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; letter-spacing: 2px; margin-top: 12px; transition: background 0.2s; }
+.confirm-btn:hover { background: #5a9a5a; }
+
+/* 日志 */
+#log-wrap { display: none; background: #0d1b2a; border: 1px solid #333; border-radius: 8px; padding: 10px; margin-top: 14px; max-height: 130px; overflow-y: auto; font-size: 0.78em; color: #7a6a50; line-height: 1.6; }
+#log-wrap.show { display: block; }
+.log-entry { border-bottom: 1px solid #222; padding: 3px 0; }
+
+/* 时间指示器 */
+.time-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 8px 12px; background: #0f3460; border-radius: 6px; font-size: 0.8em; color: #a89070; }
+.time-icon { font-size: 1.2em; }
+
+/* 已选提示 */
+.selected-note { background: #1a2a1a; border: 1px solid #4a8a4a; border-radius: 6px; padding: 10px; margin: 8px 0; font-size: 0.85em; color: #8aca8a; }
+</style>
+</head>
+<body>
+<div id="game">
+
+  <!-- 封面 -->
+  <div id="cover">
+    <h2>🏛️ 女尊世界</h2>
+    <div class="subtitle">当 家 主</div>
+    <div class="desc">
+      女尊王朝，边境小镇。<br>
+      你年过及笄，议得一门亲事。<br>
+      破屋一间，薄田几亩，夫君一名。<br><br>
+      从寒门到霸主，一切从今日开始。
+    </div>
+    <button class="start-btn" onclick="startGame()">开始游戏</button>
+  </div>
+
+  <!-- 属性条 -->
+  <div id="stats">
+    <div class="stat"><div class="stat-name">💰 银两</div><div class="stat-val" id="s-money">0</div></div>
+    <div class="stat"><div class="stat-name">⭐ 声望</div><div class="stat-val" id="s-prestige">1</div></div>
+    <div class="stat"><div class="stat-name">🤝 人脉</div><div class="stat-val" id="s-social">1</div></div>
+    <div class="stat"><div class="stat-name">📖 智慧</div><div class="stat-val" id="s-wit">1</div></div>
+    <div class="stat"><div class="stat-name">⚔️ 魄力</div><div class="stat-val" id="s-bravo">1</div></div>
+    <div class="stat"><div class="stat-name">🏷️ 身份</div><div class="stat-val" id="s-class">镇民</div></div>
+    <div class="stat"><div class="stat-name">📅 第</div><div class="stat-val" id="s-day">1</div></div>
+    <div class="stat"><div class="stat-name">🌙</div><div class="stat-val" id="s-phase">清晨</div></div>
+    <div id="s-affection-wrap">
+      <div style="color:#c96a8a;font-size:0.78em">💕 夫君好感 <span id="s-affection-num">50</span>/100</div>
+      <div class="aff-bar-bg"><div class="aff-bar-fill" id="s-affection-bar" style="width:50%"></div></div>
+    </div>
+  </div>
+
+  <!-- 场景 -->
+  <div id="scene">
+    <div id="scene-title"></div>
+    <div id="scene-text"></div>
+    <div id="choices"></div>
+  </div>
+
+  <!-- 存档栏 -->
+  <div id="save-bar">
+    <button class="btn-sm" onclick="saveGame()">💾 存档</button>
+    <button class="btn-sm" onclick="loadGame()">📂 读档</button>
+    <button class="btn-ghost" onclick="confirmReset()">🔄 重开</button>
+  </div>
+
+  <!-- 日志 -->
+  <div id="log-wrap">
+    <div id="log"></div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// 数据
+// ═══════════════════════════════════════
+
+var S = {};
+var _step = 0; // 0=封面 1=选夫君 2=第一印象 3=取名 4=游戏中
+
+// 夫君原型（4种，不再是6×6组合爆炸）
+var HUSBANDS = [
+  { id: 'scholar', name: '文弱书生', desc: '眉清目秀，谈吐斯文。家中曾有功名，如今家道中落。', traits: ['才华', '文静'], bg: '书香门第', pers: '文弱' },
+  { id: 'outgoing', name: '活泼开朗', desc: '爱说爱笑，走到哪里都是焦点。没什么心机，但总能让人开心。', traits: ['人缘', '活泼'], bg: '商贾之家', pers: '开朗' },
+  { id: 'quiet', name: '沉默寡言', desc: '话不多，喜怒不形于色。心思细腻，往往能注意到别人忽略的细节。', traits: ['细腻', '机敏'], bg: '武勋世家', pers: '沉默' },
+  { id: 'tsundere', name: '傲娇别扭', desc: '嘴硬心软，明明在意却偏要装作不在乎。相处久了会发现意外的温柔。', traits: ['傲娇', '别扭'], bg: '寒门子弟', pers: '傲娇' },
+];
+
+// 第一印象选项（3种）
+var FIRST_IMPRESSIONS = [
+  { id: 'peace', text: '他的眼神让我心安，仿佛找到了依靠', effect: { affection: 15, wit: 1 }, note: '💕 好感+15　📖 智慧+1' },
+  { id: 'interest', text: '他看起来和镇上其他人不太一样……', effect: { affection: 8, social: 1 }, note: '💕 好感+8　🤝 人脉+1' },
+  { id: 'mystery', text: '我暂时看不出他的深浅，得慢慢观察', effect: { affection: 5, bravo: 1 }, note: '💕 好感+5　⚔️ 魄力+1' },
+];
+
+// 身份阶段（随声望/人脉解锁）
+var IDENTITY_LEVELS = [
+  { name: '镇民', min: 0 },
+  { name: '小商户', min: 5 },
+  { name: '乡绅', min: 15 },
+  { name: '名家', min: 30 },
+  { name: '一方霸主', min: 50 },
+];
+
+// ═══════════════════════════════════════
+// 核心函数
+// ═══════════════════════════════════════
+
+function startGame() {
+  resetGameState();
+  hideCover();
+  showStep1();
+}
+
+function resetGameState() {
+  S = { money: 0, prestige: 1, social: 1, wit: 1, bravo: 1, cls: '镇民', day: 1, phase: '清晨', flags: {}, husband: null, log: [] };
+  _step = 0;
+}
+
+function hideCover() {
+  var cover = document.getElementById('cover');
+  cover.style.position = 'absolute';
+  cover.style.visibility = 'hidden';
+  cover.style.pointerEvents = 'none';
+  cover.style.top = '0';
+  cover.style.left = '0';
+  cover.style.width = '100%';
+  cover.style.zIndex = '-1';
+}
+
+// ── 步骤1：选夫君 ──
+function showStep1() {
+  _step = 1;
+  document.getElementById('scene').classList.add('show');
+  document.getElementById('save-bar').classList.add('show');
+  document.getElementById('log-wrap').classList.add('show');
+  document.getElementById('stats').style.display = 'grid';
+  document.getElementById('stats').style.visibility = 'hidden';
+
+  document.getElementById('scene-title').textContent = '议亲';
+  document.getElementById('scene-text').innerHTML = '<p>女尊王朝，男子及笄便要婚配。</p><p>镇上媒婆带来了四户人家的公子——</p><p>他们的性情、家世各异。你的选择，将决定这段婚姻的起点。</p>';
+
+  var html = '<div class="step-indicator">第一步 · 选择夫君</div>';
+  html += '<div class="step-dots"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div>';
+  html += '<div class="char-grid">';
+  HUSBANDS.forEach(function(h, i) {
+    html += '<div class="char-card" onclick="selectHusband('+i+')">';
+    html += '<div class="c-name">'+h.name+'</div>';
+    html += '<div class="c-desc">'+h.desc+'</div>';
+    html += '<div class="c-tags">';
+    h.traits.forEach(function(t){ html += '<span class="char-tag">'+t+'</span>'; });
+    html += '<span class="char-tag">'+h.bg+'</span>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+  html += '<div id="selected-husband"></div>';
+  document.getElementById('choices').innerHTML = html;
+  render();
+}
+
+window.selectHusband = function(i) {
+  var h = HUSBANDS[i];
+  S.husband = { id: h.id, name: h.name, desc: h.desc, traits: h.traits, bg: h.bg, pers: h.pers, affection: 50 };
+  S.cls = h.bg;
+  addLog('婚配：' + h.name + '（' + h.bg + '）');
+  render();
+  var html = '<div class="selected-note">✓ 已选择：<strong>'+h.name+'</strong>　'+h.traits.join('、')+'　来自'+h.bg+'</div>';
+  html += '<button class="confirm-btn" onclick="showStep2()">下一步 →</button>';
+  document.getElementById('selected-husband').innerHTML = html;
+};
+
+// ── 步骤2：第一印象 ──
+function showStep2() {
+  _step = 2;
+  var h = S.husband;
+  document.getElementById('scene-title').textContent = '初见';
+  document.getElementById('scene-text').innerHTML = '<p>新婚之夜，红烛摇曳。</p><p>你第一次认真打量身侧的男子——'+h.name+'。</p><p>他似乎察觉了你的目光，微微侧过头来。</p><p>你心里，对他的第一印象是——</p>';
+
+  var html = '<div class="step-indicator">第二步 · 第一印象</div>';
+  html += '<div class="step-dots"><div class="step-dot done"></div><div class="step-dot active"></div><div class="step-dot"></div></div>';
+  html += '<div class="impress-grid">';
+  FIRST_IMPRESSIONS.forEach(function(f, i) {
+    html += '<div class="impress-card" onclick="selectImpression('+i+')">';
+    html += '<div class="i-text">"'+f.text+'"</div>';
+    html += '<div class="i-effect">'+f.note+'</div></div>';
+  });
+  html += '</div>';
+  html += '<div id="selected-impression"></div>';
+  document.getElementById('choices').innerHTML = html;
+};
+
+// ── 步骤3：取名 ──
+window.selectImpression = function(i) {
+  var f = FIRST_IMPRESSIONS[i];
+  S.husband.affection = 50 + f.effect.affection;
+  S.wit += f.effect.wit || 0;
+  S.social += f.effect.social || 0;
+  S.bravo += f.effect.bravo || 0;
+  addLog('初见印象：' + f.text.substring(0,15) + '…');
+  addLog('夫君好感：' + S.husband.affection);
+  render();
+
+  var effectText = f.note.replace('💕 ', '💕 ');
+  var html = '<div class="selected-note">✓ '+f.text+'</div>';
+  html += '<div class="name-input-wrap">';
+  html += '<label>为你的夫君取个名字</label>';
+  html += '<input type="text" id="hname-input" value="'+S.husband.name+'" placeholder="输入姓名…">';
+  html += '</div>';
+  html += '<button class="confirm-btn" onclick="confirmAndStart()">✓ 完成婚娶，开始新生活</button>';
+  document.getElementById('selected-impression').innerHTML = html;
+};
+
+window.confirmAndStart = function() {
+  var nameInput = document.getElementById('hname-input');
+  var name = nameInput ? nameInput.value.trim() : S.husband.name;
+  if (!name) name = S.husband.name;
+  S.husband.name = name;
+  addLog('夫君正式命名：' + S.husband.name);
+  _step = 4;
+  document.getElementById('stats').style.visibility = '';
+  document.getElementById('s-affection-wrap').classList.add('show');
+  updateAffectionBar();
+  showScene('day_start');
+};
+
+// ═══════════════════════════════════════
+// 场景系统
+// ═══════════════════════════════════════
+
+var scenes = {
+  day_start: {
+    title: '清晨',
+    getTitle: function() { return '第'+S.day+'日 · 清晨'; },
+    text: function() {
+      var h = S.husband;
+      var weather = ['晴朗', '微风', '阴天', '小雨'][Math.floor(Math.random()*4)];
+      return '<p>'+weather+'的清晨，阳光从破旧的窗纸透进来。</p>' +
+        '<p>身侧的'+h.name+'睡得正酣，睫毛微颤。</p>' +
+        '<p>这是你们成亲后的第'+S.day+'日。家中银两不多，得想想今日的生计。</p>' +
+        (S.day > 1 ? '<p>昨日：'+S.log[S.log.length-1]+'</p>' : '');
+    },
+    getChoices: function() {
+      return [
+        { text: '唤醒夫君，商量今日计划', next: 'plan_together', type: 'love', tag: '💕' },
+        { text: '独自出门找活干', next: 'go_town', type: 'safe', tag: '🍚' },
+        { text: '去集市看看商机', next: 'market', type: 'risky', tag: '⚔️' },
+        { text: '与夫君再聊一会儿', next: 'morning_talk', type: 'love', tag: '💕' },
+      ];
+    }
+  },
+
+  plan_together: {
+    title: '商议',
+    text: function() {
+      return '<p>'+S.husband.name+'揉了揉眼睛，坐起身来。</p>' +
+        '<p>"娘子，今日可有什么打算？我都听你的。"</p>' +
+        '<p>他的语气里带着信任。'+S.husband.traits[0]+'的特质，让这个早晨多了几分暖意。</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '让他在家操持，你外出找活', next: 'go_town', type: 'safe', tag: '🍚' },
+        { text: '一起去集市碰碰运气', next: 'market', type: 'risky', tag: '⚔️' },
+        { text: '在家教他认几个字', next: 'teach_letters', type: 'smart', tag: '📖' },
+      ];
+    }
+  },
+
+  go_town: {
+    title: '镇上',
+    text: function() {
+      return '<p>清晨的街道已有行人往来。</p>' +
+        '<p>镇中心告示墙前站着几个女子，都是来找活的。</p>' +
+        '<p>一位衣着得体的中年妇人正在张望，见你走过，微微点了点头。</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '应征药铺打杂（稳妥）', next: 'work_pharmacy', type: 'safe', tag: '🍚', effect: function(){ S.money+=20; S.wit+=1; } },
+        { text: '去码头扛货（日结快）', next: 'work_dock', type: 'safe', tag: '🍚', effect: function(){ S.money+=30; } },
+        { text: '和那位妇人搭话', next: 'talk_lady', type: 'smart', tag: '📖' },
+      ];
+    }
+  },
+
+  market: {
+    title: '集市',
+    text: function() {
+      return '<p>集市已热闹起来。各色摊位吆喝声不断。</p>' +
+        '<p>你注意到有商贩在低价转卖一批布匹——若是能低价吃进，或许能赚一笔。</p>' +
+        '<p>但也有人说最近镇上来了个外地大商贩，把行情搅得很乱。</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '低价吃进布匹，搏一把', next: 'resell_cloth', type: 'risky', tag: '⚔️', effect: function(){ S.money-=10; } },
+        { text: '帮布庄吆喝，赚个稳当佣金', next: 'sell_cloth', type: 'safe', tag: '🍚', effect: function(){ S.money+=15; S.prestige+=1; } },
+        { text: '四处打听消息再说', next: 'market_info', type: 'smart', tag: '📖' },
+      ];
+    }
+  },
+
+  work_pharmacy: {
+    title: '药铺',
+    text: function() {
+      return '<p>药铺老板是个沉默寡言的中年妇人，见你识字，便留下了你。</p>' +
+        '<p>一日下来，你学会了辨药、包药。她递给你一碗热粥和二十文钱：</p>' +
+        '<p>"明日巳时还来吗？"</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '答应长做，留下来学更多', next: 'pharmacy_long', type: 'love', tag: '💕', effect: function(){ S.cls='药铺学徒'; S.wit+=1; } },
+        { text: '收钱道谢，回家与夫君分享', next: 'evening', type: 'love', tag: '💕', effect: function(){ S.money+=20; } },
+      ];
+    }
+  },
+
+  work_dock: {
+    title: '码头',
+    text: function() {
+      return '<p>码头繁忙，你扛了一下午盐包，肩膀酸痛。</p>' +
+        '<p>管事递过三十文："明日还来吗？"</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '继续扛，攒钱要紧', next: 'dock_again', type: 'safe', tag: '🍚', effect: function(){ S.money+=30; } },
+        { text: '够了，回家去', next: 'evening', type: 'love', tag: '💕', effect: function(){ S.money+=30; } },
+      ];
+    }
+  },
+
+  dock_again: {
+    title: '码头又一日',
+    text: function() {
+      return '<p>又一日的辛苦劳动。老茧磨出来了，但三十文稳稳到手。</p>' +
+        '<p>码头管事看你的眼神，已经有些熟悉了。</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '继续扛下去', next: 'dock_again', type: 'safe', tag: '🍚', effect: function(){ S.money+=30; } },
+        { text: '回家', next: 'evening', type: 'love', tag: '💕', effect: function(){ S.money+=30; } },
+      ];
+    }
+  },
+
+  talk_lady: {
+    title: '偶遇',
+    text: function() {
+      return '<p>你上前行礼，妇人微微颔首。</p>' +
+        '<p>"我府上缺个账房先生，月钱二两银子，包吃住。你可愿意？"</p>' +
+        '<p>——这是遇上了贵人了。</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '立刻答应', next: 'maid_job', type: 'safe', tag: '🍚', effect: function(){ S.cls='账房先生'; S.money+=60; S.prestige+=2; } },
+        { text: '答应，但提出先安顿好家里', next: 'maid_job_soft', type: 'smart', tag: '📖', effect: function(){ S.cls='账房先生'; S.money+=60; S.prestige+=3; S.social+=1; } },
+      ];
+    }
+  },
+
+  maid_job: {
+    title: '账房',
+    text: function() {
+      return '<p>妇人姓柳，是镇上出了名的大户人家当家主母。</p>' +
+        '<p>你进了柳府当了账房。一月下来，账目理得清清楚楚。</p>' +
+        '<p>柳夫人看了账本，微微点头："下月月钱加一成。"</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '继续勤勉做事', next: 'maid_up', type: 'safe', tag: '🍚', effect: function(){ S.money+=80; S.prestige+=2; S.cls='柳府账房'; } },
+        { text: '回家报喜，与夫君小聚', next: 'evening_special', type: 'love', tag: '💕', effect: function(){ S.money+=60; S.husband.affection+=5; } },
+      ];
+    }
+  },
+
+  maid_job_soft: {
+    title: '账房（婉约）',
+    text: function() {
+      return '<p>柳夫人有些意外地看了你一眼。</p>' +
+        '<p>"倒是头一回见成了亲的女子，还把夫君放在心上。"</p>' +
+        '<p>"也罢，三日后来报到就是。"</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '谢过夫人，回家告诉夫君好消息', next: 'evening_special', type: 'love', tag: '💕', effect: function(){ S.money+=60; S.husband.affection+=8; } },
+        { text: '先去镇上采买些东西再回家', next: 'buy_gift', type: 'smart', tag: '📖', effect: function(){ S.money-=5; S.husband.affection+=3; } },
+      ];
+    }
+  },
+
+  market_info: {
+    title: '打听',
+    text: function() {
+      return '<p>你四处转了转，与几个商贩闲聊。</p>' +
+        '<p>得知一个重要消息：镇外十里有个村庄闹了虫灾，粮食欠收，很快会有粮商来镇上高价收粮。</p>' +
+        '<p>如果你能提前囤粮，等粮价涨上去再卖……</p>';
+    },
+    getChoices: function() {
+      return [
+        { text: '立刻借钱囤粮！', next: 'grain_gamble', type: 'risky', tag: '⚔️', effect: function(){ S.money-=20; } },
+        { text: '稳扎稳打，还是做小生意', next: 'evening', type: 'safe', tag: '🍚', effect: function(){ S.money+=10;
