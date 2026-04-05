@@ -100,7 +100,8 @@ h2{color:#c9a96e;font-size:2.4em;margin-bottom:6px;letter-spacing:8px}
 <div id=choices></div>
 </div>
 <div class=night-panel id=night-panel>
-<div class=night-title>🌙 夜幕降临 · 归家时光</div>
+<div class=night-title id=night-title-default>🌙 夜幕降临 · 归家时光</div>
+<div id=night-mood-text style="color:#a89070;font-size:0.78em;text-align:center;margin-bottom:8px;display:none"></div>
 <div id=night-choices></div>
 </div>
 <div id=sbar class=sbar>
@@ -144,7 +145,7 @@ var S={};
 var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
 var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
 function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
-function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.concubinePregnant)S.concubinePregnant={};if(!S.concubinePregnancyDay)S.concubinePregnancyDay={};if(S._currentConcubine===undefined)S._currentConcubine=null;if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(!S.examDay)S.examDay=0;if(!S.interviewPassed)S.interviewPassed=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}if(!S.husbandMood)S.husbandMood='neutral';if(!S.goodEventToday)S.goodEventToday=false;if(!S.touchedConcubineToday)S.touchedConcubineToday=false;}
+function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;;if(!S.availableMen)S.availableMen=[];if(!S.concubines)S.concubines=[];if(!S.concubineAffection)S.concubineAffection={};if(!S.concubinePregnant)S.concubinePregnant={};if(!S.concubinePregnancyDay)S.concubinePregnancyDay={};if(S._currentConcubine===undefined)S._currentConcubine=null;if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(!S.examDay)S.examDay=0;if(!S.interviewPassed)S.interviewPassed=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}if(!S.husbandMood)S.husbandMood='neutral';if(!S.goodEventToday)S.goodEventToday=false;if(!S.touchedConcubineToday)S.touchedConcubineToday=false;if(!S.todayEvents)S.todayEvents=[];if(!S.todayWeather)S.todayWeather=null;if(!S.todaySeason)S.todaySeason=null;if(!S.todayMood)S.todayMood=1;}
 function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
 function toggleLog(){var lw=document.getElementById('log-wrap');if(lw)lw.classList.toggle('on');}
 function saveGame(){localStorage.setItem('nvzh_v5',JSON.stringify(S));addLog('已存档');}
@@ -178,6 +179,121 @@ function showScene(title,text,choices,etag){
   document.getElementById('night-panel').classList.remove('on');
   document.getElementById('scene').classList.add('on');
 }
+function getSeason(){
+  // 春1-90 夏91-180 秋181-270 冬271-360 循环，365天一年
+  var d=S.day%360||360;
+  if(d<=90)return'春';
+  if(d<=180)return'夏';
+  if(d<=270)return'秋';
+  return'冬';
+}
+function getWeather(){
+  var w=['晴朗','薄云','微风','阴沉','细雨','大雾','烈日','小雪'];
+  return w[Math.floor(Math.random()*w.length)];
+}
+function updateHusbandMood(){
+  // 每天结算时根据当日行为调整心情
+  // 0=happy,1=normal,2=sad,3=angry
+  var mood=S.todayMood||1;
+  var prev=S.husbandMood||1;
+  var aff=S.affection;
+  var concTouched=S.touchedConcubineToday||false;
+  var goodToday=S.goodEventToday||false;
+  // 如果摸了妾室，正夫可能不高兴
+  if(concTouched&&aff<70){
+    mood=Math.min(3,mood+1); // 更不高兴
+  } else if(concTouched&&aff>=70){
+    mood=Math.min(3,mood); // 好感高，容忍度也高
+  }
+  // 有好事
+  if(goodToday){
+    mood=Math.max(0,mood-1);
+  }
+  // 随机波动
+  var drift=Math.floor(Math.random()*3)-1; // -1,0,1
+  mood=Math.max(0,Math.min(3,mood+drift));
+  // 好感极端情况
+  if(aff>=80)mood=Math.max(0,mood-1);
+  if(aff<30)mood=Math.min(3,mood+1);
+  S.husbandMood=mood;
+  S.todayMood=mood;
+  // 重置今日标记
+  S.touchedConcubineToday=false;
+  S.goodEventToday=false;
+  return mood;
+}
+function rollDailyHusbandEvents(){
+  // 为今晚生成随机事件池（不重复）
+  var mood=S.todayMood||1;
+  var aff=S.affection;
+  var hid=S.husband.id;
+  var tid=S.trait?S.trait.id:'';
+  var season=getSeason();
+  var pool=[];
+
+  // 基础事件（几乎每晚都有）
+  var baseOpts=[
+    {id:'n_eat',text:'和'+S.husband.name+'一起吃晚饭',next:'n_eat',type:'safe',tag:'🍚',cond:true},
+  ];
+
+  // 聊天类（按好感度）
+  var talkOpts=[
+    {id:'n_talk',text:'和他聊聊天',next:'n_talk',type:'love',tag:'💬',cond:aff>=31},
+    {id:'n_heart',text:'说些体己话',next:'n_heart',type:'love',tag:'💕',cond:aff>=51},
+    {id:'n_secret',text:'听他说说心事',next:'n_secret',type:'love',tag:'🌙',cond:aff>=71},
+    {id:'n_intimate',text:'和'+S.husband.name+'温存片刻',next:'n_intimate',type:'love',tag:'💋',cond:aff>=71&&!S.husband.isPregnant},
+    {id:'n_account',text:'一起算算家里的账',next:'n_account',type:'smart',tag:'📖',cond:tid==='sharp'},
+    {id:'n_problem',text:'关心他的烦恼',next:'n_problem',type:'love',tag:'💞',cond:aff>=71&&S.husbandProblems&&S.husbandProblems.length>0},
+  ];
+
+  // 随机特殊事件池（按心情和季节）
+  var specialOpts=[
+    {id:'n_rain_0',text:'他冒雨在门口等你，浑身湿透',next:'n_weather_rain',type:'love',tag:'🌧',cond:season==='夏'&&Math.random()<0.4},
+    {id:'n_rain_1',text:'天冷了，他早早给你掌好了被窝',next:'n_weather_cold',type:'love',tag:'❄',cond:season==='冬'&&Math.random()<0.4},
+    {id:'n_season_spring',text:'春夜他摘了一朵花放在你枕边',next:'n_season_spring',type:'love',tag:'🌸',cond:season==='春'&&Math.random()<0.35},
+    {id:'n_season_autumn',text:'秋夜他给你披上外衣，说别着凉',next:'n_season_autumn',type:'love',tag:'🍂',cond:season==='秋'&&Math.random()<0.35},
+    {id:'n_season_summer',text:'夏夜他给你扇了一夜的扇子',next:'n_season_summer',type:'love',tag:'🌙',cond:season==='夏'&&Math.random()<0.35},
+    {id:'n_he_massage',text:'他说想给你按按肩',next:'n_he_massage',type:'love',tag:'💆',cond:mood>=1&&Math.random()<0.4},
+    {id:'n_he_ask_tired',text:'他突然问：娘子今天累不累？',next:'n_he_ask_tired',type:'love',tag:'💬',cond:mood>=1&&Math.random()<0.4},
+    {id:'n_he_tea',text:'他默默给你倒了一杯热茶',next:'n_he_tea',type:'safe',tag:'🍵',cond:Math.random()<0.5},
+    {id:'n_he_doubt',text:'他若有所思地看着窗外，欲言又止',next:'n_he_doubt',type:'love',tag:'🌙',cond:mood>=2&&Math.random()<0.5},
+    {id:'n_he_coverblanket',text:'他轻轻给你掖了掖被角',next:'n_he_coverblanket',type:'love',tag:'💕',cond:mood<=1&&Math.random()<0.5},
+    {id:'n_he_silent',text:'他安静地坐在灯下，时不时看你',next:'n_he_silent',type:'love',tag:'🌙',cond:mood<=1&&Math.random()<0.4},
+    {id:'n_he_complain',text:'他说：娘子最近总回来很晚……',next:'n_he_complain',type:'love',tag:'💔',cond:mood>=2&&Math.random()<0.5},
+    {id:'n_he_blush',text:'他脸红红的，说：有件事想跟你说……',next:'n_he_blush',type:'love',tag:'💕',cond:mood===0&&Math.random()<0.4},
+    {id:'n_he_food',text:'他亲手做了点心，说想让你尝尝',next:'n_he_food',type:'love',tag:'🍰',cond:Math.random()<0.5},
+    {id:'n_he_embroidery',text:'他低着头绣花，说是在给你做香囊',next:'n_he_embroidery',type:'love',tag:'🧵',cond:Math.random()<0.4},
+    {id:'n_he_poem',text:'他轻声念了一首诗，问你觉得如何',next:'n_he_poem',type:'love',tag:'📖',cond:tid!=='fierce'&&Math.random()<0.35},
+    {id:'n_he_askfuture',text:'他问：娘子，我们以后会一直在一起吗？',next:'n_he_askfuture',type:'love',tag:'💕',cond:aff>=60&&Math.random()<0.4},
+    {id:'n_he_tender',text:'他拉着你的手，轻轻唱起一首歌',next:'n_he_tender',type:'love',tag:'🎵',cond:Math.random()<0.35},
+    {id:'n_he_smile',text:'他看见你就笑了，眼里满是光',next:'n_he_smile',type:'love',tag:'💕',cond:mood===0&&Math.random()<0.5},
+    {id:'n_he_cold',text:'他有些感冒，但还是坚持给你做饭',next:'n_he_cold',type:'love',tag:'🤧',cond:Math.random()<0.3},
+  ];
+
+  // 按心情过滤特殊事件
+  var filteredSpecial=specialOpts.filter(function(o){return o.cond;});
+  // 打乱顺序
+  filteredSpecial.sort(function(){return Math.random()-0.5;});
+  // 选取今晚可用事件（取4~6个）
+  var tonight=[];
+  tonight.push(baseOpts[0]); // 永远有晚饭
+  // 从可用特殊事件里取最多5个
+  for(var i=0;i<filteredSpecial.length&&tonight.length<6;i++){
+    tonight.push(filteredSpecial[i]);
+  }
+  // 如果聊天选项满足条件且今晚还有空位，也加入
+  if(tonight.length<5){
+    var shuffledTalk=talkOpts.filter(function(o){return o.cond;}).sort(function(){return Math.random()-0.5;});
+    for(var j=0;j<shuffledTalk.length&&tonight.length<6;j++){
+      var exists=tonight.some(function(o){return o.id===shuffledTalk[j].id;});
+      if(!exists)tonight.push(shuffledTalk[j]);
+    }
+  }
+  // 始终确保"休息"在最后
+  tonight.push({id:'n_sleep',text:'各自休息，明日再见',next:'n_sleep',type:'safe',tag:'🌙',cond:true});
+  return tonight;
+}
+
 function showNight(){
   document.getElementById('scene').classList.remove('on');
   document.getElementById('night-panel').classList.add('on');
@@ -187,31 +303,7 @@ function showNight(){
   var trait=S.trait?S.trait.id:'';
   var opts=[];
 
-  // 基础选项
-  opts.push({text:'和'+hname+'一起吃晚饭',next:'n_eat',type:'safe',tag:'🍚'});
-
-  // 好感度解锁
-  if(aff>=31)opts.push({text:'和他聊聊天',next:'n_talk',type:'love',tag:'💬'});
-  if(aff>=51)opts.push({text:'说些体己话',next:'n_heart',type:'love',tag:'💕'});
-  if(aff>=71)opts.push({text:'听他说说心事',next:'n_secret',type:'love',tag:'🌙'});
-
-  // 亲密度解锁（71+）
-  if(aff>=71&&!S.husband.isPregnant){
-    opts.push({text:'和'+hname+'温存片刻',next:'n_intimate',type:'love',tag:'💋'});
-  }
-  if(aff>=81&&!S.husbandProposalDone){
-    opts.push({text:'他似乎有话想说……',next:'n_husband_propose',type:'love',tag:'💍'});
-  }
-
-  // 备孕选项（86+，未怀孕）
-  if(aff>=86&&!S.husband.isPregnant&&!S.fertilityTreatment){
-    opts.push({text:'和'+hname+'商量备孕的事',next:'n_try_baby',type:'love',tag:'👶'});
-  }
-  if(S.fertilityTreatment&&!S.husband.isPregnant){
-    opts.push({text:'期待'+hname+'的好消息……',next:'n_fertility_wait',type:'love',tag:'🤱'});
-  }
-
-  // 孕期专属（夫君怀孕中）
+  // 孕期专属（优先，始终显示）
   if(S.husband.isPregnant){
     var pday=S.husband.pregnancyDay||0;
     if(pday>=1&&pday<=3){
@@ -225,21 +317,49 @@ function showNight(){
     }
   }
 
-  // 性格限定
-  if(trait==='sharp')opts.push({text:'一起算算家里的账',next:'n_account',type:'smart',tag:'📖'});
-
-  // 节日
-  if(S.nearFestival)opts.push({text:S.nearFestival+'将至，一起过节吧',next:'n_festival',type:'love',tag:'🏮'});
-
-  // 丈夫烦恼（好感71+）
-  if(aff>=71&&S.husbandProblems&&S.husbandProblems.length>0)opts.push({text:'关心他的烦恼',next:'n_problem',type:'love',tag:'💞'});
-
   // 生日
   if(S.flags.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent&&S.day===S.flags.husbandBirthdayDay){
     opts.push({text:'今天是他的生日！给他送礼物',next:'n_birthday',type:'love',tag:'🎂'});
   }
 
-  // 妾室选项（如果有纳妾）
+  // 备孕
+  if(aff>=86&&!S.husband.isPregnant&&!S.fertilityTreatment){
+    opts.push({text:'和'+hname+'商量备孕的事',next:'n_try_baby',type:'love',tag:'👶'});
+  }
+  if(S.fertilityTreatment&&!S.husband.isPregnant){
+    opts.push({text:'期待'+hname+'的好消息……',next:'n_fertility_wait',type:'love',tag:'🤱'});
+  }
+
+  // 求婚
+  if(aff>=81&&!S.husbandProposalDone){
+    opts.push({text:'他似乎有话想说……',next:'n_husband_propose',type:'love',tag:'💍'});
+  }
+
+  // 节日
+  if(S.nearFestival)opts.push({text:S.nearFestival+'将至，一起过节吧',next:'n_festival',type:'love',tag:'🏮'});
+
+  // 基础（晚饭永远有）
+  opts.push({text:'和'+hname+'一起吃晚饭',next:'n_eat',type:'safe',tag:'🍚'});
+
+  // 从今晚随机池里取特殊事件
+  var tonightPool=S.todayEvents||[];
+  var usedIds={'n_eat':true,'n_sleep':true,'n_preg_relief':true,'n_name_baby':true,'n_preg_checkup':true,'n_heartbeat':true,'n_preg_final':true,'n_birthday':true,'n_try_baby':true,'n_fertility_wait':true,'n_husband_propose':true,'n_festival':true};
+  tonightPool.forEach(function(ev){
+    if(!usedIds[ev.id]&&opts.length<10){
+      opts.push(ev);
+      usedIds[ev.id]=true;
+    }
+  });
+
+  // 好感/性格/烦恼兜底（概率加入）
+  if(aff>=31&&!usedIds.n_talk&&Math.random()<0.6)opts.push({text:'和他聊聊天',next:'n_talk',type:'love',tag:'💬'});
+  if(aff>=51&&!usedIds.n_heart&&Math.random()<0.5)opts.push({text:'说些体己话',next:'n_heart',type:'love',tag:'💕'});
+  if(aff>=71&&!S.husband.isPregnant&&!usedIds.n_secret&&Math.random()<0.5)opts.push({text:'听他说说心事',next:'n_secret',type:'love',tag:'🌙'});
+  if(aff>=71&&!S.husband.isPregnant&&!usedIds.n_intimate&&Math.random()<0.5)opts.push({text:'和'+hname+'温存片刻',next:'n_intimate',type:'love',tag:'💋'});
+  if(trait==='sharp'&&!usedIds.n_account&&Math.random()<0.5)opts.push({text:'一起算算家里的账',next:'n_account',type:'smart',tag:'📖'});
+  if(aff>=71&&S.husbandProblems&&S.husbandProblems.length>0&&!usedIds.n_problem&&Math.random()<0.5)opts.push({text:'关心他的烦恼',next:'n_problem',type:'love',tag:'💞'});
+
+  // 妾室
   if(S.concubines&&S.concubines.length>0){
     var cids=S.concubines;
     if(cids.length===1){
@@ -254,26 +374,31 @@ function showNight(){
     }
   }
 
-  // 孩子选项
+  // 孩子
   if(S.children&&S.children.length>0){
     if(S.children.length===1){
       var ch=S.children[0];
-      var chAge=ch.age||0;
-      opts.push({text:'去看看'+ch.name+'（'+chAge+'天）',next:'n_child_do_0',type:'love',tag:'👶'});
+      opts.push({text:'去看看'+ch.name+'（'+(ch.age||0)+'天）',next:'n_child_do_0',type:'love',tag:'👶'});
     } else {
       opts.push({text:'去看孩子们（'+S.children.length+'人）',next:'n_child_select',type:'love',tag:'👶'});
     }
   }
 
-  // 管家/后宅管理（2+妾室）
+  // 后宅管家
   if(S.concubines&&S.concubines.length>=2){
     opts.push({text:'处理后宅事务（管家）',next:'n_manage_harem',type:'safe',tag:'🏠'});
   }
 
-  // 认识新人入口（社交场合）
+  // 认识新人
   if(S.availableMen&&S.availableMen.length>0){
     var man=S.availableMen[0];
-    opts.push({text:'打听'+AVAILABLE_MEN.find(function(m){return m.id===man;}).name+'的下落',next:'man_detail_'+man,type:'love',tag:'👤'});
+    var mname=AVAILABLE_MEN.find(function(m){return m.id===man;});
+    if(mname)opts.push({text:'打听'+mname.name+'的下落',next:'man_detail_'+man,type:'love',tag:'👤'});
+  }
+
+  // 随机前兆提示
+  if(!S.flags.randomEventTriggered&&S.concubines&&S.concubines.length>=2&&Math.random()<0.2){
+    opts.push({text:'⚠️后宅似乎有些动静……',next:'harem_conflict_event',type:'risky',tag:'⚔'});
   }
 
   opts.push({text:'各自休息，明日再见',next:'n_sleep',type:'safe',tag:'🌙'});
@@ -288,6 +413,7 @@ function showNight(){
     if(btn){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
   };
 }
+
 
 window.s1=function(){
   document.getElementById('cover').style.display='none';
@@ -383,40 +509,84 @@ function checkFestival(){var day=S.day;if(day>=5&&day<=7)S.nearFestival='端午'
 function getMorningGreeting(){
   var h=S.husband.name;var aff=S.affection;var tid=S.trait?S.trait.id:'';var hid=S.husband.id;
   var mood=S.husbandMood||'neutral';
+  var season=S.todaySeason||getSeason();
+  var weather=S.todayWeather||'晴朗';
   var base='';
+
+  // 每日随机小动作（在基础早安语基础上增加）
+  var actions=[];
+  if(weather==='细雨')actions.push('他撑着伞在门口等你');
+  if(weather==='小雪')actions.push('他给你准备了热手炉');
+  if(weather==='大雾')actions.push('他牵着你的手，怕你走迷路');
+  if(season==='冬')actions.push('他给你披上了厚外衣');
+  if(season==='夏')actions.push('他给你摇了一晚上的扇子，眼下有淡淡的青色');
+  if(season==='春')actions.push('他采了一朵小花插在窗台上');
+  if(season==='秋')actions.push('他炖了一锅暖暖的汤');
+  actions.push('给你梳头');
+  actions.push('给你做了早饭');
+  actions.push('给你念了一首诗');
+  actions.push('给你泡了一壶热茶');
+  actions.push('默默给你掖了掖被角');
+  actions.push('给你唱了一首歌');
+  actions.push('绣了一个小香囊送你');
+  actions.push('在窗边写大字');
+  actions.push('安静地看书，陪着你');
+  actions.push('亲自去集市买了新鲜的菜');
+  actions.push('把屋子收拾得干干净净');
+
+  // 每天随机选一个动作
+  var action=actions[Math.floor(Math.random()*actions.length)];
+
+  // 心情不好时的问候
   if(mood==='angry'){
     if(aff>=70){base=h+'见你出来，脸色淡淡的，哼了一声别过头去：「……早。」声音里带着几分委屈。';}
     else{base=h+'背对着你，坐在床边一动不动。你叫了几声，他才冷冷地说：「……没什么好说的。」';}
+    base+=' '+action+'，但他不太愿意和你说话。';
     return base;
   }
   if(mood==='sad'){
     base=h+'坐在窗边发呆，见你出来才勉强笑了笑：「娘子，早……今日，你忙你的吧。」眼里有些许忧虑。';
+    base+=' '+action+'，但他的眼神里藏着心事。';
     return base;
   }
   if(mood==='happy'){
-    if(tid==='sharp'){base=h+'见你醒了，眼睛亮了起来，小跑着迎上来：「娘子！你醒了！今天我给你备好了早点，快来尝尝！」笑容里满是欢喜。';}
-    else if(tid==='warm'){base=h+'温柔地迎上来，拉着你的手：「娘子，早安。今日我特意早起给你炖了银耳羹，你一定要喝一碗。」眼里满是笑意。';}
-    else if(tid==='fierce'){base=h+'见你出来，紧张中带着期待地搓了搓手：「娘、娘子！早！我……我给你做了早饭！」脸红扑扑的。';}
-    else if(tid==='calm'){base=h+'已默默备好洗漱水和热茶，见你出来，微微一笑：「娘子，早。今日一切顺利。」眼神柔和。';}
-    else if(hid==='tsundere'){base='「哼，早、早饭……才不是我特意做的呢！」'+h+'别过脸去，但嘴角却藏不住笑意，耳朵红红的。';}
-    else if(hid==='outgoing'){base=h+'从厨房探出头，笑得眼睛弯弯：「娘子！你醒啦！快来快来，今天我做了你最爱吃的桂花糕！」';}
-    else if(hid==='quiet'){base=h+'见你出来，眼神温柔地迎上来，轻轻握了握你的手：「……早。粥温在锅里，我给你盛。」';}
-    else if(hid==='scholar'){base=h+'见你醒了，放下手中的书，微笑着说：「娘子早。今日春风和煦，一定是个好日子。」';}
-    else{base=h+'见你醒来，眼睛里满是欢喜：「娘子，早。我给你热了粥……」主动迎上来牵你的手。';}
+    var happyTexts=[];
+    if(tid==='sharp'){happyTexts.push(h+'见你醒了，眼睛亮了起来，小跑着迎上来：「娘子！你醒了！今天我给你备好了早点，快来尝尝！」笑容里满是欢喜。');}
+    else if(tid==='warm'){happyTexts.push(h+'温柔地迎上来，拉着你的手：「娘子，早安。今日我特意早起给你炖了银耳羹，你一定要喝一碗。」眼里满是笑意。');}
+    else if(tid==='fierce'){happyTexts.push(h+'见你出来，紧张中带着期待地搓了搓手：「娘、娘子！早！我……我给你做了早饭！」脸红扑扑的。');}
+    else if(tid==='calm'){happyTexts.push(h+'已默默备好洗漱水和热茶，见你出来，微微一笑：「娘子，早。今日一切顺利。」眼神柔和。');}
+    else if(hid==='tsundere'){happyTexts.push('「哼，早、早饭……才不是我特意做的呢！」'+h+'别过脸去，但嘴角却藏不住笑意，耳朵红红的。');}
+    else if(hid==='outgoing'){happyTexts.push(h+'从厨房探出头，笑得眼睛弯弯：「娘子！你醒啦！快来快来，今天我做了你最爱吃的桂花糕！」');}
+    else if(hid==='quiet'){happyTexts.push(h+'见你出来，眼神温柔地迎上来，轻轻握了握你的手：「……早。粥温在锅里，我给你盛。」');}
+    else if(hid==='scholar'){happyTexts.push(h+'见你醒了，放下手中的书，微笑着说：「娘子早。今日春风和煦，一定是个好日子。」');}
+    else{happyTexts.push(h+'见你醒来，眼睛里满是欢喜，主动迎上来牵你的手：「娘子，早。」');}
+    base=happyTexts[Math.floor(Math.random()*happyTexts.length)];
+    base+=' '+action+'，他今日心情很好。';
     return base;
   }
-  if(tid==='sharp'){base=h+'见你醒了，连忙迎上来：「娘子，你精明能干，今天有什么打算？我听你安排便是。」';}
-  else if(tid==='warm'){base=h+'端着一碗热粥走来，笑容温柔：「娘子，早。今日家里我打理，你安心忙你的事。」';}
-  else if(tid==='fierce'){base=h+'见你出来，神色微微紧张，搓了搓手才凑上前：「娘……娘子，早。我给你倒好了洗漱水……」';}
-  else if(tid==='calm'){base=h+'已默默备好洗漱水，见你出来，只是淡淡一点头，话不多，却把一切都安排得妥帖帖。';}
-  else if(aff>=80){base=h+'早早便起了，见你醒来，眼睛一亮：「娘子，早。我给你热了粥……」眼里满是关切。';}
-  else if(aff>=60){base=h+'坐在窗边，见你醒了，微微一笑：「娘子，早。今日天气不错。」';}
-  else if(aff>=40){base=h+'正收拾屋子，见你出来，点了点头：「……起来了。」语气平淡，却也多了几分默契。';}
-  else if(aff>=31&&hid==='tsundere'){base='「哼，早、早饭……才不是我特意做的呢！」'+h+'别过脸去，耳根却有些红。';}
-  else if(aff>=31&&hid==='outgoing'){base=h+'从厨房探出头：「娘子！你醒啦！今天我给你做了桂花糕，快来尝尝！」';}
-  else if(aff>=31&&hid==='quiet'){base=h+'正安静地浇花，见你出来，轻声道：「……早。粥温在锅里了。」';}
-  else if(aff>=31&&hid==='scholar'){base=h+'见你醒了，放下手中的书：「娘子早。我泡了茶，你要先喝口热的吗？」';}
-  else{base=h+'背对着你，似乎在想什么心事。听到你的脚步声，他轻声道：「……早。」';}
+
+  // normal mood - 按性格和心情的普通问候
+  var greet=[];
+  if(tid==='sharp'){greet.push(h+'见你醒了，连忙迎上来：「娘子，今天有什么打算？我听你安排便是。」');}
+  else if(tid==='warm'){greet.push(h+'端着一碗热粥走来，笑容温柔：「娘子，早。今日家里我打理，你安心忙你的事。」');}
+  else if(tid==='fierce'){greet.push(h+'见你出来，神色微微紧张，搓了搓手才凑上前：「娘……娘子，早。我给你倒好了洗漱水……」');}
+  else if(tid==='calm'){greet.push(h+'已默默备好洗漱水，见你出来，只是淡淡一点头，话不多，却把一切都安排得妥帖。');}
+  else if(aff>=80){greet.push(h+'早早便起了，见你醒来，眼睛一亮：「娘子，早。我给你热了粥……」眼里满是关切。');}
+  else if(aff>=60){greet.push(h+'坐在窗边，见你醒了，微微一笑：「娘子，早。今日天气不错。」');}
+  else if(aff>=40){greet.push(h+'正收拾屋子，见你出来，点了点头：「……起来了。」语气平淡，却也多了几分默契。');}
+  else if(aff>=31&&hid==='tsundere'){greet.push('「哼，早、早饭……才不是我特意做的呢！」'+h+'别过脸去，耳根却有些红。');}
+  else if(aff>=31&&hid==='outgoing'){greet.push(h+'从厨房探出头：「娘子！你醒啦！今天我给你做了桂花糕，快来尝尝！」');}
+  else if(aff>=31&&hid==='quiet'){greet.push(h+'正安静地浇花，见你出来，轻声道：「……早。粥温在锅里了。」');}
+  else if(aff>=31&&hid==='scholar'){greet.push(h+'见你醒了，放下手中的书：「娘子早。我泡了茶，你要先喝口热的吗？」');}
+  else{greet.push(h+'背对着你，似乎在想什么心事。听到你的脚步声，他轻声道：「……早。」');}
+
+  base=greet[Math.floor(Math.random()*greet.length)];
+
+  // 季节/天气加描述
+  var seasonDesc={'春':'春光明媚','夏':'蝉鸣阵阵','秋':'秋风送爽','冬':'寒气袭人'};
+  var weatherDesc={'晴朗':'阳光明媚','薄云':'薄云遮日','微风':'微风轻拂','阴沉':'天色阴沉','细雨':'细雨绵绵','大雾':'雾气沉沉','烈日':'烈日炎炎','小雪':'初雪飘落'};
+  base+=' '+seasonDesc[season]||''+weatherDesc[weather]||'';
+  base+='。'+action+'。';
   return base;
 }
 
@@ -956,6 +1126,161 @@ function n_problem_solve(){
   renderStats();updateAff();
 }
 
+// ========== 纪念日 ==========
+function anniversary_remember(){
+  S.affection=Math.min(100,S.affection+10);
+  S.goodEventToday=true;
+  addLog('纪念日：记得！好感+10');
+  showScene('成亲纪念日',['你握住他的手，认真地说：「我也一直记得这个日子。」',S.husband.name+'愣了一下，随即眼眶微微泛红。',S.husband.name+'轻声说：「娘子……谢谢你。这些日子，我有时候会想，娘子是不是不再像以前那样在意我了……但今天，我知道了。」','他紧紧握住你的手，在你耳边轻声说：「能娶到你，是我这辈子最大的福气。」'], [{text:'我们以后还有很多个这样的日子',next:'n_sleep',type:'safe'}],'💕 纪念日');
+  updateAff();
+}
+function anniversary_forget(){
+  S.affection=Math.max(0,S.affection-5);
+  S.husbandMood='sad';
+  addLog('纪念日：忘了！好感-5');
+  showScene('成亲纪念日',['你有些歉意地说：「这些日子太忙，差点忘了……」',S.husband.name+'的眼神暗了一下，低下头：「没关系……娘子忙，我知道。」',S.husband.name+'轻声说：「只是……其实我一直记着今天是我们的纪念日。」他勉强笑了笑，笑容里有些落寞。'], [{text:'对不起，我下次一定记得',next:'n_sleep',type:'safe'}],'💔 纪念日');
+  updateAff();
+}
+
+// ========== 丈夫日常随机事件 ==========
+// 这些事件由 rollDailyHusbandEvents() 随机选出
+function n_weather_rain(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('雨夜他等你 好感+5');
+  showScene('雨夜',['外面下着雨，'+S.husband.name+'却撑伞在门口等你。',S.husband.name+'轻声说：「娘子，天黑了路不好走……我怕你淋湿了。」他身上的衣服已经湿了一半。'], [{text:'心疼地给他擦干',next:'n_sleep',type:'safe'}],'🌧 温情');
+  updateAff();
+}
+function n_weather_cold(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他给你掌被窝 好感+5');
+  showScene('寒夜',['天冷了，你正要睡下，'+S.husband.name+'却不肯回自己房间。',S.husband.name+'轻声说：「娘子，我给你掌好被窝再走……你别着凉了。」他钻进被子里，把被角掖得严严实实才肯离开。'], [{text:'谢谢你的好意',next:'n_sleep',type:'safe'}],'❄ 温情');
+  updateAff();
+}
+function n_season_spring(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('春日他摘花 好感+5');
+  showScene('春夜',[S.husband.name+'神秘兮兮地拉你到窗边：「娘子，你看！」',S.husband.name+'不知什么时候在窗台上放了一朵小花：「今早去院子里摘的，想着你会喜欢。」春夜的微风里，那朵花散发着淡淡的清香。'], [{text:'他真是有心了',next:'n_sleep',type:'safe'}],'🌸 春日');
+  updateAff();
+}
+function n_season_autumn(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('秋夜他披衣 好感+5');
+  showScene('秋夜',['秋夜微凉，'+S.husband.name+'见你坐在窗边发呆，轻轻给你披上了外衣。',S.husband.name+'轻声说：「娘子，别着凉了。」他在你身边坐下，望着窗外的月亮，一句话也不说，却让你觉得很安心。'], [{text:'有你真好',next:'n_sleep',type:'safe'}],'🍂 秋夜');
+  updateAff();
+}
+function n_season_summer(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('夏夜他扇扇子 好感+5');
+  showScene('夏夜',['夏夜闷热，你翻来覆去睡不着。',S.husband.name+'轻轻坐在床边，一下一下地给你扇着扇子：「娘子，睡吧。」他的动作很轻很慢，直到你沉沉睡去。'], [{text:'他真的很贴心',next:'n_sleep',type:'safe'}],'🌙 夏夜');
+  updateAff();
+}
+function n_he_massage(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他想给你按肩 好感+5');
+  showScene('按肩',[S.husband.name+'有些犹豫地说：「娘子，你今天看起来很累……我、我能给你按按肩吗？」',S.husband.name+'的手法虽然生疏，却很认真。你闭上眼，能感觉到他的小心翼翼。'], [{text:'舒服多了',next:'n_sleep',type:'safe'}],'💆 温情');
+  updateAff();
+}
+function n_he_ask_tired(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他问你累不累 好感+5');
+  showScene('关心',[S.husband.name+'见你回来了，轻声问：「娘子，今天累不累？」',S.husband.name+'端来一碗热汤：「我给你炖了汤，趁热喝吧。」他的眼神里满是关切。'], [{text:'有你真暖心',next:'n_sleep',type:'safe'}],'💕 关心');
+  updateAff();
+}
+function n_he_tea(){
+  S.affection=Math.min(100,S.affection+3);
+  addLog('他默默倒茶 好感+3');
+  showScene('热茶',[S.husband.name+'默默端来一杯热茶，放在你手边，什么也没说就退到一旁。',S.husband.name+'的细心都在这杯茶里了。'], [{text:'喝完茶休息',next:'n_sleep',type:'safe'}],'🍵 日常');
+  updateAff();
+}
+function n_he_doubt(){
+  S.affection=Math.max(0,S.affection-2);
+  addLog('他欲言又止 好感-2');
+  showScene('心事',[S.husband.name+'坐在灯下，望着窗外发呆，似有满腹心事。',S.husband.name+'欲言又止：「娘子……没什么，早点休息吧。」'], [{text:'追问他',next:'n_sleep',type:'safe'}],'🌙 困惑');
+  updateAff();
+}
+function n_he_coverblanket(){
+  S.affection=Math.min(100,S.affection+4);
+  S.goodEventToday=true;
+  addLog('他掖被角 好感+4');
+  showScene('掖被角',[S.husband.name+'见你躺下，轻轻走过来，弯腰给你掖了掖被角。',S.husband.name+'的手指不小心碰到了你的手背，他的脸微微一红，低下头轻声说：「娘子……晚安。」'], [{text:'晚安',next:'n_sleep',type:'safe'}],'💕 温情');
+  updateAff();
+}
+function n_he_silent(){
+  S.affection=Math.min(100,S.affection+3);
+  addLog('他安静地看你 好感+3');
+  showScene('安静陪伴',[S.husband.name+'安静地坐在灯下，时不时抬头看你一眼，嘴角带着淡淡的笑。',S.husband.name+'不说话，却让你觉得很安心。'], [{text:'这种感觉很好',next:'n_sleep',type:'safe'}],'🌙 温情');
+  updateAff();
+}
+function n_he_complain(){
+  S.affection=Math.max(0,S.affection-3);
+  addLog('他抱怨你回来晚 好感-3');
+  showScene('委屈',[S.husband.name+'有些委屈地说：「娘子最近总回来很晚……我……我不知道该不该说。」',S.husband.name+'低着头，声音越来越小：「我只是……想你了。」'], [{text:'安慰他',next:'n_sleep',type:'safe'}],'💔 委屈');
+  updateAff();
+}
+function n_he_blush(){
+  S.affection=Math.min(100,S.affection+6);
+  S.goodEventToday=true;
+  addLog('他脸红红的说有话 好感+6');
+  showScene('害羞',[S.husband.name+'脸红红的，欲言又止：「娘子……有件事……我、我……」',S.husband.name+'深吸一口气，终于鼓起勇气：「娘子，我……我给你写了一封信，你……你能看看吗？」'], [{text:'看他的信',next:'n_sleep',type:'safe'}],'💕 心动');
+  updateAff();
+}
+function n_he_food(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他亲手做点心 好感+5');
+  showScene('点心',[S.husband.name+'有些害羞地端出一盘点心：「娘子，这是我今天学着做的……你尝尝好不好吃？」',S.husband.name+'紧张地看着你，手指不安地攥在一起。'], [{text:'很好吃！',next:'n_sleep',type:'safe'}],'🍰 甜蜜');
+  updateAff();
+}
+function n_he_embroidery(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他绣香囊 好感+5');
+  showScene('香囊',[S.husband.name+'低着头绣花，见你来了，连忙藏到身后：「没、没什么！」',S.husband.name+'拗不过你，只好拿出来给你看——原来是一个小小的香囊，上面绣着一朵小花。'], [{text:'我很喜欢！',next:'n_sleep',type:'safe'}],'🧵 甜蜜');
+  updateAff();
+}
+function n_he_poem(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他念诗 好感+5');
+  showScene('念诗',[S.husband.name+'轻声念了一首诗：「入我相思门，知我相思苦……」念完，他抬头看你，眼里闪着微微的光：「娘子，你觉得……怎么样？」'], [{text:'你的诗念得真好',next:'n_sleep',type:'safe'}],'📖 诗意');
+  updateAff();
+}
+function n_he_askfuture(){
+  S.affection=Math.min(100,S.affection+6);
+  S.goodEventToday=true;
+  addLog('他问未来 好感+6');
+  showScene('未来',[S.husband.name+'忽然轻声问：「娘子，我们以后会一直在一起吗？」',S.husband.name+'望着你，眼神里带着几分认真和期盼：「我想……一直陪着你。」'], [{text:'当然会的',next:'n_sleep',type:'safe'}],'💕 未来');
+  updateAff();
+}
+function n_he_tender(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他唱歌 好感+5');
+  showScene('歌声',[S.husband.name+'拉着你的手，轻轻唱起一首歌。他的声音不大，却格外温柔。',S.husband.name+'唱完，低声说：「娘子，这是我小时候母亲唱给我听的……我想，以后也唱给我们的孩子听。」'], [{text:'很美的歌',next:'n_sleep',type:'safe'}],'🎵 温情');
+  updateAff();
+}
+function n_he_smile(){
+  S.affection=Math.min(100,S.affection+5);
+  S.goodEventToday=true;
+  addLog('他见你就笑 好感+5');
+  showScene('笑容',[S.husband.name+'看见你就笑了，眼睛里满是光：「娘子，你回来了！」',S.husband.name+'的笑容像冬日里的一缕阳光，让你的心也跟着暖了起来。'], [{text:'你笑起来真好看',next:'n_sleep',type:'safe'}],'💕 笑容');
+  updateAff();
+}
+function n_he_cold(){
+  S.affection=Math.min(100,S.affection+4);
+  S.goodEventToday=true;
+  addLog('他感冒了还做饭 好感+4');
+  showScene('感冒',[S.husband.name+'有感冒的迹象，却还是坚持给你做了饭。',S.husband.name+'打喷嚏时还嘴硬：「我……我没事！这点小病算什么，娘子你别担心！」'], [{text:'快去休息！',next:'n_sleep',type:'safe'}],'🤧 甜蜜');
+  updateAff();
+}
+
 // ========== 回家与结算 ==========
 function go_home(){
   // 面试通过后次日入职
@@ -1128,7 +1453,49 @@ function n_sleep(){
     S.flags.childEventShown=false;
   }
 
-  addLog('第'+S.day+'日开始');
+  // ========== 丈夫心情更新 + 今日事件池 + 天气/季节 ==========
+  // 心情结算
+  var mood=S.husbandMood||'neutral';
+  var aff=S.affection;
+  if(S.touchedConcubineToday&&aff<70){
+    mood=Math.min(3,(mood==='happy'?1:mood==='neutral'?2:mood==='sad'?3:3));
+  }
+  if(S.goodEventToday){
+    mood=Math.max(0,(mood==='angry'?2:mood==='sad'?1:mood==='neutral'?0:0));
+  }
+  var mMap={'happy':0,'neutral':1,'sad':2,'angry':3};
+  var mLabels=[0,1,2,3];
+  var mNames=['happy','neutral','sad','angry'];
+  var mVal=mMap[mood]!==undefined?mMap[mood]:1;
+  if(!S.touchedConcubineToday&&!S.goodEventToday){
+    var mDrift=Math.floor(Math.random()*3)-1;
+    mVal=Math.max(0,Math.min(3,mVal+mDrift));
+  }
+  S.husbandMood=mNames[mVal];
+  S.todayMood=mVal;
+  S.touchedConcubineToday=false;
+  S.goodEventToday=false;
+
+  // 设置今日天气和季节
+  S.todayWeather=getWeather();
+  S.todaySeason=getSeason();
+
+  // 为今晚生成随机丈夫事件池
+  S.todayEvents=rollDailyHusbandEvents();
+
+  // ========== 纪念日检测 ==========
+  var anniversaries=[30,60,90,100,120,150,180,200,365];
+  for(var ai=0;ai<anniversaries.length;ai++){
+    if(S.day===anniversaries[ai]){
+      showScene('成亲第'+S.day+'天纪念',['今日是成亲第'+S.day+'天。',S.husband.name+'似乎有话想对你说。','「娘子……今天是我们成亲的纪念日，你还记得吗？」','他眼神里带着几分期待与紧张，你心里一动。'], [
+        {text:'我也一直记得这个日子',next:'anniversary_remember',type:'love'},
+        {text:'这些日子太忙，差点忘了……',next:'anniversary_forget',type:'risky'},
+      ],'💕 纪念日');
+      return;
+    }
+  }
+
+  addLog('第'+S.day+'日开始（'+S.todaySeason+'·'+S.todayWeather+'）心情:'+S.husbandMood);
   renderStats();updateAff();
   showMorning();
 }
@@ -1386,6 +1753,7 @@ function n_concubine_select(){
 function n_concubine_do(cid){
   if(!cid){go('n_sleep','safe');return;}
   S._currentConcubine=cid;
+  S.touchedConcubineToday=true;
   var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
   var mname=man?man.name:cid;
   var aff=S.concubineAffection[cid]||50;
@@ -1441,6 +1809,7 @@ function concubine_chat(){
     '他的笑容真诚而温暖，让这寒冷的夜也多了几分暖意。'
   ];
   S.concubineAffection[cid]=Math.min(100,aff+3);
+  S.touchedConcubineToday=true;
   addLog(mname+'好感+3');
   showScene(mname+'的故事',texts,[{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'💬 '+mname);
 }
@@ -1453,6 +1822,7 @@ function concubine_gift(){
   var mname=man?man.name:cid;
   var aff=S.concubineAffection[cid]||50;
   S.concubineAffection[cid]=Math.min(100,aff+8);
+  S.touchedConcubineToday=true;
   addLog('送礼物给'+mname+' -15文 好感+8');
   showScene('小礼物',['你在街上买了一支精致的发簪，递给了'+mname+'。',mname+'接过礼物，眼眶微微泛红：「娘子……谢谢你。」','他小心翼翼地把发簪收好，像是收到了什么珍贵的宝贝。'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🎁 '+mname);
   renderStats();
@@ -1470,6 +1840,7 @@ function concubine_night(){
     '这一夜，你们相依而眠，他的手指紧紧握着你的衣角，像是生怕你会消失一般。'
   ];
   S.concubineAffection[cid]=Math.min(100,aff+5);
+  S.touchedConcubineToday=true;
   // 25%怀孕概率（妾室未怀孕时）
   if(!isPreg&&Math.random()<0.25){
     S.concubinePregnant[cid]=true;
@@ -2170,6 +2541,36 @@ function festival_celebration(){
   updateAff();
 }
 
+// ========== 丈夫心情修复 ==========
+function n_apologize(){
+  var hname=S.husband.name;
+  S.affection=Math.min(100,S.affection+5);
+  S.husbandMood='neutral';
+  addLog('道歉 好感+5 心情恢复');
+  var texts=[
+    [hname+'见你主动来道歉，愣了一下，随即眼眶微微泛红。「娘子……其实我也不是真的生气，就是……就是有时候觉得，你对我很好，可我……我怕配不上你……」'],
+    [hname+'别过脸去，但听到你轻声细语地解释，肩膀渐渐放松了。「……哼，我才没有生气呢。」他的声音软了下来，轻轻握住了你的手。'],
+    ['你拉住他的手，轻声说：「这些日子冷落了你，是我不对。」'+hname+'的眼圈红了：「娘子……我不怪你。我只是……有时候觉得自己帮不上你的忙。」'],
+  ];
+  var t=texts[Math.floor(Math.random()*texts.length)];
+  showScene('道歉',[t[0],t[1],'你轻声道：「以后我会多陪陪你。」'+hname+'终于笑了，虽然眼里还带着泪光，却满是释然。'], [{text:'今夜，就这样相拥入眠吧',next:'n_sleep',type:'safe'}],'💕 道歉');
+  updateAff();
+}
+function n_comfort_husband(){
+  var hname=S.husband.name;
+  S.affection=Math.min(100,S.affection+3);
+  S.husbandMood='neutral';
+  addLog('安抚丈夫 好感+3 心情恢复');
+  var texts=[
+    [hname+'低着头坐在窗边，见你来了，轻声说：「娘子……我没事，就是……有时候会觉得孤单。」','你在他身边坐下，轻轻握住他的手。'],
+    ['你坐到'+hname+'身边，什么也没说，只是静静地陪着他。',hname+'轻轻把头靠在你的肩上：「娘子……有你在我身边，就好。」'],
+    [hname+'勉强笑了笑：「娘子不用担心我，只是……」话没说完，他的眼眶已经红了。你轻轻把他拥入怀中，拍了拍他的背。'],
+  ];
+  var t=texts[Math.floor(Math.random()*texts.length)];
+  showScene('安抚',[t[0],t[1],'过了许久，'+hname+'的呼吸渐渐平稳了下来。他轻声说：「娘子……谢谢你。」'], [{text:'陪他入眠',next:'n_sleep',type:'safe'}],'💕 安抚');
+  updateAff();
+}
+
 // ========== 路由 ==========
 window.go=function(n,t){
   switch(n){
@@ -2391,6 +2792,32 @@ window.go=function(n,t){
     case 'harem_social_scholar_lei':harem_social_action('scholar_lei');break;
     case 'harem_social_priest_ye':harem_social_action('priest_ye');break;
     case 'harem_social_husband':harem_social_husband();break;
+
+    // 纪念日
+    case 'anniversary_remember':anniversary_remember();break;
+    case 'anniversary_forget':anniversary_forget();break;
+
+    // 丈夫日常随机事件
+    case 'n_weather_rain':n_weather_rain();break;
+    case 'n_weather_cold':n_weather_cold();break;
+    case 'n_season_spring':n_season_spring();break;
+    case 'n_season_autumn':n_season_autumn();break;
+    case 'n_season_summer':n_season_summer();break;
+    case 'n_he_massage':n_he_massage();break;
+    case 'n_he_ask_tired':n_he_ask_tired();break;
+    case 'n_he_tea':n_he_tea();break;
+    case 'n_he_doubt':n_he_doubt();break;
+    case 'n_he_coverblanket':n_he_coverblanket();break;
+    case 'n_he_silent':n_he_silent();break;
+    case 'n_he_complain':n_he_complain();break;
+    case 'n_he_blush':n_he_blush();break;
+    case 'n_he_food':n_he_food();break;
+    case 'n_he_embroidery':n_he_embroidery();break;
+    case 'n_he_poem':n_he_poem();break;
+    case 'n_he_askfuture':n_he_askfuture();break;
+    case 'n_he_tender':n_he_tender();break;
+    case 'n_he_smile':n_he_smile();break;
+    case 'n_he_cold':n_he_cold();break;
     case 'meet_new_man':meet_new_man(S._lastManId||'');break;
 
     // 认识新人路由（按id动态分发）
