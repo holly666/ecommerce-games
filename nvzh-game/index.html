@@ -1686,6 +1686,7 @@ function n_preg_relief(){
   updateAff();
 }
 function n_name_baby(){
+  if(!S.husband){showScene('提示',['现在没有需要取名的宝宝。'],[{text:'继续',next:'n_sleep',type:'safe'}],'💕 取名');return;}
   var hname=S.husband.name;var hid=S.husband.id;
   var boyNames=['璟儿','霖儿','昭儿','煜儿','安儿','宁儿','瑞儿','麒儿'];
   var girlNames=['婉儿','婷儿','晴儿','月儿','雪儿','灵儿','瑶儿','璐儿'];
@@ -2011,9 +2012,22 @@ function n_concubine_do(cid){
   }
 
   document.getElementById('night-panel').classList.remove('on');
+  var t=man?man.traits:[];
+  var isYAN=t.indexOf('温柔')>=0||t.indexOf('神秘')>=0;
+  var isXU=t.indexOf('才华')>=0||t.indexOf('慵懒')>=0;
+  var isPEI=t.indexOf('傲气')>=0||t.indexOf('内敛')>=0;
+  var isLIN=t.indexOf('开朗')>=0||t.indexOf('多才')>=0;
+  var isLEI=t.indexOf('孤傲')>=0||t.indexOf('才学')>=0;
+  var isYE=t.indexOf('清淡')>=0||t.indexOf('神秘')>=0;
   var introText=isPreg
     ?[mname+'挺着微微隆起的肚子，见到你，眼里满是期待：「娘子来了……」']
-    :[mname+'见到你，眼里闪着喜悦的光：「娘子今日怎么得空来了？」','他的房间里收拾得整整齐齐，桌上还放着一壶温好的茶。'];
+    :(isYAN?[mname+'轻轻抬起头，眼里带着如水般的温柔：「娘子……我就知道你会来。','他的房间里燃着淡淡的沉香，帘幕低垂，一切都是你喜欢的模样。']:
+      isXU?[mname+'慵懒地倚在窗边，手里还拿着一卷诗册，见你来了也不急着起身：「娘子……嗯，来了啊。」','他懒洋洋地合上书，唇角带着一抹闲适的笑意。']:
+      isPEI?[mname+'见到你，矜持地点了点头，神色淡然：「娘子怎么亲自来了，有事让人唤一声便是。」']:
+      isLIN?[mname+'一见到你就跳了起来，眼里满是惊喜：「娘子！我就知道你会来！快坐快坐！」']:
+      isLEI?[mname+'放下手中的书卷，神色平静却透着几分疏离：「娘子来了……请坐。」']:
+      isYE?[mname+'静静地站在灯影里，见你进来，微微一笑：「娘子……夜深了。」他的声音清淡如水，却有一丝不易察觉的欢喜。']:
+      [mname+'见到你，眼里闪着喜悦的光：「娘子今日怎么得空来了？」','他的房间里收拾得整整齐齐，桌上还放着一壶温好的茶。']);
   showScene('去'+mname+'房中',introText,null);
   var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov'};
   var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov'};
@@ -2032,11 +2046,57 @@ function concubine_chat(){
   var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
   var mname=man?man.name:cid;
   var aff=S.concubineAffection[cid]||50;
-  var texts=[
-    mname+'坐在你对面，聊起他的过去、他的喜好、他的梦想。',
-    '他说：「能遇到娘子，是我这辈子最大的福气。」',
-    '他的笑容真诚而温暖，让这寒冷的夜也多了几分暖意。'
-  ];
+  var t=man?man.traits:[];
+  var isYAN=t.indexOf('温柔')>=0||t.indexOf('神秘')>=0;
+  var isXU=t.indexOf('才华')>=0||t.indexOf('慵懒')>=0;
+  var isPEI=t.indexOf('傲气')>=0||t.indexOf('内敛')>=0;
+  var isLIN=t.indexOf('开朗')>=0||t.indexOf('多才')>=0;
+  var isLEI=t.indexOf('孤傲')>=0||t.indexOf('才学')>=0;
+  var isYE=t.indexOf('清淡')>=0||t.indexOf('神秘')>=0;
+  var texts=[];
+  if(isYAN){
+    texts=[
+      mname+'坐在窗边，月光洒在他的侧脸上，他轻轻地说：「娘子，有些话我从未对人说过……」',
+      '他聊起幼时在山中的日子：「那时候我总是一个人，看云、听风……以为此生也会这样孤独下去。」',
+      '他看着你，眼里有一种说不出的温柔：「直到遇见娘子，才知道……有人等在前面，是什么感觉。」',
+      '他的声音很轻，却让人心安。'
+    ];
+  } else if(isXU){
+    texts=[
+      mname+'懒洋洋地靠在软榻上，手里还握着一卷诗册：「娘子，今晚月色不错，适合吟诗。」',
+      '他随意翻了一页：「『春水碧于天，画船听雨眠』……可惜如今没有画船。」',
+      '「不过有娘子在，倒比那诗里的意境还好些。」他抬眼看你，眼里带着几分促狭的笑意。',
+      '你们就这样有一搭没一搭地聊着，漫漫长夜也不觉得无聊了。'
+    ];
+  } else if(isPEI){
+    texts=[
+      mname+'背对着你坐在灯下，像是在生闷气：「娘子怎么突然想起来看我了？」',
+      '他嘴上这么说，却没有起身离开的意思。沉默片刻，他轻声说：「……其实我也没那么小气。」',
+      '他的手指无意识地拨弄着衣角，半晌才低声说：「娘子若有事，只管去忙，我能照顾好自己。」',
+      '明明是在逞强，语气里却藏着委屈。'
+    ];
+  } else if(isLIN){
+    texts=[
+      mname+'一看到你就笑了，拉着你坐下：「娘子你可来了！我今天学了一首新曲子，正想弹给你听呢！」',
+      '他兴冲冲地拿出琵琶，弹了一曲《阳春白雪》，指法娴熟，清脆悦耳。',
+      '「娘子觉得怎么样？」他眼巴巴地看着你，像个等待夸奖的孩子。',
+      '他的活泼和热情，让整个房间都亮了起来。'
+    ];
+  } else if(isLEI){
+    texts=[
+      mname+'坐在书案前，面前摊着一本古籍，他头也不抬：「娘子来了。」',
+      '你走近一看，他正在批注一本书，字迹清隽有力。',
+      '「这本书讲的是治世之道，」他难得主动开口，「娘子若是感兴趣，我可以讲给你听。」',
+      '他说话不多，但字字珠玑，透着几分孤傲与才学。'
+    ];
+  } else if(isYE){
+    texts=[
+      mname+'静静地看着你，不说话，眼神却仿佛能看穿一切。',
+      '半晌，他才轻声说：「娘子今日气色不错，看来一切顺遂。」',
+      '他的声音清淡如水，却透着几分了然：「我今日研了一壶茶，娘子要尝尝吗？」',
+      '他的一切都是淡淡的，却让人感到一种莫名的安心。'
+    ];
+  }
   S.concubineAffection[cid]=Math.min(100,aff+3);
   S.touchedConcubineToday=true;
   addLog(mname+'好感+3');
@@ -2063,7 +2123,44 @@ function concubine_night(){
   var mname=man?man.name:cid;
   var aff=S.concubineAffection[cid]||50;
   var isPreg=S.concubinePregnant[cid]||false;
-  var texts=[
+  var t=man?man.traits:[];
+  var isYAN=t.indexOf('温柔')>=0||t.indexOf('神秘')>=0;
+  var isXU=t.indexOf('才华')>=0||t.indexOf('慵懒')>=0;
+  var isPEI=t.indexOf('傲气')>=0||t.indexOf('内敛')>=0;
+  var isLIN=t.indexOf('开朗')>=0||t.indexOf('多才')>=0;
+  var isLEI=t.indexOf('孤傲')>=0||t.indexOf('才学')>=0;
+  var isYE=t.indexOf('清淡')>=0||t.indexOf('神秘')>=0;
+  var texts=isYAN?[
+    '夜深了，烛火摇曳。'+mname+'轻轻靠在你身边，声音低柔如月光：「娘子……能这样靠着你，真好。」',
+    '他的手指轻轻覆上你的手背，动作温柔得像怕惊扰了什么珍贵的东西。',
+    '「娘子，我以前总怕黑……」他在你耳边轻声说，「但有你在，我什么都不怕了。」',
+    '这一夜，他紧紧依偎着你，像一只终于找到归宿的倦鸟。'
+  ]:isXU?[
+    '夜深了，'+mname+'慵懒地靠在床头，月光洒在他的眉眼间，透着几分闲适。',
+    '「娘子，今夜月色不错……」他慢悠悠地说，「适合做点风雅的事。」',
+    '他轻轻拉着你的手，唇角带着一抹意味深长的笑：「当然……最风雅的事，是和娘子在一起。」',
+    '他的慵懒里藏着深情，让人不由自主地陷进去。'
+  ]:isPEI?[
+    '夜深了，'+mname+'坐在床边，神色傲然，却在不经意间红了耳尖。',
+    '「娘子……哼，我可不是特意等你的。」他别过脸去，声音却透着紧张。',
+    '他半晌才低声说：「既然娘子来了……就、就坐近些吧。」',
+    '他的矜持里藏着渴望，嘴硬的模样让人心动。'
+  ]:isLIN?[
+    '夜深了，'+mname+'兴奋地拉着你的手，眼里闪着光：「娘子你终于来了！我等了好久！」',
+    '他絮絮叨叨地说着今天发生的趣事，手舞足蹈，像只快乐的小鸟。',
+    '「娘子，你知道吗？我今天学会了一道新菜，改天做给你吃！」',
+    '他的热情驱散了夜晚的沉闷，整间屋子都热闹了起来。'
+  ]:isLEI?[
+    '夜深了，'+mname+'坐在灯下看书，见你来了才缓缓合上书卷，神色淡然。',
+    '「娘子来了。」他的声音平静无波，却在你坐下时，不动声色地为你倒了一杯茶。',
+    '「夜深了，早些休息吧。」他轻声说，眼神却一直追随着你，透着几分不易察觉的温柔。',
+    '他话不多，却将一切安排得妥帖，让人感到被默默守护着。'
+  ]:isYE?[
+    '夜深了，'+mname+'静静地坐在窗边，月光洒在他身上，如烟如雾。',
+    '他回头看你，微微一笑：「娘子……你来了。」',
+    '他的气息清淡而神秘，让人想要靠近，又不忍打破这份静谧。',
+    '「这一夜，娘子想做什么？」他轻声问，眼神深邃而温柔。'
+  ]:[
     '夜深了，烛火摇曳。'+mname+'轻轻靠在你身边，神色带着几分娇羞。',
     '「娘子……」他的声音轻轻的，带着几分期待。',
     '这一夜，你们相依而眠，他的手指紧紧握着你的衣角，像是生怕你会消失一般。'
@@ -2140,8 +2237,32 @@ function concubine_give_birth(){
   S.children.push(child);
   S.concubineAffection[cid]=Math.min(100,(S.concubineAffection[cid]||50)+15+5);
   addLog('妾室'+mname+'生子！'+childName+'（'+child.personality+'）好感+20');
+  var t=man?man.traits:[];
+  var isYAN=t.indexOf('温柔')>=0||t.indexOf('神秘')>=0;
+  var isXU=t.indexOf('才华')>=0||t.indexOf('慵懒')>=0;
+  var isPEI=t.indexOf('傲气')>=0||t.indexOf('内敛')>=0;
+  var isLIN=t.indexOf('开朗')>=0||t.indexOf('多才')>=0;
+  var isLEI=t.indexOf('孤傲')>=0||t.indexOf('才学')>=0;
+  var isYE=t.indexOf('清淡')>=0||t.indexOf('神秘')>=0;
   var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
-  showScene('临盆',['夜里，'+mname+'突然感到阵痛袭来，你连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。',mname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……我们的孩子……」','孩子取名「'+childName+'」，是个'+child.personality+'的孩子。（'+statLine+'）'], [{text:'抱抱我们的孩子',next:'concubine_child_scene',type:'love'}],'🎉 妾室生产：'+childName);
+  var birthTexts=['夜里，'+mname+'突然感到阵痛袭来，你连夜叫来了产婆。','经过一夜的努力，清晨的第一缕阳光照进窗内时——','「哇——」一声清亮的啼哭打破了寂静。','「恭喜娘子！是个'+(isBoy?'小公子':'小千金')+'！」产婆笑呵呵地抱着孩子。'];
+  var birthLine='';
+  if(isYAN){
+    birthLine='孩子取名「'+childName+'」，是个'+child.personality+'的孩子。'+mname+'虚弱地握着你的手，泪流满面：「娘子……谢谢你……赐给我这个孩子……我一定会好好爱他……如同爱娘子一般。」（'+statLine+'）';
+  } else if(isXU){
+    birthLine='孩子取名「'+childName+'」。'+mname+'虚弱地躺在榻上，却依然带着几分文人的雅兴：「『明珠入掌』——这是上天赐予我们的诗……」他看着孩子，唇角浮起一抹欣慰的笑：「娘子，我们的孩子……多像一首好诗的开篇。」（'+statLine+'）';
+  } else if(isPEI){
+    birthLine='孩子取名「'+childName+'」。'+mname+'虽然虚弱，却强撑着傲然的姿态：「哼，这孩子……哭声倒是响亮，将来定是个有骨气的。」他看向孩子，眼眶却红了：「娘子……谢谢你……让我有了血脉的延续。」（'+statLine+'）';
+  } else if(isLIN){
+    birthLine='孩子取名「'+childName+'」。'+mname+'喜极而泣，拉着你的手不停地说：「娘子！我们的孩子！你看他多可爱！我要教他弹琴、教他唱歌——我要把我会的一切都教给他！」他眼里满是喜悦和期待。（'+statLine+'）';
+  } else if(isLEI){
+    birthLine='孩子取名「'+childName+'」。'+mname+'神色平静，只是接过孩子时，手指微微颤抖。他轻声说：「娘子……这孩子，我们好好教导。将来……希望他比我更懂得如何爱人。」（'+statLine+'）';
+  } else if(isYE){
+    birthLine='孩子取名「'+childName+'」。'+mname+'静静地抱着孩子，神色淡然中透着一丝不易察觉的温柔：「这孩子……来得寂静，却如同月光，清亮而温柔。」他抬头看你，轻声道：「娘子，谢谢你。」（'+statLine+'）';
+  } else {
+    birthLine='孩子取名「'+childName+'」，是个'+child.personality+'的孩子。'+mname+'虚弱地躺在床上，看到孩子的那一刻，眼泪夺眶而出：「娘子……谢谢你……我们的孩子……」（'+statLine+'）';
+  }
+  showScene('临盆',birthTexts.concat([birthLine]), [{text:'抱抱我们的孩子',next:'concubine_child_scene',type:'love'}],'🎉 妾室生产：'+childName);
 }
 function concubine_child_scene(){
   var cid=S._currentConcubine||(S.concubines&&S.concubines[0]);
@@ -2152,7 +2273,64 @@ function concubine_child_scene(){
   S.concubineAffection[cid]=Math.min(100,(S.concubineAffection[cid]||50)+5);
   addLog('妾室一家 好感+5');
   var statLine='体质:'+child.physique+' 悟性:'+child.intelligence+' 情商:'+child.empathy+' 武力:'+child.martial;
-  showScene('有了孩子的生活',[mname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。',gender+'「'+child.name+'」（'+child.personality+'）渐渐长大，会对着你笑，会伸出小手要你抱。','这个家，变得更完整了。（'+statLine+'）'],[{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
+  var t=man?man.traits:[];
+  var isYAN=t.indexOf('温柔')>=0||t.indexOf('神秘')>=0;
+  var isXU=t.indexOf('才华')>=0||t.indexOf('慵懒')>=0;
+  var isPEI=t.indexOf('傲气')>=0||t.indexOf('内敛')>=0;
+  var isLIN=t.indexOf('开朗')>=0||t.indexOf('多才')>=0;
+  var isLEI=t.indexOf('孤傲')>=0||t.indexOf('才学')>=0;
+  var isYE=t.indexOf('清淡')>=0||t.indexOf('神秘')>=0;
+  var childTexts=[];
+  if(isYAN){
+    childTexts=[
+      mname+'每天清晨都会亲自给孩子穿衣，动作轻柔而细致，像是在对待一件易碎的珍宝。',
+      '他会轻声给孩子哼唱摇篮曲，声音温柔如水：「小宝贝，快入睡……娘子在身边……」',
+      gender+'「'+child.name+'」最喜欢窝在'+mname+'怀里，小手抓着他的衣襟不放。',
+      mname+'抬头看你，眼里满是温柔：「娘子，你看这孩子……笑起来真像你。」（'+statLine+'）'
+    ];
+  } else if(isXU){
+    childTexts=[
+      mname+'偶尔会抱着孩子，慵懒地倚在窗边，轻声吟诵古诗，似乎想从小给孩子熏陶文学气息。',
+      '「娘子，这孩子若是将来也能吟诗作对就好了……」他笑着说，眼里透着才子特有的期许。',
+      gender+'「'+child.name+'」似乎听得懂似的，睁着圆圆的眼睛，安静地听他念诗。',
+      '这孩子，从小就在书香与慵懒的诗意中成长。（'+statLine+'）'
+    ];
+  } else if(isPEI){
+    childTexts=[
+      mname+'对孩子的教育颇为严格，从小就教导孩子要自尊自强，不要轻易示弱。',
+      '「站要有站相，坐要有坐相！」他的语气严肃，却会在孩子睡着后，默默为孩子掖好被角。',
+      gender+'「'+child.name+'」从小就有几分'+mname+'的傲气，遇事不肯服输。',
+      '他嘴上严厉，眼里却满是慈爱——是那种"恨铁不成钢"的深情。（'+statLine+'）'
+    ];
+  } else if(isLIN){
+    childTexts=[
+      mname+'每天变着法子逗孩子开心，弹琴、唱歌、做游戏，样样都来，整个院子都充满了欢声笑语。',
+      '「'+child.name+'！看爹爹给你变个戏法！」他像个长不大的孩子，和孩子打成一片。',
+      gender+'「'+child.name+'」在'+mname+'的陪伴下，性格开朗活泼，整天笑呵呵的。',
+      '这孩子继承了父亲的阳光，走到哪儿都能带来欢乐。（'+statLine+'）'
+    ];
+  } else if(isLEI){
+    childTexts=[
+      mname+'注重对孩子的教育，从小就给他读经史子集，培养他的学识与气度。',
+      '「这孩子，要多读书，修身养性，方能成大器。」他亲手为孩子圈点启蒙读物，一字一句地教。',
+      gender+'「'+child.name+'」虽小，却已显出几分安静沉稳的气质，喜欢独自看书思考。',
+      '父子的相处，总是安静而充满智慧的。（'+statLine+'）'
+    ];
+  } else if(isYE){
+    childTexts=[
+      mname+'静静地陪伴在孩子身边，话不多，却总是在关键时刻给予温柔的守护。',
+      '他会和孩子一起静坐，看月升日落，不急不躁，一切都在无言中传递。',
+      gender+'「'+child.name+'」在'+mname+'的熏陶下，性格清淡温和，不急不缓。',
+      '父子相伴，如清风朗月，一切尽在不言中。（'+statLine+'）'
+    ];
+  } else {
+    childTexts=[
+      mname+'每天都围着孩子转，给孩子换尿布、喂奶、哄睡，样样都做得有模有样。',
+      gender+'「'+child.name+'」（'+child.personality+'）渐渐长大，会对着你笑，会伸出小手要你抱。',
+      '这个家，变得更完整了。（'+statLine+'）'
+    ];
+  }
+  showScene('有了孩子的生活',childTexts,[{text:'继续生活',next:'n_sleep',type:'safe'}],'👶 '+child.name);
 }
 
 // ========== 育儿系统 ==========
