@@ -1224,6 +1224,14 @@ window.go=function(n,t){
     default:go_home();
   }
 };
+// 兜底：全局按钮点击拦截，确保所有 chc 按钮都能响应
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.chc');
+  if(btn&&!btn.disabled&&btn.getAttribute('data-next')){
+    e.preventDefault();
+    go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));
+  }
+});
 </script>
 </body>
 </html>
