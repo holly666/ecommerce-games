@@ -444,7 +444,7 @@ function hubAdventure(){
   document.getElementById('hubArea').innerHTML='';
   var riskColor=ev.type==='safe'?'#22c55e':ev.type==='smart'?'#a78bfa':'#ef4444';
   document.getElementById('sceneArea').innerHTML='<div class="scene-box"><div class="scene-text" style="text-align:center"><div style="font-size:1.5em;margin-bottom:10px">&#9876;</div><strong style="color:'+riskColor+'">'+ev.title+'</strong><br><br>'+ev.desc+'</div></div>';
-  document.getElementById('choicesArea').innerHTML='<div class="choices"><button class="choice-btn '+ev.type+'" onclick="doAdventure('+JSON.stringify(ev).replace(/"/g,'&quot;')+')">'+ev.type==='safe'?'[safe] 稳妥应对':ev.type==='smart'?'[smart] 智取周旋':ev.type==='risky'?'[risky] 正面迎敌':'[???] 应对'} +'</button><button class="choice-btn safe" onclick="renderHub()">[safe] 放弃离开</button></div>';
+  document.getElementById('choicesArea').innerHTML='<div class="choices"><button class="choice-btn '+ev.type+'" onclick="doAdventure('+JSON.stringify(ev).replace(/"/g,'&quot;')+')">'+(ev.type==='safe'?'[safe] 稳妥应对':ev.type==='smart'?'[smart] 智取周旋':ev.type==='risky'?'[risky] 正面迎敌':'[???] 应对')+'</button><button class="choice-btn safe" onclick="renderHub()">[safe] 放弃离开</button></div>';
 }
 
 function doAdventure(evStr){
@@ -484,7 +484,7 @@ function hubMain(){
     {id:'main_sect1',title:'宗门日常',desc:'参加宗门晨课，与众弟子一起修炼基础功法。掌门会在今日宣布一件大事……'},
     {id:'main_sect2',title:'深夜密谈',desc:'你发现'+lead+'独自在悬崖边，似乎心事重重。上前询问，还是悄然离开？'},
     {id:'main_sect3',title:'论剑大会',desc:'一年一度的论剑大会即将开始，这是提升声望与实力的好机会。'},
-    {id:'main_sect4',title:'旧敌来袭',desc:'+'那夜追杀'+lead+'的势力似乎找到了寒渊剑宗的踪迹，山门之外杀气腾腾！'},
+    {id:'main_sect4',title:'旧敌来袭',desc:'那夜追杀'+lead+'的势力似乎找到了寒渊剑宗的踪迹，山门之外杀气腾腾！'},
   ];
   var html='<div style="margin-bottom:15px"><button class="back-btn" onclick="renderHub()">&#8592; 返回</button></div>';
   html+='<div class="scene-box" style="margin-bottom:15px"><div class="scene-title" style="color:#c084fc;margin-bottom:12px;border-bottom:1px solid rgba(192,132,252,0.2);padding-bottom:8px;letter-spacing:2px">主线剧情</div>';
