@@ -265,6 +265,11 @@ function showNight(){
     }
   }
 
+  // 管家/后宅管理（2+妾室）
+  if(S.concubines&&S.concubines.length>=2){
+    opts.push({text:'处理后宅事务（管家）',next:'n_manage_harem',type:'safe',tag:'🏠'});
+  }
+
   // 认识新人入口（社交场合）
   if(S.availableMen&&S.availableMen.length>0){
     var man=S.availableMen[0];
@@ -377,11 +382,33 @@ function day1(){addLog('=== 游戏开始 ===');addLog('第1日开始');renderSta
 function checkFestival(){var day=S.day;if(day>=5&&day<=7)S.nearFestival='端午';else if(day>=25&&day<=27)S.nearFestival='中秋';else S.nearFestival=null;}
 function getMorningGreeting(){
   var h=S.husband.name;var aff=S.affection;var tid=S.trait?S.trait.id:'';var hid=S.husband.id;
+  var mood=S.husbandMood||'neutral';
   var base='';
+  if(mood==='angry'){
+    if(aff>=70){base=h+'见你出来，脸色淡淡的，哼了一声别过头去：「……早。」声音里带着几分委屈。';}
+    else{base=h+'背对着你，坐在床边一动不动。你叫了几声，他才冷冷地说：「……没什么好说的。」';}
+    return base;
+  }
+  if(mood==='sad'){
+    base=h+'坐在窗边发呆，见你出来才勉强笑了笑：「娘子，早……今日，你忙你的吧。」眼里有些许忧虑。';
+    return base;
+  }
+  if(mood==='happy'){
+    if(tid==='sharp'){base=h+'见你醒了，眼睛亮了起来，小跑着迎上来：「娘子！你醒了！今天我给你备好了早点，快来尝尝！」笑容里满是欢喜。';}
+    else if(tid==='warm'){base=h+'温柔地迎上来，拉着你的手：「娘子，早安。今日我特意早起给你炖了银耳羹，你一定要喝一碗。」眼里满是笑意。';}
+    else if(tid==='fierce'){base=h+'见你出来，紧张中带着期待地搓了搓手：「娘、娘子！早！我……我给你做了早饭！」脸红扑扑的。';}
+    else if(tid==='calm'){base=h+'已默默备好洗漱水和热茶，见你出来，微微一笑：「娘子，早。今日一切顺利。」眼神柔和。';}
+    else if(hid==='tsundere'){base='「哼，早、早饭……才不是我特意做的呢！」'+h+'别过脸去，但嘴角却藏不住笑意，耳朵红红的。';}
+    else if(hid==='outgoing'){base=h+'从厨房探出头，笑得眼睛弯弯：「娘子！你醒啦！快来快来，今天我做了你最爱吃的桂花糕！」';}
+    else if(hid==='quiet'){base=h+'见你出来，眼神温柔地迎上来，轻轻握了握你的手：「……早。粥温在锅里，我给你盛。」';}
+    else if(hid==='scholar'){base=h+'见你醒了，放下手中的书，微笑着说：「娘子早。今日春风和煦，一定是个好日子。」';}
+    else{base=h+'见你醒来，眼睛里满是欢喜：「娘子，早。我给你热了粥……」主动迎上来牵你的手。';}
+    return base;
+  }
   if(tid==='sharp'){base=h+'见你醒了，连忙迎上来：「娘子，你精明能干，今天有什么打算？我听你安排便是。」';}
   else if(tid==='warm'){base=h+'端着一碗热粥走来，笑容温柔：「娘子，早。今日家里我打理，你安心忙你的事。」';}
   else if(tid==='fierce'){base=h+'见你出来，神色微微紧张，搓了搓手才凑上前：「娘……娘子，早。我给你倒好了洗漱水……」';}
-  else if(tid==='calm'){base=h+'已默默备好洗漱水，见你出来，只是淡淡一点头，话不多，却把一切都安排得妥妥帖帖。';}
+  else if(tid==='calm'){base=h+'已默默备好洗漱水，见你出来，只是淡淡一点头，话不多，却把一切都安排得妥帖帖。';}
   else if(aff>=80){base=h+'早早便起了，见你醒来，眼睛一亮：「娘子，早。我给你热了粥……」眼里满是关切。';}
   else if(aff>=60){base=h+'坐在窗边，见你醒了，微微一笑：「娘子，早。今日天气不错。」';}
   else if(aff>=40){base=h+'正收拾屋子，见你出来，点了点头：「……起来了。」语气平淡，却也多了几分默契。';}
@@ -1052,6 +1079,40 @@ function n_sleep(){
     });
   }
 
+  // ========== 宅斗/随机事件检测 ==========
+  // 节日庆祝（季节性）
+  if(S.nearFestival&&!S.flags.festivalTodayTriggered){
+    S.flags.festivalTodayTriggered=true;
+    festival_celebration();
+    return;
+  }
+
+  // 随机宅斗/剧情事件（概率触发，每次最多一个）
+  if(!S.flags.randomEventTriggered){
+    var rand=Math.random();
+    if(S.concubines&&S.concubines.length>=2&&rand<0.15){
+      // 宅斗事件
+      S.flags.randomEventTriggered=true;
+      harem_conflict_event();
+      return;
+    } else if(S.concubines&&S.concubines.length>=1&&rand>=0.15&&rand<0.28){
+      // 妾室随机剧情
+      S.flags.randomEventTriggered=true;
+      var concRand=Math.random();
+      if(concRand<0.33){
+        random_concubine_illness();return;
+      } else if(concRand<0.66){
+        random_seduction_attempt();return;
+      } else {
+        random_conspiracy();return;
+      }
+    } else if(S.concubines&&S.concubines.length>=1&&S.affection<50&&rand>=0.28&&rand<0.40){
+      // 正夫吃醋剧情
+      S.flags.randomEventTriggered=true;
+      harem_jealous_husband();return;
+    }
+  }
+
   // 孩子成长：每日age++，每10天触发育儿事件（每次最多触发一个）
   if(S.children&&S.children.length>0&&!S.flags.childEventShown){
     S.flags.childEventShown=true;
@@ -1655,6 +1716,460 @@ function checkMeetNewMan(){
   return false;
 }
 
+// ========== 宅斗系统 ==========
+// 管家主界面（2+妾室时显示）
+function n_manage_harem(){
+  var cids=S.concubines;
+  var choices=[
+    {text:'分配住所（谁住更好的房间）',next:'harem_room',type:'safe'},
+    {text:'决定谁陪出门应酬',next:'harem_social',type:'love'},
+    {text:'查看各妾室状况',next:'harem_status',type:'smart'},
+    {text:'处理近日矛盾',next:'harem_conflict_event',type:'risky'},
+    {text:'返回',next:'n_sleep',type:'safe'},
+  ];
+  showScene('后宅事务',['你坐在堂中，环视众妾室。','后宅虽小，却也有许多事需要你来主持公道。'],choices,'🏠 管家');
+}
+
+// 住所分配
+function harem_room(){
+  var cids=S.concubines;
+  var choices=cids.map(function(cid){
+    var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+    var mname=man?man.name:cid;
+    var aff=S.concubineAffection[cid]||50;
+    return {text:'让'+mname+'住更好的东厢房（好感:'+aff+')',next:'harem_room_'+cid,type:'safe'};
+  });
+  choices.push({text:'维持现状',next:'n_sleep',type:'safe'});
+  showScene('住所分配',['你可以调整妾室的住所。更舒适的住所能提升好感，但也会引发其他妾室的不满。'],choices,'🏠 住所');
+}
+function harem_room_action(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var caff=S.concubineAffection[cid]||50;
+  S.concubineAffection[cid]=Math.min(100,caff+5);
+  addLog(mname+'住好房间 好感+5');
+  // 其他人可能不满
+  var others=S.concubines.filter(function(c){return c!==cid;});
+  if(others.length>0&&Math.random()<0.4){
+    var oth=others[Math.floor(Math.random()*others.length)];
+    var man2=AVAILABLE_MEN.find(function(m){return m.id===oth;});
+    var oname=man2?man2.name:oth;
+    var oaff=S.concubineAffection[oth]||50;
+    S.concubineAffection[oth]=Math.max(0,oaff-3);
+    addLog(oname+'不满搬房 好感-3');
+    showScene('住所分配',['你决定让'+mname+'住东厢房。',mname+'大喜：「多谢娘子！」','但其他妾室颇有微词——尤其是'+oname+'，脸色有些不好看。'], [{text:'继续',next:'n_sleep',type:'safe'}],'🏠 住所');
+  } else {
+    showScene('住所分配',[mname+'大喜：「多谢娘子抬爱！」'], [{text:'继续',next:'n_sleep',type:'safe'}],'🏠 住所');
+  }
+}
+
+// 出门应酬决定
+function harem_social(){
+  var cids=S.concubines;
+  var hname=S.husband.name;
+  var choices=cids.map(function(cid){
+    var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+    var mname=man?man.name:cid;
+    return {text:'带'+mname+'出门应酬',next:'harem_social_'+cid,type:'love'};
+  });
+  choices.push({text:'带正夫'+hname+'出门',next:'harem_social_husband',type:'love'});
+  choices.push({text:'独自出门，不带人',next:'n_sleep',type:'safe'});
+  showScene('出门应酬',['有社交场合，你可以决定带谁一同出席。'],choices,'🏠 应酬');
+}
+function harem_social_action(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var caff=S.concubineAffection[cid]||50;
+  S.concubineAffection[cid]=Math.min(100,caff+8);
+  S.prestige=Math.min(20,S.prestige+1);
+  addLog('带'+mname+'应酬 好感+8 声望+1');
+  var others=S.concubines.filter(function(c){return c!==cid;});
+  if(others.length>0&&Math.random()<0.3){
+    var oth=others[Math.floor(Math.random()*others.length)];
+    var man2=AVAILABLE_MEN.find(function(m){return m.id===oth;});
+    var oname=man2?man2.name:oth;
+    var oaff=S.concubineAffection[oth]||50;
+    S.concubineAffection[oth]=Math.max(0,oaff-3);
+    addLog(oname+'未被选中 好感-3');
+    showScene('出门应酬',[mname+'得知能陪你出门，眼睛都亮了：「真的吗？太好了！」','他精心打扮，与你同行。','但后宅里，'+oname+'听闻后，沉默了许久。'], [{text:'继续',next:'n_sleep',type:'safe'}],'🏠 应酬');
+  } else {
+    showScene('出门应酬',[mname+'得知能陪你出门，眼睛都亮了：「真的吗？太好了！」','他精心打扮，与你同行。'], [{text:'继续',next:'n_sleep',type:'safe'}],'🏠 应酬');
+  }
+  renderStats();
+}
+function harem_social_husband(){
+  S.affection=Math.min(100,S.affection+8);
+  S.prestige=Math.min(20,S.prestige+1);
+  addLog('带正夫应酬 好感+8 声望+1');
+  if(S.concubines&&Math.random()<0.4){
+    var cid=S.concubines[Math.floor(Math.random()*S.concubines.length)];
+    var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+    var mname=man?man.name:cid;
+    var caff=S.concubineAffection[cid]||50;
+    S.concubineAffection[cid]=Math.max(0,caff-3);
+    addLog('妾室'+mname+'不满 好感-3');
+    showScene('出门应酬',[S.husband.name+'得知后，眼睛一亮：「娘子愿意带我去？」','你们一同出席，他全程紧紧跟在你身边。','但后宅里，'+mname+'听闻后，有些落寞。'], [{text:'继续',next:'n_sleep',type:'safe'}],'🏠 应酬');
+  } else {
+    showScene('出门应酬',[S.husband.name+'得知后，眼睛一亮：「娘子愿意带我去？」','你们一同出席，他全程紧紧跟在你身边。'], [{text:'继续',next:'n_sleep',type:'safe'}],'🏠 应酬');
+  }
+  renderStats();updateAff();
+}
+
+// 查看妾室状况
+function harem_status(){
+  var lines=S.concubines.map(function(cid){
+    var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+    var mname=man?man.name:cid;
+    var aff=S.concubineAffection[cid]||50;
+    var preg=S.concubinePregnant[cid];
+    var pday=preg?(S.concubinePregnancyDay[cid]||0):0;
+    var pregText=preg?'（怀孕'+pday+'天🌸）':'（未怀孕）';
+    return mname+pregText+' 好感:'+aff;
+  });
+  var aff=S.affection;
+  lines.unshift('正夫 '+S.husband.name+' 好感:'+aff);
+  showScene('后宅状况',lines.join('\n'),[{text:'返回',next:'n_manage_harem',type:'safe'}],'🏠 状况');
+}
+
+// ========== 宅斗冲突事件 ==========
+function harem_conflict_event(){
+  var cids=S.concubines;
+  if(cids.length<2)return;
+  var conflictTypes=['report','argue','neglect'];
+  var type=conflictTypes[Math.floor(Math.random()*conflictTypes.length)];
+  var idxA=Math.floor(Math.random()*cids.length);
+  var a=cids[idxA];
+  var manA=AVAILABLE_MEN.find(function(m){return m.id===a;});
+  var nameA=manA?manA.name:a;
+  var b;
+  var nameB;
+  if(type!=='neglect'){
+    var others=cids.filter(function(c){return c!==a;});
+    b=others[Math.floor(Math.random()*others.length)];
+    var manB=AVAILABLE_MEN.find(function(m){return m.id===b;});
+    nameB=manB?manB.name:b;
+  }
+  var hname=S.husband.name;
+  var affA=S.concubineAffection[a]||50;
+
+  if(type==='report'){
+    // A向娘子告状B
+    var complaints=[
+      nameA+'哭着来找你：「娘子，你要给我做主啊！'+nameB+'他……他背着我和其他人说我的坏话！」',
+      nameA+'委屈地说：「娘子，'+nameB+'总是故意冷落我，今天还把我的茶盏打破了……」',
+      nameA+'告状说：「娘子，'+nameB+'在外面说我不会伺候人……我真的不知道哪里得罪他了。」',
+    ];
+    var comp=complaints[Math.floor(Math.random()*complaints.length)];
+    showScene('后宅告状',[comp,'两边各有说辞，你决定怎么处理？'], [
+      {text:'袒护'+nameA+'（斥责'+nameB+'）',next:'harem_judge_'+a+'_'+b,type:'risky'},
+      {text:'袒护'+nameB+'（斥责'+nameA+'）',next:'harem_judge_'+b+'_'+a,type:'risky'},
+      {text:'各打五十大板，双方各罚',next:'harem_judge_neutral',type:'safe'},
+      {text:'安抚双方，息事宁人',next:'n_sleep',type:'safe'},
+    ],'⚔️ 宅斗');
+  } else if(type==='argue'){
+    // AB吵架
+    var argues=[
+      '你路过庭院，听到'+nameA+'和'+nameB+'在争吵。',
+      '「你凭什么就能得娘子宠爱？你以为你是谁！」'+nameA+'的声音尖利。',
+      '「哼，你也不照照镜子看看自己！」'+nameB+'不甘示弱。',
+    ];
+    showScene('后宅争吵',[argues.join('\n')], [
+      {text:'当场斥责双方，各罚',next:'harem_judge_neutral',type:'safe'},
+      {text:'单独把'+nameA+'叫来询问',next:'harem_judge_'+a+'_'+b,type:'smart'},
+      {text:'单独把'+nameB+'叫来询问',next:'harem_judge_'+b+'_'+a,type:'smart'},
+      {text:'当作没看见，让她们自己解决',next:'n_sleep',type:'safe'},
+    ],'⚔️ 宅斗');
+  } else {
+    // 正夫被冷落
+    var neglectTexts=[
+      hname+'找你谈心：「娘子，我……我知道纳妾是常事，但'+nameA+'总是缠着你，我有时候……有些落寞。」',
+      hname+'有些委屈：「娘子，你有了'+nameA+'后，是不是……不那么在意我了？」',
+      hname+'轻声说：「娘子，我不是不容人，只是有时候……我也想和你多说说话。」',
+    ];
+    var ntxt=neglectTexts[Math.floor(Math.random()*neglectTexts.length)];
+    showScene('正夫诉苦',[ntxt,'你会怎么做？'], [
+      {text:'安慰正夫，今晚陪他',next:'harem_comfort_husband',type:'love'},
+      {text:'解释清楚，维持现状',next:'n_sleep',type:'safe'},
+      {text:'提醒正夫不要小心眼',next:'harem_scold_husband',type:'risky'},
+    ],'💔 正夫与妾室');
+  }
+}
+
+// 裁决：袒护方A，斥责方B
+function harem_judge_side(sideA,sideB){
+  var manA=AVAILABLE_MEN.find(function(m){return m.id===sideA;});
+  var manB=AVAILABLE_MEN.find(function(m){return m.id===sideB;});
+  var nameA=manA?manA.name:sideA;
+  var nameB=manB?manB.name:sideB;
+  var affA=S.concubineAffection[sideA]||50;
+  var affB=S.concubineAffection[sideB]||50;
+  S.concubineAffection[sideA]=Math.min(100,affA+8);
+  S.concubineAffection[sideB]=Math.max(0,affB-8);
+  addLog('宅斗裁决 袒护'+nameA+' 好感+8 斥责'+nameB+' 好感-8');
+  showScene('裁决结果',['你当众斥责了'+nameB+'，维护了'+nameA+'。',nameA+'感激涕零：「娘子真是我的靠山！」','而'+nameB+'则满脸委屈，低头不语……'], [{text:'继续',next:'n_sleep',type:'safe'}]);
+}
+
+// 各打五十大板
+function harem_judge_neutral(){
+  var cids=S.concubines;
+  cids.forEach(function(cid){
+    var aff=S.concubineAffection[cid]||50;
+    S.concubineAffection[cid]=Math.max(0,aff-3);
+  });
+  addLog('宅斗裁决 各罚各妾 好感-3');
+  showScene('裁决结果',['你当众训斥了双方：「都是一家人，有什么好争的？都给我消停些！」','两人都不情愿地低下了头。这事暂时平息了，但心里都有了芥蒂。'], [{text:'继续',next:'n_sleep',type:'safe'}]);
+}
+
+// 安抚正夫
+function harem_comfort_husband(){
+  S.affection=Math.min(100,S.affection+8);
+  addLog('安抚正夫 好感+8');
+  showScene('安慰正夫',[S.husband.name+'听到你的话，眼眶微微泛红。','「娘子……谢谢你。我不是不容人，我只是……有时候需要确认你的心里有我。」','你握住他的手，轻声安慰。他终于露出了笑容，紧紧靠在你身边。'], [{text:'今晚好好陪他',next:'n_sleep',type:'safe'}],'💕 安慰');
+  updateAff();
+}
+function harem_scold_husband(){
+  S.affection=Math.max(0,S.affection-5);
+  addLog('斥责正夫 好感-5');
+  showScene('斥责正夫',[S.husband.name+'听到你的话，神色一变，低下了头。','「娘子说得对……是我小心眼了。」','他转身离开，背影有些落寞。'], [{text:'继续',next:'n_sleep',type:'safe'}],'💔 斥责');
+  updateAff();
+}
+
+// ========== 正夫 vs 妾室冲突 ==========
+function harem_jealous_husband(){
+  if(!S.concubines||S.concubines.length===0)return;
+  var cid=S.concubines[Math.floor(Math.random()*S.concubines.length)];
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var hname=S.husband.name;
+  var scenes=[
+    '晚间，'+hname+'欲言又止：「娘子，我听说……你今晚去了'+mname+'那里。我、我没事，就是问问……」',
+    hname+'有些落寞地说：「娘子，我有件事想问你。你纳了'+mname+'之后……是不是就不怎么来我这里了？」',
+    '你从'+mname+'房中出来，正好遇见'+hname+'。他脸色有些苍白，强作笑颜：「娘子……早。」',
+  ];
+  var sc=scenes[Math.floor(Math.random()*scenes.length)];
+  showScene('正夫的委屈',[sc,'你会怎么处理？'], [
+    {text:'安慰正夫，今晚去他那里',next:'harem_comfort_husband_direct',type:'love'},
+    {text:'解释这是应尽之责，让他理解',next:'harem_explain',type:'smart'},
+    {text:'忽视他的情绪',next:'harem_ignore',type:'risky'},
+  ],'💔 正夫委屈');
+}
+function harem_comfort_husband_direct(){
+  S.affection=Math.min(100,S.affection+10);
+  addLog('正夫委屈被安慰 好感+10');
+  showScene('安慰正夫',[S.husband.name+'见你主动来他房中，眼眶微微泛红。','「娘子……我还以为你再也不来了。」','你轻声安慰，他终于放下心结，靠在你身边。这一夜，他紧紧握着你的手，像是生怕你会消失一般。'], [{text:'继续',next:'n_sleep',type:'safe'}],'💕 安慰');
+  updateAff();
+}
+function harem_explain(){
+  S.affection=Math.max(0,S.affection-3);
+  S.social+=1;
+  addLog('向正夫解释 好感-3 人脉+1');
+  showScene('解释',[S.husband.name+'听完后，低头不语。','「娘子说得对……是这个家的事重要。我不应该……」他声音越来越小。','他虽然接受了，但心里还是有了一丝芥蒂。'], [{text:'继续',next:'n_sleep',type:'safe'}]);
+  renderStats();updateAff();
+}
+function harem_ignore(){
+  S.affection=Math.max(0,S.affection-8);
+  addLog('忽视正夫情绪 好感-8');
+  showScene('被忽视',[S.husband.name+'独自回了房，一夜无话。','第二天见面时，他只是淡淡地点了点头，眼神里多了几分陌生。'], [{text:'继续',next:'n_sleep',type:'safe'}],'💔 冷落');
+  updateAff();
+}
+
+// ========== 随机剧情 ==========
+// 妾室生病
+function random_concubine_illness(){
+  var cids=S.concubines;
+  var cid=cids[Math.floor(Math.random()*cids.length)];
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var scenes=[
+    ['一早，有人来报：'+mname+'病了，发着高烧。','你连忙赶去看望，只见他躺在床上，脸色苍白，额头上滚烫。',mname+'虚弱地说：「娘子……我没事的……不要因为我误了你的正事……」'],
+    [mname+'今日没有出房门，你推门一看，他正蜷缩在床上，说是昨夜受了风寒。','他见你来了，强撑着想起身行礼：「娘子……对不起，今日无法伺候娘子……」'],
+    ['你听下人说，'+mname+'昨夜腹痛难忍，一夜没睡。','他见到你时，眼眶红红的：「娘子……我不知道是不是吃坏了东西……」'],
+  ];
+  var sc=scenes[Math.floor(Math.random()*scenes.length)];
+  showScene(mname+'病了',sc.concat(['你会怎么做？']), [
+    {text:'请大夫来给他看病',next:'harem_illness_cure_'+cid,type:'safe'},
+    {text:'亲自照顾他一晚',next:'harem_illness_care_'+cid,type:'love'},
+    {text:'让他自己休息（冷淡处理）',next:'harem_illness_ignore_'+cid,type:'risky'},
+  ],'🤒 妾室生病');
+}
+function harem_illness_cure(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  S.money=Math.max(0,S.money-10);
+  var caff=S.concubineAffection[cid]||50;
+  S.concubineAffection[cid]=Math.min(100,caff+12);
+  addLog('请大夫给'+mname+'看病 -10文 好感+12');
+  showScene('请大夫',['你请来了镇上最好的老大夫，给他开了方子。','几日后，'+mname+'痊愈了，他拉着你的手说：「娘子的大恩，我一辈子都不会忘。」'], [{text:'继续',next:'n_sleep',type:'safe'}],'🤒 痊愈');
+  renderStats();
+}
+function harem_illness_care(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var caff=S.concubineAffection[cid]||50;
+  S.concubineAffection[cid]=Math.min(100,caff+10);
+  addLog('亲自照顾'+mname+' 好感+10');
+  showScene('亲自照顾',[mname+'病中，你一直守在他身边，给他喂药、换毛巾。','他流着泪说：「娘子……我以为你不在乎我。没想到你……」','他紧紧握住你的手，不肯松开。'], [{text:'继续',next:'n_sleep',type:'safe'}],'💕 照顾');
+}
+function harem_illness_ignore(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var caff=S.concubineAffection[cid]||50;
+  S.concubineAffection[cid]=Math.max(0,caff-10);
+  addLog('忽视'+mname+'的病 好感-10');
+  showScene('被忽视',[mname+'的病拖了数日才渐渐好转。','他再见到你时，眼神里多了几分疏离和失望。'], [{text:'继续',next:'n_sleep',type:'safe'}],'💔 冷落');
+}
+
+// 有人爬床（勾引）
+function random_seduction_attempt(){
+  var hname=S.husband.name;
+  if(S.concubines&&S.concubines.length>0&&Math.random()<0.6){
+    // 妾室试图勾引
+    var cid=S.concubines[Math.floor(Math.random()*S.concubines.length)];
+    var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+    var mname=man?man.name:cid;
+    var scenes=[
+      ['夜深了，'+mname+'敲响你的房门。',mname+'轻声说：「娘子……我睡不着，能陪我说说话吗？」他衣着单薄，神色间带着几分缠绵。'],
+      [mname+'在院中「偶遇」你：「娘子，夜深了怎么还不休息？」他的眼神有些意味深长。'],
+    ];
+    var sc=scenes[Math.floor(Math.random()*scenes.length)];
+    showScene('深夜来客',sc.concat(['正夫'+hname+'还在等着你……你会怎么做？']), [
+      {text:'婉拒，回正夫房中',next:'harem_seduction_refuse_'+cid,type:'safe'},
+      {text:'让他进来说话',next:'harem_seduction_talk_'+cid,type:'love'},
+      {text:'斥责他的行为',next:'harem_seduction_scold_'+cid,type:'risky'},
+    ],'🌙 深夜');
+  } else {
+    // 有人试图爬床（可能是外人或想上位的）
+    showScene('深夜异动',['夜半，你被一阵轻微的响动惊醒。','似乎有人在推你的房门——来人轻手轻脚，似乎不想被发现。','你屏住呼吸，想看看来人是谁……'], [
+      {text:'起身查看',next:'harem_seduction_check',type:'safe'},
+      {text:'大声喝斥',next:'harem_seduction_shout',type:'risky'},
+      {text:'假装睡着，静观其变',next:'harem_seduction_sleep',type:'smart'},
+    ],'🌙 深夜');
+  }
+}
+function harem_seduction_refuse(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  S.affection=Math.min(100,S.affection+3);
+  addLog('婉拒'+mname+'深夜来访 好感+3');
+  showScene('深夜来客',[mname+'见你态度坚决，脸上闪过一丝失落。','「娘子……那我先回去了。」他轻声说，眼神有些黯淡。'], [{text:'继续休息',next:'n_sleep',type:'safe'}],'🌙 深夜');
+  updateAff();
+}
+function harem_seduction_talk(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var caff=S.concubineAffection[cid]||50;
+  S.concubineAffection[cid]=Math.min(100,caff+5);
+  addLog('深夜与'+mname+'谈话 好感+5');
+  showScene('深夜来客',[mname+'进了你的房间，和你说了很久的话。','他说：「娘子，我知道我不该深夜来打扰……只是……我真的很想你。」'], [{text:'继续休息',next:'n_sleep',type:'safe'}],'🌙 深夜');
+}
+function harem_seduction_scold(cid){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+  var mname=man?man.name:cid;
+  var caff=S.concubineAffection[cid]||50;
+  S.concubineAffection[cid]=Math.max(0,caff-8);
+  addLog('斥责'+mname+'深夜来访 好感-8');
+  showScene('深夜来客',[mname+'被你斥责后，脸色一阵红一阵白。','「娘子……对不起，是我……我知错了。」他低着头退了出去。'], [{text:'继续休息',next:'n_sleep',type:'safe'}],'🌙 深夜');
+}
+function harem_seduction_check(){
+  showScene('深夜异动',['你悄悄起身，轻轻拉开房门——',S.husband.name+'正站在门口，手里端着一碗热汤，神色有些不安。','「娘子……我、我见你房里有灯……想给你送碗汤……」他的脸红了。'], [{text:'让他进来坐坐',next:'harem_seduction_husband_love',type:'love'},{text:'道谢后让他回去休息',next:'n_sleep',type:'safe'}],'🌙 深夜');
+}
+function harem_seduction_husband_love(){
+  S.affection=Math.min(100,S.affection+8);
+  addLog('正夫深夜送汤 好感+8');
+  showScene('深夜温情',[S.husband.name+'见你没有拒绝，脸上露出了淡淡的笑意。','他坐在床边，轻声说：「娘子，这么晚了还亮着灯，是不是有心事？」','你们聊了很久，他一直陪在你身边。'], [{text:'相拥入眠',next:'n_sleep',type:'safe'}],'💕 温情');
+  updateAff();
+}
+function harem_seduction_shout(){
+  S.prestige+=1;
+  addLog('大声斥斥深夜来访者 声望+1');
+  showScene('深夜异动',['「谁！」你大喝一声。','门外传来一阵慌乱的脚步声，很快便消失在夜色中。',S.husband.name+'也被惊醒，披衣来看：「娘子，怎么了？」'], [{text:'继续休息',next:'n_sleep',type:'safe'}],'🌙 有惊无险');
+  renderStats();
+}
+function harem_seduction_sleep(){
+  showScene('深夜异动',['你闭着眼睛，假装睡着。','门轻轻被推开，有人悄悄走了进来，在你床边站了一会儿，又轻轻退了出去。','第二天，你听说昨晚有个小厮被抓到在院子里游荡，说是迷了路……'], [{text:'继续',next:'n_sleep',type:'safe'}],'🌙 有惊无险');
+}
+
+// 有人陷害
+function random_conspiracy(){
+  var cids=S.concubines;
+  if(cids.length<2)return;
+  var cidA=cids[Math.floor(Math.random()*cids.length)];
+  var others=cids.filter(function(c){return c!==cidA;});
+  var cidB=others[Math.floor(Math.random()*others.length)];
+  var manA=AVAILABLE_MEN.find(function(m){return m.id===cidA;});
+  var manB=AVAILABLE_MEN.find(function(m){return m.id===cidB;});
+  var nameA=manA?manA.name:cidA;
+  var nameB=manB?manB.name:cidB;
+  var conspiracies=[
+    ['一早起，'+nameB+'大呼小叫：「我的玉佩不见了！」','下人们窃窃私语，有人暗示是'+nameA+'拿了。','你查看现场，发现这分明是有人故意栽赃……'],
+    [nameB+'哭哭啼啼来找你：「娘子，'+nameA+'他……他在我茶里下了东西！」','老大夫来验过后，发现不过是普通的助眠药，但'+nameB+'坚持说是故意的。'],
+    ['有下人来报：'+nameA+'私藏了外面的东西！经查实，是几封匿名信，信中内容对'+nameB+'家不利。',nameA+'大喊冤枉：「娘子，这不是我写的！有人栽赃我！」'],
+  ];
+  var sc=conspiracies[Math.floor(Math.random()*conspiracies.length)];
+  showScene('有人被陷害',sc.concat(['你决定怎么处理？']), [
+    {text:'查明真相（还'+nameA+'清白）',next:'harem_conspiracy_investigate_'+cidA+'_'+cidB,type:'smart'},
+    {text:'偏向'+nameB+'（惩罚'+nameA+'）',next:'harem_conspiracy_blame_'+cidA+'_'+cidB,type:'risky'},
+    {text:'各打五十大板，双方各罚',next:'harem_judge_neutral',type:'safe'},
+  ],'⚔️ 陷害事件');
+}
+function harem_conspiracy_investigate_side(sideA,sideB){
+  var manA=AVAILABLE_MEN.find(function(m){return m.id===sideA;});
+  var manB=AVAILABLE_MEN.find(function(m){return m.id===sideB;});
+  var nameA=manA?manA.name:sideA;
+  var nameB=manB?manB.name:sideB;
+  var affA=S.concubineAffection[sideA]||50;
+  var affB=S.concubineAffection[sideB]||50;
+  S.concubineAffection[sideA]=Math.min(100,affA+10);
+  S.concubineAffection[sideB]=Math.max(0,affB-10);
+  S.wit+=1;
+  addLog('查明陷害真相 还'+nameA+'清白 好感+10 智慧+1');
+  showScene('查明真相',['你仔细调查，发现这分明是'+nameB+'自导自演的戏码。','「'+nameB+'，你好大的胆子！」你当众斥责。',nameA+'感动得落泪：「娘子明鉴！」'], [{text:'继续',next:'n_sleep',type:'safe'}],'✅ 明鉴');
+  renderStats();
+}
+function harem_conspiracy_blame_side(sideA,sideB){
+  var manA=AVAILABLE_MEN.find(function(m){return m.id===sideA;});
+  var manB=AVAILABLE_MEN.find(function(m){return m.id===sideB;});
+  var nameA=manA?manA.name:sideA;
+  var nameB=manB?manB.name:sideB;
+  var affA=S.concubineAffection[sideA]||50;
+  var affB=S.concubineAffection[sideB]||50;
+  S.concubineAffection[sideA]=Math.max(0,affA-10);
+  // 惩罚错误的人 - 真正的幕后黑手反而得意
+  S.concubineAffection[sideB]=Math.min(100,affB+5);
+  addLog('错误惩罚'+nameA+' 好感-10 '+nameB+'得逞');
+  showScene('错误裁决',[nameA+'被罚后，满脸委屈地回了房。','而'+nameB+'私下却露出了一丝得意——看来你被他骗了。'], [{text:'继续',next:'n_sleep',type:'safe'}],'😔 误判');
+}
+
+// ========== 节日庆祝 ==========
+function festival_celebration(){
+  var fest=S.nearFestival||'节日';
+  var participants=[S.husband.name];
+  if(S.concubines){
+    S.concubines.forEach(function(cid){
+      var man=AVAILABLE_MEN.find(function(m){return m.id===cid;});
+      participants.push(man?man.name:cid);
+    });
+  }
+  var allLine=participants.join('、');
+  var festTexts={
+    '春节':'新年将至，全家团聚。你们一起贴春联、包饺子、放鞭炮，欢声笑语不断。',
+    '端午':'端午佳节，你们一起包粽子、挂艾草、观看龙舟比赛。',
+    '中秋':'中秋月圆，全家在院子里赏月、吃月饼。孩子们踮着脚尖想要够到月亮。',
+    '七夕':'七夕乞巧，女子们在月光下穿针引线，祈求心灵手巧。',
+  };
+  var text=festTexts[fest]||fest+'将至，全家团聚在一起，共度佳节。';
+  S.affection=Math.min(100,S.affection+8);
+  if(S.concubines){
+    S.concubines.forEach(function(cid){
+      var aff=S.concubineAffection[cid]||50;
+      S.concubineAffection[cid]=Math.min(100,aff+5);
+    });
+  }
+  addLog(fest+'全员庆祝 好感全体+5~8');
+  showScene(fest+'佳节',[allLine+'在堂中相聚。',text,'大家都很开心，这个节日给你们留下了美好的回忆。'], [{text:'继续',next:'n_sleep',type:'safe'}],'🏮 '+fest);
+  updateAff();
+}
+
 // ========== 路由 ==========
 window.go=function(n,t){
   switch(n){
@@ -1785,6 +2300,97 @@ window.go=function(n,t){
     case 'child_train_0':child_train(0);break;
     case 'child_train_1':child_train(1);break;
     case 'child_train_2':child_train(2);break;
+
+    // 后宅管家
+    case 'n_manage_harem':n_manage_harem();break;
+    case 'harem_room':harem_room();break;
+    case 'harem_social':harem_social();break;
+    case 'harem_status':harem_status();break;
+    case 'harem_conflict_event':harem_conflict_event();break;
+
+    // 宅斗裁决
+    case 'harem_judge_neutral':harem_judge_neutral();break;
+    case 'harem_comfort_husband':harem_comfort_husband();break;
+    case 'harem_scold_husband':harem_scold_husband();break;
+
+    // 正夫vs妾室
+    case 'harem_jealous_husband':harem_jealous_husband();break;
+    case 'harem_comfort_husband_direct':harem_comfort_husband_direct();break;
+    case 'harem_explain':harem_explain();break;
+    case 'harem_ignore':harem_ignore();break;
+
+    // 随机剧情-生病
+    case 'harem_illness_cure_doc_yan':harem_illness_cure('doc_yan');break;
+    case 'harem_illness_cure_rich_xu':harem_illness_cure('rich_xu');break;
+    case 'harem_illness_cure_martial_pei':harem_illness_cure('martial_pei');break;
+    case 'harem_illness_cure_artisan_lin':harem_illness_cure('artisan_lin');break;
+    case 'harem_illness_cure_scholar_lei':harem_illness_cure('scholar_lei');break;
+    case 'harem_illness_cure_priest_ye':harem_illness_cure('priest_ye');break;
+    case 'harem_illness_care_doc_yan':harem_illness_care('doc_yan');break;
+    case 'harem_illness_care_rich_xu':harem_illness_care('rich_xu');break;
+    case 'harem_illness_care_martial_pei':harem_illness_care('martial_pei');break;
+    case 'harem_illness_care_artisan_lin':harem_illness_care('artisan_lin');break;
+    case 'harem_illness_care_scholar_lei':harem_illness_care('scholar_lei');break;
+    case 'harem_illness_care_priest_ye':harem_illness_care('priest_ye');break;
+    case 'harem_illness_ignore_doc_yan':harem_illness_ignore('doc_yan');break;
+    case 'harem_illness_ignore_rich_xu':harem_illness_ignore('rich_xu');break;
+    case 'harem_illness_ignore_martial_pei':harem_illness_ignore('martial_pei');break;
+    case 'harem_illness_ignore_artisan_lin':harem_illness_ignore('artisan_lin');break;
+    case 'harem_illness_ignore_scholar_lei':harem_illness_ignore('scholar_lei');break;
+    case 'harem_illness_ignore_priest_ye':harem_illness_ignore('priest_ye');break;
+
+    // 随机剧情-爬床/深夜
+    case 'harem_seduction_refuse_doc_yan':harem_seduction_refuse('doc_yan');break;
+    case 'harem_seduction_refuse_rich_xu':harem_seduction_refuse('rich_xu');break;
+    case 'harem_seduction_refuse_martial_pei':harem_seduction_refuse('martial_pei');break;
+    case 'harem_seduction_refuse_artisan_lin':harem_seduction_refuse('artisan_lin');break;
+    case 'harem_seduction_refuse_scholar_lei':harem_seduction_refuse('scholar_lei');break;
+    case 'harem_seduction_refuse_priest_ye':harem_seduction_refuse('priest_ye');break;
+    case 'harem_seduction_talk_doc_yan':harem_seduction_talk('doc_yan');break;
+    case 'harem_seduction_talk_rich_xu':harem_seduction_talk('rich_xu');break;
+    case 'harem_seduction_talk_martial_pei':harem_seduction_talk('martial_pei');break;
+    case 'harem_seduction_talk_artisan_lin':harem_seduction_talk('artisan_lin');break;
+    case 'harem_seduction_talk_scholar_lei':harem_seduction_talk('scholar_lei');break;
+    case 'harem_seduction_talk_priest_ye':harem_seduction_talk('priest_ye');break;
+    case 'harem_seduction_scold_doc_yan':harem_seduction_scold('doc_yan');break;
+    case 'harem_seduction_scold_rich_xu':harem_seduction_scold('rich_xu');break;
+    case 'harem_seduction_scold_martial_pei':harem_seduction_scold('martial_pei');break;
+    case 'harem_seduction_scold_artisan_lin':harem_seduction_scold('artisan_lin');break;
+    case 'harem_seduction_scold_scholar_lei':harem_seduction_scold('scholar_lei');break;
+    case 'harem_seduction_scold_priest_ye':harem_seduction_scold('priest_ye');break;
+    case 'harem_seduction_check':harem_seduction_check();break;
+    case 'harem_seduction_shout':harem_seduction_shout();break;
+    case 'harem_seduction_sleep':harem_seduction_sleep();break;
+    case 'harem_seduction_husband_love':harem_seduction_husband_love();break;
+
+    // 随机剧情-陷害
+    case 'harem_conspiracy_investigate_doc_yan_rich_xu':harem_conspiracy_investigate_side('doc_yan','rich_xu');break;
+    case 'harem_conspiracy_investigate_rich_xu_doc_yan':harem_conspiracy_investigate_side('rich_xu','doc_yan');break;
+    case 'harem_conspiracy_investigate_doc_yan_martial_pei':harem_conspiracy_investigate_side('doc_yan','martial_pei');break;
+    case 'harem_conspiracy_investigate_martial_pei_doc_yan':harem_conspiracy_investigate_side('martial_pei','doc_yan');break;
+    case 'harem_conspiracy_investigate_artisan_lin_scholar_lei':harem_conspiracy_investigate_side('artisan_lin','scholar_lei');break;
+    case 'harem_conspiracy_investigate_scholar_lei_artisan_lin':harem_conspiracy_investigate_side('scholar_lei','artisan_lin');break;
+    case 'harem_conspiracy_investigate_priest_ye_rich_xu':harem_conspiracy_investigate_side('priest_ye','rich_xu');break;
+    case 'harem_conspiracy_investigate_rich_xu_priest_ye':harem_conspiracy_investigate_side('rich_xu','priest_ye');break;
+    case 'harem_conspiracy_blame_doc_yan_rich_xu':harem_conspiracy_blame_side('doc_yan','rich_xu');break;
+    case 'harem_conspiracy_blame_rich_xu_doc_yan':harem_conspiracy_blame_side('rich_xu','doc_yan');break;
+    case 'harem_conspiracy_blame_artisan_lin_scholar_lei':harem_conspiracy_blame_side('artisan_lin','scholar_lei');break;
+    case 'harem_conspiracy_blame_scholar_lei_artisan_lin':harem_conspiracy_blame_side('scholar_lei','artisan_lin');break;
+
+    // 住所/应酬
+    case 'harem_room_doc_yan':harem_room_action('doc_yan');break;
+    case 'harem_room_rich_xu':harem_room_action('rich_xu');break;
+    case 'harem_room_martial_pei':harem_room_action('martial_pei');break;
+    case 'harem_room_artisan_lin':harem_room_action('artisan_lin');break;
+    case 'harem_room_scholar_lei':harem_room_action('scholar_lei');break;
+    case 'harem_room_priest_ye':harem_room_action('priest_ye');break;
+    case 'harem_social_doc_yan':harem_social_action('doc_yan');break;
+    case 'harem_social_rich_xu':harem_social_action('rich_xu');break;
+    case 'harem_social_martial_pei':harem_social_action('martial_pei');break;
+    case 'harem_social_artisan_lin':harem_social_action('artisan_lin');break;
+    case 'harem_social_scholar_lei':harem_social_action('scholar_lei');break;
+    case 'harem_social_priest_ye':harem_social_action('priest_ye');break;
+    case 'harem_social_husband':harem_social_husband();break;
     case 'meet_new_man':meet_new_man(S._lastManId||'');break;
 
     // 认识新人路由（按id动态分发）
@@ -1806,7 +2412,39 @@ window.go=function(n,t){
     case 'man_detail_priest_ye':man_detail('priest_ye');break;
     case 'man_chat_priest_ye':man_chat('priest_ye');break;
     case 'recruit_priest_ye':recruit_man('priest_ye');break;
-    default:go_home();
+    default:
+    // 动态路由兜底（harem_judge_X_Y, harem_conspiracy_X_Y, harem_illness_X, harem_room_X, harem_social_X 等）
+    if(typeof n==='string'){
+      if(n.startsWith('harem_judge_')){
+        var pj=n.split('_');
+        if(pj.length>=4&&pj[2]!=='neutral'&&pj[2]!=='comfort'&&pj[2]!=='scold'){
+          harem_judge_side(pj[2],pj[3]);return;
+        }
+      }
+      if(n.startsWith('harem_conspiracy_investigate_')){
+        var pci=n.replace('harem_conspiracy_investigate_','').split('_');
+        if(pci.length>=2){harem_conspiracy_investigate_side(pci[0],pci[1]);return;}
+      }
+      if(n.startsWith('harem_conspiracy_blame_')){
+        var pcb=n.replace('harem_conspiracy_blame_','').split('_');
+        if(pcb.length>=2){harem_conspiracy_blame_side(pcb[0],pcb[1]);return;}
+      }
+      if(n.startsWith('harem_illness_cure_')||n.startsWith('harem_illness_care_')||n.startsWith('harem_illness_ignore_')||n.startsWith('harem_room_')||n.startsWith('harem_social_')){
+        var pid=n.split('_').pop();
+        if(n.startsWith('harem_illness_cure_')){harem_illness_cure(pid);return;}
+        if(n.startsWith('harem_illness_care_')){harem_illness_care(pid);return;}
+        if(n.startsWith('harem_illness_ignore_')){harem_illness_ignore(pid);return;}
+        if(n.startsWith('harem_room_')){harem_room_action(pid);return;}
+        if(n.startsWith('harem_social_')){harem_social_action(pid);return;}
+      }
+      if(n.startsWith('harem_seduction_refuse_')||n.startsWith('harem_seduction_talk_')||n.startsWith('harem_seduction_scold_')){
+        var psd=n.split('_').pop();
+        if(n.startsWith('harem_seduction_refuse_')){harem_seduction_refuse(psd);return;}
+        if(n.startsWith('harem_seduction_talk_')){harem_seduction_talk(psd);return;}
+        if(n.startsWith('harem_seduction_scold_')){harem_seduction_scold(psd);return;}
+      }
+    }
+    go_home();
   }
 };
 // 兜底：全局按钮点击拦截，确保所有 chc 按钮都能响应
