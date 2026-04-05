@@ -214,13 +214,13 @@ function showNight(){
   // 孕期专属（夫君怀孕中）
   if(S.husband.isPregnant){
     var pday=S.husband.pregnancyDay||0;
-    if(pday>=1&&pday<=30){
+    if(pday>=1&&pday<=3){
       opts.push({text:hname+'害喜厉害，多照顾他',next:'n_preg_relief',type:'love',tag:'🤰'});
       opts.push({text:'一起给宝宝取个小名',next:'n_name_baby',type:'love',tag:'💕'});
-    } else if(pday>=31&&pday<=90){
+    } else if(pday>=4&&pday<=7){
       opts.push({text:'陪'+hname+'去医馆产检',next:'n_preg_checkup',type:'love',tag:'🏥'});
-      opts.push({text:'一起听宝宝的心跳',next:'n_heartbeat',type:'love',tag:'💗'});
-    } else if(pday>=91){
+      opts.push({text:'一起听胎心',next:'n_heartbeat',type:'love',tag:'💗'});
+    } else if(pday>=8){
       opts.push({text:hname+'临近产期，多陪陪他',next:'n_preg_final',type:'love',tag:'🌸'});
     }
   }
@@ -815,7 +815,7 @@ function n_sleep(){
   if(S.husband.isPregnant){
     S.husband.pregnancyDay=(S.husband.pregnancyDay||0)+1;
     addLog('夫君孕期第'+(S.husband.pregnancyDay)+'天');
-    if(S.husband.pregnancyDay>=120){
+    if(S.husband.pregnancyDay>=10){
       give_birth();return;
     }
     // 孕期随机事件
