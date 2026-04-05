@@ -176,6 +176,7 @@ function showScene(title,text,choices,etag){
   // 清除旧夜间事件处理器，防止隐藏后仍被触发
   document.getElementById('night-choices').onclick=null;
   document.getElementById('night-panel').classList.remove('on');
+  document.getElementById('scene').classList.add('on');
 }
 function showNight(){
   document.getElementById('scene').classList.remove('on');
