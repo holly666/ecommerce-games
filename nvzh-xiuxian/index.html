@@ -815,9 +815,46 @@ function doRomanceChoice(affection,effect,ctype){
   if(affection)G.affection=Math.max(0,Math.min(100,G.affection+affection));
   if(effect)applyEffect(effect,0);
   notify('好感度 +'+affection,'love');
-  renderHub();
-}
-// ── MAIN QUESTS (lead-specific) ───────────────────────────────────
+  var lead=G.maleLead;
+  var aftermath='';
+  if(lead==='lengyehan'){
+    if(ctype==='love'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6">&#128149; 情感升温 &#128149;</span></div><div class="narrator">冷夜寒怔住了。他看着你，冰封的眼眸里似乎有什么在融化。他没有说话，只是轻轻反握住你的手，指尖微微发颤。<br><br>那一刻，风雪似乎都静止了。<br><br>「……你这个人。」许久，他低声开口，声音比平时柔和了许多，「总是让我……不知所措。」<br><br>他微微侧头，月光照在他微微泛红的耳根上。这个永远冷淡的男人，第一次在你面前露出这样脆弱的一面。<br><br>「谢谢你。」他轻声说，「愿意留在我身边。」<br><br>他松开你的手，转身向回廊走去。走出几步，他忽然停下：「……早点休息。」<br><br>月光下，他的背影渐渐远去。可你知道，有什么东西，已经悄然改变了。</div></div></div>';
+    } else if(ctype==='safe'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#a78bfa">&#128149; 静静陪伴 &#128149;</span></div><div class="narrator">你没有出声，只是静静地站在他身旁，陪伴他看这场纷飞的大雪。<br><br>冷夜寒也没有说话。你们就这样并肩而立，任由雪花落在肩头。<br><br>不知过了多久，他忽然开口：「……你不问我吗？」<br><br>「问什么？」<br><br>「问我师兄的事。」<br><br>「你想说的时候，自然会说。」你轻声道。<br><br>他沉默了片刻，然后轻轻叹了口气：「你……真的很奇怪。」<br><br>可你分明看见，他紧绷的眉心，松弛了几分。<br><br>「走吧。」他转身向屋内走去，「雪大了。」<br><br>他走了几步，又回头看了你一眼。月光下，那目光里多了些你从未见过的东西。</div></div></div>';
+    } else {
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#fbbf24">&#128149; 深入追问 &#128149;</span></div><div class="narrator">你忍不住问他：「如果重来一次，你会追出去吗？」<br><br>冷夜寒的身体微微一僵。他沉默了很久，久到你以为他不会回答。<br><br>「……会。」<br><br>他终于开口，声音有些沙哑：「如果那晚我追出去，也许……一切都会不同。」<br><br>他转过身，目光落在你脸上：「可现在说这些，已经没有意义了。」<br><br>「过去的事，就让它过去吧。」他轻声说，「我应该向前看。」<br><br>他的目光里闪过一丝你从未见过的柔和：「谢谢你……愿意听我说这些。」<br><br>风雪中，他向你伸出手：「走吧，我送你回去。」<br><br>那夜，他第一次主动牵起你的手，在风雪中并肩而行。</div></div></div>';
+    }
+  } else if(lead==='xiaowuhen'){
+    if(ctype==='love'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6">&#128149; 心动时刻 &#128149;</span></div><div class="narrator">你踮起脚尖，在他唇边印下一个轻吻。<br><br>萧无痕怔住了。<br><br>片刻后，他忽然笑了，伸手将你拥入怀中。「小傻瓜……」他的声音里带着笑意，「这种时候，应该让我来才对。」<br><br>他低下头，在你额头落下一个轻吻。然后是鼻尖，最后是唇边。<br><br>「记住了吗？」他捧着你的脸，目光里满是柔情，「以后这种事，要主动。」<br><br>海风吹过，带来他身上淡淡的美酒香气。你发现，他的耳根红了。<br><br>这个玩世不恭的男人，第一次在你面前红了脸。<br><br>「萧无痕……」<br><br>「别说话。」他紧紧抱住你，「让我多抱一会儿。」<br><br>那夜，月光如水，你们在甲板上相拥，直到天明。</div></div></div>';
+    } else if(ctype==='safe'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#a78bfa">&#128149; 温馨时刻 &#128149;</span></div><div class="narrator">你笑着继续踏浪，享受这美好的夜晚。<br><br>萧无痕也跟着你笑，重新敲起铃鼓。海浪声中，你们踏浪而舞，笑声不断。<br><br>「你学得真快！」他大声夸赞，「比我当年还快！」<br><br>「你当年？」你好奇地问。<br><br>他眨眨眼：「我当年学这个的时候，可没有这么好的老师。」<br><br>你们一边跳舞，一边聊天。他给你讲海上的故事，讲仙岛的传说，讲他小时候的趣事。<br><br>那是你第一次听到他讲述自己的过去。<br><br>「谢谢你。」他忽然停下脚步，认真地看着你，「愿意陪我跳这支舞。」<br><br>海风吹起他的发丝，月光将他的侧脸照得柔和。<br><br>「我很久没有这么开心过了。」他轻声说。</div></div></div>';
+    } else {
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#fbbf24">&#128149; 试探调戏 &#128149;</span></div><div class="narrator">你故意踩了他一脚：「油嘴滑舌！」<br><br>萧无痕夸张地叫了一声，然后哈哈大笑：「哎呀，将门虎女！」<br><br>他伸手揉了揉被踩的地方，然后忽然拉住你的手：「来，再教我一遍。」<br><br>他拉着你在甲板上跳了起来，这一次他跳得格外认真。<br><br>「知道吗，」他一边跳一边说，「我以前觉得，一个人过挺好的。」<br><br>「现在呢？」<br><br>他停下脚步，认真地看着你：「现在觉得……有人陪着跳这支舞，也挺好的。」<br><br>他凑近你耳边低声道：「尤其是和你。」<br><br>你的心跳漏了一拍。这个男人，说情话的时候真是让人招架不住。</div></div></div>';
+    }
+  } else if(lead==='subaiyi'){
+    if(ctype==='love'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6">&#128149; 温柔以待 &#128149;</span></div><div class="narrator">你轻轻靠在他肩上，给他无声的陪伴。<br><br>苏白衣的身体微微一僵，然后渐渐放松下来。他轻轻叹了口气，将你拢得更近了一些。<br><br>「谢谢你。」他轻声说，「愿意听我说这些。」<br><br>月光洒在你们身上，将两个人的影子融为一体。<br><br>「以前……我总觉得，这些事说出来也没有用。」他轻声道，「可现在发现，有人陪着，感觉不一样。」<br><br>他低头看你，目光温柔得像月色：「有你在身边，真好。」<br><br>你的心忽然暖暖的。这个温柔的男人，终于愿意在你面前卸下所有防备。<br><br>那夜，你们在月下坐了很久。分别时，他轻轻拉住你的手：「以后……能多陪陪我吗？」</div></div></div>';
+    } else if(ctype==='safe'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#a78bfa">&#128149; 认真学习 &#128149;</span></div><div class="narrator">你认真地继续学习，不想辜负他的教导。<br><br>苏白衣微微点头，眼中有了几分赞许：「你很认真。这点……很好。」<br><br>他继续教你辨认各种草药，你们一边走一边聊。他讲每种草药的功效、禁忌、采摘时节……你认真地记着。<br><br>「你记得真快。」他笑着说，「比我当年学得快多了。」<br><br>「你当年也是这样学的吗？」<br><br>「嗯。」他的目光里有了几分怀念，「我娘教我的。」<br><br>他忽然停下脚步：「我在想，如果她能看到你……一定会很高兴。」<br><br>你第一次看到他露出这样柔和的笑容。<br><br>「谢谢你。」他轻声说，「愿意陪我做这些。」</div></div></div>';
+    } else {
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#fbbf24">&#128149; 触动心事 &#128149;</span></div><div class="narrator">你问他：「你娘亲……是什么样的人？」<br><br>苏白衣沉默了片刻，目光望向远方的山谷。<br><br>「她……是个很温柔的人。」他的声音很轻，「她总是笑，不管遇到什么事，都不抱怨。」<br><br>「她常教我读书、写字、辨认草药。她说……」他的声音有些哽哽，「她说，学了这些，就能救人了。」<br><br>你轻轻握住他的手。<br><br>「她走的时候，我还在山里采药。」他低下头，「没能见到她最后一面。」<br><br>他的眼眶微微泛红。这个温柔的男人，即使说起最痛的往事，也是这样轻轻地。<br><br>「谢谢你……愿意听我说这些。」他反握住你的手，「你是第一个。」</div></div></div>';
+    }
+  } else {
+    if(ctype==='love'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#f472b6">&#128149; 心意相通 &#128149;</span></div><div class="narrator">你轻轻点头：我也喜欢你。<br><br>熊蛮儿怔住了。然后，他的脸上绽开了一个巨大的笑容——那是你见过的最灿烂的笑容。<br><br>「真的？！」他一把抱起你，在空中转了好几圈，「你答应了？！你真的答应了！」<br><br>「放我下来！」你叫道。<br><br>「不放！」他抱得更紧了，「我太开心了！我等这一天等了多久你知道吗！」<br><br>他把你放下来，然后紧紧握住你的手，眼中满是认真：「你等着，我回去就告诉阿妈！让她准备聘礼！」<br><br>「这么快？！」<br><br>「当然！」他理直气壮地说，「喜欢一个人，就要快！不然被别人抢走了怎么办！」<br><br>你忍不住笑出声来。这个笨拙的男人，表白都这么笨拙。<br><br>可不知道为什么，你觉得这样真好。</div></div></div>';
+    } else if(ctype==='safe'){
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#a78bfa">&#128149; 温馨互动 &#128149;</span></div><div class="narrator">你接过肉，说声谢谢。<br><br>熊蛮儿笑得眼睛都眯成了一条缝：「谢什么！你是我的人，我当然要照顾你！」<br><br>他坐在你身边，看你吃肉，眼神里满是期待：「好吃吗？香不香？」<br><br>「香！」你笑着说。<br><br>「那当然！」他得意地说，「我烤肉的本事可是一流的！以前我一个人住的时候，天天自己烤肉吃！」<br><br>你一边吃一边听他讲以前的事。他讲小时候在部落里长大的故事，讲第一次学狩猎的趣事，讲他最得意的一次捕获……<br><br>他讲得眉飞色舞，你听得津津有味。<br><br>「以后我天天给你烤肉吃！」他拍着胸口说，「让你成为世界上最幸福的女人！」</div></div></div>';
+    } else {
+      aftermath='<div class="scene-box"><div class="scene-text"><div style="text-align:center;margin-bottom:15px"><span style="color:#fbbf24">&#128149; 欢乐互动 &#128149;</span></div><div class="narrator">你故意说：你跳舞还不如打架厉害呢！<br><br>熊蛮儿愣了一下，然后哈哈大笑：「你说得对！我跳舞就是不如打架厉害！」<br><br>他拍拍你的肩膀：「不过没关系！反正我打架厉害就行了！」<br><br>「那你教我打架吧！」你笑着说。<br><br>「好呀！」他眼睛一亮，「明天开始，我教你几招防身的！」<br><br>他拉着你比划起来，一边比一边说：「这一招是当我们被敌人围住的时候用的……这一招是当有人从背后袭击的时候……」<br><br>他教得特别认真，每一个动作都拆解得很详细。<br><br>「记住了吗？」<br><br>「记住了！」<br><br>「好！」他拍拍你的头，「我的女人，不能被别人欺负！」</div></div></div>';
+    }
+  }
+  document.getElementById('hubArea').innerHTML='';
+  document.getElementById('sceneArea').innerHTML=aftermath;
+  document.getElementById('choicesArea').innerHTML='<div class="choices"><button class="choice-btn love" onclick="renderHub()">[love] 返回主界面，继续这一天</button></div>';
+  renderStats();
+}// ── MAIN QUESTS (lead-specific) ───────────────────────────────────
 function hubMain(){
   var lid=G.maleLead;
   document.getElementById('hubArea').innerHTML='';
