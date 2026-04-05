@@ -1,62 +1,797 @@
-<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>nvzh</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#1a1a2e;color:#e8d5b7;min-height:100vh}#game{max-width:680px;margin:0 auto;padding:20px}#cover{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:92vh;text-align:center}h2{color:#c9a96e;font-size:2.4em;margin-bottom:6px;letter-spacing:8px}.s{color:#a89070;font-size:1.1em;margin-bottom:28px;letter-spacing:4px}.d{color:#7a6a50;font-size:0.88em;max-width:440px;line-height:1.9;margin-bottom:36px}.bgg{background:#c9a96e;color:#1a1a2e;border:none;padding:14px 50px;border-radius:8px;cursor:pointer;font-size:1.05em;font-weight:bold;letter-spacing:4px;transition:background 0.2s}.bgg:hover{background:#e0c080}.sw{background:#16213e;border:1px solid #c9a96e;border-radius:12px;padding:22px;margin-bottom:14px;display:none}.sw.on{display:block}.st{color:#c9a96e;font-size:1.1em;text-align:center;margin-bottom:6px;font-weight:bold;letter-spacing:2px}.ss{color:#7a6a50;font-size:0.8em;text-align:center;margin-bottom:18px}.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.cc{background:#0f3460;border:2px solid #3a3a5a;border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;text-align:left}.cc:hover{border-color:#c9a96e;transform:translateY(-2px)}.cn{color:#c9a96e;font-size:0.98em;font-weight:bold;margin-bottom:5px}.cd{color:#a89070;font-size:0.8em;line-height:1.5;margin-bottom:5px}.ct{display:flex;flex-wrap:wrap;gap:4px}.ch{background:#1a2a4a;color:#7a9aca;font-size:0.7em;padding:2px 6px;border-radius:3px}.cbtn{display:block;width:100%;background:#4a8a4a;color:#fff;border:none;padding:13px;border-radius:8px;cursor:pointer;font-size:1em;font-weight:bold;letter-spacing:2px;margin-top:14px;transition:background 0.2s}.cbtn:hover{background:#5a9a5a}.cbtn:disabled{background:#3a5a3a;color:#6a7a6a;cursor:not-allowed}.sel{background:#1a2a1a;border:1px solid #4a8a4a;border-radius:6px;padding:10px;margin:8px 0;font-size:0.85em;color:#8aca8a}.nw{background:#0f3460;border:1px solid #c9a96e;border-radius:8px;padding:14px;margin:10px 0}.nl{color:#a89070;font-size:0.8em;display:block;margin-bottom:6px}.ni{width:100%;background:#16213e;border:1px solid #5a4a3a;color:#e8d5b7;padding:10px 12px;border-radius:6px;font-size:1em}.sc{background:#16213e;border:1px solid #c9a96e;border-radius:12px;padding:20px;margin-bottom:14px;display:none}.sc.on{display:block}.sct{color:#c9a96e;font-size:1.0em;font-weight:bold;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}.scd{font-size:0.8em;color:#7a6a50}.sctx{line-height:1.9;color:#d4c4a8;font-size:0.9em;margin-bottom:14px}.sctx p{margin-bottom:10px}.chc{display:block;width:100%;background:#0f3460;border:2px solid #5a4a3a;color:#e8d5b7;padding:12px 14px;margin:6px 0;border-radius:8px;cursor:pointer;text-align:left;font-size:0.9em;line-height:1.5;transition:all 0.18s}.chc:hover{background:#1a4a7a;transform:translateX(3px)}.chc.safe{border-color:#4a8a4a}.chc.safe:hover{background:#1a3a1a}.chc.risky{border-color:#8a3a3a}.chc.risky:hover{background:#3a1a1a}.chc.love{border-color:#8a4a6a}.chc.love:hover{background:#3a1a2a}.chc.smart{border-color:#4a4a8a}.chc.smart:hover{background:#1a1a3a}.tag{display:inline-block;font-size:0.72em;padding:1px 6px;border-radius:3px;margin-right:5px;font-weight:bold}.t-safe{background:#2a4a2a;color:#8aca8a}.t-risky{background:#4a2a2a;color:#ca8a8a}.t-love{background:#4a2a4a;color:#ca8aca}.t-smart{background:#2a2a4a;color:#8a8aca}.sb{background:#16213e;border:1px solid #c9a96e;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:none}.sb.on{display:block}.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.st2{background:#0f3460;border-radius:6px;padding:5px 6px;text-align:center}.sn{font-size:0.65em;color:#a89070}.sv{font-size:1.0em;color:#c9a96e;font-weight:bold}.aw{display:none;background:#2a1a3e;border:1px solid #9a4a6a;border-radius:6px;padding:7px 12px;text-align:center;margin-top:8px}.aw.on{display:block}.al{color:#c96a8a;font-size:0.75em}.abb{background:#1a0a2e;border-radius:10px;height:6px;margin-top:4px}.abf{background:linear-gradient(90deg,#9a4a6a,#c96a8a);border-radius:10px;height:6px;transition:width 0.5s}.sbar{display:none;text-align:center;margin:10px 0}.sbar.on{display:block}.bs{background:#c9a96e;color:#1a1a2e;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.82em;font-weight:bold;margin:0 3px}.bg2{background:transparent;color:#7a6a50;border:1px solid #3a3a3a;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.82em;margin:0 3px}.lw{display:none;background:#0d1b2a;border:1px solid #222;border-radius:8px;padding:8px;margin-top:12px;max-height:110px;overflow-y:auto;font-size:0.75em;color:#6a5a4a;line-height:1.6}.lw.on{display:block}.le{border-bottom:1px solid #1a1a1a;padding:2px 0}.et{background:#3a2a1a;color:#c9a96e;font-size:0.7em;padding:2px 8px;border-radius:4px;margin-bottom:8px;letter-spacing:1px}</style></head><body><div id=game><div id=cover><h2>🏛 女尊世界</h2><div class=s>当 家 主</div><div class=d>女尊王朝，边境小镇。<br>你年过及笄，议得一门亲事。<br>破屋一间，薄田几亩，夫君一名。<br>从寒门到霸主，一切从今日开始。</div><button class=bgg onclick="s1()">开始游戏</button></div><div id=step1 class=sw><div class=st>第一步 · 你的身世</div><div class=ss>你从哪里来？</div><div class=cg id=bg-grid></div><div id=sel-bg></div></div><div id=step2 class=sw><div class=st>第二步 · 你的心性</div><div class=ss>你是什么样的人？</div><div class=cg id=trait-grid></div><div id=sel-trait></div></div><div id=step3 class=sw><div class=st>第三步 · 命名与定亲</div><div id=sel-confirm></div></div><div id=stats-bar class=sb><div class=sg id=stats-grid></div><div class=aw id=aff-wrap><div class=al>💕 夫君好感 <span id=aff-num>50</span>/100</div><div class=abb><div class=abf id=aff-bar style=width:50%></div></div></div></div><div id=scene class=sc><div class=sct><span id=scene-title-text></span><span class=scd id=day-num></span></div><div id=event-tag></div><div class=sctx id=scene-text></div><div id=choices></div></div><div id=sbar class=sbar><button class=bs onclick="saveGame()">💾 存档</button><button class=bs onclick="loadGame()">📂 读档</button><button class=bg2 onclick="if(confirm('确定重开？'))resetGame()">🔄 重开</button><button class=bg2 onclick="toggleLog()">📜 日志</button></div><div class=lw id=log-wrap><div id=log></div></div></div><script>
-var BGS=[{id:"biz",name:"商贾之后",desc:"父亲是镇上布商，家境殷实，自幼耳濡目染商道。",tags:["善经营","人脉广"],init:{money:80,prestige:2}},{id:"scholar",name:"书香门第",desc:"祖上出过几位秀才，虽家道中落，却知书达理。",tags:["智慧高","人脉佳"],init:{money:30,prestige:4,wit:2}},{id:"gentry",name:"官宦人家",desc:"父亲曾是县城小吏，因得罪权贵被贬，但人脉犹在。",tags:["声望高","懂人情"],init:{money:20,prestige:6,social:2}},{id:"poor",name:"寒门出身",desc:"一无所有，白手起家。唯有满腔热血，和一颗不服输的心。",tags:["意志坚","无包袱"],init:{money:5,bravo:2}}];
-var TRAITS=[{id:"sharp",name:"精明强干",desc:"心思缜密，算账从不出错，遇事总有办法。",effect:{wit:2},tags:["机敏","果断"]},{id:"warm",name:"温柔贤惠",desc:"待人和气，人缘极好，邻里有难处总愿相帮。",effect:{social:2},tags:["和善","包容"]},{id:"fierce",name:"泼辣直爽",desc:"敢说敢做，嘴巴不饶人，但心里最有数。",effect:{bravo:2},tags:["胆大","豪爽"]},{id:"calm",name:"内敛沉稳",desc:"话不多，但句句在点，旁人不敢小觑。",effect:{prestige:2},tags:["稳重","深沉"]}];
-var HUSBANDS=[{id:"scholar",name:"顾长卿",bg:"书香门第",desc:"眉清目秀，谈吐斯文。家中曾有功名，如今家道中落。",traits:["才华","文静"]},{id:"outgoing",name:"柳云舟",bg:"商贾之家",desc:"爱说爱笑，走到哪里都是焦点。没什么心机，但总能让人开心。",traits:["人缘","活泼"]},{id:"quiet",name:"沈墨白",bg:"武勋世家",desc:"话不多，喜怒不形于色。心思细腻，往往能注意到别人忽略的细节。",traits:["细腻","机敏"]},{id:"tsundere",name:"楚灼",bg:"寒门子弟",desc:"嘴硬心软，明明在意却偏要装作不在乎。相处久了会发现意外的温柔。",traits:["傲娇","别扭"]}];
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>女尊世界 · 当家主</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#1a1a2e;color:#e8d5b7;min-height:100vh}
+#game{max-width:680px;margin:0 auto;padding:20px}
+#cover{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:92vh;text-align:center}
+h2{color:#c9a96e;font-size:2.4em;margin-bottom:6px;letter-spacing:8px}
+.s{color:#a89070;font-size:1.1em;margin-bottom:28px;letter-spacing:4px}
+.d{color:#7a6a50;font-size:0.88em;max-width:440px;line-height:1.9;margin-bottom:36px}
+.bgg{background:#c9a96e;color:#1a1a2e;border:none;padding:14px 50px;border-radius:8px;cursor:pointer;font-size:1.05em;font-weight:bold;letter-spacing:4px;transition:background 0.2s}
+.bgg:hover{background:#e0c080}
+.sw{background:#16213e;border:1px solid #c9a96e;border-radius:12px;padding:22px;margin-bottom:14px;display:none}
+.sw.on{display:block}
+.st{color:#c9a96e;font-size:1.1em;text-align:center;margin-bottom:6px;font-weight:bold;letter-spacing:2px}
+.ss{color:#7a6a50;font-size:0.8em;text-align:center;margin-bottom:18px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.cc{background:#0f3460;border:2px solid #3a3a5a;border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;text-align:left}
+.cc:hover{border-color:#c9a96e;transform:translateY(-2px)}
+.cn{color:#c9a96e;font-size:0.98em;font-weight:bold;margin-bottom:5px}
+.cd{color:#a89070;font-size:0.8em;line-height:1.5;margin-bottom:5px}
+.ct{display:flex;flex-wrap:wrap;gap:4px}
+.ch{background:#1a2a4a;color:#7a9aca;font-size:0.7em;padding:2px 6px;border-radius:3px}
+.cbtn{display:block;width:100%;background:#4a8a4a;color:#fff;padding:13px;border-radius:8px;cursor:pointer;font-size:1em;font-weight:bold;letter-spacing:2px;margin-top:14px;transition:background 0.2s;border:none}
+.cbtn:hover{background:#5a9a5a}
+.cbtn:disabled{background:#3a5a3a;color:#6a7a6a;cursor:not-allowed}
+.sel{background:#1a2a1a;border:1px solid #4a8a4a;border-radius:6px;padding:10px;margin:8px 0;font-size:0.85em;color:#8aca8a}
+.nw{background:#0f3460;border:1px solid #c9a96e;border-radius:8px;padding:14px;margin:10px 0}
+.nl{color:#a89070;font-size:0.8em;display:block;margin-bottom:6px}
+.ni{width:100%;background:#16213e;border:1px solid #5a4a3a;color:#e8d5b7;padding:10px 12px;border-radius:6px;font-size:1em}
+.sc{background:#16213e;border:1px solid #c9a96e;border-radius:12px;padding:20px;margin-bottom:14px;display:none}
+.sc.on{display:block}
+.sct{color:#c9a96e;font-size:1.0em;font-weight:bold;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+.scd{color:#7a6a50;font-size:0.8em}
+.sctx{line-height:1.9;color:#d4c4a8;font-size:0.9em;margin-bottom:14px}
+.sctx p{margin-bottom:10px}
+.chc{display:block;width:100%;background:#0f3460;border:2px solid #5a4a3a;color:#e8d5b7;padding:12px 14px;margin:6px 0;border-radius:8px;cursor:pointer;text-align:left;font-size:0.9em;line-height:1.5;transition:all 0.18s}
+.chc:hover{background:#1a4a7a;transform:translateX(3px)}
+.chc:disabled{opacity:0.4;cursor:not-allowed;transform:none!important}
+.chc.safe{border-color:#4a8a4a}.chc.safe:hover{background:#1a3a1a}
+.chc.risky{border-color:#8a3a3a}.chc.risky:hover{background:#3a1a1a}
+.chc.love{border-color:#8a4a6a}.chc.love:hover{background:#3a1a2a}
+.chc.smart{border-color:#4a4a8a}.chc.smart:hover{background:#1a1a3a}
+.chc.gov{border-color:#6a6a3a}.chc.gov:hover{background:#2a2a1a}
+.tag{display:inline-block;font-size:0.72em;padding:1px 6px;border-radius:3px;margin-right:5px;font-weight:bold}
+.t-safe{background:#2a4a2a;color:#8aca8a}.t-risky{background:#4a2a2a;color:#ca8a8a}.t-love{background:#4a2a4a;color:#ca8aca}.t-smart{background:#2a2a4a;color:#8a8aca}.t-gov{background:#3a3a1a;color:#caca6a}
+.sb{background:#16213e;border:1px solid #c9a96e;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:none}
+.sb.on{display:block}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.st2{background:#0f3460;border-radius:6px;padding:5px 6px;text-align:center}
+.sn{font-size:0.65em;color:#a89070}.sv{font-size:1.0em;color:#c9a96e;font-weight:bold}
+.aw{display:none;background:#2a1a3e;border:1px solid #9a4a6a;border-radius:6px;padding:7px 12px;text-align:center;margin-top:8px}
+.aw.on{display:block}
+.abb{background:#1a0a2e;border-radius:10px;height:6px;margin-top:4px}
+.abf{background:linear-gradient(90deg,#9a4a6a,#c96a8a);border-radius:10px;height:6px;transition:width 0.5s}
+.aff-label{font-size:0.72em;color:#c96a8a;margin-bottom:3px}
+.aff-level{font-size:0.78em;color:#e8a0b0;font-weight:bold;margin-top:3px}
+.sbar{display:none;text-align:center;margin:10px 0}
+.sbar.on{display:block}
+.bs{background:#c9a96e;color:#1a1a2e;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.82em;font-weight:bold;margin:0 3px}
+.bg2{background:transparent;color:#7a6a50;border:1px solid #3a3a3a;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.82em;margin:0 3px}
+.lw{display:none;background:#0d1b2a;border:1px solid #222;border-radius:8px;padding:8px;margin-top:12px;max-height:110px;overflow-y:auto;font-size:0.75em;color:#6a5a4a;line-height:1.6}
+.lw.on{display:block}
+.le{border-bottom:1px solid #1a1a1a;padding:2px 0}
+.et{background:#3a2a1a;color:#c9a96e;font-size:0.7em;padding:2px 8px;border-radius:4px;margin-bottom:8px;letter-spacing:1px;display:inline-block}
+.night-panel{display:none;background:#1a0f2e;border:1px solid #7a4a9a;border-radius:10px;padding:14px;margin:10px 0}
+.night-panel.on{display:block}
+.night-title{color:#b080d0;font-size:0.9em;font-weight:bold;margin-bottom:10px;text-align:center}
+</style>
+</head>
+<body>
+<div id=game>
+<div id=cover>
+<h2>🏛 女尊世界</h2><div class=s>当 家 主</div>
+<div class=d>女尊王朝，边境小镇。<br>你年过及笄，议得一门亲事。<br>破屋一间，薄田几亩，夫君一名。<br>从寒门到霸主，一切从今日开始。</div>
+<button class=bgg onclick="s1()">开始游戏</button>
+</div>
+<div id=step1 class="sw"><div class=st>第一步 · 你的身世</div><div class=ss>你从哪里来？</div><div class=cg id=bg-grid></div><div id=sel-bg></div></div>
+<div id=step2 class="sw"><div class=st>第二步 · 你的心性</div><div class=ss>你是什么样的人？</div><div class=cg id=trait-grid></div><div id=sel-trait></div></div>
+<div id=step3 class="sw"><div id=sel-confirm></div></div>
+<div id=stats-bar class=sb>
+<div class=sg id=stats-grid></div>
+<div class=aw id=aff-wrap>
+<div class=aff-label>💕 夫君好感</div>
+<div style="display:flex;align-items:center;gap:8px">
+<div style="flex:1;background:#1a0a2e;border-radius:10px;height:6px"><div class=abf id=aff-bar style="width:50%"></div></div>
+<span id=aff-num style="color:#c96a8a;font-size:0.85em;font-weight:bold">50</span>
+</div>
+<div class=aff-level id=aff-level>室友</div>
+</div>
+</div>
+<div id=scene class=sc>
+<div class=sct><span id=scene-title-text></span><span class=scd id=day-num></span></div>
+<div id=event-tag></div>
+<div class=sctx id=scene-text></div>
+<div id=choices></div>
+</div>
+<div class=night-panel id=night-panel>
+<div class=night-title>🌙 夜幕降临 · 归家时光</div>
+<div id=night-choices></div>
+</div>
+<div id=sbar class=sbar>
+<button class=bs onclick="saveGame()">💾 存档</button>
+<button class=bs onclick="loadGame()">📂 读档</button>
+<button class=bg2 onclick="if(confirm('确定重开？'))resetGame()">🔄 重开</button>
+<button class=bg2 onclick="toggleLog()">📜 日志</button>
+</div>
+<div class=lw id=log-wrap><div id=log></div></div>
+</div>
+<script>
+
+var BGS=[
+  {id:'biz',name:'商贾之后',desc:'父亲是镇上布商，家境殷实，自幼耳濡目染商道。',tags:['善经营','人脉广'],init:{money:80,prestige:2}},
+  {id:'scholar',name:'书香门第',desc:'祖上出过几位秀才，虽家道中落，却知书达理。',tags:['智慧高','人脉佳'],init:{money:30,prestige:4,wit:2}},
+  {id:'gentry',name:'官宦人家',desc:'父亲曾是县城小吏，因得罪权贵被贬，但人脉犹在。',tags:['声望高','懂人情'],init:{money:20,prestige:6,social:2}},
+  {id:'poor',name:'寒门出身',desc:'一无所有，白手起家。唯有满腔热血，和一颗不服输的心。',tags:['意志坚','无包袱'],init:{money:5,bravo:2}}
+];
+var TRAITS=[
+  {id:'sharp',name:'精明强干',desc:'心思缜密，算账从不出错，遇事总有办法。',effect:{wit:2},tags:['机敏','果断']},
+  {id:'warm',name:'温柔贤惠',desc:'待人和气，人缘极好，邻里有难处总愿相帮。',effect:{social:2},tags:['和善','包容']},
+  {id:'fierce',name:'泼辣直爽',desc:'敢说敢做，嘴巴不饶人，但心里最有数。',effect:{bravo:2},tags:['胆大','豪爽']},
+  {id:'calm',name:'内敛沉稳',desc:'话不多，但句句在点，旁人不敢小觑。',effect:{prestige:2},tags:['稳重','深沉']}
+];
+var HUSBANDS=[
+  {id:'scholar',name:'顾长卿',bg:'书香门第',desc:'眉清目秀，谈吐斯文。家中曾有功名，如今家道中落。',traits:['才华','文静']},
+  {id:'outgoing',name:'柳云舟',bg:'商贾之家',desc:'爱说爱笑，走到哪里都是焦点。没什么心机，但总能让人开心。',traits:['人缘','活泼']},
+  {id:'quiet',name:'沈墨白',bg:'武勋世家',desc:'话不多，喜怒不形于色。心思细腻，往往能注意到别人忽略的细节。',traits:['细腻','机敏']},
+  {id:'tsundere',name:'楚灼',bg:'寒门子弟',desc:'嘴硬心软，明明在意却偏要装作不在乎。相处久了会发现意外的温柔。',traits:['傲娇','别扭']}
+];
 var S={};
+var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
+var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
+function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
+function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isOfficial)S.isOfficial=false;if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.officialProbation)S.officialProbation=[];if(!S.govTaskDone)S.govTaskDone=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;}
+function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
+function toggleLog(){var lw=document.getElementById('log-wrap');if(lw)lw.classList.toggle('on');}
+function saveGame(){localStorage.setItem('nvzh_v5',JSON.stringify(S));addLog('已存档');}
+function loadGame(){var d=localStorage.getItem('nvzh_v5');if(d){S=JSON.parse(d);showGame();document.getElementById('aff-wrap').classList.add('on');document.getElementById('sbar').classList.add('on');renderStats();updateAff();addLog('读档成功');}else{addLog('无存档');}}
+function resetGame(){localStorage.removeItem('nvzh_v5');location.reload();}
+function showGame(){document.getElementById('scene').classList.add('on');document.getElementById('stats-bar').style.display='block';}
+function checkIdentity(){if(S.identity===1){if(S.hasShop){S.identity=2;addLog('⏩ 进入阶段2：谋生·商');S.cls='布庄老板';}else if(S.isOfficial){S.identity=2;addLog('⏩ 进入阶段2：谋生·仕');S.cls='县衙小吏';}}if(S.identity===2&&S.day>=60&&(S.marketProfit>=500||S.govTaskDone>=5)){S.identity=3;addLog('⏩ 进入阶段3：崛起');}if(S.identity===3&&S.day>=120){S.identity=4;addLog('⏩ 进入阶段4：一方霸主');}}
+function renderStats(){var el=document.getElementById('stats-grid');var idt=IDT_NAMES[S.identity-1]||'窘境';el.innerHTML='<div class=st2><div class=sn>💰 银两</div><div class=sv>'+(S.money||0)+'</div></div><div class=st2><div class=sn>⭐ 声望</div><div class=sv>'+(S.prestige||0)+'</div></div><div class=st2><div class=sn>🤝 人脉</div><div class=sv>'+(S.social||0)+'</div></div><div class=st2><div class=sn>📖 智慧</div><div class=sv>'+(S.wit||0)+'</div></div><div class=st2><div class=sn>⚔ 魄力</div><div class=sv>'+(S.bravo||0)+'</div></div><div class=st2><div class=sn>🏷 身份</div><div class=sv>'+idt+'</div></div><div class=st2><div class=sn>📅</div><div class=sv>第'+(S.day||1)+'日</div></div>';}
+function updateAff(){var a=Math.round(S.affection);document.getElementById('aff-num').textContent=a;document.getElementById('aff-bar').style.width=a+'%';var el=document.getElementById('aff-level');if(el)el.textContent=getAffLabel(a);}
 
-function renderStats(){var el=document.getElementById("stats-grid");el.style.display="grid";el.style.gridTemplateColumns="repeat(4,1fr)";el.innerHTML='<div class=st2><div class=sn>💰 银两</div><div class=sv>'+(S.money||0)+'</div></div><div class=st2><div class=sn>⭐ 声望</div><div class=sv>'+(S.prestige||0)+'</div></div><div class=st2><div class=sn>🤝 人脉</div><div class=sv>'+(S.social||0)+'</div></div><div class=st2><div class=sn>📖 智慧</div><div class=sv>'+(S.wit||0)+'</div></div><div class=st2><div class=sn>⚔ 魄力</div><div class=sv>'+(S.bravo||0)+'</div></div><div class=st2><div class=sn>🏷 身份</div><div class=sv>'+(S.cls||'无业')+'</div></div><div class=st2><div class=sn>📅 第</div><div class=sv>'+S.day+'日</div></div>';}
-function updateAff(){if(!S.husband)return;var a=Math.round(S.husband.affection||50);document.getElementById("aff-num").textContent=a;document.getElementById("aff-bar").style.width=a+"%";}
-function addLog(m){S.log.push(m);var le=document.getElementById("log");var e=document.createElement("div");e.className="le";var label="[第"+S.day+"天] ";var content=(label+m).substring(0,20);e.textContent=content;le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>10)le.removeChild(le.firstChild);}function toggleLog(){var lw=document.getElementById("log-wrap");lw.classList.toggle("on");}
-function saveGame(){localStorage.setItem("nvzh_v4",JSON.stringify(S));addLog("已存档");}
-function loadGame(){var d=localStorage.getItem("nvzh_v4");if(d){S=JSON.parse(d);showGame();document.getElementById("aff-wrap").classList.add("on");document.getElementById("sbar").classList.add("on");document.getElementById("log-wrap").classList.add("on");renderStats();updateAff();addLog("读档成功");}else{addLog("无存档");}}
-function resetGame(){localStorage.removeItem("nvzh_v4");location.reload();}
-function showGame(){document.getElementById("scene").classList.add("on");document.getElementById("stats-bar").style.display="block";}
-function showScene(title,text,choices,etag){document.getElementById("scene-title-text").textContent=title;document.getElementById("day-num").textContent="第 "+S.day+" 日";document.getElementById("event-tag").innerHTML=etag?'<span class=et>'+etag+'</span>':'';var t=Array.isArray(text)?text.map(function(p){return'<p>'+p+'</p>';}).join(''):text;document.getElementById("scene-text").innerHTML=t;var h='<div id=cw>';if(choices){choices.forEach(function(c){var tp=c.type||'safe';var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖'};var cm={safe:'safe',risky:'risky',love:'love',smart:'smart'};var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart'};h+='<button class="chc '+cm[tp]+'" data-next="'+c.next+'" data-type="'+tp+'"><span class="tag '+tcm[tp]+'">'+tm[tp]+'</span> '+c.text+'</button>';});}h+='</div>';document.getElementById("choices").innerHTML=h;var cw=document.getElementById("cw");if(cw){cw.onclick=function(e){var btn=e.target.closest('.chc');if(btn){go(btn.getAttribute("data-next"),btn.getAttribute("data-type"));}}};}
-window.s1=function(){document.getElementById("cover").style.display="none";document.getElementById("step1").classList.add("on");var h='';BGS.forEach(function(b,i){h+='<div class=cc data-i='+i+'><div class=cn>'+b.name+'</div><div class=cd>'+b.desc+'</div><div class=ct>';b.tags.forEach(function(t){h+='<span class=ch>'+t+'</span>';});h+='</div></div>';});document.getElementById("bg-grid").innerHTML=h;document.getElementById("bg-grid").onclick=function(e){var card=e.target.closest('.cc');if(card){var idx=parseInt(card.getAttribute("data-i"));window._selBG(idx);}};};
-window._selBG=function(i){S.bg=BGS[i];var b=S.bg;if(b.init.money)S.money=b.init.money;if(b.init.prestige)S.prestige=b.init.prestige;if(b.init.social)S.social=b.init.social;if(b.init.wit)S.wit=b.init.wit;if(b.init.bravo)S.bravo=b.init.bravo;document.getElementById("sel-bg").innerHTML='<div class=sel>✓ 已选择：<strong>'+b.name+'</strong> — '+b.desc+'</div><button class=cbtn onclick="s2()">下一步 →</button>';};
-window.s2=function(){document.getElementById("step1").classList.remove("on");document.getElementById("step2").classList.add("on");var h='';TRAITS.forEach(function(t,i){h+='<div class=cc data-i='+i+'><div class=cn>'+t.name+'</div><div class=cd>'+t.desc+'</div><div class=ct>';t.tags.forEach(function(tag){h+='<span class=ch>'+tag+'</span>';});h+='</div></div>';});document.getElementById("trait-grid").innerHTML=h;document.getElementById("trait-grid").onclick=function(e){var card=e.target.closest('.cc');if(card){var idx=parseInt(card.getAttribute("data-i"));window._selTrait(idx);}};};
-window._selTrait=function(i){S.trait=TRAITS[i];var t=S.trait;if(t.effect.wit)S.wit+=t.effect.wit;if(t.effect.social)S.social+=t.effect.social;if(t.effect.bravo)S.bravo+=t.effect.bravo;if(t.effect.prestige)S.prestige+=t.effect.prestige;document.getElementById("sel-trait").innerHTML='<div class=sel>✓ 已选择：<strong>'+t.name+'</strong> — '+t.desc+'</div><button class=cbtn onclick="s3()">下一步 →</button>';};
-window.s3=function(){document.getElementById("step2").classList.remove("on");document.getElementById("step3").classList.add("on");var names=["念卿","锦绣","如玉","秋水","碧落","凝霜","映雪","思柔"];var dn=names[Math.floor(Math.random()*names.length)];var h='<div class=sel>身世：<strong>'+(S.bg?S.bg.name:"?")+'</strong>　心性：<strong>'+(S.trait?S.trait.name:"?")+'</strong></div>';h+='<div class=nw><label class=nl>为自己取个名字</label><input class=ni type=text id=player-name value="'+dn+'" placeholder="输入你的名字…"></div>';h+='<div style="color:#7a6a50;font-size:0.82em;margin:10px 0 4px">夫君候选：</div><div class=cg id=h-grid>';HUSBANDS.forEach(function(hs,i){h+='<div class=cc data-i='+i+'><div class=cn>'+hs.name+'</div><div class=cd>'+hs.desc+'</div><div class=ct><span class=ch>'+hs.bg+'</span></div></div>';});h+='</div><div id=sel-h></div>';document.getElementById("sel-confirm").innerHTML=h;document.getElementById("h-grid").onclick=function(e){var card=e.target.closest('.cc');if(card){var idx=parseInt(card.getAttribute("data-i"));window._selH(idx);}};};
-window._selH=function(i){S.husband=HUSBANDS[i];S.husband.affection=50;document.getElementById("sel-h").innerHTML='<div class=sel>✓ 已选择夫君：<strong>'+S.husband.name+'</strong> — '+S.husband.traits.join("、")+'</div><button class=cbtn onclick="startGame()">✓ 确认，进入新婚</button>';};
-function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls="no";if(!S.flags)S.flags={};}window.startGame=function(){initS();var ni=document.getElementById("player-name");S.playerName=(ni&&ni.value.trim())||"念卿";addLog("角色创建："+S.playerName+"（"+(S.bg?S.bg.name:"")+"·"+(S.trait?S.trait.name:"")+"）");addLog("婚配："+S.husband.name);document.getElementById("step3").classList.remove("on");showGame();document.getElementById("stats-bar").style.display="block";document.getElementById("sbar").classList.add("on");document.getElementById("log-wrap").classList.add("on");document.getElementById("aff-wrap").classList.add("on");renderStats();updateAff();introMatchmaker();};
+function showScene(title,text,choices,etag){
+  document.getElementById('scene-title-text').textContent=title;
+  document.getElementById('day-num').textContent='第 '+S.day+' 日';
+  document.getElementById('event-tag').innerHTML=etag?'<span class=et>'+etag+'</span>':'';
+  var t=Array.isArray(text)?text.map(function(p){return'<p>'+p+'</p>';}).join(''):text;
+  document.getElementById('scene-text').innerHTML=t;
+  var h='';
+  if(choices&&choices.length>0){
+    choices.forEach(function(c){
+      var tp=c.type||'safe';
+      var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖',gov:'🏛'};
+      var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov'};
+      var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov'};
+      var dis=c.disabled?'disabled ':'';
+      h+='<button class="chc '+cm[tp]+'" '+dis+'data-next="'+c.next+'" data-type="'+tp+'"><span class="tag '+tcm[tp]+'">'+tm[tp]+'</span> '+c.text+'</button>';
+    });
+  }
+  document.getElementById('choices').innerHTML=h;
+  document.getElementById('choices').onclick=function(e){
+    var btn=e.target.closest('.chc');
+    if(btn&&!btn.disabled){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
+  };
+  document.getElementById('night-panel').classList.remove('on');
+}
+function showNight(){
+  document.getElementById('scene').classList.remove('on');
+  document.getElementById('night-panel').classList.add('on');
+  var h='';
+  var aff=S.affection;
+  var hname=S.husband.name;
+  var trait=S.trait?S.trait.id:'';
+  var opts=[];
+  opts.push({text:'和'+hname+'一起吃晚饭',next:'n_eat',type:'safe',tag:'🍚'});
+  if(aff>=31)opts.push({text:'和他聊聊天',next:'n_talk',type:'love',tag:'💬'});
+  if(aff>=51)opts.push({text:'说些体己话',next:'n_heart',type:'love',tag:'💕'});
+  if(aff>=71)opts.push({text:'听他说说心事',next:'n_secret',type:'love',tag:'🌙'});
+  if(trait==='sharp')opts.push({text:'一起算算家里的账',next:'n_account',type:'smart',tag:'📖'});
+  if(S.nearFestival)opts.push({text:S.nearFestival+'将至，一起过节吧',next:'n_festival',type:'love',tag:'🏮'});
+  if(S.husbandProblems&&S.husbandProblems.length>0)opts.push({text:'关心他的烦恼',next:'n_problem',type:'love',tag:'💞'});
+  if(S.flags.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent&&S.day===S.flags.husbandBirthdayDay){
+    opts.push({text:'今天是他的生日！给他送礼物',next:'n_birthday',type:'love',tag:'🎂'});
+  }
+  opts.push({text:'各自休息，明日再见',next:'n_sleep',type:'safe',tag:'🌙'});
+  var cm={safe:'safe',risky:'risky',love:'love',smart:'smart',gov:'gov'};
+  var tcm={safe:'t-safe',risky:'t-risky',love:'t-love',smart:'t-smart',gov:'t-gov'};
+  var tm={safe:'🍚',risky:'⚔',love:'💕',smart:'📖',gov:'🏛'};
+  opts.forEach(function(o){h+='<button class="chc '+cm[o.type]+'" data-next="'+o.next+'" data-type="'+o.type+'"><span class="tag '+tcm[o.type]+'">'+tm[o.type]+'</span> '+o.text+'</button>';});
+  document.getElementById('night-choices').innerHTML=h;
+  document.getElementById('night-choices').onclick=function(e){
+    var btn=e.target.closest('.chc');
+    if(btn){go(btn.getAttribute('data-next'),btn.getAttribute('data-type'));}
+  };
+}
+window.s1=function(){
+  document.getElementById('cover').style.display='none';
+  document.getElementById('step1').classList.add('on');
+  var h='';
+  BGS.forEach(function(b,i){h+='<div class=cc data-i='+i+'><div class=cn>'+b.name+'</div><div class=cd>'+b.desc+'</div><div class=ct>';b.tags.forEach(function(t){h+='<span class=ch>'+t+'</span>';});h+='</div></div>';});
+  document.getElementById('bg-grid').innerHTML=h;
+  document.getElementById('bg-grid').onclick=function(e){var card=e.target.closest('.cc');if(card){window._selBG(parseInt(card.getAttribute('data-i')));}};
+};
+window._selBG=function(i){
+  S.bg=BGS[i];var b=S.bg;
+  if(b.init.money)S.money=b.init.money;
+  if(b.init.prestige)S.prestige=b.init.prestige;
+  if(b.init.social)S.social=b.init.social;
+  if(b.init.wit)S.wit=b.init.wit;
+  if(b.init.bravo)S.bravo=b.init.bravo;
+  document.getElementById('sel-bg').innerHTML='<div class=sel>✓ 已选择：<strong>'+b.name+'</strong> — '+b.desc+'</div><button class=cbtn onclick="s2()">下一步 →</button>';
+};
+window.s2=function(){
+  document.getElementById('step1').classList.remove('on');
+  document.getElementById('step2').classList.add('on');
+  var h='';
+  TRAITS.forEach(function(t,i){h+='<div class=cc data-i='+i+'><div class=cn>'+t.name+'</div><div class=cd>'+t.desc+'</div><div class=ct>';t.tags.forEach(function(tag){h+='<span class=ch>'+tag+'</span>';});h+='</div></div>';});
+  document.getElementById('trait-grid').innerHTML=h;
+  document.getElementById('trait-grid').onclick=function(e){var card=e.target.closest('.cc');if(card){window._selTrait(parseInt(card.getAttribute('data-i')));}};
+};
+window._selTrait=function(i){
+  S.trait=TRAITS[i];var t=S.trait;
+  if(t.effect.wit)S.wit+=t.effect.wit;
+  if(t.effect.social)S.social+=t.effect.social;
+  if(t.effect.bravo)S.bravo+=t.effect.bravo;
+  if(t.effect.prestige)S.prestige+=t.effect.prestige;
+  document.getElementById('sel-trait').innerHTML='<div class=sel>✓ 已选择：<strong>'+t.name+'</strong> — '+t.desc+'</div><button class=cbtn onclick="s3()">下一步 →</button>';
+};
+window.s3=function(){
+  document.getElementById('step2').classList.remove('on');
+  document.getElementById('step3').classList.add('on');
+  var names=['念卿','锦绣','如玉','秋水','碧落','凝霜','映雪','思柔'];
+  var dn=names[Math.floor(Math.random()*names.length)];
+  var h='<div class=sel>身世：<strong>'+(S.bg?S.bg.name:'?')+'</strong>　心性：<strong>'+(S.trait?S.trait.name:'?')+'</strong></div>';
+  h+='<div class=nw><label class=nl>为自己取个名字</label><input class=ni type=text id=player-name value="'+dn+'" placeholder="输入你的名字…"></div>';
+  h+='<div style="color:#7a6a50;font-size:0.82em;margin:10px 0 4px">请选择你的夫君：</div><div class=cg id=h-grid>';
+  HUSBANDS.forEach(function(hs,i){h+='<div class=cc data-i='+i+'><div class=cn>'+hs.name+'</div><div class=cd>'+hs.desc+'</div><div class=ct><span class=ch>'+hs.bg+'</span></div></div>';});
+  h+='</div><div id=sel-h></div>';
+  document.getElementById('sel-confirm').innerHTML=h;
+  document.getElementById('h-grid').onclick=function(e){var card=e.target.closest('.cc');if(card){window._selH(parseInt(card.getAttribute('data-i')));}};
+};
+window._selH=function(i){
+  S.husband=HUSBANDS[i];
+  S.affection=50;
+  document.getElementById('sel-h').innerHTML='<div class=sel>✓ 已选择夫君：<strong>'+S.husband.name+'</strong> — '+S.husband.traits.join('、')+'</div><button class=cbtn onclick="startGame()">✓ 确认，进入新婚</button>';
+};
+window.startGame=function(){
+  initS();
+  var ni=document.getElementById('player-name');
+  S.playerName=(ni&&ni.value.trim())||'念卿';
+  addLog('角色：'+S.playerName+'（'+(S.bg?S.bg.name:'')+'·'+(S.trait?S.trait.name:'')+'）');
+  addLog('婚配：'+S.husband.name);
+  S.flags.husbandBirthdayDay=45+Math.floor(Math.random()*21);
+  S.flags.husbandBirthdayDone=false;
+  document.getElementById('step3').classList.remove('on');
+  showGame();
+  document.getElementById('stats-bar').style.display='block';
+  document.getElementById('sbar').classList.add('on');
+  document.getElementById('aff-wrap').classList.add('on');
+  renderStats();updateAff();
+  introMatchmaker();
+};
 
-function introMatchmaker(){addLog("🌟 媒婆来访");var tid=S.trait?S.trait.id:"";var extraNote="";var choices=[{text:"认真听她说每一家的情况",next:"m_detail",type:"smart"},{text:"问李婶哪户人家最有钱有势",next:"m_money",type:"smart"},{text:"催她快点定下婚期，懒得听",next:"m_hasty",type:"fierce"}];if(tid==="warm"){extraNote="（温柔的心性让你更能体会每家的不易）";S.husband.affection=(S.husband.affection||50)+3;addLog("温柔倾听 好感+3");}if(tid==="fierce"){extraNote="（泼辣的你直接切入正题，倒也痛快）";addLog("泼辣应对 效果更佳");}showScene("议亲",["天刚蒙蒙亮，破旧的小院外便传来一阵敲门声。","媒婆李婶笑盈盈地推门进来，身后跟着几个提着礼盒的妇人。她上下打量着你，眼里闪着精明的光。","「好俊的姑娘！」李婶笑道，「你娘托我说合的亲事，我可费了好大劲。这镇上四户人家，个个人中龙凤——」"+extraNote,"她拍了拍手，身后的小厮抬上来四幅画像。"], choices, "🌟 重点剧情");}
-function m_detail(){addLog("详听媒婆介绍");showScene("四户人家",["李婶闻言，眼底闪过一丝赞许，拉过板凳坐下——","「这第一户，顾家，书香门第，祖上出过秀才，如今虽家道中落，但顾家公子生得俊俏，性子也稳重……」","「这第二户，柳家，镇上布商柳老板的独子，家里有钱，人也活络，就是爱玩了些……」","「第三户，沈家，武勋世家，祖上跟过先帝打过仗，沈家公子话不多，但心思细腻……」","「第四户，楚家——」李婶顿了顿，「寒门子弟，孤儿寡弟。模样倒是好的，就是性子有些别扭。」"], [{text:"选顾长卿（书香门第）",next:"m_choose",type:"safe"},{text:"选柳云舟（商贾之家）",next:"m_choose",type:"safe"},{text:"选沈墨白（武勋世家）",next:"m_choose",type:"safe"},{text:"选楚灼（寒门子弟）",next:"m_choose",type:"risky"}], "🌟 重点剧情");}
-function m_money(){addLog("询问家境");showScene("四户人家",["李婶会心一笑，压低声音：","「要论家境，柳家最厚，布庄生意遍布三县，柳公子又是独子——啧啧。」","「但若论门第，顾家瘦死骆驼比马大，交往的都是读书人。」","「沈家名头响亮，可不复当年勇了。至于楚家——」她摇摇头，「孤儿寡弟的，能有什么好日子？」","她递上四幅画像，笑眯眯地等你自己挑。"], [{text:"选柳云舟（商贾之家，有钱）",next:"m_choose",type:"safe"},{text:"选顾长卿（书香门第）",next:"m_choose",type:"safe"},{text:"选沈墨白（武勋世家）",next:"m_choose",type:"safe"},{text:"选楚灼（寒门子弟）",next:"m_choose",type:"risky"}], "🌟 重点剧情");}
-function m_hasty(){S.bravo+=1;addLog("催促婚期 魄力+1");showScene("四户人家",["你不耐烦地摆摆手。李婶讪讪一笑，也不再多言，直接把四位公子的画像铺在你面前。","「好好好，姑娘爽快！那就让我老李直说了——」","她指着四幅画像，一一报出名号家世，末了补了一句：","「这婚期嘛，女尊王朝，男子及笄便要婚配。姑娘既已年过及笈，亲事——宜早不宜迟。」"], [{text:"选顾长卿（书香门第）",next:"m_choose",type:"safe"},{text:"选柳云舟（商贾之家）",next:"m_choose",type:"safe"},{text:"选沈墨白（武勋世家）",next:"m_choose",type:"safe"},{text:"选楚灼（寒门子弟）",next:"m_choose",type:"risky"}], "🌟 重点剧情");}
-function m_choose(){showScene("新婚之夜",["三日后，大婚之日。","红烛摇曳，喜帕之下，你第一次见到他——你的夫君，"+S.husband.name+"。","他微微侧过头，目光与你相触。那一瞬间，你心里对他的第一印象是——"], [{text:"他的眼神让我心安，仿佛找到了依靠",next:"fi_0",type:"love"},{text:"他看起来和镇上其他人不太一样……",next:"fi_1",type:"smart"},{text:"我暂时看不出他的深浅，得慢慢观察",next:"fi_2",type:"smart"}], "🌟 新婚之夜");}
-function fi_0(){S.husband.affection=65;S.wit+=1;addLog("第一印象：心安");fi_end("他的眼神让我心安，仿佛找到了依靠。");}
-function fi_1(){S.husband.affection=58;S.social+=1;addLog("第一印象：好奇");fi_end("他看起来和镇上其他人不太一样……那种若即若离的感觉，让人心生好奇。");}
-function fi_2(){S.husband.affection=55;S.bravo+=1;addLog("第一印象：观望");fi_end("我暂时看不出他的深浅。他的眼神太沉了，像一口看不见底的井。");}
-function fi_end(impress){showScene("初见印象",[impress,"夫君似乎察觉了你的目光，薄唇微微抿了抿，似乎想说什么，却又没有开口。","红烛燃尽，夜渐深。窗外传来几声犬吠，你在这陌生的气息中，沉沉睡去。","——翌日清晨，你将迎来嫁入这家后的第一个清晨。"], [{text:"进入第一日清晨",next:"day1",type:"safe"}], "🌟 新婚之夜");}
-function day1(){addLog("=== 游戏开始 ===");addLog("第1日开始");renderStats();updateAff();showMorning();}
+function introMatchmaker(){
+  addLog('🌟 媒婆来访');
+  var tid=S.trait?S.trait.id:'';
+  var extraNote='';
+  var choices=[
+    {text:'认真听她说每一家的情况',next:'m_detail',type:'smart'},
+    {text:'问李婶哪户人家最有钱有势',next:'m_money',type:'smart'},
+    {text:'催她快点定下婚期，懒得听',next:'m_hasty',type:'fierce'}
+  ];
+  if(tid==='warm'){extraNote='（你温柔倾听，体会每家的不易）';S.affection+=3;}
+  if(tid==='fierce'){extraNote='（泼辣的你直接切入正题，倒也痛快）';}
+  showScene('议亲',['天刚蒙蒙亮，破旧的小院外便传来一阵敲门声。','媒婆李婶笑盈盈地推门进来，身后跟着几个提着礼盒的妇人。她上下打量着你，眼里闪着精明的光。','「好俊的姑娘！」李婶笑道，「你娘托我说合的亲事，我可费了好大劲。这镇上四户人家，个个人中龙凤——」'+extraNote,'她拍了拍手，身后的小厮抬上来四幅画像。'],choices,'🌟 重点剧情');
+}
+function m_detail(){addLog('详听媒婆介绍');showScene('四户人家',['李婶闻言，眼底闪过一丝赞许，拉过板凳坐下——','「这第一户，顾家，书香门第，祖上出过秀才，如今虽家道中落，但顾家公子生得俊俏，性子也稳重……」','「这第二户，柳家，镇上布商柳老板的独子，家里有钱，人也活络，就是爱玩了些……」','「第三户，沈家，武勋世家，祖上跟过先帝打过仗，沈家公子话不多，但心思细腻……」','「第四户，楚家——」李婶顿了顿，「寒门子弟，孤儿寡弟。模样倒是好的，就是性子有些别扭。」'],[{text:'选顾长卿（书香门第·才华文静）',next:'m_choose',type:'safe'},{text:'选柳云舟（商贾之家·人缘活泼）',next:'m_choose',type:'safe'},{text:'选沈墨白（武勋世家·细腻机敏）',next:'m_choose',type:'safe'},{text:'选楚灼（寒门子弟·傲娇别扭）',next:'m_choose',type:'risky'}],'🌟 重点剧情');}
+function m_money(){addLog('询问家境');showScene('四户人家',['李婶会心一笑，压低声音：','「要论家境，柳家最厚，布庄生意遍布三县，柳公子又是独子——啧啧。」','「但若论门第，顾家瘦死骆驼比马大，交往的都是读书人。」','「沈家名头响亮，可不复当年勇了。至于楚家——」她摇摇头，「孤儿寡弟的，能有什么好日子？」','她递上四幅画像，笑眯眯地等你自己挑。共同'],[{text:'选柳云舟（商贾之家有钱）',next:'m_choose',type:'safe'},{text:'选顾长卿（书香门第）',next:'m_choose',type:'safe'},{text:'选沈墨白（武勋世家）',next:'m_choose',type:'safe'},{text:'选楚灼（寒门子弟）',next:'m_choose',type:'risky'}],'🌟 重点剧情');}
+function m_hasty(){S.bravo+=1;addLog('催促婚期 魄力+1');showScene('四户人家',['你不耐烦地摆摆手。李婶讪讪一笑，直接把四位公子的画像铺在你面前。','「好好好，姑娘爽快！那就让我老李直说了——」','她指着四幅画像，一一报出名号家世，末了补了一句：','「这婚期嘛，女尊王朝，男子及笄便要婚配。姑娘既已年过及笈，亲事——宜早不宜迟。」'],[{text:'选顾长卿（书香门第）',next:'m_choose',type:'safe'},{text:'选柳云舟（商贾之家）',next:'m_choose',type:'safe'},{text:'选沈墨白（武勋世家）',next:'m_choose',type:'safe'},{text:'选楚灼（寒门子弟）',next:'m_choose',type:'risky'}],'🌟 重点剧情');}
+function m_choose(){showScene('新婚之夜',['三日后，大婚之日。','红烛摇曳，喜帕之下，你第一次见到他——你的夫君，'+S.husband.name+'。','他微微侧过头，目光与你相触。那一瞬间，你心里对他的第一印象是——'],[{text:'他的眼神让我心安，仿佛找到了依靠',next:'fi_0',type:'love'},{text:'他看起来和镇上其他人不太一样……',next:'fi_1',type:'smart'},{text:'我暂时看不出他的深浅，得慢慢观察',next:'fi_2',type:'smart'}],'🌟 新婚之夜');}
+function fi_0(){S.affection=65;S.wit+=1;addLog('第一印象：心安');fi_end('他的眼神让我心安，仿佛找到了依靠。');}
+function fi_1(){S.affection=58;S.social+=1;addLog('第一印象：好奇');fi_end('他看起来和镇上其他人不太一样……那种若即若离的感觉，让人心生好奇。');}
+function fi_2(){S.affection=55;S.bravo+=1;addLog('第一印象：观望');fi_end('我暂时看不出他的深浅。他的眼神太沉了，像一口看不见底的井。');}
+function fi_end(impress){showScene('初见印象',[impress,'夫君似乎察觉了你的目光，薄唇微微抿了抿，似乎想说什么，却又没有开口。','红烛燃尽，夜渐深。窗外传来几声犬吠，你在这陌生的气息中，沉沉睡去。','——翌日清晨，你将迎来嫁入这家后的第一个清晨。'],[{text:'进入第一日清晨',next:'day1',type:'safe'}],'🌟 新婚之夜');}
+function day1(){addLog('=== 游戏开始 ===');addLog('第1日开始');renderStats();updateAff();checkFestival();showMorning();}
+function checkFestival(){var day=S.day;if(day>=5&&day<=7)S.nearFestival='端午';else if(day>=25&&day<=27)S.nearFestival='中秋';else S.nearFestival=null;}
+function getMorningGreeting(){
+  var h=S.husband.name;var aff=S.affection;var tid=S.trait?S.trait.id:'';var hid=S.husband.id;
+  var base='';
+  if(tid==='sharp'){base=h+'见你醒了，连忙迎上来：「娘子，你精明能干，今天有什么打算？我听你安排便是。」';}
+  else if(tid==='warm'){base=h+'端着一碗热粥走来，笑容温柔：「娘子，早。今日家里我打理，你安心忙你的事。」';}
+  else if(tid==='fierce'){base=h+'见你出来，神色微微紧张，搓了搓手才凑上前：「娘……娘子，早。我给你倒好了洗漱水……」';}
+  else if(tid==='calm'){base=h+'已默默备好洗漱水，见你出来，只是淡淡一点头，话不多，却把一切都安排得妥妥帖帖。';}
+  else if(aff>=80){base=h+'早早便起了，见你醒来，眼睛一亮：「娘子，早。我给你热了粥……」眼里满是关切。';}
+  else if(aff>=60){base=h+'坐在窗边，见你醒了，微微一笑：「娘子，早。今日天气不错。」';}
+  else if(aff>=40){base=h+'正收拾屋子，见你出来，点了点头：「……起来了。」语气平淡，却也多了几分默契。';}
+  else if(aff>=31&&hid==='tsundere'){base='「哼，早、早饭……才不是我特意做的呢！」'+h+'别过脸去，耳根却有些红。';}
+  else if(aff>=31&&hid==='outgoing'){base=h+'从厨房探出头：「娘子！你醒啦！今天我给你做了桂花糕，快来尝尝！」';}
+  else if(aff>=31&&hid==='quiet'){base=h+'正安静地浇花，见你出来，轻声道：「……早。粥温在锅里了。」';}
+  else if(aff>=31&&hid==='scholar'){base=h+'见你醒了，放下手中的书：「娘子早。我泡了茶，你要先喝口热的吗？」';}
+  else{base=h+'背对着你，似乎在想什么心事。听到你的脚步声，他轻声道：「……早。」';}
+  return base;
+}
 
-function showMorning(){var h=S.husband;var ws=["晴朗的早晨","薄云遮日","微风轻拂","天色阴沉"];var w=ws[Math.floor(Math.random()*ws.length)];var aff=h?h.affection:50;var tid=S.trait?S.trait.id:"";var greeting="";if(tid==="sharp"){greeting=h.name+"见你醒了，连忙迎上来，眼里带着几分佩服：「娘子，你精明能干，今天有什么打算？我听你安排便是。」";}else if(tid==="warm"){greeting=h.name+"端着一碗热粥走来，笑容温柔：「娘子，早。今日家里我打理，你安心忙你的事。」他眼里满是体贴。";}else if(tid==="fierce"){greeting=h.name+"见你出来，神色微微紧张，搓了搓手才凑上前：「娘……娘子，早。我给你倒好了洗漱水……」他讨好地笑了笑。";}else if(tid==="calm"){greeting=h.name+"已默默备好洗漱水，见你出来，只是淡淡一点头，话不多，却把一切都安排得妥妥帖帖。";}else if(aff>=80){greeting=h.name+"早早便起了，见你醒来，眼睛一亮：「娘子，早。我给你热了粥……」他递上一碗热粥，眼里满是关切。";}else if(aff>=60){greeting=h.name+"坐在窗边，见你醒了，微微一笑：「娘子，早。今日天气不错。」";}else if(aff>=40){greeting=h.name+"正收拾屋子，见你出来，点了点头：「……起来了。」语气平淡，却也多了几分默契。";}else{greeting=h.name+"背对着你，似乎在想什么心事。听到你的脚步声，他轻声道：「……早。」";}
-showScene("第"+S.day+"日 · 清晨",[w+"。阳光从破旧的窗纸透进来，在地上投下斑驳的光影。",greeting,"新的一天开始了。今日，你打算……"], [{text:"去集市逛逛，看有没有商机",next:"go_market",type:"safe"},{text:"去找点活干，赚些银两",next:"go_work",type:"safe"},{text:"和"+h.name+"聊聊天",next:"talk_husband",type:"love"},{text:"去镇上打听消息",next:"go_town",type:"smart"},{text:"逛逛小店，买点东西",next:"go_shop",type:"smart"}]);}
-function go_market(){addLog("去集市");var evs=[{tag:"📈 集市动态",title:"集市见闻",text:["你来到集市，今日人声鼎沸。打听之下得知，受边境局势影响，外地布匹运不进来，布价一夜涨了三成。","布商们眉开眼笑，百姓却叫苦连天。你心里盘算着，这或许是个机会……"],choices:[{text:"趁机囤货，低买高卖",next:"ev_market_buy",type:"risky"},{text:"老实买必需品，不凑热闹",next:"ev_market_calm",type:"safe"},{text:"向相熟的布商打听行情",next:"ev_market_info",type:"smart"}]},{tag:"⚠️ 街头冲突",title:"集市遇袭",text:["你在集市挑选布匹时，几个流里流气的地痞围了上来。","为首的刀疤脸嘿嘿一笑，伸手就要摸你的脸：「小娘子，跟爷走，爷请你喝酒——」","周围的人纷纷避开，没人敢出声。你感觉到他身后的同伙正在包抄过来。"],choices:[{text:"厉声斥责，吓退他们",next:"ev_rogue_scold",type:"fierce"},{text:"假装害怕，趁机脱身",next:"ev_rogue_escape",type:"smart"},{text:"直接动手反击",next:"ev_rogue_fight",type:"risky"}]},{tag:"🌟 贵人偶遇",title:"柳夫人",text:["从布庄出来时，你差点撞上一顶青布小轿。轿帘掀开，露出一张保养极好的妇人面容——","是镇上柳布商的夫人。她上下打量你一番，忽然笑了：","「你就是新搬来的小媳妇？听说你精明能干，我家老爷可好奇得很。」她递过一张名帖，「下月初三，我府上赏花宴，你也来坐坐？」"],choices:[{text:"欣然接受，道谢收下",next:"ev_rich_accept",type:"love"},{text:"婉言谢绝，不想攀附",next:"ev_rich_refuse",type:"smart"},{text:"借机攀谈，打听商机",next:"ev_rich_biz",type:"smart"}]},{tag:"🏠 房东来访",title:"房东太太",text:["门外传来敲门声，是房东王太太。她叉着腰，脸上带着几分不耐烦：","「小媳妇，这个月的租子该交了。你家那位身子不便，我可拖不起！」","她上下打量你这破旧的小屋，嘴角带着轻蔑的笑，「要不就拿五两银子出来，要不就——搬走！」"],choices:[{text:"忍气吞声，如数交租",next:"ev_landlord_pay",type:"safe"},{text:"讨价还价，争取宽限",next:"ev_landlord_negotiate",type:"smart"},{text:"强势回击，斥她欺人",next:"ev_landlord_fight",type:"fierce"}]},{tag:"💰 商机降临",title:"布庄转让",text:["你在茶馆喝茶时，听到邻桌几个人在叹气：","「……孙布庄的老孙头去世了，他儿子不争气，这布庄怕是要关门了……」","「那可是镇中心的好铺子啊！可惜要价三百两，谁能接得起……」"],choices:[{text:"想办法筹钱，哪怕借债",next:"ev_biz_attempt",type:"risky"},{text:"先去打听详情，谨慎行事",next:"ev_biz_info",type:"smart"},{text:"这不是我能觊觎的，算了",next:"ev_biz_giveup",type:"calm"}]}];var ev=evs[Math.floor(Math.random()*evs.length)];showScene(ev.title,ev.text,ev.choices,ev.tag);}
-function go_work(){addLog("找活干");var tid=S.trait?S.trait.id:"";var jobs=[{name:"药铺打杂",money:20,wit:1,text:"药铺老板娘见你识字，留下你帮忙。一天下来，你学会了辨药、包药。她递给你二十文钱和一碗热粥：「明日还来吗？」",traitExtra:null},{name:"码头扛货",money:30,bravo:1,text:"码头繁忙，你扛了一下午盐包，肩膀酸痛。管事的递过三十文：「明日还来吗？」",traitExtra:null},{name:"酒楼帮工",money:25,social:1,text:"醉仙楼正值旺季，你帮忙端盘子、擦桌子。掌柜的结账时多给了五文赏钱：「小娘子手脚麻利，下次再来！」",traitExtra:null},{name:"大户帮厨",money:22,social:1,text:"镇东张大卢家办寿宴，缺帮厨。你切了一天的菜，切得手腕都酸了，不过工钱当日结清。",traitExtra:null}];var job=jobs[Math.floor(Math.random()*jobs.length)];S.money+=job.money;if(job.wit)S.wit+=job.wit;if(job.bravo)S.bravo+=job.bravo;if(job.social)S.social+=job.social;var extraText="";if(tid==="sharp"&&(job.wit||job.name==="药铺打杂")){S.prestige+=1;extraText="老板看你算账精明，额外赏识你！声望+1";addLog("额外赏识 声望+1");}else if(tid==="warm"){S.social+=1;extraText="帮工时你和伙计们相处融洽，结交了几个朋友！人脉+1";addLog("结交朋友 人脉+1");}else if(tid==="fierce"){S.bravo+=1;extraText="干活时有人想压你工钱，你当场拍桌理论，拿回了应得的！魄力+1";addLog("据理力争 魄力+1");}else if(tid==="calm"){S.prestige+=1;extraText="你默默干活，东家看在眼里，临走时特意多给了赏钱：「这姑娘沉稳，做事牢靠。」声望+1";addLog("额外认可 声望+1");}addLog(job.name+" +"+job.money+"文");if(extraText)job.text+=" "+extraText;renderStats();showScene("打工归来",[job.text,"暮色渐沉，你拖着疲惫的身体往家走。今天虽然辛苦，但银两实实在在多了几文。"], [{text:"回家休息",next:"go_home",type:"safe"}]);}
-function talk_husband(){addLog("夫妻闲话");var h=S.husband;var tid=S.trait?S.trait.id:"";var topics;if(tid==="sharp"){topics=[["你和"+h.name+"聊起家里的开支。你翻开那本旧账本，一笔笔算给他看：哪里可以省钱，哪里可以开源。他听得认真，不时点头：「娘子果然精明，我心里踏实多了。」","家的钱怎么管 💡"]];}else if(tid==="warm"){topics=[["你和"+h.name+"聊起邻里关系。他说起前几天隔壁王婶送来一碗饺子，你便和他商量日后如何回礼。他说：「娘子想得周全。」你们越聊越开心，屋里充满了温馨的气氛。","邻里之道 💕"]];}else if(tid==="fierce"){topics=[[h.name+"说起前两天镇上地痞骚扰的事，神色有些不安。你一拍桌子：「谁敢欺负我们，我跟他没完！」他愣了一下，随即眼眶微红：「娘子……有你在，我不怕了。」","如何对付恶人 ⚔"]];}else if(tid==="calm"){topics=[["你们没有说话，各自做着各自的事。你在一旁看账本，他在旁边安静地绣着什么。夕阳从窗纸透进来，屋里静谧而温暖。他偶尔抬头看你一眼，嘴角带着淡淡的笑。","静静相伴 🌙"]];}else{topics=[[h.name+"说起他小时候的故事。父亲的早逝，母亲的改嫁，他从小寄人篱下的日子……他的声音很轻，像是在说别人的故事。","他的身世"],[h.name+"聊起镇上的各种趣事，说到兴起时，眉眼间竟有了几分少年气。「娘子，你知道吗，我小时候……」他忽然停住，有些不好意思地笑了。","他的童年"],[h.name+"忽然问你：「娘子，你当初为什么愿意嫁给我？」你愣了一下，没想到他会问这个。沉默片刻后，他说：「……其实我也没想到，真的能娶到你。」","他的心意"]];}h.affection=(h.affection||50)+5;addLog("好感+5");showScene("夫妻闲话",[topics[0][0],"窗外夕阳西沉，你们就这样聊了很久。不知不觉间，心近了几分。"], [{text:"天色不早了，休息吧",next:"go_home",type:"safe"}],topics[0][1]+" 💕");}function go_town(){addLog("镇上打听");var infos=["你逢人便打招呼，聊些家常。镇上的风土人情渐渐了然于胸——谁家有什么背景，谁和谁有过节，这些消息日后或许都有用。","你特意去了趟茶馆，要了一壶茶，坐在角落里听人聊天。果然，有人提到县衙最近在招女吏——这是一条仕途的路子。","你打听到，镇上最大的布商柳家在找合伙的伙伴。柳夫人似乎对「新搬来的小媳妇」很感兴趣……"];var t=infos[Math.floor(Math.random()*infos.length)];S.social+=1;addLog("人脉+1");renderStats();showScene("镇上见闻",[t], [{text:"天色不早了，回家",next:"go_home",type:"safe"}]);}
-function go_shop(){var h='<div style="background:#0f3460;border:1px solid #c9a96e;border-radius:8px;padding:14px;margin-bottom:10px"><div style="color:#c9a96e;font-weight:bold;margin-bottom:8px">💰 银两：'+S.money+'文</div><div style="color:#7a6a50;font-size:0.85em">量入为出，细水长流。</div></div>';var items=[{name:"🎁 给夫君买个小礼物",cost:10,effect:"好感+3~8",action:"buy_gift",type:"love"},{name:"🔨 修补屋顶（需50文）",cost:50,effect:"声望+1",action:"do_renovate",type:"safe",req:50},{name:"💼 打点县衙小吏（需30文）",cost:30,effect:"声望+2",action:"do_bribe",type:"smart",req:30},{name:"💰 进货卖货（需100文）",cost:100,effect:"60%概率+60文",action:"do_trade",type:"risky",req:100},{name:"🏠 回家（不买东西）",cost:0,action:"go_home",type:"safe"}];items.forEach(function(item){var canBuy=S.money>=item.cost;var cls=item.type==="safe"?"safe":(item.type==="love"?"love":"smart");h+='<button class="chc '+cls+'" '+(canBuy?"":"disabled ")+'data-next="'+item.action+'" data-type="safe"><span class="tag t-safe">🍚</span>'+item.name+(item.cost>0?"　("+item.cost+"文)":"")+'<br><span style="font-size:0.78em;color:#8aca8a">'+item.effect+'</span></button>';});showScene("街边小店",["镇上有一家杂货铺，针头线脑、油盐酱醋，什么都卖。你进去转了转……"], null);document.getElementById("choices").innerHTML=h;}
+function showMorning(){
+  var idt=S.identity;
+  var hname=S.husband.name;
+  var weather=['晴朗的早晨','薄云遮日','微风轻拂','天色阴沉'][Math.floor(Math.random()*4)];
+  var greet=getMorningGreeting();
+  var choices=[];
+  if(idt===1){
+    choices=[
+      {text:'去集市逛逛，看有没有商机',next:'go_market',type:'safe'},
+      {text:'去找点活干，赚些银两',next:'go_work',type:'safe'},
+      {text:'和'+hname+'聊聊天',next:'talk_husband_early',type:'love'},
+      {text:'去镇上打听消息',next:'go_town',type:'smart'},
+      {text:'去县衙报名女吏（仕途入口）',next:'gov_enlist',type:'gov'},
+    ];
+  } else if(idt>=2&&S.isMerchant){
+    choices=[
+      {text:'经营布庄（老板模式）',next:'manage_shop',type:'safe'},
+      {text:'去集市进货',next:'shop_restock',type:'smart'},
+      {text:'和'+hname+'商量经营',next:'shop_husband_chat',type:'love'},
+      {text:'去镇上打听行情',next:'go_town',type:'smart'},
+      {text:'参加社交活动',next:'social_event',type:'love'},
+    ];
+  } else if(idt>=2&&S.isOfficial){
+    choices=[
+      {text:'去县衙办公务',next:'gov_work',type:'gov'},
+      {text:'处理纠纷',next:'gov_dispute',type:'gov'},
+      {text:'和'+hname+'吃早饭',next:'n_eat',type:'love'},
+      {text:'去镇上走走',next:'go_town',type:'safe'},
+    ];
+  } else {
+    choices=[
+      {text:'去集市逛逛',next:'go_market',type:'safe'},
+      {text:'找活干',next:'go_work',type:'safe'},
+      {text:'和'+hname+'聊聊',next:'talk_husband_early',type:'love'},
+      {text:'去镇上打听消息',next:'go_town',type:'smart'},
+    ];
+  }
+  showScene('第'+S.day+'日 · 清晨',[weather+'。阳光从窗纸透进来，在地上投下斑驳的光影。',greet,'新的一天开始了。今日，你打算……'],choices);
+}
 
-function buy_gift(){S.money-=10;var bonus=3+Math.floor(Math.random()*6);S.husband.affection=(S.husband.affection||50)+bonus;addLog("买礼物 好感+"+bonus);renderStats();updateAff();showScene("买礼物",["你在小摊上挑了一件精致的小物件——一支乌木簪子。"+S.husband.name+"收到时愣了一下，随即耳根微微泛红：「……谢谢娘子。」他小心翼翼地收了起来。"], [{text:"回家",next:"go_home",type:"safe"}], "🎁 心意");}
-function do_renovate(){if(S.money<50){go_shop();return;}S.money-=50;S.prestige+=1;addLog("修补屋顶 -50文 声望+1");renderStats();showScene("修补屋顶",["你请了工匠来修补屋顶，又把破旧的窗户纸换成了新的。虽然花了不少钱，但这破屋终于有了几分家的样子。"], [{text:"回家",next:"go_home",type:"safe"}], "🏠 焕然一新");}
-function do_bribe(){if(S.money<30){go_shop();return;}S.money-=30;S.prestige+=2;addLog("打点小吏 -30文 声望+2");renderStats();showScene("打点县衙",["你找到县衙的一个小文书，递上三十两银子，请他日后多多关照。他接过银子，意味深长地笑了：「放心，你的事，就是我的事。」"], [{text:"回家",next:"go_home",type:"safe"}], "💼 铺路");}
-function do_trade(){if(S.money<100){go_shop();return;}S.money-=100;if(Math.random()<0.6){S.money+=160;addLog("进货买卖 +60文");showScene("买卖赚了",["你低价吃进一批布疖，找准时机转手卖出——净赚六十文！虽然不多，但这是你第一次用脑子赚钱，不是用苦力。"], [{text:"回家",next:"go_home",type:"safe"}], "📈 投资成功");}else{S.money+=30;addLog("进货买卖 -70文");showScene("买卖亏了",["你吃进了布疖，但价格走势不如预期，只好低价脱手。亏了七十文，权当交了学费。"], [{text:"回家",next:"go_home",type:"safe"}], "📉 投资失败");}renderStats();}
-function ev_market_buy(){if(Math.random()<0.6){S.money+=50;addLog("低买高卖 +50文");showScene("投资成功",["你大胆吃进二十匹布，果然布价持续走高，转手卖出后赚了五十两！虽然有风险，但这笔钱来得快。"], [{text:"回家休息",next:"go_home",type:"safe"}], "📈 投资成功");}else{S.money-=15;addLog("囤货亏损 -15文");showScene("投资失败",["你吃进了布，却发现消息有误，价格不涨反跌。咬牙低价脱手，亏了十五文。吃一堑长一智。"], [{text:"回家休息",next:"go_home",type:"safe"}], "📉 投资失败");}renderStats();}
-function ev_market_calm(){S.wit+=1;addLog("静观其变 智慧+1");showScene("静观其变",["你没有盲目跟风，而是在一旁观察。布价大起大落，有人欢喜有人愁。而你，稳住了本金。"], [{text:"回家休息",next:"go_home",type:"safe"}]);renderStats();}
-function ev_market_info(){S.social+=1;addLog("打听行情 人脉+1");showScene("打听行情",["你和相熟的布商聊了很久，得到了不少有价值的信息。虽然没有直接赚钱，但这些消息日后必有用处。"], [{text:"回家休息",next:"go_home",type:"safe"}]);renderStats();}
-function ev_rogue_scold(){S.bravo+=1;S.prestige+=1;addLog("厉声斥责 魄力+1 声望+1");showScene("舌战胜利",["你叉腰怒斥，地痞们被你气势所慑，一时竟不敢妄动。为首的刀疤脸讪讪一笑：「算你狠！走！」围观的人群中，有人暗暗叫好。"], [{text:"回家休息",next:"go_home",type:"safe"}], "⚔ 舌战胜利");renderStats();}
-function ev_rogue_escape(){S.wit+=1;addLog("机智脱身 智慧+1");showScene("机智脱身",["你假装害怕，弯腰作呕，趁他们愣神之际，拎起买的东西从人群中钻了出去。等他们反应过来，你早已消失在巷子里。"], [{text:"回家休息",next:"go_home",type:"safe"}], "🃏 机智脱身");renderStats();}
-function ev_rogue_fight(){if(S.bravo>=3){S.prestige+=2;addLog("击退地痞 声望+2");showScene("击退地痞",["你抄起扁担，一记横扫——为首的地痞捷捷惨叫。他没想到一个姑娘家这么能打。其他人见状，一哄而散。"], [{text:"回家休息",next:"go_home",type:"safe"}], "⚔ 击退地痞");}else{S.money-=10;addLog("被打伤 -10文");showScene("力不从心",["你挥拳反击，但力气不够，被刀疤脸推倒在地。身上青了几块，还丢了几件东西。真是赔了夫人又折兵。"], [{text:"回家休息",next:"go_home",type:"safe"}], "⚔ 力不从心");}renderStats();}
-function ev_rich_accept(){S.prestige+=2;S.social+=1;addLog("结识柳夫人 声望+2 人脉+1");showScene("结识贵人",["你收下名帖，真诚道谢。柳夫人满意地点点头，放下轿帘，悠悠而去。你望着那顶小轿远去的背影，知道自己或许攀上了一条重要的线。"], [{text:"回家休息",next:"go_home",type:"safe"}], "🌟 结识贵人");renderStats();}
-function ev_rich_refuse(){S.wit+=1;addLog("婉拒邀请 智慧+1");showScene("有礼谢绝",["你婉言谢绝，柳夫人微微挑眉，意味深长地看了你一眼：「倒是个有骨气的。有缘再见吧。」轿子悠悠远去，你心里却有些后悔……"], [{text:"回家休息",next:"go_home",type:"safe"}], "🌸 有礼谢绝");renderStats();}
-function ev_rich_biz(){S.money+=20;S.social+=1;addLog("商谈得利 +20文 人脉+1");showScene("商谈得利",["你不卑不亢地和柳夫人攀谈，夫人对你颇为欣赏，临走时竟让丫鬟给你塞了个红包——里面是二十两银子的定金！「下次来府上细谈。」"], [{text:"回家休息",next:"go_home",type:"safe"}], "💰 商谈得利");renderStats();}
-function ev_landlord_pay(){S.money-=5;addLog("如数交租 -5文");showScene("忍气交租",["你忍下这口气，如数交了五两银子。王太太这才换了一副嘴脸：「这才对嘛！下个月早些！」她扭着腰走了，你望着她的背影，心里暗暗发誓：总有一天，要有自己的房子。"], [{text:"回家休息",next:"go_home",type:"safe"}], "🏠 忍气交租");renderStats();}
-function ev_landlord_negotiate(){if(S.wit>=3){S.money-=3;addLog("谈判成功 -3文");showScene("谈判成功",["你拿出账本，一笔笔算给她看——她要的租金已经超过了镇上平均水平。王太太被你算得哑口无言，最后同意减两成。你保住了面子和银子。"], [{text:"回家休息",next:"go_home",type:"safe"}], "📖 谈判成功");}else{S.money-=5;addLog("谈判失败 -5文");showScene("谈判失败",["你想讨价还价，却被王太太一顿抢白，最后还是如数交了租。不过她答应宽限三天——聊胜于无吧。"], [{text:"回家休息",next:"go_home",type:"safe"}], "📖 谈判失败");}renderStats();}
-function ev_landlord_fight(){S.prestige+=1;S.husband.affection=(S.husband.affection||50)+5;addLog("强势回击 声望+1 好感+5");showScene("强势反击",["你毫不退让地和王太太对骂——「我相公是清白人家，轮不到你欺辱！下次再来无理取闹，我去县衙告你骚扰！」她被你震住，灰溜溜地跑了。"+S.husband.name+"握着你的手，眼眶竟有些红了。"], [{text:"回家休息",next:"go_home",type:"safe"}], "⚔ 强势反击");renderStats();updateAff();}
-function ev_biz_attempt(){if(S.money>=300){S.money-=300;S.cls="布庄老板";addLog("买下布庄！ -300文");showScene("梦想成真",["你凑齐三百两银子，签下契约的那一刻，手都在抖。从这一刻起，你不再是穷街僻巷的小媳妇——你是孙布庄的新主人！"], [{text:"回家休息",next:"go_home",type:"safe"}], "🏆 梦想成真");}else{showScene("本钱不足",["你四处借钱，却怎么也凑不够三百两。梦想很丰满，现实很骨感。但你不甘心——总有一天，要把这布庄拿下！"], [{text:"回家休息",next:"go_home",type:"safe"}], "💸 本钱不足");}renderStats();}
-function ev_biz_info(){S.social+=1;S.wit+=1;addLog("打听详情 智慧+1 人脉+1");showScene("知己知彼",["你找到孙家的旧伙计，详细打听了布庄的情况——位置好，老客户多，就是缺一个懂经营的新主人。你心里有了数，只等时机和本钱。"], [{text:"回家休息",next:"go_home",type:"safe"}], "📋 知己知彼");renderStats();}
-function ev_biz_giveup(){showScene("量力而行",["三百两，是你现在想都不敢想的数字。你叹了口气，转身离开。有些事情，不是光有野心就能做到的。"], [{text:"回家休息",next:"go_home",type:"safe"}], "🌫️ 量力而行");}
-function go_home(){S.day++;if(S.husband&&Math.random()<0.25){S.husband.affection=(S.husband.affection||50)+(Math.random()<0.5?1:-1);S.husband.affection=Math.max(0,Math.min(100,S.husband.affection));}renderStats();updateAff();addLog("第"+S.day+"日开始");showMorning();}
-window.go=function(n,t){switch(n){case"m_detail":m_detail();break;case"m_money":m_money();break;case"m_hasty":m_hasty();break;case"m_choose":m_choose();break;case"fi_0":fi_0();break;case"fi_1":fi_1();break;case"fi_2":fi_2();break;case"day1":day1();break;case"go_market":go_market();break;case"go_work":go_work();break;case"talk_husband":talk_husband();break;case"go_town":go_town();break;case"go_shop":go_shop();break;case"buy_gift":buy_gift();break;case"do_renovate":do_renovate();break;case"do_bribe":do_bribe();break;case"do_trade":do_trade();break;case"ev_market_buy":ev_market_buy();break;case"ev_market_calm":ev_market_calm();break;case"ev_market_info":ev_market_info();break;case"ev_rogue_scold":ev_rogue_scold();break;case"ev_rogue_escape":ev_rogue_escape();break;case"ev_rogue_fight":ev_rogue_fight();break;case"ev_rich_accept":ev_rich_accept();break;case"ev_rich_refuse":ev_rich_refuse();break;case"ev_rich_biz":ev_rich_biz();break;case"ev_landlord_pay":ev_landlord_pay();break;case"ev_landlord_negotiate":ev_landlord_negotiate();break;case"ev_landlord_fight":ev_landlord_fight();break;case"ev_biz_attempt":ev_biz_attempt();break;case"ev_biz_info":ev_biz_info();break;case"ev_biz_giveup":ev_biz_giveup();break;case"go_home":go_home();break;default:go_home();}};
-</script></body></html>
+function go_market(){
+  addLog('去集市');
+  var evs=[
+    {tag:'📈 集市动态',title:'集市见闻',text:['你来到集市，今日人声鼎沸。打听之下得知，受边境局势影响，外地布匹运不进来，布价一夜涨了三成。','布商们眉开眼笑，百姓却叫苦连天。你心里盘算着，这或许是个机会……'],choices:[{text:'趁机囤货，低买高卖',next:'ev_market_buy',type:'risky'},{text:'老实买必需品，不凑热闹',next:'ev_market_calm',type:'safe'},{text:'向相熟的布商打听行情',next:'ev_market_info',type:'smart'}]},
+    {tag:'⚠️ 街头冲突',title:'集市遇袭',text:['你在集市挑选布匹时，几个流里流气的地痞围了上来。','为首的刀疤脸嘿嘿一笑，伸手就要摸你的脸：「小娘子，跟爷走，爷请你喝酒——」','周围的人纷纷避开，没人敢出声。你感觉到他身后的同伙正在包抄过来。'],choices:[{text:'厉声斥责，吓退他们',next:'ev_rogue_scold',type:'fierce'},{text:'假装害怕，趁机脱身',next:'ev_rogue_escape',type:'smart'},{text:'直接动手反击',next:'ev_rogue_fight',type:'risky'}]},
+    {tag:'🌟 贵人偶遇',title:'柳夫人',text:['从布庄出来时，你差点撞上一顶青布小轿。轿帘掀开，露出一张保养极好的妇人面容——','是镇上柳布商的夫人。她上下打量你一番，忽然笑了：','「你就是新搬来的小媳妇？听说你精明能干，我家老爷可好奇得很。」她递过一张名帖，「下月初三，我府上赏花宴，你也来坐坐？」'],choices:[{text:'欣然接受，道谢收下',next:'ev_rich_accept',type:'love'},{text:'婉言谢绝，不想攀附',next:'ev_rich_refuse',type:'smart'},{text:'借机攀谈，打听商机',next:'ev_rich_biz',type:'smart'}]},
+    {tag:'🏠 房东来访',title:'房东太太',text:['门外传来敲门声，是房东王太太。她叉着腰，脸上带着几分不耐烦：','「小媳妇，这个月的租子该交了。你家那位身子不便，我可拖不起！」','她上下打量你这破旧的小屋，嘴角带着轻蔑的笑，「要不就拿五两银子出来，要不就——搬走！」'],choices:[{text:'忍气吞声，如数交租',next:'ev_landlord_pay',type:'safe'},{text:'讨价还价，争取宽限',next:'ev_landlord_negotiate',type:'smart'},{text:'强势回击，斥她欺人',next:'ev_landlord_fight',type:'fierce'}]},
+    {tag:'💰 商机降临',title:'布庄转让',text:['你在茶馆喝茶时，听到邻桌几个人在叹气：','「……孙布庄的老孙头去世了，他儿子不争气，这布庄怕是要关门了……」','「那可是镇中心的好铺子啊！可惜要价三百两，谁能接得起……」'],choices:[{text:'想办法筹钱，哪怕借债',next:'ev_biz_attempt',type:'risky'},{text:'先去打听详情，谨慎行事',next:'ev_biz_info',type:'smart'},{text:'这不是我能觊觎的，算了',next:'ev_biz_giveup',type:'calm'}]}
+  ];
+  var ev=evs[Math.floor(Math.random()*evs.length)];
+  showScene(ev.title,ev.text,ev.choices,ev.tag);
+}
+
+function go_work(){
+  addLog('找活干');
+  var tid=S.trait?S.trait.id:'';
+  var jobs=[
+    {name:'药铺打杂',money:20,wit:1,text:'药铺老板娘见你识字，留下你帮忙。一天下来，你学会了辨药、包药。她递给你二十文钱和一碗热粥：「明日还来吗？」'},
+    {name:'码头扛货',money:30,bravo:1,text:'码头繁忙，你扛了一下午盐包，肩膀酸痛。管事的递过三十文：「明日还来吗？」'},
+    {name:'酒楼帮工',money:25,social:1,text:'醉仙楼正值旺季，你帮忙端盘子、擦桌子。掌柜的结账时多给了五文赏钱：「小娘子手脚麻利，下次再来！」'},
+    {name:'大户帮厨',money:22,social:1,text:'镇东张大卢家办寿宴，缺帮厨。你切了一天的菜，切得手腕都酸了，不过工钱当日结清。'}
+  ];
+  var job=jobs[Math.floor(Math.random()*jobs.length)];
+  S.money+=job.money;
+  if(job.wit)S.wit+=job.wit;
+  if(job.bravo)S.bravo+=job.bravo;
+  if(job.social)S.social+=job.social;
+  var extraText='';
+  if(tid==='sharp'){S.prestige+=1;extraText='老板看你算账精明，额外赏识你！声望+1';addLog('额外赏识 声望+1');}
+  else if(tid==='warm'){S.social+=1;extraText='帮工时你和伙计们相处融洽，结交了几个朋友！人脉+1';addLog('结交朋友 人脉+1');}
+  else if(tid==='fierce'){S.bravo+=1;extraText='干活时有人想压你工钱，你当场拍桌理论，拿回了应得的！魄力+1';addLog('据理力争 魄力+1');}
+  else if(tid==='calm'){S.prestige+=1;extraText='你默默干活，东家看在眼里，临走时特意多给了赏钱：「这姑娘沉稳，做事牢靠。」声望+1';addLog('额外认可 声望+1');}
+  addLog(job.name+' +'+job.money+'文');
+  if(extraText)job.text+=' '+extraText;
+  renderStats();
+  showScene('打工归来',[job.text,'暮色渐沉，你拖着疲惫的身体往家走。今天虽然辛苦，但银两实实在在多了几文。'],[{text:'回家休息',next:'go_home',type:'safe'}]);
+}
+
+function talk_husband_early(){
+  addLog('夫妻闲话');
+  var h=S.husband;var tid=S.trait?S.trait.id:'';
+  var aff=S.affection;
+  var topics=[];
+  if(aff>=71){
+    topics=[
+      [h.name+'忽然问你：「娘子，你当初为什么愿意嫁给我？」他的眼神里带着几分认真。「其实我……一直没敢问。今天鼓起勇气了。」','认真的一天'],
+      [h.name+'说起他小时候的故事。父亲的早逝，母亲的改嫁，他从小寄人篱下的日子……他的声音很轻，像是在说别人的故事。','他的身世'],
+      [h.name+'聊起镇上的各种趣事，说到兴起时，眉眼间竟有了几分少年气。「娘子，你知道吗，我小时候……」他忽然停住，有些不好意思地笑了。','他的童年']
+    ];
+  } else if(aff>=51){
+    topics=[
+      [h.name+'主动和你聊起家里的开支。你翻开那本旧账本，一笔笔算给他看。他听得认真，不时点头：「娘子果然精明，我心里踏实多了。」','家的钱怎么管'],
+      [h.name+'聊起邻里关系。他说起前几天隔壁王婶送来一碗饺子，你便和他商量日后如何回礼。他说：「娘子想得周全。」','邻里之道']
+    ];
+  } else if(aff>=31){
+    topics=[
+      [h.name+'有些拘谨地坐在你对面，小心翼翼地开口：「娘子……今天忙不忙？」话虽然不多，但眼神里满是关切。','淡淡的关心']
+    ];
+  } else {
+    topics=[
+      [h.name+'背对着你，似乎在想什么心事。听到你的脚步声，他轻声道：「……早。」语气甚是冷淡。','陌生的一天']
+    ];
+  }
+  var t=topics[Math.floor(Math.random()*topics.length)];
+  S.affection=Math.min(100,S.affection+5);
+  addLog('好感+5');
+  showScene('夫妻闲话',[t[0],'窗外阳光正好，你们就这样聊了很久。不知不觉间，心近了几分。'],[{text:'天色不早了，回家',next:'go_home',type:'safe'}],t[1]+' 💕');
+}
+function go_town(){
+  addLog('镇上打听');
+  var infos=[
+    '你逢人便打招呼，聊些家常。镇上的风土人情渐渐了然于胸——谁家有什么背景，谁和谁有过节，这些消息日后或许都有用。',
+    '你特意去了趟茶馆，要了一壶茶，坐在角落里听人聊天。果然，有人提到县衙最近在招女吏——这是一条仕途的路子。',
+    '你打听到，镇上最大的布商柳家在找合伙的伙伴。柳夫人似乎对「新搬来的小媳妇」很感兴趣……'
+  ];
+  var t=infos[Math.floor(Math.random()*infos.length)];
+  S.social+=1;
+  addLog('人脉+1');
+  renderStats();
+  showScene('镇上见闻',[t],[{text:'天色不早了，回家',next:'go_home',type:'safe'}]);
+}
+
+// ========== 仕途入口 ==========
+function gov_enlist(){
+  if(S.eventsTriggered.gov_enlist_told){showScene('县衙门口',['你再次来到县衙。门口的告示还贴着：「招募女吏若干，择优录取。」'], [{text:'进去报名',next:'gov_enlist_signup',type:'gov'},{text:'再考虑考虑',next:'go_home',type:'safe'}],'🏛 县衙');return;}
+  S.eventsTriggered.gov_enlist_told=true;
+  addLog('发现仕途入口');
+  showScene('县衙门口',['你路过县衙，看见门口贴着一张告示。围观的百姓议论纷纷——','「听说了吗？县衙要招女吏了！以前可从没有过这样的先例！」','「谁家的姑娘要是能考上，那可是光耀门楣的大事啊……」','告示上写着：招募女吏三名，笔试加面试，择优录取。你心里一动——这条路，或许值得一试。'], [{text:'进去报名',next:'gov_enlist_signup',type:'gov'},{text:'回去再想想',next:'go_home',type:'safe'}],'🏛 县衙');
+}
+function gov_enlist_signup(){
+  showScene('县衙 · 报名',['你走进县衙，一个文书模样的小吏抬眼看你。','「报名女吏？」她上下打量你一番，「倒是有些胆色。不过要先过笔试，考核你的学识和能力。」','她递过一张纸：「这是报名表，填好了三日后来考试。」'], [{text:'当场答题应试（笔试）',next:'gov_exam',type:'gov'},{text:'回去准备，改日再来',next:'go_home',type:'safe'}],'🏛 仕途入口');
+}
+function gov_exam(){
+  var qs=[
+    {q:'镇上两家布商起争执，争的是一批布的货源。你会怎么断？',opts:['让两家平分货源','实地调查，谁先到谁有理','上报县衙等候裁决'],ans:1,exp:'实地调查是尊重事实的做法。'},
+    {q:'县衙粮仓失火，百姓哄抢。你正好在场，该怎么做？',opts:['立刻制止哄抢行为','先报告县衙','加入哄抢'],ans:0,exp:'秩序是一切的基础。制止哄抢才能防止事态扩大。'}
+  ];
+  var q=qs[0];
+  showScene('笔试开始',[q.q], q.opts.map(function(o,i){return{text:o,next:'gov_exam_result',type:'smart'};}),'📝 笔试');
+  S._examAnswer=0;
+}
+function gov_exam_result(){
+  // 简单处理，答对给奖励
+  S.prestige+=2;S.wit+=1;
+  S.officialProbation.push('exam_passed');
+  addLog('笔试通过 声望+2 智慧+1');
+  showScene('笔试结果',['你答完卷子，小吏接过看了看，微微点头：「不错，有点见识。三日后来面试。」','这关算是过了！接下来还有面试。'],[{text:'回去等面试通知',next:'go_home',type:'safe'}],'✅ 笔试通过');
+}
+// ========== 市场/事件 ==========
+function ev_market_buy(){if(Math.random()<0.6){S.money+=50;addLog('低买高卖 +50文');showScene('投资成功',['你大胆吃进二十匹布，果然布价持续走高，转手卖出后赚了五十两！虽然有风险，但这钱来得快。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📈 投资成功');}else{S.money-=15;addLog('囤货亏损 -15文');showScene('投资失败',['你吃进了布，却发现消息有误，价格不涨反跌。咬牙低价脱手，亏了十五文。吃一堑长一智。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📉 投资失败');}renderStats();}
+function ev_market_calm(){S.wit+=1;addLog('静观其变 智慧+1');showScene('静观其变',['你没有盲目跟风，而是在一旁观察。布价大起大落，有人欢喜有人愁。而你，稳住了本金。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📋 静观其变');renderStats();}
+function ev_market_info(){S.social+=1;addLog('打听行情 人脉+1');showScene('打听行情',['你和相熟的布商聊了很久，得到了不少有价值的信息。虽然没有直接赚钱，但这些消息日后必有用处。'],[{text:'回家休息',next:'go_home',type:'safe'}],'💬 打听行情');renderStats();}
+function ev_rogue_scold(){S.bravo+=1;S.prestige+=1;addLog('厉声斥责 魄力+1 声望+1');showScene('舌战胜利',['你叉腰怒斥，地痞们被你气势所慑，一时竟不敢妄动。为首的刀疤脸讪讪一笑：「算你狠！走！」围观的人群中，有人暗暗叫好。'],[{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 舌战胜利');renderStats();}
+function ev_rogue_escape(){S.wit+=1;addLog('机智脱身 智慧+1');showScene('机智脱身',['你假装害怕，弯腰作呕，趁他们愣神之际，拎起买的东西从人群中钻了出去。等他们反应过来，你早已消失在巷子里。','虽然有些狼狈，但总算全身而退。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🃏 机智脱身');renderStats();}
+function ev_rogue_fight(){if(S.bravo>=3){S.prestige+=2;addLog('击退地痞 声望+2');showScene('击退地痞',['你抄起扁担，一记横扫——为首的地痞惨叫。他没想到一个姑娘家这么能打。其他人见状，一哄而散。'],[{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 击退地痞');}else{S.money-=10;addLog('被打伤 -10文');showScene('力不从心',['你挥拳反击，但力气不够，被刀疤脸推倒在地。身上青了几块，还丢了几件东西。真是赔了夫人又折兵。回去好好养伤吧。'],[{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 力不从心');}renderStats();}
+function ev_rich_accept(){S.prestige+=2;S.social+=1;S.invitationAccepted=true;S.invitationDay=S.day+25;addLog('结识柳夫人 声望+2 人脉+1');showScene('结识贵人',['你收下名帖，真诚道谢。柳夫人满意地点点头，放下轿帘，悠悠而去。','你望着那顶小轿远去的背影，知道自己或许攀上了一条重要的线。赏花宴的邀请也一并收下了。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🌟 结识贵人');renderStats();}
+function ev_rich_refuse(){S.wit+=1;addLog('婉拒邀请 智慧+1');showScene('有礼谢绝',['你婉言谢绝，柳夫人微微挑眉，意味深长地看了你一眼：「倒是个有骨气的。有缘再见吧。」轿子悠悠远去，你心里却有些后悔……'],[{text:'回家休息',next:'go_home',type:'safe'}],'🌸 有礼谢绝');renderStats();}
+function ev_rich_biz(){S.money+=20;S.social+=1;addLog('商谈得利 +20文 人脉+1');showScene('商谈得利',['你不卑不亢地和柳夫人攀谈，夫人对你颇为欣赏，临走时竟让丫鬟给你塞了个红包——里面是二十两银子的定金！「下次来府上细谈。」'],[{text:'回家休息',next:'go_home',type:'safe'}],'💰 商谈得利');renderStats();}
+function ev_landlord_pay(){S.money-=5;addLog('如数交租 -5文');showScene('忍气交租',['你忍下这口气，如数交了五两银子。王太太这才换了一副嘴脸：「这才对嘛！下个月早些！」她扭着腰走了，你望着她的背影，心里暗暗发誓：总有一天，要有自己的房子。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🏠 忍气交租');renderStats();}
+function ev_landlord_negotiate(){if(S.wit>=3){S.money-=3;addLog('谈判成功 -3文');showScene('谈判成功',['你拿出账本，一笔笔算给她看——她要的租金已经超过了镇上平均水平。王太太被你算得哑口无言，最后同意减两成。你保住了面子和银子。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📖 谈判成功');}else{S.money-=5;addLog('谈判失败 -5文');showScene('谈判失败',['你想讨价还价，却被王太太一顿抢白，最后还是如数交了租。不过她答应宽限三天——聊胜于无吧。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📖 谈判失败');}renderStats();}
+function ev_landlord_fight(){S.prestige+=1;S.affection=Math.min(100,S.affection+5);addLog('强势回击 声望+1 好感+5');showScene('强势反击',['你毫不退让地和王太太对骂——「我相公是清白人家，轮不到你欺辱！下次再来无理取闹，我去县衙告你骚扰！」她被你震住，灰溜溜地跑了。','「娘子……」'+S.husband.name+'握着你的手，眼眶竟有些红了。'], [{text:'回家休息',next:'go_home',type:'safe'}],'⚔ 强势反击');renderStats();updateAff();}
+function ev_biz_attempt(){if(S.money>=300){S.money-=300;S.hasShop=true;S.isMerchant=true;S.marketProfit=0;addLog('买下布庄！-300文');showScene('梦想成真',['你凑齐三百两银子，签下契约的那一刻，手都在抖。','从这一刻起，你不再是穷街僻巷的小媳妇——你是孙布庄的新主人！','「娘子……」'+S.husband.name+'得知消息，眼眶都红了，「我就知道你行的。」'], [{text:'回家休息',next:'go_home',type:'safe'}],'🏆 梦想成真');}else{var need=300-S.money;showScene('本钱不足',['你四处借钱，却怎么也凑不够三百两。还差'+need+'两。','梦想很丰满，现实很骨感。但你不甘心——总有一天，要把这布庄拿下！'],[{text:'回家休息',next:'go_home',type:'safe'}],'💸 本钱不足');}renderStats();checkIdentity();}
+function ev_biz_info(){S.social+=1;S.wit+=1;addLog('打听详情 智慧+1 人脉+1');showScene('知己知彼',['你找到孙家的旧伙计，详细打听了布庄的情况——位置好，老客户多，就是缺一个懂经营的新主人。你心里有了数，只等时机和本钱。'],[{text:'回家休息',next:'go_home',type:'safe'}],'📋 知己知彼');renderStats();}
+function ev_biz_giveup(){showScene('量力而行',['三百两，是你现在想都不敢想的数字。你叹了口气，转身离开。有些事情，不是光有野心就能做到的。'],[{text:'回家休息',next:'go_home',type:'safe'}],'🌫️ 量力而行');}
+
+// ========== 布庄老板模式 ==========
+function manage_shop(){
+  addLog('经营布庄');
+  var earnings=20+Math.floor(Math.random()*30)+(S.shopReputation||0);
+  S.money+=earnings;
+  S.marketProfit+=earnings;
+  S.shopReputation=Math.min(10,(S.shopReputation||0)+1);
+  addLog('布庄营收 +'+earnings+'文');
+  showScene('布庄经营',['你坐在柜台后面，招呼着来往的客人。','「老板娘，这匹布怎么卖？」一个衣着体面的妇人挑中了一匹苏州绢。','你报价，她也不还价，爽快地买下了。','一天下来，营业额还不错。'], [{text:'继续经营',next:'go_home',type:'safe'},{text:'和伙计聊聊',next:'shop_worker_chat',type:'smart'}],'🏪 布庄');
+  renderStats();checkIdentity();
+}
+function shop_restock(){
+  if(S.money<50){showScene('进货',['你本想多进些货，但手头的银子不够。'], [{text:'算了',next:'go_home',type:'safe'}],'🏪 进货');return;}
+  S.money-=50;
+  S.shopReputation=Math.min(10,(S.shopReputation||0)+2);
+  addLog('进货 -50文 店铺声望+2');
+  showScene('进货',['你去了镇外的集市，精挑细选了一批布料。','「老板娘好眼光，这批货品质不错！」进货商笑道。','回来的路上，你盘算着怎么定价才能多赚些。'], [{text:'回家',next:'go_home',type:'safe'}],'🏪 进货');
+  renderStats();
+}
+function shop_husband_chat(){
+  var hname=S.husband.name;
+  var aff=S.affection;
+  var texts=[];
+  if(aff>=71){
+    texts=[
+      [hname+'主动来到布庄帮忙：「娘子，我帮你看店，你歇歇。」他算账算得又快又准，比你雇的伙计还精明。你惊讶地发现，他竟然有这方面的天赋！','他算账又快又准'],
+      [hname+'说：「娘子，我在前厅招呼客人，你在后面算账，我们配合得真好。」你心里暖暖的。','默契配合']
+    ];
+  } else if(aff>=51){
+    texts=[
+      [hname+'来布庄看你，他坐在一旁安静地绣花，时不时抬头看你忙碌的身影，嘴角带着淡淡的笑。','温馨的一天']
+    ];
+  } else {
+    texts=[
+      [hname+'站在门口，有些不安地看着来往的客人：「娘子，我……我能帮什么忙吗？」他小心翼翼的样子，让你有些心酸。','他的小小帮忙']
+    ];
+  }
+  var t=texts[0];
+  S.affection=Math.min(100,S.affection+3);
+  addLog('布庄夫妻互动 好感+3');
+  showScene('布庄时光',[t[0]], [{text:'继续忙布庄',next:'go_home',type:'safe'}],t[1]+' 💕');
+  renderStats();updateAff();
+}
+function shop_worker_chat(){
+  S.social+=1;addLog('结交伙计 人脉+1');
+  showScene('和伙计聊天',['你和伙计聊了起来，打听到不少布行的门道。','「老板娘，你要是想多赚点钱，可以试试直接从苏州进货，省去中间差价。」','这倒是个不错的建议。'], [{text:'回家',next:'go_home',type:'safe'}],'💬 打听行情');
+  renderStats();
+}
+function social_event(){
+  if(S.prestige>=10){
+    showScene('赏花宴',['你受邀来到柳府，满园的花开得正盛。柳夫人热情地拉着你介绍给众宾客：「这位就是我跟你们说的，新来的小媳妇，人又能干又机灵！」','你举止得体，谈笑风生，给众人留下了极好的印象。'], [{text:'结交新朋友',next:'social_event_2',type:'love'},{text:'和柳夫人深谈',next:'social_event_liu',type:'love'}],'🌸 柳府赏花宴');
+  } else {
+    showScene('街头偶遇',['你在镇上遇到了柳夫人。她看见你，笑着点了点头：「哟，小媳妇，最近可好？改天来府上坐坐？」'], [{text:'寒暄几句',next:'go_home',type:'safe'}],'💬 偶遇');
+  }
+}
+function social_event_2(){S.prestige+=2;S.social+=1;addLog('赏花宴结交 声望+2 人脉+1');showScene('结交名流',['你在赏花宴上与几位镇上名流交谈甚欢。分别时，她们纷纷邀请你日后多来往。'], [{text:'回家',next:'go_home',type:'safe'}],'🌟 赏花宴');renderStats();}
+function social_event_liu(){S.social+=2;S.prestige+=1;addLog('柳夫人深谈 人脉+2 声望+1');showScene('柳夫人',['柳夫人拉着你说了很久。她对你的布庄经营颇感兴趣，临走时说：「小媳妇，我有个生意想和你谈谈。下次来府上，我们细说。」'], [{text:'回家',next:'go_home',type:'safe'}],'💬 深谈');renderStats();}
+
+// ========== 仕途模式 ==========
+function gov_work(){
+  var tasks=['你去街巷巡逻，维持秩序。', '你帮忙整理文书，誊抄告示。', '你随县丞下乡巡视农情。'];
+  var task=tasks[Math.floor(Math.random()*tasks.length)];
+  S.govTaskDone+=1;
+  S.prestige+=1;
+  addLog('公务处理 声望+1');
+  showScene('县衙日常',[task,'忙碌了一天，县丞对你点了点头：「不错，继续努力。」'], [{text:'回家',next:'go_home',type:'safe'}],'🏛 公务');
+  renderStats();checkIdentity();
+}
+function gov_dispute(){
+  showScene('纠纷调解',['镇上两家因摊位问题起了争执，双方各执一词，闹到了县衙。','「大人！是她先占了我的位置！」', '「明明是你诬赖我！」','作为女吏，你需要公正地处理这起纠纷。'], [{text:'实地勘察，明辨是非',next:'gov_dispute_fair',type:'gov'},{text:'各打五十大板，各让一步',next:'gov_dispute_split',type:'safe'},{text:'上报县丞定夺',next:'gov_dispute_up',type:'smart'}],'⚖️ 纠纷');
+}
+function gov_dispute_fair(){S.wit+=2;S.prestige+=2;S.govTaskDone+=1;addLog('公正裁决 智慧+2 声望+2');showScene('公正裁决',['你亲自去实地查看，很快弄清了来龙去脉——是后来的商贩占了先来者的位置。你秉公而断，众人心服口服。'], [{text:'回家',next:'go_home',type:'safe'}],'✅ 公正裁决');renderStats();checkIdentity();}
+function gov_dispute_split(){S.prestige+=1;S.govTaskDone+=1;addLog('各让一步 声望+1');showScene('各让一步',['你各打五十大板，两家各让一步。虽不算完美，但总算是平息了争端。'], [{text:'回家',next:'go_home',type:'safe'}],'⚖️ 调解');renderStats();}
+function gov_dispute_up(){S.social+=1;addLog('上报县丞 人脉+1');showScene('上报县丞',['你将情况如实上报县丞。县丞赞赏你「知道轻重，不擅自做主」，也算加了一分印象分。'], [{text:'回家',next:'go_home',type:'safe'}],'🏛 明智');renderStats();}
+
+// ========== 晚间互动 ==========
+function n_eat(){
+  var hname=S.husband.name;var hid=S.husband.id;var aff=S.affection;
+  var texts=[];
+  if(hid==='tsundere')texts=['晚饭时，'+hname+'一言不发地给你夹菜，嘴里却说：「别、别想多，我就是顺手……」菜却堆得像小山一样。','他嘴上不饶人，行动却比谁都体贴。'];
+  else if(hid==='outgoing')texts=[hname+'眉飞色舞地和你说了一天的见闻，笑得眼睛弯成月牙：「娘子，今天我做的红烧肉，你尝尝好不好吃？」','他总能让你忘掉烦恼。'];
+  else if(hid==='quiet')texts=[hname+'安静地吃着饭，偶尔抬头看你一眼，嘴角带着淡淡的笑。他不会说什么动听的话，但这顿饭吃得格外安心。','无声的陪伴。'];
+  else if(hid==='scholar')texts=[hname+'边吃边和你聊起今天看的书，说到兴起处，连饭都忘了吃。你无奈地给他夹了一筷子菜：「先吃饭。」','他这才不好意思地笑了。'];
+  else texts=[hname+'陪你吃了晚饭，席间聊了些家常。简单而温馨。'];
+  S.affection=Math.min(100,S.affection+2);
+  addLog('一起吃晚饭 好感+2');
+  showScene('晚饭时分',[texts[0],texts[1]], [{text:'天色不早，休息吧',next:'n_sleep',type:'safe'}],'🍚 温馨晚餐');
+  updateAff();
+}
+function n_talk(){
+  var hname=S.husband.name;var hid=S.husband.id;var aff=S.affection;
+  var topics=[];
+  if(aff>=71){
+    topics.push([hname+'忽然说：「娘子，我有件事一直想告诉你……」他的眼神里带着几分认真，让你心里一动。',hname+'说起他的童年，说起那些不曾向人提起的往事。他的声音很轻，却让你觉得这一刻无比珍贵。']);
+  } else if(aff>=51){
+    topics.push([hname+'和你聊起对未来的想法：「娘子，等我们有钱了，我想……我想带你去看一看外面的世界。」',hname+'在灯下说着他的小心愿，眼睛里闪着光。']);
+  } else {
+    topics.push([hname+'有些拘谨地坐在一旁，小心翼翼地开口：「娘子……今天忙不忙？」话虽然不多，但满是关切。',hname+'的关心虽笨拙，却能感觉到他的真心。']);
+  }
+  var t=topics[0];
+  S.affection=Math.min(100,S.affection+3);
+  addLog('夜谈 好感+3');
+  showScene('夜话',[t[0],t[1]], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'💬 夜话');
+  updateAff();
+}
+function n_heart(){
+  var hname=S.husband.name;var hid=S.husband.id;
+  var texts=[];
+  if(hid==='tsundere'){
+    texts=['夜深了，你正要睡下，'+hname+'忽然轻声说：「娘子……其实我、我……算了，没什么！」他背过身去，耳根却红了一片。','他明明想说些什么，却又说不出口。你看着他别扭的样子，忍不住笑了。'];
+  } else if(hid==='outgoing'){
+    texts=[hname+'拉着你的手，轻声说：「娘子，嫁给我……你后悔过吗？」你摇摇头。他的眼睛一下子亮了起来：「真的？那太好了！」','他的喜悦如此简单，让你也跟着开心起来。'];
+  } else if(hid==='quiet'){
+    texts=[hname+'坐在窗边，望着窗外的月亮，轻声说：「娘子，能遇见你，是我的福气。」他的声音很轻，却让你心里一暖。','月色如水，他的眼神更如水。'];
+  } else if(hid==='scholar'){
+    texts=[hname+'握着你的手，轻声念了一句诗：「愿得一心人，白首不相离。」他看着你，眼里满是柔情。','他从来不擅长表达，但这句诗已是最好的情话。'];
+  }
+  S.affection=Math.min(100,S.affection+5);
+  addLog('体己话 好感+5');
+  showScene('体己话',[texts[0],texts[1]], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'💕 体己话');
+  updateAff();
+}
+function n_secret(){
+  var hname=S.husband.name;var hid=S.husband.id;
+  var events=[
+    ['「娘子，我跟你说过我父亲的事吗？」'+hname+'的声音很轻。','「他走的时候，我才十岁。母亲改了嫁，我就……一个人了。」他的眼眶微微泛红。「所以我一直不太敢……依赖别人。」','你轻轻握住他的手，他没有说话，只是把头靠在了你的肩上。这一刻，比任何言语都更有力量。'],
+    ['「娘子，其实我……我以前有个喜欢的姑娘。」'+hname+'忽然说。','你一愣，他却笑了：「可惜她看不上我。后来我就想，算了吧，安心过日子。」','「不过现在……」他看着你，眼神里带着几分羞涩，「我觉得这样也很好。」'],
+    ['「娘子，你知道我为什么愿意嫁给你吗？」'+hname+'轻声问。','「因为成亲那天，你接过喜帖的时候，笑了一下。那个笑……让我觉得很安心。」','「我想，这样的娘子，应该不会让我受委屈吧。」他的声音越来越小，却字字真心。']
+  ];
+  var ev=events[Math.floor(Math.random()*events.length)];
+  S.affection=Math.min(100,S.affection+8);
+  S.husbandEvents.push('secret_shared');
+  addLog('听心事 好感+8');
+  showScene('他的心事',[ev[0],ev[1],ev[2]], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🌙 心事');
+  updateAff();
+}
+function n_account(){
+  if(S.trait&&S.trait.id!=='sharp'){n_eat();return;}
+  var texts=['你点起油灯，翻开账本，一笔一笔地算。'+S.husband.name+'安静地坐在一旁，时不时搭把手。','「娘子，这里算错了吧？」他指着账本上的一行。你凑过去一看，果然——如果不是他细心，这个月又要白忙了。','你心里暗暗惊奇：没想到他还有这方面的天赋。'];
+  S.affection=Math.min(100,S.affection+3);
+  S.wit+=1;
+  addLog('一起算账 好感+3 智慧+1');
+  showScene('一起算账',texts,[{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'📖 精明');
+  updateAff();renderStats();
+}
+function n_festival(){
+  var fest=S.nearFestival||'节日';
+  var foods={'端午':'粽子','中秋':'月饼'};
+  var food=foods[fest]||'点心';
+  var texts=[fest+'到了。',S.husband.name+'亲手包了'+food+'，虽然卖相不太好，但吃得出是用心做的。','「娘子，尝尝？」他眼里带着几分期待。','屋外传来远处的欢笑声，屋内烛火摇曳。这一刻，你觉得这就是家的感觉。'];
+  S.affection=Math.min(100,S.affection+10);
+  S.eventsTriggered['festival_'+fest]=true;
+  addLog(fest+'节 好感+10');
+  showScene(fest+'节',texts,[{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🏮 '+fest);
+  updateAff();
+}
+function n_birthday(){
+  var hname=S.husband.name;
+  showScene('他的生日',[hname+'今天似乎有些心事，坐立不安的样子。',hname+'坐在窗边，烛光照在他脸上，让他的轮廓柔和了许多。'], [{text:'送他精心准备的礼物',next:'n_birthday_give',type:'love'},{text:'假装不知道，陪他吃顿饭',next:'n_birthday_quiet',type:'safe'}],'🎂 生日');
+}
+function n_birthday_give(){
+  var hname=S.husband.name;
+  if(S.money>=20){
+    S.money-=20;
+    S.affection=Math.min(100,S.affection+15);
+    S.eventsTriggered.birthday_gift_sent=true;
+    addLog('生日礼物 -20文 好感+15');
+    showScene('生日礼物',['你递上礼物——一支乌木簪子，虽然不贵重，却是你精心挑选的。',hname+'愣住了，接过礼物的双手微微发抖。',hname+'的眼眶红了：「娘子……谢谢你。」他的声音哽咽，却又带着藏不住的欢喜。'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🎂 生日');
+  } else {
+    S.affection=Math.min(100,S.affection+5);
+    S.eventsTriggered.birthday_gift_sent=true;
+    addLog('生日心意 好感+5');
+    showScene('生日心意',['你没有足够的银两买礼物，但你不甘心。你拿起针线，亲手缝了一个小香囊。',hname+'接过香囊，愣了一下，随即眼眶红了：「娘子……这比什么金银都贵重。」'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🎂 生日');
+  }
+  renderStats();updateAff();
+}
+function n_birthday_quiet(){
+  S.affection=Math.min(100,S.affection+5);
+  addLog('默默陪伴 好感+5');
+  showScene('生日',['你没有声张，只是做了一桌他爱吃的菜。',S.husband.name+'吃着吃着，忽然停下了筷子，沉默了很久。',hname+'轻声说：「娘子……今天是我的生辰。」他抬起头，眼里闪着微微的泪光：「谢谢你记得。」'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🎂 生日');
+  updateAff();
+}
+function n_problem(){
+  var prob=S.husbandProblems.shift();
+  if(!prob){n_sleep();return;}
+  S.affection=Math.min(100,S.affection+8);
+  addLog('帮夫解决烦恼 好感+8');
+  showScene('他的烦恼',[prob],[{text:'尽力帮他',next:'n_problem_solve',type:'love'},{text:'安慰他但不插手',next:'n_sleep',type:'safe'}],'💞 关心');
+}
+function n_problem_solve(){
+  S.prestige+=1;
+  S.affection=Math.min(100,S.affection+5);
+  addLog('解决问题 声望+1 好感+5');
+  showScene('解决烦恼',['你帮他分析了情况，提出了几个可行的方案。',S.husband.name+'听完，眼眶微微泛红：「娘子……有你在，真好。」'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'✅ 解决了');
+  renderStats();updateAff();
+}
+
+// ========== 回家与结算 ==========
+function go_home(){
+  // 赏花宴触发检测
+  if(S.invitationAccepted&&S.day>=S.invitationDay&&!S.eventsTriggered.invitation_event){
+    S.eventsTriggered.invitation_event=true;
+    addLog('赏花宴日期到');
+    showScene('柳府请帖',['一大早，有人敲门——是柳府的小厮。','「我家夫人让我来请安，说后天便是赏花宴，请姑娘务必赏光。」他递上一封烫金请帖。'], [{text:'欣然赴约',next:'flower_party',type:'love'},{text:'婉言谢绝',next:'flower_party_refuse',type:'safe'}],'🌸 柳府请帖');
+    return;
+  }
+  // 每月生日检测
+  if(S.day===S.flags.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent){
+    S.eventsTriggered.birthday_gift_sent=false;
+  }
+  showNight();
+}
+
+function flower_party(){
+  if(S.prestige>=10){
+    showScene('柳府赏花宴',['你盛装打扮，来到柳府。','满园花开，衣香鬓影。柳夫人热情地拉着你介绍给众宾客：「这位就是我跟你们说的，新来的小媳妇，人又能干又机灵！」','你举止得体，谈笑风生，给众人留下了极好的印象。声望大涨！'], [{text:'结交名流',next:'flower_party_2',type:'love'},{text:'和柳夫人深谈合作',next:'flower_party_3',type:'smart'}],'🌸 柳府赏花宴');
+  } else {
+    showScene('柳府赏花宴',['你来到柳府，但因声望不够，只能在偏厅等候。柳夫人歉意地说：「今日贵客太多，委屈你了。」','虽然没有见到大场面，但你还是认识了几个小商人，略有收获。'], [{text:'回家',next:'go_home_return',type:'safe'}],'🌸 赏花宴（小场面）');
+  }
+}
+function flower_party_2(){S.prestige+=3;S.social+=2;addLog('赏花宴大成功 声望+3 人脉+2');showScene('名流交际',['你在赏花宴上与几位镇上名流交谈甚欢，分别时，她们纷纷邀请你日后多来往。'], [{text:'回家',next:'go_home_return',type:'safe'}],'🌟 赏花宴');renderStats();}
+function flower_party_3(){S.prestige+=2;S.social+=2;S.money+=50;addLog('柳夫人深谈 声望+2 人脉+2 +50文');showScene('柳夫人深谈',['柳夫人拉着你说了很久。她对你的布庄经营颇感兴趣，当场决定和你合作一笔生意！','「这是一百两银子的定金，你先拿着。」她笑道。'], [{text:'回家',next:'go_home_return',type:'safe'}],'💰 合作');renderStats();}
+function flower_party_refuse(){showScene('婉拒',['你婉言谢绝了邀请。柳夫人有些意外，但也没有勉强：「也罢，改日再叙吧。」'], [{text:'回家',next:'go_home_return',type:'safe'}],'🌸 婉拒');}
+
+function go_home_return(){showNight();}
+
+function n_sleep(){
+  // 结算
+  S.day++;
+  // 身份检测
+  checkIdentity();
+  // 随机事件触发（丈夫心情波动）
+  if(Math.random()<0.2){
+    var delta=(Math.random()<0.5)?1:-1;
+    S.affection=Math.max(0,Math.min(100,S.affection+delta));
+  }
+  // 每月随机给丈夫一个烦恼
+  if(S.day%10===0){
+    var problems=['镇上新开了一家布庄，我想去学学他们的经营。','我最近有些心事……娘子，你有空吗？','街上的地痞又来骚扰了，我有些担心。','我想……给娘子添一件新衣裳。'];
+    S.husbandProblems.push(problems[Math.floor(Math.random()*problems.length)]);
+  }
+  // 仕途试用转正检测
+  if(S.isOfficial&&S.govTaskDone>=3&&!S.officialTaskCount>=5){
+    S.officialTaskCount=5;
+    S.cls='县衙正式吏员';
+    addLog('仕途转正！身份升级');
+  }
+  addLog('第'+S.day+'日开始');
+  renderStats();updateAff();
+  showMorning();
+}
+
+// ========== 路由 ==========
+window.go=function(n,t){
+  switch(n){
+    case 'm_detail':m_detail();break;
+    case 'm_money':m_money();break;
+    case 'm_hasty':m_hasty();break;
+    case 'm_choose':m_choose();break;
+    case 'fi_0':fi_0();break;
+    case 'fi_1':fi_1();break;
+    case 'fi_2':fi_2();break;
+    case 'day1':day1();break;
+    case 'go_market':go_market();break;
+    case 'go_work':go_work();break;
+    case 'talk_husband_early':talk_husband_early();break;
+    case 'go_town':go_town();break;
+    case 'gov_enlist':gov_enlist();break;
+    case 'gov_enlist_signup':gov_enlist_signup();break;
+    case 'gov_exam':gov_exam();break;
+    case 'gov_exam_result':gov_exam_result();break;
+    case 'ev_market_buy':ev_market_buy();break;
+    case 'ev_market_calm':ev_market_calm();break;
+    case 'ev_market_info':ev_market_info();break;
+    case 'ev_rogue_scold':ev_rogue_scold();break;
+    case 'ev_rogue_escape':ev_rogue_escape();break;
+    case 'ev_rogue_fight':ev_rogue_fight();break;
+    case 'ev_rich_accept':ev_rich_accept();break;
+    case 'ev_rich_refuse':ev_rich_refuse();break;
+    case 'ev_rich_biz':ev_rich_biz();break;
+    case 'ev_landlord_pay':ev_landlord_pay();break;
+    case 'ev_landlord_negotiate':ev_landlord_negotiate();break;
+    case 'ev_landlord_fight':ev_landlord_fight();break;
+    case 'ev_biz_attempt':ev_biz_attempt();break;
+    case 'ev_biz_info':ev_biz_info();break;
+    case 'ev_biz_giveup':ev_biz_giveup();break;
+    case 'manage_shop':manage_shop();break;
+    case 'shop_restock':shop_restock();break;
+    case 'shop_husband_chat':shop_husband_chat();break;
+    case 'shop_worker_chat':shop_worker_chat();break;
+    case 'social_event':social_event();break;
+    case 'social_event_2':social_event_2();break;
+    case 'social_event_liu':social_event_liu();break;
+    case 'gov_work':gov_work();break;
+    case 'gov_dispute':gov_dispute();break;
+    case 'gov_dispute_fair':gov_dispute_fair();break;
+    case 'gov_dispute_split':gov_dispute_split();break;
+    case 'gov_dispute_up':gov_dispute_up();break;
+    case 'n_eat':n_eat();break;
+    case 'n_talk':n_talk();break;
+    case 'n_heart':n_heart();break;
+    case 'n_secret':n_secret();break;
+    case 'n_account':n_account();break;
+    case 'n_festival':n_festival();break;
+    case 'n_birthday':n_birthday();break;
+    case 'n_birthday_give':n_birthday_give();break;
+    case 'n_birthday_quiet':n_birthday_quiet();break;
+    case 'n_problem':n_problem();break;
+    case 'n_problem_solve':n_problem_solve();break;
+    case 'n_sleep':n_sleep();break;
+    case 'go_home':go_home();break;
+    case 'flower_party':flower_party();break;
+    case 'flower_party_2':flower_party_2();break;
+    case 'flower_party_3':flower_party_3();break;
+    case 'flower_party_refuse':flower_party_refuse();break;
+    case 'go_home_return':go_home_return();break;
+    default:go_home();
+  }
+};
+</script>
+</body>
+</html>
