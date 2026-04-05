@@ -283,21 +283,21 @@ function showStep1PlayerBg() {
 
 window.selectPlayerBg = function(i) {
   var bg = PLAYER_BACKGROUNDS[i];
-  S.money += bg.bonus.money || 0;
-  S.prestige += bg.bonus.prestige || 0;
-  S.social += bg.bonus.social || 0;
-  S.wit += bg.bonus.wit || 0;
-  S.bravo += bg.bonus.bravo || 0;
+  S.money = (S.money||0) + (bg.bonus.money||0);
+  S.prestige = (S.prestige||0) + (bg.bonus.prestige||0);
+  S.social = (S.social||0) + (bg.bonus.social||0);
+  S.wit = (S.wit||0) + (bg.bonus.wit||0);
+  S.bravo = (S.bravo||0) + (bg.bonus.bravo||0);
   S.cls = bg.bonus.cls;
   S.playerBg = bg.id;
   S.playerBgName = bg.name;
   addLog('身世：' + bg.name + '（' + bg.bonus.cls + '）');
-  render();
+  try { render(); } catch(e) { console.error('render error', e); }
   var html = '<div class="husband-card" style="border-color:#4a9a4a;background:#0a2a1a;margin-top:15px"><div class="name" style="color:#4a9a4a">✓ 已选择：'+bg.name+'</div><div class="desc">'+bg.desc+'</div></div>';
-  html += '<div style="background:#1a2a0a;border:1px solid #4a9a4a;border-radius:8px;padding:12px;margin:10px 0;font-size:0.85em;color:#8ac98a">💰 银两 +'+(bg.bonus.money||0)+'　⭐ 声望 +'+(bg.bonus.prestige||0)+'　🤝 人脉 +'+(bg.bonus.social||0)+'　📖 智慧 +'+(bg.bonus.wit||0)+'　⚔️ 魄力 +'+(bg.bravo||0)+'</div>';
+  html += '<div style="background:#1a2a0a;border:1px solid #4a9a4a;border-radius:8px;padding:12px;margin:10px 0;font-size:0.85em;color:#8ac98a">💰 银两 +'+(bg.bonus.money||0)+'　⭐ 声望 +'+(bg.bonus.prestige||0)+'　🤝 人脉 +'+(bg.bonus.social||0)+'　📖 智慧 +'+(bg.bonus.wit||0)+'　⚔️ 魄力 +'+(bg.bonus.bravo||0)+'</div>';
   html += '<button class="choice" style="background:#1a4a2a;border-color:#4a9a4a" onclick="showStep2HusbandBg()">下一步：选择夫君 →</button>';
-  document.getElementById('scene-text').insertAdjacentHTML('beforeend', html);
-  setTimeout(function() { document.querySelector('#scene-text .choice:last-of-type').scrollIntoView({behavior:'smooth',block:'nearest'}); }, 50);
+  var st = document.getElementById('scene-text');
+  if (st) { st.insertAdjacentHTML('beforeend', html); }
 };
 
 function showStep2HusbandBg() {
