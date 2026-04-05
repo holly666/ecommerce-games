@@ -136,8 +136,8 @@ function render() {
   document.getElementById('s-bravo').textContent = S.bravo;
   document.getElementById('s-class').textContent = S.cls;
   document.getElementById('s-day').textContent = S.day;
-  var items = S.items.length ? S.items.map(function(i){return '<span class="item">'+i+'</span>';}).join('') : '<span class="item">空空如也</span>';
-  document.getElementById('item-list').innerHTML = items;
+  var items = (S.items||[]).length ? S.items.map(function(i){return '<span class="item">'+i+'</span>';}).join('') : '';
+  if (items) document.getElementById('item-list').innerHTML = items;
   var affStat = document.getElementById('s-affection-stat');
   if(affStat){ affStat.style.display = S.husband ? 'block' : 'none'; }
   if(S.husband){
@@ -253,6 +253,7 @@ function hPers() { return S.husband ? S.husband.persId : 'kind'; }
 function hTraits() { return S.husband ? S.husband.traits.join(' / ') : '无'; }
 
 function startGame() {
+  S = { money: 0, prestige: 1, social: 1, wit: 1, bravo: 1, cls: '镇民', items: [], log: [], day: 1, phase: 1, flags: {}, husband: null, playerBg: null, playerBgName: null };
   var cover = document.getElementById('cover');
   cover.style.position = 'absolute';
   cover.style.visibility = 'hidden';
