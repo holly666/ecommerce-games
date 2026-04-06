@@ -449,9 +449,10 @@ window.s1=function(){
   var h='';
   BGS.forEach(function(b,i){h+='<div class=cc data-i='+i+'><div class=cn>'+b.name+'</div><div class=cd>'+b.desc+'</div><div class=ct>';b.tags.forEach(function(t){h+='<span class=ch>'+t+'</span>';});h+='</div></div>';});
   document.getElementById('bg-grid').innerHTML=h;
-  document.getElementById('bg-grid').onclick=function(e){var card=e.target.closest('.cc');if(card){window._selBG(parseInt(card.getAttribute('data-i')));}};
+  document.getElementById('bg-grid').onclick=function(e){console.log('bg-grid clicked, target:',e.target.className);var card=e.target.closest('.cc');console.log('card found:',!!card,card?card.getAttribute('data-i'):null);if(card){window._selBG(parseInt(card.getAttribute('data-i')));}};
 };
 window._selBG=function(i){
+  console.log('_selBG called, i=',i,'BGS[i]=',BGS[i]);
   S.bg=BGS[i];var b=S.bg;
   if(b.init.money)S.money=b.init.money;
   if(b.init.prestige)S.prestige=b.init.prestige;
@@ -460,24 +461,23 @@ window._selBG=function(i){
   if(b.init.bravo)S.bravo=b.init.bravo;
   document.getElementById('sel-bg').innerHTML='<div class=sel>✓ 已选择：<strong>'+b.name+'</strong> — '+b.desc+'</div><button class=cbtn onclick="s2()">下一步 →</button>';
 };
-window.s2=function(){
+window.s2=function(){console.log('s2 called');
   document.getElementById('step1').classList.remove('on');
   document.getElementById('step2').classList.add('on');
   var h='';
   TRAITS.forEach(function(t,i){h+='<div class=cc data-i='+i+'><div class=cn>'+t.name+'</div><div class=cd>'+t.desc+'</div><div class=ct>';t.tags.forEach(function(tag){h+='<span class=ch>'+tag+'</span>';});h+='</div></div>';});
   document.getElementById('trait-grid').innerHTML=h;
-  document.getElementById('trait-grid').onclick=function(e){var card=e.target.closest('.cc');if(card){window._selTrait(parseInt(card.getAttribute('data-i')));}};
+  document.getElementById('trait-grid').onclick=function(e){console.log('trait-grid clicked, target:',e.target);var card=e.target.closest('.cc');if(card){window._selTrait(parseInt(card.getAttribute('data-i')));}};
 };
 window._selTrait=function(i){
-  S.trait=TRAITS[i];var t=S.trait;
+  console.log('_selTrait called, i=',i);S.trait=TRAITS[i];var t=S.trait;
   if(t.effect.wit)S.wit+=t.effect.wit;
   if(t.effect.social)S.social+=t.effect.social;
   if(t.effect.bravo)S.bravo+=t.effect.bravo;
   if(t.effect.prestige)S.prestige+=t.effect.prestige;
   document.getElementById('sel-trait').innerHTML='<div class=sel>✓ 已选择：<strong>'+t.name+'</strong> — '+t.desc+'</div><button class=cbtn onclick="s3()">下一步 →</button>';
 };
-window.s3=function(){
-  document.getElementById('step2').classList.remove('on');
+window.s3=function(){console.log('s3 called');document.getElementById('step2').classList.remove('on');
   document.getElementById('step3').classList.add('on');
   var names=['念卿','锦绣','如玉','秋水','碧落','凝霜','映雪','思柔'];
   var dn=names[Math.floor(Math.random()*names.length)];
