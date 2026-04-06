@@ -116,10 +116,10 @@ h2{color:#c9a96e;font-size:2.4em;margin-bottom:6px;letter-spacing:8px}
 
 var S={};
 var BGS=[
-  {id:'biz',name:'商贾之后',desc:'父亲是镇上布商，家境殷实，自幼耳濡目染商道。',tags:['善经营','人脉广'],init:{money:80,prestige:2}},
-  {id:'scholar',name:'书香门第',desc:'祖上出过几位秀才，虽家道中落，却知书达理。',tags:['智慧高','人脉佳'],init:{money:30,prestige:4,wit:2}},
-  {id:'gentry',name:'官宦人家',desc:'父亲曾是县城小吏，因得罪权贵被贬，但人脉犹在。',tags:['声望高','懂人情'],init:{money:20,prestige:6,social:2}},
-  {id:'poor',name:'寒门出身',desc:'一无所有，白手起家。唯有满腔热血，和一颗不服输的心。',tags:['意志坚','无包袱'],init:{money:5,bravo:2}}
+  {id:'biz',name:'商贾之后',desc:'父亲是镇上布商，家境殷实，自幼耳濡目染商道。',tags:['善经营','人脉广'],init:{money:8000,prestige:2}},
+  {id:'scholar',name:'书香门第',desc:'祖上出过几位秀才，虽家道中落，却知书达理。',tags:['智慧高','人脉佳'],init:{money:3000,prestige:4,wit:2}},
+  {id:'gentry',name:'官宦人家',desc:'父亲曾是县城小吏，因得罪权贵被贬，但人脉犹在。',tags:['声望高','懂人情'],init:{money:2000,prestige:6,social:2}},
+  {id:'poor',name:'寒门出身',desc:'一无所有，白手起家。唯有满腔热血，和一颗不服输的心。',tags:['意志坚','无包袱'],init:{money:500,bravo:2}}
 ];
 var TRAITS=[
   {id:'sharp',name:'精明强干',desc:'心思缜密，算账从不出错，遇事总有办法。',effect:{wit:2},tags:['机敏','果断']},
@@ -149,6 +149,14 @@ var HUSBANDS=[
 ];
 var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
 var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
+function formatMoney(n){
+  // 1黄金=10白银=100两=100000文
+  if(n>=100000)return(Math.round(n/1000)/100).toFixed(2)+'黄金';
+  if(n>=10000)return(Math.round(n/100)/10).toFixed(2)+'白银';
+  if(n>=1000)return Math.floor(n/1000)+'两'+(n%1000>0?(n%1000<10?' 00'+n%1000:''+n%1000).slice(-3).replace(/^0+/,'')?' '+n%1000+'文':'':'');
+  if(n>=100)return Math.floor(n/100)+'两'+(n%100>0?' '+n%100+'文':'');
+  return n+'文';
+}
 function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
 function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if(!S.bravo)S.bravo=0;if(!S.day)S.day=1;if(!S.cls)S.cls='无业';if(!S.flags)S.flags={};if(!S.affection)S.affection=50;if(!S.identity)S.identity=1;if(!S.husbandEvents)S.husbandEvents=[];if(!S.mainQuest)S.mainQuest=0;if(!S.questChoice)S.questChoice={};if(!S.wealth)S.wealth=0;if(!S.eventsTriggered)S.eventsTriggered={};if(!S.isMerchant)S.isMerchant=false;if(!S.officialTaskCount)S.officialTaskCount=0;if(!S.marketDay)S.marketDay=0;if(!S.marketProfit)S.marketProfit=0;if(!S.nearFestival)S.nearFestival=null;if(!S.husbandProblems)S.husbandProblems=[];if(!S.invitationAccepted)S.invitationAccepted=false;if(!S.invitationDay)S.invitationDay=0;if(!S.hasShop)S.hasShop=false;if(!S.shopReputation)S.shopReputation=0;if(!S.prestige)S.prestige=0;if(!S.money)S.money=0;if(!S.availableMen)S.availableMen=[];if(!S.metMen)S.metMen={};if(S.availableMen&&S.availableMen.length>0){S.availableMen=S.availableMen.filter(function(id){return S.metMen[id];});}if(!S.concubines)S.concubines=[];if(!S.concurrineAffection)S.concubineAffection={};if(!S.concurrinePregnant)S.concurrinePregnant={};if(!S.concurrinePregnancyDay)S.concurrinePregnancyDay={};if(S._currentConcubine===undefined)S._currentConcubine=null;if(!S.metMen)S.metMen={};if(!S.isPregnant)S.isPregnant=false;if(!S.pregnancyDay)S.pregnancyDay=0;if(!S.children)S.children=[];if(!S.intimacyCount)S.intimacyCount=0;if(!S.husbandProposalDone)S.husbandProposalDone=false;if(!S.fertilityTreatment)S.fertilityTreatment=false;if(S.husband){if(S.husband.isPregnant===undefined)S.husband.isPregnant=false;if(S.husband.pregnancyDay===undefined)S.husband.pregnancyDay=0;}if(!S.husbandMood)S.husbandMood='neutral';if(!S.goodEventToday)S.goodEventToday=false;if(!S.touchedConcubineToday)S.touchedConcubineToday=false;if(!S.todayEvents)S.todayEvents=[];if(!S.todayWeather)S.todayWeather=null;if(!S.todaySeason)S.todaySeason=null;if(!S.todayMood)S.todayMood=1;if(!S.examLevel)S.examLevel='none';if(!S.examStatus)S.examStatus='idle';if(!S.examAnnounced)S.examAnnounced=false;if(!S.examDay)S.examDay=0;if(!S.examPassed)S.examPassed=false;if(!S.lastExamDay)S.lastExamDay=0;if(!S.govTitle)S.govTitle='无';if(!S.governance)S.governance={justice:0,tax:0,security:0,publicSentiment:0};if(!S.currentRank)S.currentRank='none';if(!S.salary)S.salary=0;if(!S.lastSalaryDay)S.lastSalaryDay=0;if(!S.annualReviewYear)S.annualReviewYear=0;if(!S.promotionReady)S.promotionReady=false;if(!S.examPrepDays)S.examPrepDays=0;if(!S.examType)S.examType=null;if(!S.isOfficial)S.isOfficial=false;if(!S.govTaskDone)S.govTaskDone=0;if(S.isMarried===undefined)S.isMarried=false;if(S.searchingForHusband===undefined)S.searchingForHusband=false;if(S.gossipPressure===undefined)S.gossipPressure=0;if(S.matchmakerVisited===undefined)S.matchmakerVisited=false;}
 function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
@@ -158,7 +166,7 @@ function loadGame(){var d=localStorage.getItem('nvzh_v5');if(d){S=JSON.parse(d);
 function resetGame(){localStorage.removeItem('nvzh_v5');location.reload();}
 function showGame(){document.getElementById('scene').classList.add('on');document.getElementById('stats-bar').style.display='block';}
 function checkIdentity(){if(S.examLevel==='none'&&S.hasShop){S.identity=2;S.cls='布庄老板';}else if(S.examLevel!=='none'&&S.examLevel!=='官员'){S.identity=2;S.cls=S.examLevel;}else if(S.examLevel==='官员'){S.identity=3;S.cls=S.govTitle||'官员';}if(S.identity===2&&S.day>=60&&S.examLevel==='none'&&S.marketProfit>=200){S.identity=3;}if(S.identity===3&&S.day>=120){S.identity=4;}}
-function renderStats(){var el=document.getElementById('stats-grid');var idt=IDT_NAMES[S.identity-1]||'窘境';el.innerHTML='<div class=st2><div class=sn>💰 银两</div><div class=sv>'+(S.money||0)+'</div></div><div class=st2><div class=sn>⭐ 声望</div><div class=sv>'+(S.prestige||0)+'</div></div><div class=st2><div class=sn>🤝 人脉</div><div class=sv>'+(S.social||0)+'</div></div><div class=st2><div class=sn>📖 智慧</div><div class=sv>'+(S.wit||0)+'</div></div><div class=st2><div class=sn>⚔ 魄力</div><div class=sv>'+(S.bravo||0)+'</div></div><div class=st2><div class=sn>🏷 身份</div><div class=sv>'+idt+'</div></div><div class=st2><div class=sn>📅</div><div class=sv>第'+(S.day||1)+'日</div></div>';}
+function renderStats(){var el=document.getElementById('stats-grid');var idt=IDT_NAMES[S.identity-1]||'窘境';el.innerHTML='<div class=st2><div class=sn>💰 银两</div><div class=sv>'+formatMoney(S.money||0)+'</div></div><div class=st2><div class=sn>⭐ 声望</div><div class=sv>'+(S.prestige||0)+'</div></div><div class=st2><div class=sn>🤝 人脉</div><div class=sv>'+(S.social||0)+'</div></div><div class=st2><div class=sn>📖 智慧</div><div class=sv>'+(S.wit||0)+'</div></div><div class=st2><div class=sn>⚔ 魄力</div><div class=sv>'+(S.bravo||0)+'</div></div><div class=st2><div class=sn>🏷 身份</div><div class=sv>'+idt+'</div></div><div class=st2><div class=sn>📅</div><div class=sv>第'+(S.day||1)+'日</div></div>';}
 function updateAff(){var a=Math.round(S.affection);document.getElementById('aff-num').textContent=a;document.getElementById('aff-bar').style.width=a+'%';var el=document.getElementById('aff-level');if(el)el.textContent=getAffLabel(a);}
 
 function showScene(title,text,choices,etag){
@@ -698,7 +706,7 @@ function go_work(){
   else if(tid==='warm'){S.social+=1;extraText='帮工时你和伙计们相处融洽，结交了几个朋友！人脉+1';addLog('结交朋友 人脉+1');}
   else if(tid==='fierce'){S.bravo+=1;extraText='干活时有人想压你工钱，你当场拍桌理论，拿回了应得的！魄力+1';addLog('据理力争 魄力+1');}
   else if(tid==='calm'){S.prestige+=1;extraText='你默默干活，东家看在眼里，临走时特意多给了赏钱：「这姑娘沉稳，做事牢靠。」声望+1';addLog('额外认可 声望+1');}
-  addLog(job.name+' +'+job.money+'文');
+  addLog(job.name+' +'+formatMoney(job.money)+');
   if(extraText)job.text+=' '+extraText;
   renderStats();
   showScene('打工归来',[job.text,'暮色渐沉，你拖着疲惫的身体往家走。今天虽然辛苦，但银两实实在在多了几文。'],[{text:'回家休息',next:'go_home',type:'safe'}]);
@@ -1125,11 +1133,11 @@ function gov_collect_salary(){
   if(S.salary<=0)return;
   var months=Math.max(1,Math.floor((S.day-S.lastSalaryDay)/30));
   if(months<=0)return;
-  var total=S.salary*months;
+  var total=S.salary*months*100;
   S.money+=total;
   S.lastSalaryDay=S.day+(months*30);
-  addLog('领取俸禄 '+months+'个月共'+total+'两！');
-  showScene('俸禄发放',['又到了发薪的日子。','俸禄核算中：本月俸禄 '+S.salary+'两 × '+months+'个月 = '+total+'两','你签收俸禄，银两入库。'], [{text:'继续',next:'go_home',type:'safe'}],'💰 俸禄+'+total+'两');
+  addLog('领取俸禄 '+months+'个月共'+total/100+'两！');
+  showScene('俸禄发放',['又到了发薪的日子。','俸禄核算中：本月俸禄 '+S.salary+'两 × '+months+'个月 = '+(total/100)+'两','你签收俸禄，银两入库。'], [{text:'继续',next:'go_home',type:'safe'}],'💰 俸禄+'+total+'两');
   renderStats();
 }
 
@@ -1258,10 +1266,10 @@ function n_birthday(){
 function n_birthday_give(){
   var hname=S.husband.name;
   if(S.money>=20){
-    S.money-=20;
+    S.money-=2000;
     S.affection=Math.min(100,S.affection+15);
     S.eventsTriggered.birthday_gift_sent=true;
-    addLog('生日礼物 -20文 好感+15');
+    addLog('生日礼物 -20两 好感+15');
     showScene('生日礼物',['你递上礼物——一支乌木簪子，虽然不贵重，却是你精心挑选的。',hname+'愣住了，接过礼物的双手微微发抖。',hname+'的眼眶红了：「娘子……谢谢你。」他的声音哽咽，却又带着藏不住的欢喜。'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🎂 生日');
   } else {
     S.affection=Math.min(100,S.affection+5);
@@ -1483,7 +1491,7 @@ function flower_party(){
   }
 }
 function flower_party_2(){S.prestige+=3;S.social+=2;addLog('赏花宴大成功 声望+3 人脉+2');showScene('名流交际',['你在赏花宴上与几位镇上名流交谈甚欢，分别时，她们纷纷邀请你日后多来往。'], [{text:'回家',next:'go_home_return',type:'safe'}],'🌟 赏花宴');renderStats();}
-function flower_party_3(){S.prestige+=2;S.social+=2;S.money+=50;addLog('柳夫人深谈 声望+2 人脉+2 +50文');showScene('柳夫人深谈',['柳夫人拉着你说了很久。她对你的布庄经营颇感兴趣，当场决定和你合作一笔生意！','「这是一百两银子的定金，你先拿着。」她笑道。'], [{text:'回家',next:'go_home_return',type:'safe'}],'💰 合作');renderStats();}
+function flower_party_3(){S.prestige+=2;S.social+=2;S.money+=10000;addLog('柳夫人深谈 声望+2 人脉+2 +100两');showScene('柳夫人深谈',['柳夫人拉着你说了很久。她对你的布庄经营颇感兴趣，当场决定和你合作一笔生意！','「这是一百两银子的定金，你先拿着。」她笑道。'], [{text:'回家',next:'go_home_return',type:'safe'}],'💰 合作');renderStats();}
 function flower_party_refuse(){showScene('婉拒',['你婉言谢绝了邀请。柳夫人有些意外，但也没有勉强：「也罢，改日再叙吧。」'], [{text:'回家',next:'go_home_return',type:'safe'}],'🌸 婉拒');}
 
 function go_home_return(){showNight();}
@@ -2448,7 +2456,7 @@ function concubine_gift(){
   var aff=S.concubineAffection[cid]||50;
   S.concubineAffection[cid]=Math.min(100,aff+8);
   S.touchedConcubineToday=true;
-  addLog('送礼物给'+mname+' -15文 好感+8');
+  addLog('送礼物给'+mname+' -15两 好感+8');
   showScene('小礼物',['你在街上买了一支精致的发簪，递给了'+mname+'。',mname+'接过礼物，眼眶微微泛红：「娘子……谢谢你。」','他小心翼翼地把发簪收好，像是收到了什么珍贵的宝贝。'], [{text:'夜深了，休息吧',next:'n_sleep',type:'safe'}],'🎁 '+mname);
   renderStats();
 }
@@ -3184,7 +3192,7 @@ function harem_illness_cure(cid){
   S.money=Math.max(0,S.money-10);
   var caff=S.concubineAffection[cid]||50;
   S.concubineAffection[cid]=Math.min(100,caff+12);
-  addLog('请大夫给'+mname+'看病 -10文 好感+12');
+  addLog('请大夫给'+mname+'看病 -10两 好感+12');
   showScene('请大夫',['你请来了镇上最好的老大夫，给他开了方子。','几日后，'+mname+'痊愈了，他拉着你的手说：「娘子的大恩，我一辈子都不会忘。」'], [{text:'继续',next:'n_sleep',type:'safe'}],'🤒 痊愈');
   renderStats();
 }
@@ -3412,21 +3420,21 @@ function n_comfort_husband(){
 }
 
 // ========== 集市/事件函数 ==========
-function ev_market_buy(){S.money-=30;S.prestige+=2;addLog('囤货布料 -30两 声望+2');showScene('囤货',['你果断出手，用三十两囤了一批布料。','一个月后，边境局势稳定，布价回落——但你买的这批货，因为品质好，反而卖出了高价。','净赚二十两！'], [{text:'回家',next:'go_home',type:'safe'}],'📈 商机');renderStats();}
+function ev_market_buy(){S.money-=3000;S.prestige+=2;addLog('囤货布料 -3两 声望+2');showScene('囤货',['你果断出手，用三十两囤了一批布料。','一个月后，边境局势稳定，布价回落——但你买的这批货，因为品质好，反而卖出了高价。','净赚二两！'], [{text:'回家',next:'go_home',type:'safe'}],'📈 商机');renderStats();}
 function ev_market_calm(){addLog('买了必需品');showScene('买东西',['你没有跟风抢购，而是买了些实用的必需品。','虽然没赚到钱，但也不亏。日子还长，稳扎稳打才是正道。'], [{text:'回家',next:'go_home',type:'safe'}],'🍚 赶集');}
 function ev_market_info(){S.social+=1;addLog('打听行情 人脉+1');showScene('打听行情',['你找到相熟的布商攀谈，打听到不少有用的信息。','「最近南边的丝路不通，丝绸要涨价……不过你这眼光，说不定能在这波行情里赚到。」他意味深长地看了你一眼。'], [{text:'回家',next:'go_home',type:'safe'}],'🔍 打听');renderStats();}
 function ev_rogue_scold(){S.bravo+=1;addLog('斥责流氓 魄力+1');showScene('斥责',['你深吸一口气，厉声斥责：「光天化日之下，你们想干什么？！」','你声音不大，却字字如刀。围观众人开始议论纷纷，地痞们见势不妙，讪讪退去。'], [{text:'回家',next:'go_home',type:'safe'}],'⚔️ 脱身');renderStats();}
 function ev_rogue_escape(){addLog('趁机脱身');showScene('脱身',['你假装害怕的样子，身子发抖，地痞们得意地哈哈大笑。','趁他们注意力分散，你猛然转身，拉住一个路人的袖子大声呼救。地痞们见势不妙，匆匆散去。'], [{text:'回家',next:'go_home',type:'safe'}],'🏃 脱身');}
-function ev_rogue_fight(){S.bravo+=2;S.money-=10;addLog('动手反击 魄力+2 -10两');showScene('反击',['你不退反进，顺手抓起地上一根棍子，狠狠砸向为首地痞的头！','地痞们被打得抱头鼠窜，你虽然也挨了几拳，但总算保住了自己的清白。','路人报官，地痞被押走。你擦干嘴角的血，默默回家。'], [{text:'回家',next:'go_home',type:'safe'}],'⚔️ 反击');renderStats();}
+function ev_rogue_fight(){S.bravo+=2;S.money-=1000;addLog('动手反击 魄力+2 -10两');showScene('反击',['你不退反进，顺手抓起地上一根棍子，狠狠砸向为首地痞的头！','地痞们被打得抱头鼠窜，你虽然也挨了几拳，但总算保住了自己的清白。','路人报官，地痞被押走。你擦干嘴角的血，默默回家。'], [{text:'回家',next:'go_home',type:'safe'}],'⚔️ 反击');renderStats();}
 function ev_rich_accept(){S.invitationAccepted=true;S.invitationDay=S.day+3;addLog('接受柳府邀请');showScene('赴宴',['你欣然接受邀请，柳夫人满意地笑了。','「好，我等你。后天柳府赏花宴，不见不散。」'], [{text:'回家',next:'go_home',type:'safe'}],'🌸 柳府');}
 function ev_rich_refuse(){addLog('婉拒柳夫人');showScene('婉拒',['你婉言谢绝，柳夫人略有失望，但也没有勉强。','「也罢，姑娘是个有主见的人。日后有机会再合作吧。」'], [{text:'回家',next:'go_home',type:'safe'}],'🌸 婉拒');}
-function ev_rich_biz(){S.prestige+=1;S.money+=30;addLog('攀谈商机 声望+1 +30两');showScene('商机',['你和柳夫人深入交谈，发现了一个合作的机会——她的布庄正好缺人手，而你……有点想法。','她当场给了你三十两银子作为定金，并约定改日详谈。'], [{text:'回家',next:'go_home',type:'safe'}],'💰 商机');renderStats();}
-function ev_landlord_pay(){S.money-=5;addLog('交租 -5两');showScene('交租',['你如数交齐五两租金，王太太收起银子，哼了一声走了。','「下个月记得早做准备！」她头也不回地说。'], [{text:'回家',next:'go_home',type:'safe'}],'🏠 租金');renderStats();}
+function ev_rich_biz(){S.prestige+=1;S.money+=3000;addLog('攀谈商机 声望+1 +3两');showScene('商机',['你和柳夫人深入交谈，发现了一个合作的机会——她的布庄正好缺人手，而你……有点想法。','她当场给了你三十两银子作为定金，并约定改日详谈。'], [{text:'回家',next:'go_home',type:'safe'}],'💰 商机');renderStats();}
+function ev_landlord_pay(){S.money-=500;addLog('交租 -5两');showScene('交租',['你如数交齐五两租金，王太太收起银子，哼了一声走了。','「下个月记得早做准备！」她头也不回地说。'], [{text:'回家',next:'go_home',type:'safe'}],'🏠 租金');renderStats();}
 function ev_landlord_negotiate(){S.social+=1;addLog('讨价还价 人脉+1');showScene('谈判',['你条理清晰地和房东讲道理：「太太，我平日里从不拖欠，这次宽容几日，我一定补上。」','房东太太被你磨得没办法，答应宽限十天。'], [{text:'回家',next:'go_home',type:'safe'}],'🏠 谈判');renderStats();}
 function ev_landlord_fight(){S.prestige+=1;addLog('强势回击 声望+1');showScene('反击',['你不卑不亢地反驳：「我虽是小本生意，但也知道契约精神。下次再威胁我，我就去衙门告你滋扰。」','房东太太被你镇住了，讪讪地收起嘴脸：「算你狠！」'], [{text:'回家',next:'go_home',type:'safe'}],'⚔️ 反击');renderStats();}
-function ev_biz_attempt(){S.money-=100;S.prestige+=3;addLog('借债接店 -100两 声望+3');showScene('接店',['你借了一百两银子，高价接手了孙家布庄。','虽然风险很大，但位置极好，只要用心经营，很快就能回本。'], [{text:'回家',next:'go_home',type:'safe'}],'💰 商机');S.hasShop=true;renderStats();}
+function ev_biz_attempt(){S.money-=10000;S.prestige+=3;addLog('借债接店 -100两 声望+3');showScene('接店',['你借了一百两银子，高价接手了孙家布庄。','虽然风险很大，但位置极好，只要用心经营，很快就能回本。'], [{text:'回家',next:'go_home',type:'safe'}],'💰 商机');S.hasShop=true;renderStats();}
 function ev_biz_info(){S.social+=1;addLog('打听详情 人脉+1');showScene('打听',['你打听到孙家布庄的很多内情——位置好但欠了一些货款，招牌老但库存不少。','这让你心里有了底。做生意，得先摸清底细。'], [{text:'回家',next:'go_home',type:'safe'}],'🔍 打听');renderStats();}
-function ev_biz_giveup(){addLog('放弃商机');showScene('放弃',['三百两对你来说是个天文数字。你摇摇头，放弃了这次机会。','但心里隐隐有些不甘——如果有钱，就不用这么畏手畏脚了。'], [{text:'回家',next:'go_home',type:'safe'}],'🍃 放弃');}
+function ev_biz_giveup(){addLog('放弃商机');showScene('放弃',['三十两对你来说是个天文数字。你摇摇头，放弃了这次机会。','但心里隐隐有些不甘——如果有钱，就不用这么畏手畏脚了。'], [{text:'回家',next:'go_home',type:'safe'}],'🍃 放弃');}
 
 
 // ========== 婚姻系统：未婚活动 ==========
@@ -3469,10 +3477,10 @@ function matchmaker_auto(){
 function matchmaker_poor(){
   showScene("银两不足",["刘婆婆叹了口气：「姑娘，你这……银子不够啊。」","「婚嫁是大事，没银子可不行。回去多赚些钱，再来吧。」","她摇摇头，收起了画像。"],[{text:"先回去赚钱",next:"go_home",type:"safe"}],"🌸 媒人");
 }
-function m_pick_scholar(){S.money-=20;S.husband=HUSBANDS.find(function(h){return h.id==="scholar";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配顾长卿 -20两");renderStats();m_choose();}
-function m_pick_outgoing(){S.money-=50;S.husband=HUSBANDS.find(function(h){return h.id==="outgoing";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配柳云舟 -50两");renderStats();m_choose();}
-function m_pick_quiet(){S.money-=30;S.husband=HUSBANDS.find(function(h){return h.id==="quiet";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配沈墨白 -30两");renderStats();m_choose();}
-function m_pick_tsundere(){S.money-=15;S.husband=HUSBANDS.find(function(h){return h.id==="tsundere";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配楚灼 -15两");renderStats();m_choose();}
+function m_pick_scholar(){S.money-=2000;S.husband=HUSBANDS.find(function(h){return h.id==="scholar";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配顾长卿 -20两");renderStats();m_choose();}
+function m_pick_outgoing(){S.money-=5000;S.husband=HUSBANDS.find(function(h){return h.id==="outgoing";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配柳云舟 -50两");renderStats();m_choose();}
+function m_pick_quiet(){S.money-=3000;S.husband=HUSBANDS.find(function(h){return h.id==="quiet";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配沈墨白 -30两");renderStats();m_choose();}
+function m_pick_tsundere(){S.money-=1500;S.husband=HUSBANDS.find(function(h){return h.id==="tsundere";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配楚灼 -15两");renderStats();m_choose();}
 function n_study_alone(){
   S.wit = (S.wit||0) + 1;
   addLog('夜读 智慧+1');
