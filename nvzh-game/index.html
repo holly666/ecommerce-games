@@ -1434,6 +1434,16 @@ function n_sleep(){
   S.day++;
   checkIdentity();
 
+  // 未婚：直接跳到第二天清晨
+  if(!S.husband){
+    S.todayWeather=getWeather();
+    S.todaySeason=getSeason();
+    S.todayEvents=[];
+    showMorning();
+    return;
+  }
+
+  // 已婚：完整结算
   // 孕期推进（夫君怀孕）
   if(S.husband.isPregnant){
     S.husband.pregnancyDay=(S.husband.pregnancyDay||0)+1;
