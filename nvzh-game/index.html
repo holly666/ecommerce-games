@@ -501,7 +501,7 @@ window.startGame=function(){
   showGame();
   document.getElementById('stats-bar').style.display='block';
   document.getElementById('sbar').classList.add('on');
-  document.getElementById('aff-wrap').classList.add('on');
+  if(S.isMarried)document.getElementById('aff-wrap').classList.add('on');
   renderStats();updateAff();
   // 直接进入第一日清晨（婚姻为可选路线）
   showMorning();
@@ -3074,6 +3074,23 @@ function n_comfort_husband(){
   showScene('安抚',[t[0],t[1],'过了许久，'+hname+'的呼吸渐渐平稳了下来。他轻声说：「娘子……谢谢你。」'], [{text:'陪他入眠',next:'n_sleep',type:'safe'}],'💕 安抚');
   updateAff();
 }
+
+// ========== 集市/事件函数 ==========
+function ev_market_buy(){S.money-=30;S.prestige+=2;addLog('囤货布料 -30两 声望+2');showScene('囤货',['你果断出手，用三十两囤了一批布料。','一个月后，边境局势稳定，布价回落——但你买的这批货，因为品质好，反而卖出了高价。','净赚二十两！'], [{text:'回家',next:'go_home',type:'safe'}],'📈 商机');renderStats();}
+function ev_market_calm(){addLog('买了必需品');showScene('买东西',['你没有跟风抢购，而是买了些实用的必需品。','虽然没赚到钱，但也不亏。日子还长，稳扎稳打才是正道。'], [{text:'回家',next:'go_home',type:'safe'}],'🍚 赶集');}
+function ev_market_info(){S.social+=1;addLog('打听行情 人脉+1');showScene('打听行情',['你找到相熟的布商攀谈，打听到不少有用的信息。','「最近南边的丝路不通，丝绸要涨价……不过你这眼光，说不定能在这波行情里赚到。」他意味深长地看了你一眼。'], [{text:'回家',next:'go_home',type:'safe'}],'🔍 打听');renderStats();}
+function ev_rogue_scold(){S.bravo+=1;addLog('斥责流氓 魄力+1');showScene('斥责',['你深吸一口气，厉声斥责：「光天化日之下，你们想干什么？！」','你声音不大，却字字如刀。围观众人开始议论纷纷，地痞们见势不妙，讪讪退去。'], [{text:'回家',next:'go_home',type:'safe'}],'⚔️ 脱身');renderStats();}
+function ev_rogue_escape(){addLog('趁机脱身');showScene('脱身',['你假装害怕的样子，身子发抖，地痞们得意地哈哈大笑。','趁他们注意力分散，你猛然转身，拉住一个路人的袖子大声呼救。地痞们见势不妙，匆匆散去。'], [{text:'回家',next:'go_home',type:'safe'}],'🏃 脱身');}
+function ev_rogue_fight(){S.bravo+=2;S.money-=10;addLog('动手反击 魄力+2 -10两');showScene('反击',['你不退反进，顺手抓起地上一根棍子，狠狠砸向为首地痞的头！','地痞们被打得抱头鼠窜，你虽然也挨了几拳，但总算保住了自己的清白。','路人报官，地痞被押走。你擦干嘴角的血，默默回家。'], [{text:'回家',next:'go_home',type:'safe'}],'⚔️ 反击');renderStats();}
+function ev_rich_accept(){S.invitationAccepted=true;S.invitationDay=S.day+3;addLog('接受柳府邀请');showScene('赴宴',['你欣然接受邀请，柳夫人满意地笑了。','「好，我等你。后天柳府赏花宴，不见不散。」'], [{text:'回家',next:'go_home',type:'safe'}],'🌸 柳府');}
+function ev_rich_refuse(){addLog('婉拒柳夫人');showScene('婉拒',['你婉言谢绝，柳夫人略有失望，但也没有勉强。','「也罢，姑娘是个有主见的人。日后有机会再合作吧。」'], [{text:'回家',next:'go_home',type:'safe'}],'🌸 婉拒');}
+function ev_rich_biz(){S.prestige+=1;S.money+=30;addLog('攀谈商机 声望+1 +30两');showScene('商机',['你和柳夫人深入交谈，发现了一个合作的机会——她的布庄正好缺人手，而你……有点想法。','她当场给了你三十两银子作为定金，并约定改日详谈。'], [{text:'回家',next:'go_home',type:'safe'}],'💰 商机');renderStats();}
+function ev_landlord_pay(){S.money-=5;addLog('交租 -5两');showScene('交租',['你如数交齐五两租金，王太太收起银子，哼了一声走了。','「下个月记得早做准备！」她头也不回地说。'], [{text:'回家',next:'go_home',type:'safe'}],'🏠 租金');renderStats();}
+function ev_landlord_negotiate(){S.social+=1;addLog('讨价还价 人脉+1');showScene('谈判',['你条理清晰地和房东讲道理：「太太，我平日里从不拖欠，这次宽容几日，我一定补上。」','房东太太被你磨得没办法，答应宽限十天。'], [{text:'回家',next:'go_home',type:'safe'}],'🏠 谈判');renderStats();}
+function ev_landlord_fight(){S.prestige+=1;addLog('强势回击 声望+1');showScene('反击',['你不卑不亢地反驳：「我虽是小本生意，但也知道契约精神。下次再威胁我，我就去衙门告你滋扰。」','房东太太被你镇住了，讪讪地收起嘴脸：「算你狠！」'], [{text:'回家',next:'go_home',type:'safe'}],'⚔️ 反击');renderStats();}
+function ev_biz_attempt(){S.money-=100;S.prestige+=3;addLog('借债接店 -100两 声望+3');showScene('接店',['你借了一百两银子，高价接手了孙家布庄。','虽然风险很大，但位置极好，只要用心经营，很快就能回本。'], [{text:'回家',next:'go_home',type:'safe'}],'💰 商机');S.hasShop=true;renderStats();}
+function ev_biz_info(){S.social+=1;addLog('打听详情 人脉+1');showScene('打听',['你打听到孙家布庄的很多内情——位置好但欠了一些货款，招牌老但库存不少。','这让你心里有了底。做生意，得先摸清底细。'], [{text:'回家',next:'go_home',type:'safe'}],'🔍 打听');renderStats();}
+function ev_biz_giveup(){addLog('放弃商机');showScene('放弃',['三百两对你来说是个天文数字。你摇摇头，放弃了这次机会。','但心里隐隐有些不甘——如果有钱，就不用这么畏手畏脚了。'], [{text:'回家',next:'go_home',type:'safe'}],'🍃 放弃');}
 
 
 // ========== 婚姻系统：未婚活动 ==========
