@@ -762,7 +762,7 @@
                 else if (hid === 'duanlian') done = (rec?.duanlian||0) >= 30;
                 else if (['doujiang','milk','zhongyao'].includes(hid)) done = (rec?.[hid]||0) > 0;
                 else done = (rec?.[hid]||0) > 0;
-                habitDots.push(`<span class="history-dot ${done ? 'dot-done' : 'dot-empty'}" title="${hid}">${icon}</span>`);
+                habitDots.push(`<span class="history-dot ${done ? 'dot-done' : 'dot-miss'}" title="${hid}">${icon}</span>`);
             });
 
             const healthDots = [];
