@@ -451,7 +451,7 @@ window.s1=function(){
   document.getElementById('bg-grid').innerHTML=h;
   document.getElementById('bg-grid').onclick=null;var cards=document.querySelectorAll('#bg-grid .cc');cards.forEach(function(card){card.onclick=function(){window._selBG(parseInt(this.getAttribute('data-i')));};});
 };
-window._selBG=function(i){alert('选中了:'+i+' '+BGS[i].name);S.bg=BGS[i];var b=S.bg;
+window._selBG=function(i){S.bg=BGS[i];var b=S.bg;
   if(b.init.money)S.money=b.init.money;
   if(b.init.prestige)S.prestige=b.init.prestige;
   if(b.init.social)S.social=b.init.social;
