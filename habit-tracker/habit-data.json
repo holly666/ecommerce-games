@@ -110,5 +110,18 @@
     "chiyao": 0,
     "heparin": 1,
     "zhongyao": 200
+  },
+  "2026-04-06": {
+    "paojiao": 0,
+    "heshui": 800,
+    "doujiang": 500,
+    "milk": 0,
+    "zhongyao": 0,
+    "dabian": 1,
+    "duanlian": 1,
+    "shuijiao": 0,
+    "chiyao": 0,
+    "heparin": 1,
+    "water": 300
   }
 }
