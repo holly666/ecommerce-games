@@ -1455,13 +1455,13 @@ function n_he_cold(){
 
 // ========== 回家与结算 ==========
 function go_home(){
-  // 未婚：直接回到清晨选项
+  // 未婚：显示夜间选项
   if(!S.isMarried){
     addLog('回到家中');
     S.todayWeather=getWeather();
     S.todaySeason=getSeason();
     S.todayEvents=[];
-    showMorning();
+    showNight();
     return;
   }
 
@@ -1504,7 +1504,7 @@ function n_sleep(){
     S.todayWeather=getWeather();
     S.todaySeason=getSeason();
     S.todayEvents=[];
-    showMorning();
+    showNight();
     return;
   }
 
