@@ -150,11 +150,9 @@ var HUSBANDS=[
 var IDT_NAMES=['窘境','谋生·商','谋生·仕','崛起','一方霸主'];
 var AFF_LABELS=[[0,'陌生人'],[31,'室友'],[51,'伴侣'],[71,'知心人'],[86,'命定之人']];
 function formatMoney(n){
-  // 1黄金=10白银=100两=100000文
-  if(n>=100000)return(Math.round(n/1000)/100).toFixed(2)+'黄金';
-  if(n>=10000)return(Math.round(n/100)/10).toFixed(2)+'白银';
-  if(n>=1000)return Math.floor(n/1000)+'两'+(n%1000>0?(n%1000<10?' 00'+n%1000:''+n%1000).slice(-3).replace(/^0+/,'')?' '+n%1000+'文':'':'');
-  if(n>=100)return Math.floor(n/100)+'两'+(n%100>0?' '+n%100+'文':'');
+  // 文=铜钱，1两=白银=1000文，1黄金=10两白银=10000文
+  if(n>=10000000)return(n/10000).toFixed(2)+'黄金';
+  if(n>=1000)return Math.floor(n/1000)+'两白银'+(n%1000>0?'+'+n%1000+'文':'');
   return n+'文';
 }
 function getAffLabel(a){var label='陌生人';for(var i=0;i<AFF_LABELS.length;i++){if(a>=AFF_LABELS[i][0])label=AFF_LABELS[i][1];}return label;}
