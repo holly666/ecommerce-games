@@ -650,6 +650,10 @@ function getMorningGreeting(){
 function showMorning(){var hname=S.husband?S.husband.name:'';var greet=S.husband?getMorningGreeting():'新的一天开始了，你独自面对这小镇的清晨。';var choices=[];var rankNames={'none':'白身','merchant':'商人','童生':'童生','秀才':'秀才','举人':'举人','进士':'进士','官员':S.govTitle||'官员'};var idLabel=(!S.examLevel||S.examLevel==='none')?(S.hasShop?'白身·商人':'白身'):(rankNames[S.examLevel]||'白身');var govOpt=null;if(S.examLevel==='none'||S.examStatus==='idle'){govOpt={text:'去县学宫看看（科举仕途）',next:'exam_wenMiao',type:'gov',tag:'🏛'};}else if(S.examStatus==='prepping'){var daysLeft=Math.max(0,S.examDay-S.day);govOpt={text:'备考中（还剩'+daysLeft+'天）',next:'exam_prep_start',type:'gov',tag:'📖'};}var govWorkOpt=null;if(['童生','秀才','举人','进士','官员'].indexOf(S.examLevel)>=0){govWorkOpt={text:'去县衙处理公务（政绩）',next:'gov_work',type:'gov',tag:'📋'};}if(S.hasShop&&S.examLevel==='none'){choices.push({text:'经营布庄',next:'manage_shop',type:'safe'});choices.push({text:'去集市进货',next:'shop_restock',type:'smart'});choices.push({text:'参加社交活动',next:'social_event',type:'love'});}if(govWorkOpt)choices.push(govWorkOpt);if(['童生','秀才','举人'].indexOf(S.examLevel)>=0&&S.examStatus==='idle'){choices.push({text:'温习功课（备考）',next:'exam_prep_study',type:'smart',tag:'📖'});}choices.push({text:'去集市逛逛',next:'go_market',type:'safe'});choices.push({text:'去找点活干',next:'go_work',type:'safe'});if(S.husband){choices.push({text:'和'+hname+'商量经营',next:'shop_husband_chat',type:'love'});}choices.push({text:'去镇上打听消息',next:'go_town',type:'smart'});if(govOpt)choices.push(govOpt);if(!S.isMarried){choices.push({text:'去媒人处看看',next:'go_matchmaker',type:'safe',tag:'🌸'});}if((S.hasShop||S.examLevel!=='none')&&Math.random()<0.10){if(checkMeetNewMan())return;}if(!S.isMarried&&S.day%7===0){S.gossipPressure=(S.gossipPressure||0)+1;if(S.gossipPressure>=10&&S.gossipPressure<15&&!S.eventsTriggered.gossip_10){S.eventsTriggered.gossip_10=true;showScene('流言蜚语',['「一个姑娘家，这么大了还不嫁人……」','街坊邻居的议论渐渐多了起来。你虽不在意，却也知道——婚事，终究是绕不过去的。'],[{text:'知道了',next:'showMorning',type:'safe'}],'⚠️ 社会议论');return;}}var weathers=['晴朗的早晨','薄云遮日','微风轻拂','天色阴沉'];var weather=weathers[Math.floor(Math.random()*weathers.length)];var salaryHint='';if(S.salary>0&&S.lastSalaryDay>0&&S.day-S.lastSalaryDay>=30){var months=Math.floor((S.day-S.lastSalaryDay)/30);if(months>=1)salaryHint='【俸禄待领：'+S.salary*months+'两】';}if(!S.isMarried&&S.prestige>=10&&!S.matchmakerVisited&&Math.random()<0.15){S.matchmakerVisited=true;showScene('媒婆上门',['媒人登门','声望渐涨，上门说亲的媒人也多了起来。今日有位口碑不错的刘婆婆来访……'],[{text:'请她进门详谈',next:'matchmaker_auto',type:'safe'},{text:'婉拒，说自己想再拼两年事业',next:'matchmaker_decline',type:'smart'}],'🌸 媒人登门');return;}showScene('第'+S.day+'日 · 清晨'+salaryHint,[weather+'。阳光从窗纸透进来，在地上投下斑驳的光影。',greet,'新的一天开始了。（当前：'+idLabel+'）'],choices);}
 function go_market(){
   addLog('去集市');
+  // 偶遇柳云舟（未婚未遇见过）
+  if(!S.isMarried&&!S.metMen.outgoing&&Math.random()<0.25){
+    meet_husband_outgoing();return;
+  }
   var evs=[
     {tag:'📈 集市动态',title:'集市见闻',text:['你来到集市，今日人声鼎沸。打听之下得知，受边境局势影响，外地布匹运不进来，布价一夜涨了三成。','布商们眉开眼笑，百姓却叫苦连天。你心里盘算着，这或许是个机会……'],choices:[{text:'趁机囤货，低买高卖',next:'ev_market_buy',type:'risky'},{text:'老实买必需品，不凑热闹',next:'ev_market_calm',type:'safe'},{text:'向相熟的布商打听行情',next:'ev_market_info',type:'smart'}]},
     {tag:'⚠️ 街头冲突',title:'集市遇袭',text:['你在集市挑选布匹时，几个流里流气的地痞围了上来。','为首的刀疤脸嘿嘿一笑，伸手就要摸你的脸：「小娘子，跟爷走，爷请你喝酒——」','周围的人纷纷避开，没人敢出声。你感觉到他身后的同伙正在包抄过来。'],choices:[{text:'厉声斥责，吓退他们',next:'ev_rogue_scold',type:'fierce'},{text:'假装害怕，趁机脱身',next:'ev_rogue_escape',type:'smart'},{text:'直接动手反击',next:'ev_rogue_fight',type:'risky'}]},
@@ -1931,17 +1935,107 @@ function man_detail(manId){
 function man_chat(manId){
   var man=AVAILABLE_MEN.find(function(m){return m.id===manId;});
   if(!man){go('go_home','safe');return;}
-  var chats={};
-  chats['doc_yan']=[man.name+'谈起他走南闯北的经历，说起各种奇闻异事，让你大开眼界。','他临走时笑着说：「有缘再见，娘子。」'];
-  chats['rich_xu']=[man.name+'温文尔雅，谈起诗词歌赋来头头是道。他说：「我没什么大志向，只想活得自在。」','你忽然觉得，他活出了你想要却没有的生活。'];
-  chats['martial_pei']=[man.name+'外表冷峻，但一聊起来，发现他其实很有趣。他不喜欢舞刀弄枪，却偏爱琴棋书画。','「在这个时代，男子不习武是要被嘲笑的。」他苦笑。'];
-  chats['artisan_lin']=[man.name+'手很巧，现场给你编了一个小玩意儿。他的笑容灿烂得像阳光。','「娘子要是喜欢，我再给你编个更好看的！」'];
-  chats['scholar_lei']=[man.name+'满腹经纶，说起话来引经据典。你和他聊了很久，发现他其实很有见地。','「知音难觅。」他看着你，眼里带着几分欣赏。'];
-  chats['priest_ye']=[man.name+'说话淡淡的，却句句在点。他送你一个小香包：「道家秘方，安神用的。」','你接过香包，却看不清他眼底的神色。'];
-  var txt=chats[manId]||['你们聊了很久。'];
-  S.concubineAffection[manId]=(S.concubineAffection[manId]||30)+5;
-  addLog(man.name+'好感+5');
-  showScene(man.name+'的对话',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💬 '+man.name);
+  S.manChatCount=S.manChatCount||{};
+  S.manChatCount[manId]=(S.manChatCount[manId]||0);
+  var chatCount=S.manChatCount[manId];
+  var aff=(S.concubineAffection[manId]||30);
+
+  // 阶段1对话（0-1次）
+  var stage1={
+    'doc_yan':[
+      ['言墨谈起他走南闯北的经历，说起各种奇闻异事，让你大开眼界。','他临走时笑着说：「有缘再见，娘子。」'],
+      ['言墨从药箱里取出一包草药：「这几日天气反复，娘子拿这个泡水喝。」','你还没来得及道谢，他已经背上药箱匆匆离去。']
+    ],
+    'rich_xu':[
+      ['徐子衿温文尔雅，谈起诗词歌赋来头头是道。他说：「我没什么大志向，只想活得自在。」','你忽然觉得，他活出了你想要却没有的生活。'],
+      ['徐子衿懒洋洋地靠在窗边：「娘子，你看这外面的天，多蓝啊。」','他的语气里带着一丝不易察觉的惆怅。']
+    ],
+    'martial_pei':[
+      ['裴轻尘外表冷峻，但一聊起来，发现他其实很有趣。他不喜欢舞刀弄枪，却偏爱琴棋书画。','「在这个时代，男子不习武是要被嘲笑的。」他苦笑。'],
+      ['裴轻尘沉默了一会儿，忽然说：「娘子，你相信这世上有不受拘束的生活吗？」','你摇摇头。他也没再说什么。']
+    ],
+    'artisan_lin':[
+      ['林小川手很巧，现场给你编了一个小玩意儿。他的笑容灿烂得像阳光。','「娘子要是喜欢，我再给你编个更好看的！」'],
+      ['林小川说起他的手艺活，眼睛里有光：「我最开心的就是看到别人收到我做的礼物时的表情。」','他看向远方的天空，不知道在想什么。']
+    ],
+    'scholar_lei':[
+      ['雷子鸣满腹经纶，说起话来引经据典。你和他聊了很久，发现他其实很有见地。','「知音难觅。」他看着你，眼里带着几分欣赏。'],
+      ['雷子鸣叹道：「我这一身才学，却无用武之地。」他的眼神里有几分落寞。','你忽然觉得，这个男人的骄傲背后，藏着太多不被理解的苦闷。']
+    ],
+    'priest_ye':[
+      ['叶清羽说话淡淡的，却句句在点。他送你一个小香包：「道家秘方，安神用的。」','你接过香包，却看不清他眼底的神色。'],
+      ['叶清羽轻轻地说：「娘子的脉象有些弱，要多注意休息。」','你很奇怪：「你什么时候给我把过脉？」他但笑不语。']
+    ]
+  };
+
+  // 阶段2对话（2-3次）
+  var stage2={
+    'doc_yan':[
+      ['言墨这次说起了他的过去——他原本不是游方郎中，而是一个大户人家的少爷。家族遭难后，他流落江湖。','「人这一生，起起落落才是常态。」他轻声说。'],
+      ['「娘子，」言墨忽然说，「你这人很有趣。下次路过这里，我再来看你。」','他说话时，眼神里有一丝不易察觉的温度。']
+    ],
+    'rich_xu':[
+      ['徐子衿这次给你念了一首诗：「入我相思门，知我相思苦。」他念完，看着你笑了一下。','你心里一动——他的眼神里，似乎藏着什么。'],
+      ['「娘子，我有件事想问你。」徐子衿难得认真地说，「你……有没有想过，自己想要什么样的生活？」','他的问题让你一时语塞。']
+    ],
+    'martial_pei':[
+      ['裴轻尘这次说起了他的家人。他的父亲是武学世家传人，却要求他习武。他不愿意，两人关系很僵。','「我从小就喜欢安静的生活，但他们都觉得我不争气。」他苦笑。'],
+      ['裴轻尘拿出他的琴，给你弹了一曲。曲调平和，却透着淡淡的忧伤。','「这曲子叫什么？」你问。「《归》。」他轻声回答。']
+    ],
+    'artisan_lin':[
+      ['林小川说起他的母亲——她是镇上有名的绣娘，可惜走得早。','「我手艺都是跟她学的。」他的声音有些低落，「她走的时候，我才十二岁。」'],
+      ['「娘子，你知道我为什么喜欢做这些小玩意儿吗？」林小川的眼睛亮了起来。','「因为每一件东西做好的时候，都让我觉得——我还是有用的人。」']
+    ],
+    'scholar_lei':[
+      ['雷子鸣这天给你讲了一个故事：一个书生赶考路上，救了一个人，那人其实是考官。','「后来那个书生状元及第，衣锦还乡。」他讲完，笑了笑，「但现实里，这种事太少太少。」'],
+      ['「娘子，」雷子鸣忽然认真地说，「我有一种感觉——你和我认识的那些人都不一样。」','「哪里不一样？」你问。他想了想：「你眼里没有歧视。不管我是穷是富，你都愿意和我说话。」']
+    ],
+    'priest_ye':[
+      ['叶清羽这次给你泡了一壶茶。茶很淡，却有一种说不出的清香。','「这道茶叫'忘忧'。」他轻声说，「喝了会忘记烦恼。」'],
+      ['叶清羽忽然问：「娘子，你有什么放不下的事吗？」你一时答不上来。','他轻轻地说：「放不下，是因为还不够痛。等哪天痛够了，自然就放下了。」']
+    ]
+  };
+
+  // 阶段3对话（4次以上）
+  var stage3={
+    'doc_yan':[
+      ['言墨这次没有像平时那样急着走，而是在你身边坐了很久。','「娘子，」他轻声说，「你有没有想过——如果有一天我不再流浪了……」他没有说完。'],
+      ['你注意到言墨今天神情有些不一样。他似乎在犹豫着什么。','临走时，他忽然回头：「娘子，如果有一天我回来了——你还愿意让我进门吗？」']
+    ],
+    'rich_xu':[
+      ['徐子衿这次没有谈诗，而是认认真真地看着你：「娘子，我问你一个问题。」','「你介意我是个没出息的人吗？」他的眼神里有罕见的认真。'],
+      ['那天晚上，徐子衿一直陪着你，直到月亮升起。','他走的时候，轻声说：「娘子，谢谢你愿意听我说话。我……很开心。」']
+    ],
+    'martial_pei':[
+      ['裴轻尘这次给你看他画的画——画上是一个女子的背影，看起来很眼熟。','「这是我娘。」他轻声说，「她已经不在了。」'],
+      ['裴轻尘第一次在你面前露出了脆弱的一面：「娘子，其实我……一直很孤独。」','他的声音很轻，却字字清晰。你忽然明白，他冷峻的外表下，藏着太多的不被理解。']
+    ],
+    'artisan_lin':[
+      ['林小川这天给你做了一个风铃——他说，风铃响的时候，就是他在想你。','「娘子，这个风铃送给你。你挂在窗边，每次风铃响了，就当是我在跟你说话了。」'],
+      ['林小川走的时候，忽然回头说：「娘子，我……我以后能常来看你吗？」','他的耳根红红的，却勇敢地看着你。这是你第一次见到他害羞的样子。']
+    ],
+    'scholar_lei':[
+      ['雷子鸣这天晚上破例喝了点酒。酒后的他，比平时少了几分孤傲，多了几分柔软。','「娘子，」他轻声说，「你知不知道，我为什么总是找你聊天？」'],
+      ['他看着月亮，轻声说：「因为你让我觉得，这个世界上还有理解。」','他的眼神很温柔，温柔得让你有些意外。这是第一次，你在这个孤傲的书生身上，看到了柔软。']
+    ],
+    'priest_ye':[
+      ['叶清羽这次带你去了一个地方——一座小山坡上的小亭子。他说这里可以看到整个镇子的夜景。','「每次心情不好的时候，我就会来这里。」他轻声说。'],
+      ['叶清羽临走前，忽然停下脚步：「娘子，这段时间和你相处，我很开心。」','他的眼神在月光下格外清亮：「我不知道这算什么，但我知道——我不想忘记你。」']
+    ]
+  };
+
+  // 选择使用哪个阶段的对话
+  var pool;
+  var stage;
+  if(chatCount<=1){pool=stage1[manId]||stage1.default;stage=1;}
+  else if(chatCount<=3){pool=stage2[manId]||stage2.default;stage=2;}
+  else{pool=stage3[manId]||stage3.default;stage=3;}
+
+  var txt=pool[Math.floor(Math.random()*pool.length)];
+  S.manChatCount[manId]++;
+  S.concubineAffection[manId]=(S.concubineAffection[manId]||30)+(stage===1?5:stage===2?8:12);
+  addLog('与'+man.name+'聊天 好感+'+(stage===1?5:stage===2?8:12));
+  showScene(man.name+'的对话',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💬 '+man.name+'('+S.manChatCount[manId]+'次)');
   renderStats();
 }
 function recruit_man(manId){
@@ -1974,6 +2068,117 @@ function recruit_man(manId){
   var jText=jealousMsg?'\n'+jealousMsg:'';
   showScene('纳妾',[man.name+'闻言，微微一愣，随即笑了。','「娘子抬爱，我……我愿意。」他轻声说，眼里闪着微微的光。','从此，'+man.name+'便入了你家门下。'+(jealousMsg?'\n\n'+jealousMsg:'')], [{text:'好好待他',next:'go_home',type:'safe'}],'🌸 纳妾：'+man.name);
   if(jealousMsg)updateAff();
+}
+
+// ========== 深入交谈 & 特殊剧情 ==========
+function man_deep_doc_yan(){
+  var pool=[
+    ['言墨沉默了很久，然后说：「娘子，其实我……对你有一种不一样的感觉。」','他的声音很轻，轻得像是从很远的地方传来。'],
+    ['「你知道我为什么总是来这个镇子吗？」言墨忽然问。','你摇摇头。他苦笑：「因为这里有一个人，让我想要停留。」'],
+    ['言墨从药箱里拿出一枝花——是他不知道从哪里摘来的。','「送你。」他的耳根有些红，「别想太多，只是……觉得适合你。」']
+  ];
+  var txt=pool[Math.floor(Math.random()*pool.length)];
+  S.concubineAffection['doc_yan']=(S.concubineAffection['doc_yan']||30)+15;
+  addLog('与言墨深入交谈 好感+15');
+  showScene('深入交谈',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💕 言墨');
+  renderStats();
+}
+function man_deep_rich_xu(){
+  var pool=[
+    ['徐子衿这次没有谈诗，而是认认真真地看着你：「娘子，我问你一个问题。」','「你介意我是个没出息的人吗？」他的眼神里有罕见的认真。'],
+    ['「娘子，我有时候在想——如果我不是生在富商之家，我还能做什么？」他的声音淡淡的。','你认真地看着他：「你想做什么？」他愣了一下，然后笑了：「第一次有人这样问我。」'],
+    ['徐子衿忽然轻声念道：「入我相思门，知我相思苦。」他念完，抬头看你，眼神与往常不同。','「娘子……这句诗，我以前不懂。现在……好像有点懂了。」']
+  ];
+  var txt=pool[Math.floor(Math.random()*pool.length)];
+  S.concubineAffection['rich_xu']=(S.concubineAffection['rich_xu']||30)+15;
+  addLog('与徐子衿深入交谈 好感+15');
+  showScene('深入交谈',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💕 徐子衿');
+  renderStats();
+}
+function man_deep_martial_pei(){
+  var pool=[
+    ['裴轻尘沉默了很久，忽然说：「娘子，其实我……一直很孤独。」','他的声音很轻，却字字清晰。这是他第一次在你面前如此坦诚。'],
+    ['「你知道吗，我从小就觉得自己和周围的人格格不入。」裴轻尘轻声说。','「他们觉得我是怪人——堂堂武学世家子弟，却只喜欢琴棋书画。」他的眼神里有几分落寞。'],
+    ['裴轻尘拿出他的琴，轻轻弹了一曲。曲毕，他轻声说：「这首曲子叫《归》。我娘生前最爱听。」','「她走了以后，我就一直在想——我该归向何处？」他抬起头，目光落在你身上。']
+  ];
+  var txt=pool[Math.floor(Math.random()*pool.length)];
+  S.concubineAffection['martial_pei']=(S.concubineAffection['martial_pei']||30)+15;
+  addLog('与裴轻尘深入交谈 好感+15');
+  showScene('深入交谈',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💕 裴轻尘');
+  renderStats();
+}
+function man_deep_artisan_lin(){
+  var pool=[
+    ['林小川这次没有笑。他安静地坐在那里，看着远方。','「娘子，」他轻声说，「我有时候会想——如果我娘还在，她会为我骄傲吗？」'],
+    ['「你知道我为什么喜欢做小玩意儿吗？」林小川的眼睛亮了起来。','「因为每一件东西做好的时候，都让我觉得——我还是有用的人。」他的声音有些哽咽。'],
+    ['林小川忽然说：「娘子，我有样东西想送你。」他从怀里掏出一个小木雕——是一朵花。','「我雕了很久。」他的耳根红红的，「希望……你喜欢。」']
+  ];
+  var txt=pool[Math.floor(Math.random()*pool.length)];
+  S.concubineAffection['artisan_lin']=(S.concubineAffection['artisan_lin']||30)+15;
+  addLog('与林小川深入交谈 好感+15');
+  showScene('深入交谈',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💕 林小川');
+  renderStats();
+}
+function man_deep_scholar_lei(){
+  var pool=[
+    ['雷子鸣这天晚上破例喝了点酒。酒后的他，比平时少了几分孤傲，多了几分柔软。','「娘子，」他轻声说，「你知不知道，我为什么总是找你聊天？」'],
+    ['「因为你让我觉得——」他看着月亮，轻声说，「这个世界上还有理解。」','他的眼神很温柔，温柔得让你有些意外。这是第一次，你在这个孤傲的书生身上，看到了柔软。'],
+    ['雷子鸣忽然问：「娘子，你相信这世上有知音吗？」你还没回答，他轻声说：','「以前不信。现在……也许信了。」他看着你，眼神里有一丝不易察觉的温度。']
+  ];
+  var txt=pool[Math.floor(Math.random()*pool.length)];
+  S.concubineAffection['scholar_lei']=(S.concubineAffection['scholar_lei']||30)+15;
+  addLog('与雷子鸣深入交谈 好感+15');
+  showScene('深入交谈',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💕 雷子鸣');
+  renderStats();
+}
+function man_deep_priest_ye(){
+  var pool=[
+    ['叶清羽这次带你去了一个地方——一座小山坡上的小亭子。他说这里可以看到整个镇子的夜景。','「每次心情不好的时候，我就会来这里。」他轻声说。'],
+    ['叶清羽忽然停下脚步：「娘子，这段时间和你相处，我很开心。」','他的眼神在月光下格外清亮：「我不知道这算什么，但我知道——我不想忘记你。」'],
+    ['叶清羽轻轻地说：「娘子，你有什么放不下的事吗？」你一时答不上来。','他轻轻地说：「放不下，是因为还不够痛。等哪天痛够了，自然就放下了。」他看着你，似乎话中有话。']
+  ];
+  var txt=pool[Math.floor(Math.random()*pool.length)];
+  S.concubineAffection['priest_ye']=(S.concubineAffection['priest_ye']||30)+15;
+  addLog('与叶清羽深入交谈 好感+15');
+  showScene('深入交谈',[txt[0],txt[1]],[{text:'返回',next:'go_home',type:'safe'}],'💕 叶清羽');
+  renderStats();
+}
+
+function man_special_doc_yan(){
+  S.concubineAffection['doc_yan']=(S.concubineAffection['doc_yan']||30)+20;
+  addLog('与言墨独处 好感+20');
+  showScene('特别时刻',['那天晚上下了很大的雨。言墨浑身湿透地出现在你家门口。','「我……只是想确认一下，你有没有带伞。」他轻声说，雨水顺着他的发梢滴落。','你赶紧拉他进屋。他站在门口，有些不好意思地笑了：「看来今晚是走不了了。」'], [{text:'让他留下',next:'go_home',type:'safe'}],'✨ 言墨');
+  renderStats();
+}
+function man_special_rich_xu(){
+  S.concubineAffection['rich_xu']=(S.concubineAffection['rich_xu']||30)+20;
+  addLog('与徐子衿独处 好感+20');
+  showScene('特别时刻',['那天下午，徐子衿忽然来找你，神情有些不一样。','「娘子，我有东西想给你看。」他难得认真地说。','他带你去了一个地方——是他家后院的小亭子。他坐在那里，轻轻念了一首诗：','「入我相思门，知我相思苦……」他念完，抬头看你，眼神里有几分你从未见过的温柔。'], [{text:'静静地陪他',next:'go_home',type:'safe'}],'✨ 徐子衿');
+  renderStats();
+}
+function man_special_martial_pei(){
+  S.concubineAffection['martial_pei']=(S.concubineAffection['martial_pei']||30)+20;
+  addLog('与裴轻尘独处 好感+20');
+  showScene('特别时刻',['那天夜里，裴轻尘忽然出现在你家门口。月光下，他的神情比平时柔和了许多。','「娘子，」他轻声说，「我有件事想告诉你。」','他沉默了很久，然后说：「我……一直以来都很孤独。直到遇见你。」','他的声音很轻，却字字清晰。这是他第一次如此坦诚。'], [{text:'握住他的手',next:'go_home',type:'safe'}],'✨ 裴轻尘');
+  renderStats();
+}
+function man_special_artisan_lin(){
+  S.concubineAffection['artisan_lin']=(S.concubineAffection['artisan_lin']||30)+20;
+  addLog('与林小川独处 好感+20');
+  showScene('特别时刻',['那天傍晚，林小川忽然来找你，手里拿着一个风铃。','「娘子，这个风铃送给你。」他的笑容还是那么灿烂，耳根却红红的。','「你挂在窗边，每次风铃响了，就当是我在跟你说话了。」','他临走时，忽然回头：「娘子，我……我以后能常来看你吗？」他的眼神里有几分期待。'], [{text:'当然可以',next:'go_home',type:'safe'}],'✨ 林小川');
+  renderStats();
+}
+function man_special_scholar_lei(){
+  S.concubineAffection['scholar_lei']=(S.concubineAffection['scholar_lei']||30)+20;
+  addLog('与雷子鸣独处 好感+20');
+  showScene('特别时刻',['那天晚上，雷子鸣破例喝了点酒。他约你在镇外的小亭子见面。','「娘子，」他轻声说，「你知不知道，我为什么总是找你聊天？」','月光下，他的眼神比平时柔和了许多：「因为你让我觉得，这个世界上还有理解。」','他的声音很轻，温柔得让你有些意外。你忽然觉得，这个孤傲的书生，其实比谁都渴望被懂得。'], [{text:'陪伴他',next:'go_home',type:'safe'}],'✨ 雷子鸣');
+  renderStats();
+}
+function man_special_priest_ye(){
+  S.concubineAffection['priest_ye']=(S.concubineAffection['priest_ye']||30)+20;
+  addLog('与叶清羽独处 好感+20');
+  showScene('特别时刻',['那天夜里，叶清羽忽然出现在你家门口，神情有些不一样。','「娘子，我能带你去一个地方吗？」他轻声问。','他带你去了那座小山坡上的小亭子。月光下，整个镇子灯火点点，如梦如幻。','「每次心情不好的时候，我就会来这里。」他轻声说，转过头看着你，「但今晚……有你在，好像不一样了。」'], [{text:'静静地站在他身边',next:'go_home',type:'safe'}],'✨ 叶清羽');
+  renderStats();
 }
 
 // ========== 妾室系统 ==========
@@ -3463,6 +3668,16 @@ window.go=function(n,t){
       if(n.startsWith('recruit_')){
         var rid=n.split('_').slice(1).join('_');
         recruit_man(rid);return;
+      }
+      if(n.startsWith('man_deep_')){
+        var did=n.split('_').slice(2).join('_');
+        var deepFn='man_deep_'+did;
+        if(typeof window[deepFn]==='function'){window[deepFn]();return;}
+      }
+      if(n.startsWith('man_special_')){
+        var sid=n.split('_').slice(2).join('_');
+        var specialFn='man_special_'+sid;
+        if(typeof window[specialFn]==='function'){window[specialFn]();return;}
       }
       if(n.startsWith('harem_judge_')){
         var pj=n.split('_');
