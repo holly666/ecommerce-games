@@ -414,6 +414,11 @@ function showNight(){
     }
   }
 
+  // 和离（已婚+低好感）
+  if(S.husband&&S.affection<20){
+    opts.push({text:'和离吧',next:'divorce_husband',type:'risky',tag:'💔'});
+  }
+
   // 后宅管家
   if(S.concubines&&S.concubines.length>=2){
     opts.push({text:'处理后宅事务（管家）',next:'n_manage_harem',type:'safe',tag:'🏠'});
@@ -427,7 +432,13 @@ function showNight(){
         return;
       }
       var mname=AVAILABLE_MEN.find(function(m){return m.id===man;});
-      if(mname)opts.push({text:'打听'+mname.name+'的下落',next:'man_detail_'+man,type:'love',tag:'👤'});
+      if(mname){
+      opts.push({text:'打听'+mname.name+'的下落',next:'man_detail_'+man,type:'love',tag:'👤'});
+      // 念念不忘阶段：主动表态
+      if(!S.romanticInterest[man]&&S.metMen[man]>=3){
+        opts.push({text:'去见'+mname.name+'（表白心意）',next:'romantic_confess_'+man,type:'love',tag:'💕'});
+      }
+    }
     });
   }
 
@@ -3465,20 +3476,64 @@ function matchmaker_auto(){
     ["顾家"+cs+"两，柳家"+co+"两，沈家"+cq+"两，楚家"+ct+"两。姑娘攒够银两了吗？"]
   ];
   var choices=[
-    {text:"选顾长卿（"+cs+"两）"+(m>=cs?"":"(钱不够)"),next:m>=cs?"m_pick_scholar":"matchmaker_poor",type:"safe"},
-    {text:"选柳云舟（"+co+"两）"+(m>=co?"":"(钱不够)"),next:m>=co?"m_pick_outgoing":"matchmaker_poor",type:"safe"},
-    {text:"选沈墨白（"+cq+"两）"+(m>=cq?"":"(钱不够)"),next:m>=cq?"m_pick_quiet":"matchmaker_poor",type:"safe"},
-    {text:"选楚灼（"+ct+"两）"+(m>=ct?"":"(钱不够)"),next:m>=ct?"m_pick_tsundere":"matchmaker_poor",type:"risky"}
+    {text:S.husband?"纳顾长卿为偏房（"+cs+"两）"+(m>=cs?"":"(钱不够)"):"选顾长卿（"+cs+"两）"+(m>=cs?"":"(钱不够)"),next:m>=cs?"m_pick_scholar":"matchmaker_poor",type:"safe"},
+    {text:S.husband?"纳柳云舟为偏房（"+co+"两）"+(m>=co?"":"(钱不够)"):"选柳云舟（"+co+"两）"+(m>=co?"":"(钱不够)"),next:m>=co?"m_pick_outgoing":"matchmaker_poor",type:"safe"},
+    {text:S.husband?"纳沈墨白为偏房（"+cq+"两）"+(m>=cq?"":"(钱不够)"):"选沈墨白（"+cq+"两）"+(m>=cq?"":"(钱不够)"),next:m>=cq?"m_pick_quiet":"matchmaker_poor",type:"safe"},
+    {text:S.husband?"纳楚灼为偏房（"+ct+"两）"+(m>=ct?"":"(钱不够)"):"选楚灼（"+ct+"两）"+(m>=ct?"":"(钱不够)"),next:m>=ct?"m_pick_tsundere":"matchmaker_poor",type:"risky"}
   ];
   showScene("四户人家",arr,choices,"🌸 媒人介绍");
 }
 function matchmaker_poor(){
   showScene("银两不足",["刘婆婆叹了口气：「姑娘，你这……银子不够啊。」","「婚嫁是大事，没银子可不行。回去多赚些钱，再来吧。」","她摇摇头，收起了画像。"],[{text:"先回去赚钱",next:"go_home",type:"safe"}],"🌸 媒人");
 }
-function m_pick_scholar(){S.money-=2000;S.husband=HUSBANDS.find(function(h){return h.id==="scholar";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配顾长卿 -20两");renderStats();m_choose();}
-function m_pick_outgoing(){S.money-=5000;S.husband=HUSBANDS.find(function(h){return h.id==="outgoing";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配柳云舟 -50两");renderStats();m_choose();}
-function m_pick_quiet(){S.money-=3000;S.husband=HUSBANDS.find(function(h){return h.id==="quiet";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配沈墨白 -30两");renderStats();m_choose();}
-function m_pick_tsundere(){S.money-=1500;S.husband=HUSBANDS.find(function(h){return h.id==="tsundere";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配楚灼 -15两");renderStats();m_choose();}
+function m_pick_scholar(){
+  var man=HUSBANDS.find(function(h){return h.id==="scholar";});
+  if(S.husband){
+    if(S.concubines.indexOf('scholar')>=0){showScene('已有偏房',['此人已在府中。','你和'+man.name+'早已相识，无需再纳。'], [{text:'知道了',next:'showNight',type:'safe'}],'🌸 提醒');return;}
+    S.concubines.push('scholar');
+    S.concubineAffection['scholar']=50;
+    addLog('纳顾长卿为偏房');
+    showScene('纳偏房',['顾长卿嫁入府中，成了你的偏房。','他微微一笑：「多谢娘子收留。」'], [{text:'回房休息',next:'n_sleep',type:'safe'}],'🌸 纳偏房');renderStats();
+  } else {
+    S.money-=2000;S.husband=man;S.isMarried=true;S.searchingForHusband=false;S.affection=50;S.romanticInterest['scholar']=true;addLog("婚配顾长卿 -20两");renderStats();m_choose();
+  }
+}
+function m_pick_outgoing(){
+  var man=HUSBANDS.find(function(h){return h.id==="outgoing";});
+  if(S.husband){
+    if(S.concubines.indexOf('outgoing')>=0){showScene('已有偏房',['此人已在府中。'], [{text:'知道了',next:'showNight',type:'safe'}],'🌸 提醒');return;}
+    S.concubines.push('outgoing');
+    S.concubineAffection['outgoing']=50;
+    addLog('纳柳云舟为偏房');
+    showScene('纳偏房',['柳云舟嫁入府中，成了你的偏房。','他眉眼弯弯：「以后还请娘子多多关照。」'], [{text:'回房休息',next:'n_sleep',type:'safe'}],'🌸 纳偏房');renderStats();
+  } else {
+    S.money-=5000;S.husband=man;S.isMarried=true;S.searchingForHusband=false;S.affection=50;S.romanticInterest['outgoing']=true;addLog("婚配柳云舟 -50两");renderStats();m_choose();
+  }
+}
+function m_pick_quiet(){
+  var man=HUSBANDS.find(function(h){return h.id==="quiet";});
+  if(S.husband){
+    if(S.concubines.indexOf('quiet')>=0){showScene('已有偏房',['此人已在府中。'], [{text:'知道了',next:'showNight',type:'safe'}],'🌸 提醒');return;}
+    S.concubines.push('quiet');
+    S.concubineAffection['quiet']=50;
+    addLog('纳沈墨白为偏房');
+    showScene('纳偏房',['沈墨白嫁入府中，成了你的偏房。','他沉默地点了点头，眼神里却有一丝暖意。'], [{text:'回房休息',next:'n_sleep',type:'safe'}],'🌸 纳偏房');renderStats();
+  } else {
+    S.money-=3000;S.husband=man;S.isMarried=true;S.searchingForHusband=false;S.affection=50;S.romanticInterest['quiet']=true;addLog("婚配沈墨白 -30两");renderStats();m_choose();
+  }
+}
+function m_pick_tsundere(){
+  var man=HUSBANDS.find(function(h){return h.id==="tsundere";});
+  if(S.husband){
+    if(S.concubines.indexOf('tsundere')>=0){showScene('已有偏房',['此人已在府中。'], [{text:'知道了',next:'showNight',type:'safe'}],'🌸 提醒');return;}
+    S.concubines.push('tsundere');
+    S.concubineAffection['tsundere']=50;
+    addLog('纳楚灼为偏房');
+    showScene('纳偏房',['楚灼嫁入府中，成了你的偏房。','他别过头去，耳根却红了：「哼……别以为我是自愿的。」'], [{text:'回房休息',next:'n_sleep',type:'safe'}],'🌸 纳偏房');renderStats();
+  } else {
+    S.money-=1500;S.husband=man;S.isMarried=true;S.searchingForHusband=false;S.affection=50;S.romanticInterest['tsundere']=true;addLog("婚配楚灼 -15两");renderStats();m_choose();
+  }
+}
 function n_study_alone(){
   S.wit = (S.wit||0) + 1;
   addLog('夜读 智慧+1');
@@ -3492,6 +3547,68 @@ function n_stargaze(){
   showScene('观星',[txt,'这样的夜晚，一个人也挺好。'],[{text:'回房休息',next:'n_sleep',type:'safe'}],'✨ 星空');
 }
 
+
+// ========== 感情表白 ==========
+function romantic_confess_scholar(){romantic_confess('scholar');}
+function romantic_confess_outgoing(){romantic_confess('outgoing');}
+function romantic_confess_quiet(){romantic_confess('quiet');}
+function romantic_confess_tsundere(){romantic_confess('tsundere');}
+function romantic_confess(manId){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===manId})||HUSBANDS.find(function(m){return m.id===manId});
+  if(!man)return;
+  var mname=man.name;
+  S.romanticInterest[manId]=true;
+  var manAff=S.affectionRecords&&S.affectionRecords[manId]||50;
+  if(manAff>=80){
+    showScene('情投意合',[mname+'微微一怔，随即眼眸亮了起来。',mname+'轻声说：「我……我也一直想对你说这句话。」','「其实我……」他的脸微微泛红。'], [
+      {text:'嫁给我吧',next:'propose_marriage_'+manId,type:'love',tag:'💍'},
+      {text:'做我的偏房吧',next:'take_concubine_'+manId,type:'conc',tag:'🌸'}
+    ],'💕 情投意合');
+  } else {
+    S.affectionRecords=S.affectionRecords||{};
+    S.affectionRecords[manId]=(S.affectionRecords[manId]||50)+5;
+    showScene('表白心意',[mname+'听了你的话，神色微微一变。',mname+'沉默片刻，轻声说：「我……没想到你会对我说这个。」','「给我一些时间，好吗？」他的眼神里有期待，也有一丝踌躇。'], [{text:'我等你',next:'n_sleep',type:'safe'}],'💌 表明心意');
+  }
+}
+
+function take_concubine_scholar(){take_concubine('scholar');}
+function take_concubine_outgoing(){take_concubine('outgoing');}
+function take_concubine_quiet(){take_concubine('quiet');}
+function take_concubine_tsundere(){take_concubine('tsundere');}
+function take_concubine(manId){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===manId})||HUSBANDS.find(function(m){return m.id===manId});
+  if(!man)return;
+  if(S.concubines.indexOf(manId)>=0){showScene('已有偏房',['此人已在府中。'], [{text:'知道了',next:'showNight',type:'safe'}],'🌸');return;}
+  S.concubines.push(manId);
+  S.concubineAffection[manId]=60;
+  addLog('纳'+man.name+'为偏房');
+  renderStats();
+  showScene('纳偏房',[man.name+'嫁入府中，成了你的偏房。','他微微一笑：「多谢娘子。」'], [{text:'回房休息',next:'n_sleep',type:'safe'}],'🌸 纳偏房');
+}
+
+function propose_marriage_scholar(){propose_marriage('scholar');}
+function propose_marriage_outgoing(){propose_marriage('outgoing');}
+function propose_marriage_quiet(){propose_marriage('quiet');}
+function propose_marriage_tsundere(){propose_marriage('tsundere');}
+function propose_marriage(manId){
+  var man=AVAILABLE_MEN.find(function(m){return m.id===manId})||HUSBANDS.find(function(m){return m.id===manId});
+  if(!man)return;
+  if(S.husband&&S.husband.id!==manId){
+    var exHusband=S.husband;
+    S.concubines=S.concubines||[];
+    if(S.concubines.indexOf(exHusband.id)<0){S.concubines.push(exHusband.id);S.concubineAffection[exHusband.id]=S.affection;}
+    addLog('与'+exHusband.name+'结束婚姻');
+  }
+  S.husband=man;
+  S.isMarried=true;
+  S.affection=80;
+  S.romanticInterest[manId]=true;
+  addLog('与'+man.name+'定下终身');
+  renderStats();
+  showScene('定下终身',['你握住'+man.name+'的手，微微一笑。',man.name+'的眼睛瞬间亮了起来——那是这辈子最真挚的欢喜。','「我愿意。」他轻声说，眼眶微红。','窗外月色如水，你们终于确定了彼此的心意。'], [{text:'开始新生活',next:'m_choose',type:'safe'}],'💍 终身之约');
+}
+
+// Router entries for propose/take_concubine
 // ========== 路由 ==========
 window.go=function(n,t){
   switch(n){
@@ -3507,6 +3624,19 @@ window.go=function(n,t){
     case 'matchmaker_decline':matchmaker_decline();break;
     case 'matchmaker_poor':matchmaker_poor();break;
     case 'm_choose':m_choose();break;
+    case 'divorce_husband':divorce_husband();break;
+    case 'romantic_confess_scholar':romantic_confess_scholar();break;
+    case 'take_concubine_scholar':take_concubine_scholar();break;
+    case 'take_concubine_outgoing':take_concubine_outgoing();break;
+    case 'take_concubine_quiet':take_concubine_quiet();break;
+    case 'take_concubine_tsundere':take_concubine_tsundere();break;
+    case 'propose_marriage_scholar':propose_marriage_scholar();break;
+    case 'propose_marriage_outgoing':propose_marriage_outgoing();break;
+    case 'propose_marriage_quiet':propose_marriage_quiet();break;
+    case 'propose_marriage_tsundere':propose_marriage_tsundere();break;
+    case 'romantic_confess_outgoing':romantic_confess_outgoing();break;
+    case 'romantic_confess_quiet':romantic_confess_quiet();break;
+    case 'romantic_confess_tsundere':romantic_confess_tsundere();break;
     case 'fi_0':fi_0();break;
     case 'fi_1':fi_1();break;
     case 'fi_2':fi_2();break;
