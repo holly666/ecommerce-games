@@ -447,7 +447,7 @@ function showNight(){
   }
 
   // 随机前兆提示
-  if(!S.flags.randomEventTriggered&&S.concubines&&S.concubines.length>=2&&Math.random()<0.2){
+  if(!S.flags?.randomEventTriggered&&S.concubines&&S.concubines.length>=2&&Math.random()<0.2){
     opts.push({text:'⚠️后宅似乎有些动静……',next:'harem_conflict_event',type:'risky',tag:'⚔'});
   }
 
@@ -1617,7 +1617,7 @@ function n_sleep(){
   }
 
   // 随机宅斗/剧情事件（概率触发，每次最多一个）
-  if(!S.flags.randomEventTriggered){
+  if(!S.flags?.randomEventTriggered){
     var rand=Math.random();
     if(S.concubines&&S.concubines.length>=2&&rand<0.15){
       // 宅斗事件
