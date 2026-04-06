@@ -3079,30 +3079,47 @@ function n_comfort_husband(){
 // ========== 婚姻系统：未婚活动 ==========
 function go_matchmaker(){
   S.searchingForHusband = true;
-  showScene('媒人处',['刘婆婆见了你，笑得满脸褶子。','「姑娘终于想通了！我这儿有好几户不错的人家——」','她掏出四幅画像，一一介绍。'],[
-    {text:'选顾长卿（书香门第·才华文静）',next:'m_pick_scholar',type:'safe'},
-    {text:'选柳云舟（商贾之家·人缘活泼）',next:'m_pick_outgoing',type:'safe'},
-    {text:'选沈墨白（武勋世家·细腻机敏）',next:'m_pick_quiet',type:'safe'},
-    {text:'选楚灼（寒门子弟·傲娇别扭）',next:'m_pick_tsundere',type:'risky'},
-    {text:'暂时不想嫁人，先走了',next:'go_home',type:'safe'}
-  ],'🌸 媒人处');
+  var cs=20,co=50,cq=30,ct=15;
+  var m=S.money||0;
+  var arr=[
+    ["刘婆婆见了你，笑得满脸褶子。"],
+    ["「姑娘终于想通了！我这儿有好几户不错的人家——」"],
+    ["她掏出四幅画像，一一介绍。"],
+    ["顾家公子，书香门第，彩礼约"+cs+"两；柳家公子，商贾之家，彩礼约"+co+"两；沈家公子，武勋世家，彩礼约"+cq+"两；楚家公子，寒门子弟，彩礼约"+ct+"两。"],
+    ["她眯着眼看你：「姑娘有多少银两？」"]
+  ];
+  var choices=[
+    {text:"选顾长卿（"+cs+"两）"+(m>=cs?"":"(钱不够)"),next:m>=cs?"m_pick_scholar":"matchmaker_poor",type:"safe"},
+    {text:"选柳云舟（"+co+"两）"+(m>=co?"":"(钱不够)"),next:m>=co?"m_pick_outgoing":"matchmaker_poor",type:"safe"},
+    {text:"选沈墨白（"+cq+"两）"+(m>=cq?"":"(钱不够)"),next:m>=cq?"m_pick_quiet":"matchmaker_poor",type:"safe"},
+    {text:"选楚灼（"+ct+"两）"+(m>=ct?"":"(钱不够)"),next:m>=ct?"m_pick_tsundere":"matchmaker_poor",type:"risky"},
+    {text:"暂时不想嫁人，先走了",next:"go_home",type:"safe"}
+  ];
+  showScene("媒人处",arr,choices,"🌸 媒人处");
 }
 function matchmaker_auto(){
   S.searchingForHusband = true;
-  showScene('四户人家',['刘婆婆将四幅画像铺开——','「这第一户，顾家，书香门第……」「这第二户，柳家……」「第三户，沈家……」「第四户，楚家，寒门子弟……」'],[
-    {text:'选顾长卿',next:'m_pick_scholar',type:'safe'},
-    {text:'选柳云舟',next:'m_pick_outgoing',type:'safe'},
-    {text:'选沈墨白',next:'m_pick_quiet',type:'safe'},
-    {text:'选楚灼',next:'m_pick_tsundere',type:'risky'}
-  ],'🌸 媒人介绍');
+  var cs=20,co=50,cq=30,ct=15;
+  var m=S.money||0;
+  var arr=[
+    ["刘婆婆将四幅画像铺开——"],
+    ["顾家"+cs+"两，柳家"+co+"两，沈家"+cq+"两，楚家"+ct+"两。姑娘攒够银两了吗？"]
+  ];
+  var choices=[
+    {text:"选顾长卿（"+cs+"两）"+(m>=cs?"":"(钱不够)"),next:m>=cs?"m_pick_scholar":"matchmaker_poor",type:"safe"},
+    {text:"选柳云舟（"+co+"两）"+(m>=co?"":"(钱不够)"),next:m>=co?"m_pick_outgoing":"matchmaker_poor",type:"safe"},
+    {text:"选沈墨白（"+cq+"两）"+(m>=cq?"":"(钱不够)"),next:m>=cq?"m_pick_quiet":"matchmaker_poor",type:"safe"},
+    {text:"选楚灼（"+ct+"两）"+(m>=ct?"":"(钱不够)"),next:m>=ct?"m_pick_tsundere":"matchmaker_poor",type:"risky"}
+  ];
+  showScene("四户人家",arr,choices,"🌸 媒人介绍");
 }
-function matchmaker_decline(){
-  addLog('婉拒媒婆 想先拼事业');
-  S.searchingForHusband = false;
-  showScene('婉拒',['刘婆婆有些遗憾地走了。','「也罢，姑娘是个有主见的。等你想通了，随时来找我。」','','——但你知道，议亲的事，越拖越难。'], [{text:'继续生活',next:'go_home',type:'safe'}],'🌸 媒人');
+function matchmaker_poor(){
+  showScene("银两不足",["刘婆婆叹了口气：「姑娘，你这……银子不够啊。」","「婚嫁是大事，没银子可不行。回去多赚些钱，再来吧。」","她摇摇头，收起了画像。"],[{text:"先回去赚钱",next:"go_home",type:"safe"}],"🌸 媒人");
 }
-
-// ========== 夜晚未婚活动 ==========
+function m_pick_scholar(){S.money-=20;S.husband=HUSBANDS.find(function(h){return h.id==="scholar";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配顾长卿 -20两");renderStats();m_choose();}
+function m_pick_outgoing(){S.money-=50;S.husband=HUSBANDS.find(function(h){return h.id==="outgoing";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配柳云舟 -50两");renderStats();m_choose();}
+function m_pick_quiet(){S.money-=30;S.husband=HUSBANDS.find(function(h){return h.id==="quiet";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配沈墨白 -30两");renderStats();m_choose();}
+function m_pick_tsundere(){S.money-=15;S.husband=HUSBANDS.find(function(h){return h.id==="tsundere";});S.isMarried=true;S.searchingForHusband=false;S.affection=50;addLog("婚配楚灼 -15两");renderStats();m_choose();}
 function n_study_alone(){
   S.wit = (S.wit||0) + 1;
   addLog('夜读 智慧+1');
@@ -3128,6 +3145,7 @@ window.go=function(n,t){
     case 'go_matchmaker':go_matchmaker();break;
     case 'matchmaker_auto':matchmaker_auto();break;
     case 'matchmaker_decline':matchmaker_decline();break;
+    case 'matchmaker_poor':matchmaker_poor();break;
     case 'm_choose':m_choose();break;
     case 'fi_0':fi_0();break;
     case 'fi_1':fi_1();break;
