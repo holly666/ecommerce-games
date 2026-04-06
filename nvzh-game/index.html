@@ -489,7 +489,12 @@ window.s3=function(){
   document.getElementById('sel-h').innerHTML='<button class=cbtn onclick="startGame()">✓ 确认，开始新生活</button>';
 };
 window.startGame=function(){
+  var savedBg=S.bg;
+  var savedTrait=S.trait;
+  var savedName=document.getElementById('player-name')?document.getElementById('player-name').value.trim():'';
   initS();
+  S.bg=savedBg;
+  S.trait=savedTrait;
   S.husband=null;
   S.isMarried=false;
   S.searchingForHusband=false;
