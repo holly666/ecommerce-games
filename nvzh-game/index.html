@@ -1424,6 +1424,16 @@ function n_he_cold(){
 
 // ========== 回家与结算 ==========
 function go_home(){
+  // 未婚：直接回到清晨选项
+  if(!S.isMarried){
+    addLog('回到家中');
+    S.todayWeather=getWeather();
+    S.todaySeason=getSeason();
+    S.todayEvents=[];
+    showMorning();
+    return;
+  }
+
   // 面试通过后次日入职
 
   // 赏花宴触发检测
