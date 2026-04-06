@@ -449,11 +449,9 @@ window.s1=function(){
   var h='';
   BGS.forEach(function(b,i){h+='<div class=cc data-i='+i+'><div class=cn>'+b.name+'</div><div class=cd>'+b.desc+'</div><div class=ct>';b.tags.forEach(function(t){h+='<span class=ch>'+t+'</span>';});h+='</div></div>';});
   document.getElementById('bg-grid').innerHTML=h;
-  document.getElementById('bg-grid').onclick=function(e){console.log('bg-grid clicked, target:',e.target.className);var card=e.target.closest('.cc');console.log('card found:',!!card,card?card.getAttribute('data-i'):null);if(card){window._selBG(parseInt(card.getAttribute('data-i')));}};
+  document.getElementById('bg-grid').onclick=null;var cards=document.querySelectorAll('#bg-grid .cc');cards.forEach(function(card){card.onclick=function(){window._selBG(parseInt(this.getAttribute('data-i')));};});
 };
-window._selBG=function(i){
-  console.log('_selBG called, i=',i,'BGS[i]=',BGS[i]);
-  S.bg=BGS[i];var b=S.bg;
+window._selBG=function(i){alert('选中了:'+i+' '+BGS[i].name);S.bg=BGS[i];var b=S.bg;
   if(b.init.money)S.money=b.init.money;
   if(b.init.prestige)S.prestige=b.init.prestige;
   if(b.init.social)S.social=b.init.social;
@@ -461,13 +459,13 @@ window._selBG=function(i){
   if(b.init.bravo)S.bravo=b.init.bravo;
   document.getElementById('sel-bg').innerHTML='<div class=sel>✓ 已选择：<strong>'+b.name+'</strong> — '+b.desc+'</div><button class=cbtn onclick="s2()">下一步 →</button>';
 };
-window.s2=function(){console.log('s2 called');
+window.s2=function(){alert('s2被调用了!');
   document.getElementById('step1').classList.remove('on');
   document.getElementById('step2').classList.add('on');
   var h='';
   TRAITS.forEach(function(t,i){h+='<div class=cc data-i='+i+'><div class=cn>'+t.name+'</div><div class=cd>'+t.desc+'</div><div class=ct>';t.tags.forEach(function(tag){h+='<span class=ch>'+tag+'</span>';});h+='</div></div>';});
   document.getElementById('trait-grid').innerHTML=h;
-  document.getElementById('trait-grid').onclick=function(e){console.log('trait-grid clicked, target:',e.target);var card=e.target.closest('.cc');if(card){window._selTrait(parseInt(card.getAttribute('data-i')));}};
+  document.getElementById('trait-grid').onclick=null;var tcards=document.querySelectorAll('#trait-grid .cc');tcards.forEach(function(card){card.onclick=function(){window._selTrait(parseInt(this.getAttribute('data-i')));};});
 };
 window._selTrait=function(i){
   console.log('_selTrait called, i=',i);S.trait=TRAITS[i];var t=S.trait;
