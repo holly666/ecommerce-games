@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>习惯打卡追踪</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -14,544 +13,822 @@
             padding: 20px;
         }
         .container { max-width: 900px; margin: 0 auto; }
-        h1 { color: white; text-align: center; margin-bottom: 30px; font-size: 28px; }
+        h1 { color: white; text-align: center; margin-bottom: 20px; font-size: 26px; }
+        
+        /* 日期导航 */
+        .date-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .date-nav button {
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        .date-nav button:hover { transform: scale(1.1); }
+        .date-nav input {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .date-nav .today-btn {
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
         .card {
             background: white;
             border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
-        .card h2 { color: #333; margin-bottom: 15px; font-size: 18px; }
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .stat-box {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            color: white;
-        }
+        .card h2 { color: #333; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        /* 服药 - 优化：清晰区分"今日计划"vs"已完成" */
+        .med-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .med-item { background: #f0f0f0; border-radius: 12px; padding: 12px 8px; text-align: center; }
+        /* 今日计划 - 要做 */
+        .med-item.plan-yes { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        /* 今日计划 - 不用做 */
+        .med-item.plan-no { background: #e8e8e8; color: #999; }
+        /* 已完成 */
+        .med-item.done { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
+        /* 未完成 */
+        .med-item.miss { background: #ffebee; color: #e53935; }
+        .med-icon { font-size: 24px; margin-bottom: 4px; }
+        .med-name { font-size: 12px; font-weight: 600; }
+        .med-status { font-size: 11px; opacity: 0.85; margin-top: 3px; }
+        .med-label { font-size: 9px; opacity: 0.7; margin-top: 2px; }
+        
+        /* 统计 */
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .stat-box { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; padding: 15px; text-align: center; color: white; }
         .stat-box:nth-child(2) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
         .stat-box:nth-child(3) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .stat-box:nth-child(4) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .stat-number { font-size: 36px; font-weight: bold; }
-        .stat-label { font-size: 14px; opacity: 0.9; }
-        .streak-card {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        .streak-item {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-        }
-        .streak-item .icon { font-size: 28px; margin-bottom: 5px; }
-        .streak-item .count { font-size: 24px; font-weight: bold; color: #333; }
-        .streak-item .label { font-size: 12px; color: #888; margin-top: 3px; }
-        .habit-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .habit-item {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .habit-icon { font-size: 32px; }
-        .habit-info { flex: 1; }
-        .habit-name { font-weight: bold; color: #333; font-size: 15px; }
-        .habit-target { font-size: 12px; color: #888; margin-top: 2px; }
+        .stat-number { font-size: 28px; font-weight: bold; }
+        .stat-label { font-size: 12px; opacity: 0.9; }
+        
+        /* 习惯 */
+        .habit-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .habit-row:last-child { border-bottom: none; }
+        .habit-left { display: flex; align-items: center; gap: 10px; }
+        .habit-icon { font-size: 24px; }
+        .habit-name { font-size: 14px; color: #333; }
+        .habit-value { font-size: 13px; color: #888; }
         .habit-status { font-size: 20px; }
-        .progress-section { margin-top: 20px; }
-        .progress-item { margin-bottom: 15px; }
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: #555;
-        }
-        .progress-bar {
-            background: #eee;
-            border-radius: 10px;
-            height: 8px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        .fill-red { background: linear-gradient(90deg, #f093fb, #f5576c); }
-        .fill-blue { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .habit-status.done { color: #43e97b; }
+        .habit-status.miss { color: #ff6b6b; }
+        .habit-status.mid { color: #ffa500; }
+        
+        /* 健康 */
+        .health-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .health-item { background: #f8f9fa; border-radius: 12px; padding: 12px; }
+        .health-item.alert { background: #fff3e0; border: 1px solid #ff9800; }
+        .health-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+        .health-value { font-size: 14px; font-weight: 600; color: #333; }
+        .health-value.alert { color: #e64a19; }
+        .health-detail { font-size: 11px; color: #888; margin-top: 2px; }
+        
+        /* 周视图 */
+        .week-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .week-day { background: #f8f9fa; border-radius: 10px; padding: 10px 4px; text-align: center; }
+        .week-day.today { background: #e8f0fe; border: 2px solid #667eea; }
+        .week-day .day-name { font-size: 10px; color: #888; margin-bottom: 3px; }
+        .week-day .day-date { font-size: 12px; font-weight: bold; color: #333; margin-bottom: 6px; }
+        .week-habits { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+        .week-habit { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .wh-done { background: #43e97b; }
+        .wh-miss { background: #ff6b6b; }
+        .wh-empty { background: #eee; }
+        
+        /* 进度条 */
+        .progress-item { margin-bottom: 12px; }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 13px; }
+        .progress-bar { height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 5px; transition: width 0.5s; }
         .fill-green { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        .fill-blue { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .fill-purple { background: linear-gradient(90deg, #667eea, #764ba2); }
         .fill-orange { background: linear-gradient(90deg, #fa709a, #fee140); }
-        .fill-purple { background: linear-gradient(90deg, #a8edea, #fed6e3); }
-        .footer {
-            text-align: center;
-            color: rgba(255,255,255,0.7);
-            font-size: 13px;
-            margin-top: 20px;
+
+        /* 30天历史弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .week-nav {
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-        .week-nav h3 { color: #333; font-size: 16px; }
-        .week-nav button {
-            background: #667eea;
-            color: white;
+        .modal-header h3 { font-size: 18px; color: #333; }
+        .modal-close {
+            background: #f0f0f0;
             border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
+            border-radius: 50%;
+            width: 36px; height: 36px;
+            font-size: 18px;
             cursor: pointer;
-            font-size: 13px;
+            color: #666;
         }
-        .week-nav button:hover { background: #5a6fd6; }
-        .day-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .day-header {
+        .modal-close:hover { background: #e0e0e0; }
+        .history-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .history-day {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 6px 4px;
             text-align: center;
             font-size: 11px;
-            color: #888;
-            padding: 4px 0;
         }
-        .day-cell {
-            aspect-ratio: 1;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .day-cell.completed { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
-        .day-cell.partial { background: linear-gradient(135deg, #fed6e3, #a8edea); color: #555; }
-        .day-cell.missed { background: #f0f0f0; color: #ccc; }
-        .day-cell.future { background: #f8f9fa; color: #ddd; }
-        .day-cell.today { border: 2px solid #667eea; }
-        .day-cell .icons { font-size: 14px; }
-        .recent-list { display: grid; gap: 8px; }
-        .recent-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 14px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            font-size: 14px;
-        }
-        .recent-item .date { color: #888; font-size: 12px; }
-        .recent-item .status { font-weight: bold; }
-        .recent-item .status.done { color: #43e97b; }
-        .recent-item .status.missed { color: #f5576c; }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-        }
-        .summary-row:last-child { border-bottom: none; }
-        .summary-row .label { color: #666; }
-        .summary-row .value { font-weight: bold; color: #333; }
-        .total-liquid {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            border-radius: 15px;
-            padding: 20px;
-            color: white;
-            text-align: center;
-            margin-top: 15px;
-        }
-        .total-liquid .number { font-size: 42px; font-weight: bold; }
-        .total-liquid .unit { font-size: 18px; opacity: 0.9; }
-        .total-liquid .label { font-size: 14px; opacity: 0.8; margin-top: 4px; }
+        .history-day.has-data { background: #e8f5e9; }
+        .history-day.today { background: #e3f2fd; border: 2px solid #667eea; }
+        .history-day .date { font-weight: bold; color: #333; margin-bottom: 3px; }
+        .history-day .weekday { color: #888; font-size: 10px; margin-bottom: 4px; }
+        .history-day .habits { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
+        .history-day .habit-dot { font-size: 10px; }
+        .history-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+        .dot-done { background: #43e97b; }
+        .dot-miss { background: #ff6b6b; }
+        .dot-empty { background: #eee; }
+        
+        .footer { text-align: center; color: rgba(255,255,255,0.7); margin-top: 15px; font-size: 11px; }
+        .no-data { text-align: center; color: #888; padding: 30px; }
+        .loading { text-align: center; color: white; padding: 40px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🦶 习惯打卡追踪</h1>
-
-        <!-- 本周概况 -->
-        <div class="card">
-            <h2>📅 本周打卡概况</h2>
-            <div id="weekSummary"></div>
+        <h1>🌟 习惯打卡追踪</h1>
+        
+        <!-- 日期导航 -->
+        <div class="date-nav">
+            <button onclick="changeDate(-1)">◀</button>
+            <input type="date" id="datePicker" onchange="loadDate(this.value)">
+            <button onclick="changeDate(1)">▶</button>
+            <button class="today-btn" onclick="goToday()">今</button>
         </div>
-
-        <!-- 每日详情 -->
-        <div class="card">
-            <h2>📊 近两周记录</h2>
-            <div id="recentRecords"></div>
-        </div>
-
-        <!-- 本周进度 -->
-        <div class="card">
-            <h2>🎯 本周目标完成率</h2>
-            <div id="weekProgress"></div>
-        </div>
-
-        <div class="footer">
-            数据更新于 <span id="updateDate"></span> | 坚持就是胜利！💪
+        
+        <div id="content">
+            <div class="loading">加载中...</div>
         </div>
     </div>
 
-<script>
-const DATA = {
-  "习惯列表": [
-    {
-      "id": "paojiao",
-      "name": "泡脚",
-      "icon": "🦶",
-      "target": "每日",
-      "unit": ""
-    },
-    {
-      "id": "heshui",
-      "name": "每日液体",
-      "icon": "💧",
-      "target": "每日2000ml",
-      "unit": "ml"
-    },
-    {
-      "id": "duanlian",
-      "name": "锻炼",
-      "icon": "🏃",
-      "target": "每周3-4次",
-      "unit": ""
-    },
-    {
-      "id": "shuijiao",
-      "name": "22点前睡觉",
-      "icon": "😴",
-      "target": "每日",
-      "unit": ""
-    },
-    {
-      "id": "dabian",
-      "name": "大便",
-      "icon": "💩",
-      "target": "每日1次",
-      "unit": ""
-    },
-    {
-      "id": "chiyao",
-      "name": "吃药",
-      "icon": "💊",
-      "target": "每日",
-      "unit": ""
-    },
-    {
-      "id": "heparin",
-      "name": "肝素针",
-      "icon": "💉",
-      "target": "每天",
-      "unit": ""
-    }
-  ],
-  "打卡记录": [
-    {
-      "日期": "2026-03-23",
-      "周": "周日",
-      "paojiao": 0,
-      "heshui": 0,
-      "duanlian": 0,
-      "shuijiao": 0,
-      "dabian": 1,
-      "_简版": true
-    },
-    {
-      "日期": "2026-03-24",
-      "周": "周一",
-      "paojiao": 0,
-      "heshui": 0,
-      "duanlian": 0,
-      "shuijiao": 0,
-      "dabian": 1,
-      "_简版": true
-    },
-    {
-      "日期": "2026-03-25",
-      "周": "周二",
-      "paojiao": 0,
-      "heshui": 0,
-      "duanlian": 0,
-      "shuijiao": 0,
-      "dabian": 1,
-      "_简版": true
-    },
-    {
-      "日期": "2026-03-28",
-      "周": "周六",
-      "paojiao": 0,
-      "heshui": 3850,
-      "duanlian": 30,
-      "shuijiao": 1,
-      "dabian": 0
-    },
-    {
-      "日期": "2026-03-29",
-      "周": "周日",
-      "paojiao": 1,
-      "heshui": 1000,
-      "doujiang": 400,
-      "milk": 0,
-      "water": 400,
-      "duanlian": 30,
-      "shuijiao": 0,
-      "dabian": 0,
-      "chiyao": 1,
-      "zhongyao": 200
-    },
-    {
-      "日期": "2026-03-30",
-      "周": "周一",
-      "paojiao": 1,
-      "heshui": 1550,
-      "doujiang": 400,
-      "milk": 0,
-      "zhongyao": 200,
-      "duanlian": 0,
-      "shuijiao": 1,
-      "dabian": 1,
-      "chiyao": 0,
-      "water": 950
-    },
-    {
-      "日期": "2026-04-03",
-      "周": "周五",
-      "paojiao": 0,
-      "heshui": 750,
-      "duanlian": 0,
-      "shuijiao": 0,
-      "dabian": 1,
-      "chiyao": 0,
-      "water": 50,
-      "doujiang": 500,
-      "zhongyao": 200
-    },
-    {
-      "日期": "2026-04-05",
-      "周": "周日",
-      "paojiao": 0,
-      "heshui": 200,
-      "duanlian": 0,
-      "shuijiao": 0,
-      "dabian": 0,
-      "chiyao": 0,
-      "heparin": 1,
-      "doujiang": 0,
-      "zhongyao": 0
-    },
-    {
-      "日期": "2026-04-06",
-      "周": "周一",
-      "paojiao": 0,
-      "heshui": 300,
-      "duanlian": 1,
-      "shuijiao": 0,
-      "dabian": 1,
-      "chiyao": 0,
-      "heparin": 1,
-      "doujiang": 500,
-      "zhongyao": 0
-    }
-  ]
-};
-
-// 从打卡记录和最新数据合并
-function getAllRecords() {
-  const records = JSON.parse(JSON.stringify(DATA['打卡记录'] || []));
-  // 加入最新日期条目（去重，保留最新的）
-  const latestKeys = Object.keys(DATA).filter(k => k.match(/^\d{4}-\d{2}-\d{2}$/));
-  latestKeys.forEach(date => {
-    const existing = records.findIndex(r => r['日期'] === date);
-    const entry = DATA[date];
-    const newRec = {
-      '日期': date,
-      '周': ['周日','周一','周二','周三','周四','周五','周六'][new Date(date).getDay()],
-      'paojiao': entry['泡脚'] ? 1 : 0,
-      'heshui': entry['喝水'] || 0,
-      'duanlian': entry['运动'] ? 1 : 0,
-      'shuijiao': entry['早睡'] ? 1 : 0,
-      'dabian': 0,
-      'chiyao': 0,
-      'heparin': 1,
-      'doujiang': entry['doujiang'] || 0,
-      'zhongyao': Array.isArray(entry['中药']) ? entry['中药'].length * 200 : 0
-    };
-    if (existing >= 0) {
-      records[existing] = newRec;
-    } else {
-      records.push(newRec);
-    }
-  });
-  return records.sort((a,b) => a['日期'].localeCompare(b['日期']));
-}
-
-function getWeekDates() {
-  const today = new Date();
-  const dayOfWeek = today.getDay();
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-  const dates = [];
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
-    dates.push(d.toISOString().split('T')[0]);
-  }
-  return dates;
-}
-
-function getRecordByDate(date, records) {
-  return records.find(r => r['日期'] === date) || null;
-}
-
-function isCompleted(habit, record) {
-  if (!record) return false;
-  if (habit.unit === 'ml') {
-    return (record[habit.id] || 0) >= 2000;
-  }
-  return (record[habit.id] || 0) > 0;
-}
-
-function renderWeekSummary() {
-  const records = getAllRecords();
-  const weekDates = getWeekDates();
-  const today = new Date().toISOString().split('T')[0];
-  const habits = DATA['习惯列表'];
-  
-  let html = '<div class="day-grid"><div class="day-header">一</div><div class="day-header">二</div><div class="day-header">三</div><div class="day-header">四</div><div class="day-header">五</div><div class="day-header">六</div><div class="day-header">日</div></div>';
-  html += '<div class="day-grid">';
-  weekDates.forEach(date => {
-    const rec = getRecordByDate(date, records);
-    const isToday = date === today;
-    const isFuture = date > today;
-    const completedCount = habits.filter(h => isCompleted(h, rec)).length;
-    const totalCount = habits.length;
-    let cls = isFuture ? 'future' : (completedCount >= totalCount * 0.6 ? 'completed' : completedCount > 0 ? 'partial' : 'missed');
-    if (isToday) cls += ' today';
-    const icons = [];
-    if (rec) {
-      if (rec.paojiao) icons.push('🦶');
-      if ((rec.heshui || 0) >= 500) icons.push('💧');
-      if (rec.duanlian) icons.push('🏃');
-      if (rec.shuijiao) icons.push('😴');
-      if (rec.chiyao) icons.push('💊');
-      if (rec.heparin) icons.push('💉');
-    }
-    html += `<div class="day-cell ${cls}"><div>${date.slice(5)}</div><div class="icons">${icons.slice(0,3).join('')}</div></div>`;
-  });
-  html += '</div>';
-  
-  // 本周液体总量
-  let totalLiquid = 0;
-  weekDates.forEach(date => {
-    const rec = getRecordByDate(date, records);
-    if (rec) totalLiquid += (rec.heshui || 0) + (rec.doujiang || 0) + (rec.zhongyao || 0);
-  });
-  html += `<div class="total-liquid"><div class="number">${totalLiquid}</div><div class="unit">ml</div><div class="label">本周液体合计（含中药·目标2000ml/日）</div></div>`;
-  
-  document.getElementById('weekSummary').innerHTML = html;
-}
-
-function renderRecentRecords() {
-  const records = getAllRecords();
-  const habits = DATA['习惯列表'];
-  const recent = records.slice(-14);
-  
-  let html = '<div class="recent-list">';
-  recent.reverse().forEach(rec => {
-    const date = rec['日期'];
-    const dayNames = ['周日','周一','周二','周三','周四','周五','周六'];
-    const d = new Date(date);
-    const dayName = dayNames[d.getDay()];
-    const today = new Date().toISOString().split('T')[0];
-    const isToday = date === today;
+    <script>
+    const HABIT_JSON = 'habit-data.json';
+    const HEALTH_JSON = 'health-data.json';
     
-    const items = [];
-    habits.forEach(h => {
-      if (h.unit === 'ml') {
-        const val = rec[h.id] || 0;
-        if (val > 0) items.push(`${h.icon} ${h.name}: ${val}ml`);
-      } else {
-        if (rec[h.id] > 0) items.push(`${h.icon} ${h.name}`);
-      }
-    });
-    if (rec.doujiang > 0) items.push(`🥛 豆浆: ${rec.doujiang}ml`);
-    if (rec.zhongyao > 0) items.push(`🍵 中药: ${rec.zhongyao}ml`);
+    let habitData = null;
+    let healthData = null;
+    let currentDate = new Date();
     
-    const status = items.length >= 4 ? 'done' : items.length > 0 ? 'done' : 'missed';
-    html += `<div class="recent-item">
-      <div><span class="status ${status}">${date} ${dayName}${isToday ? ' [今天]' : ''}</span>
-      <div style="font-size:12px;color:#888;margin-top:3px">${items.length > 0 ? items.join(' · ') : '无记录'}</div></div>
-    </div>`;
-  });
-  html += '</div>';
-  document.getElementById('recentRecords').innerHTML = html;
-}
+    async function loadAll() {
+        try {
+            const [h, hl] = await Promise.all([
+                fetch(HABIT_JSON).then(r => r.json()),
+                fetch(HEALTH_JSON).then(r => r.json()).catch(() => ({"健康记录":{}}))
+            ]);
+            habitData = h;
+            healthData = hl;
+            const today = new Date().toISOString().split('T')[0];
+            currentDate = new Date();
+            document.getElementById('datePicker').value = today;
+            render(today);
+        } catch(e) {
+            document.getElementById('content').innerHTML = `<div class="no-data">加载失败: ${e.message}</div>`;
+        }
+    }
+    
+    function changeDate(delta) {
+        currentDate.setDate(currentDate.getDate() + delta);
+        const d = currentDate.toISOString().split('T')[0];
+        document.getElementById('datePicker').value = d;
+        render(d);
+    }
+    
+    function goToday() {
+        currentDate = new Date();
+        const today = currentDate.toISOString().split('T')[0];
+        document.getElementById('datePicker').value = today;
+        render(today);
+    }
+    
+    function loadDate(d) {
+        currentDate = new Date(d + 'T12:00:00');
+        render(d);
+    }
+    
+    function getRecord(dateStr) {
+        if (!habitData) return null;
+        // 支持两种格式：打卡记录数组 或 日期做key的对象
+        if (habitData.打卡记录) {
+            return habitData.打卡记录.find(r => r.日期 === dateStr);
+        }
+        return habitData[dateStr] || null;
+    }
+    
+    function getHealth(dateStr) {
+        if (!healthData) return {};
+        const records = healthData.健康记录 || healthData;
+        return records[dateStr] || {};
+    }
+    
+    function getHabitList() {
+        return habitData && habitData.习惯列表 ? habitData.习惯列表 : [
+            {id:'heshui', name:'喝水', icon:'💧'},
+            {id:'doujiang', name:'豆浆', icon:'🥛'},
+            {id:'milk', name:'牛奶', icon:'🥛'},
+            {id:'zhongyao', name:'中药', icon:'🍵'},
+            {id:'paojiao', name:'泡脚', icon:'🦶'},
+            {id:'duanlian', name:'锻炼', icon:'🏃'},
+            {id:'shuijiao', name:'早睡', icon:'😴'},
+            {id:'dabian', name:'大便', icon:'💩'},
+        ];
+    }
 
-function renderWeekProgress() {
-  const records = getAllRecords();
-  const weekDates = getWeekDates();
-  const habits = DATA['习惯列表'];
-  
-  // 计算本周每天完成情况
-  const weekDays = weekDates.map(date => {
-    const rec = getRecordByDate(date, records);
-    const result = { date, record: rec };
-    habits.forEach(h => {
-      if (h.unit === 'ml') {
-        result[h.id] = (rec && (rec[h.id] || 0) >= 2000) ? 1 : 0;
-      } else {
-        result[h.id] = (rec && rec[h.id] > 0) ? 1 : 0;
-      }
-    });
-    return result;
-  });
-  
-  const actualDays = weekDays.filter(d => d.date <= new Date().toISOString().split('T')[0]).length;
-  
-  let html = '<div class="progress-section">';
-  habits.forEach(h => {
-    const done = weekDays.filter(d => d[h.id] > 0).length;
-    const pct = actualDays > 0 ? Math.round(done / actualDays * 100) : 0;
-    const color = pct >= 80 ? 'fill-green' : pct >= 50 ? 'fill-blue' : pct > 0 ? 'fill-orange' : 'fill-red';
-    const targetLabel = h.unit === 'ml' ? `${done}/${actualDays}天(≥2000ml)` : `${done}/${actualDays}天`;
-    html += `<div class="progress-item">
-      <div class="progress-label"><span>${h.icon} ${h.name}</span><span>${pct}% (${targetLabel})</span></div>
-      <div class="progress-bar"><div class="progress-fill ${color}" style="width:${pct}%"></div></div>
-    </div>`;
-  });
-  
-  // 锻炼特别统计（每周3-4次）
-  const exerciseDays = weekDays.filter(d => d.duanlian > 0).length;
-  const exPct = Math.round(exerciseDays / 4 * 100);
-  html += `<div class="progress-item">
-    <div class="progress-label"><span>🏃 锻炼（每周3-4次）</span><span>${exerciseDays}/4次</span></div>
-    <div class="progress-bar"><div class="progress-fill fill-purple" style="width:${Math.min(100,exPct)}%"></div></div>
-  </div>`;
-  
-  html += '</div>';
-  document.getElementById('weekProgress').innerHTML = html;
-}
+    // 自动生成每日点评（温暖鼓励风格）
+    function generateDailyCommentary(rec, dateStr) {
+        if (!rec) return '';
 
-function init() {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('updateDate').textContent = today;
-  renderWeekSummary();
-  renderRecentRecords();
-  renderWeekProgress();
-}
+        const liquid = (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.zhongyao||0);
+        const duanlian = rec.duanlian||0;
+        const paojiao = rec.paojiao||0;
+        const shuijiao = rec.shuijiao||0;
+        const dabian = rec.dabian||0;
+        const hd = getHealth(dateStr);
 
-init();
-</script>
+        const parts = [];
+
+        // 今日点评
+        if (liquid >= 2000) {
+            parts.push('水分补得很足，今天喝够了');
+        } else if (liquid >= 1000) {
+            parts.push(`喝了${liquid}ml，再来一点就达标了`);
+        } else if (liquid >= 500) {
+            parts.push(`才${liquid}ml，有点少啦`);
+        } else if (liquid > 0) {
+            parts.push(`才${liquid}ml，今天得加把劲了`);
+        } else {
+            parts.push('今天还没怎么喝水，记得补充水分');
+        }
+
+        if (duanlian >= 30) {
+            parts.push('运动完成，棒');
+        } else if (duanlian > 0) {
+            parts.push(`动了${duanlian}分钟，再动一动凑个30分钟吧`);
+        } else {
+            parts.push('今天还没动起来，站起来走走吧');
+        }
+
+        if (paojiao) {
+            parts.push('泡脚了，很好');
+        } else {
+            parts.push('晚上记得泡脚');
+        }
+
+        if (dabian) parts.push('大便正常');
+        if (shuijiao) parts.push('早睡达成');
+
+        const healthNotes = [];
+        if (hd) {
+            if (hd.胀气 && hd.胀气.有) healthNotes.push('有点胀气');
+            if (hd.夜尿 && hd.夜尿.次数 > 0) healthNotes.push(`夜尿${hd.夜尿.次数}次`);
+        }
+        if (healthNotes.length > 0) {
+            parts.push('健康上要关注一下：' + healthNotes.join('、'));
+        }
+
+        const mainText = parts.join('；') + '。';
+
+        // ===== 周趋势分析 =====
+        const today = new Date(dateStr + 'T12:00:00');
+        const weekDays = [];
+        for (let i = 6; i >= 0; i--) {
+            const dt = new Date(today);
+            dt.setDate(dt.getDate() - i);
+            weekDays.push(dt.toISOString().split('T')[0]);
+        }
+
+        const weekStats = weekDays.map(d => {
+            const r = getRecord(d);
+            return {
+                date: d,
+                liquid: r ? (r.heshui||0)+(r.doujiang||0)+(r.milk||0)+(r.zhongyao||0) : 0,
+                duanlian: r ? (r.duanlian||0) : 0,
+                paojiao: r ? (r.paojiao||0) : 0,
+                shuijiao: r ? (r.shuijiao||0) : 0,
+                dabian: r ? (r.dabian||0) : 0,
+            };
+        });
+
+        const count = (field, val) => weekStats.filter(d => d[field] >= val).length;
+        const avg = field => {
+            const vals = weekStats.map(d => d[field]).filter(v => v > 0);
+            return vals.length > 0 ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : 0;
+        };
+
+        // 连续达标天数
+        const streak = (field, goal) => {
+            let s = 0;
+            for (let i = weekDays.length - 1; i >= 0; i--) {
+                if (weekStats[i][field] >= goal) s++;
+                else break;
+            }
+            return s;
+        };
+
+        const weekParts = [];
+        const dStreak = streak('duanlian', 30);
+        const pStreak = streak('paojiao', 1);
+        const sStreak = streak('shuijiao', 1);
+        const dbStreak = streak('dabian', 1);
+
+        if (dStreak >= 3) weekParts.push(`锻炼连续${dStreak}天，状态不错`);
+        else if (count('duanlian', 30) >= 4) weekParts.push(`本周锻炼${count('duanlian',30)}天，继续保持`);
+
+        if (pStreak >= 3) weekParts.push(`泡脚连续${pStreak}天，很棒`);
+        else if (count('paojiao',1) >= 4) weekParts.push(`本周泡脚${count('paojiao',1)}天，养生在线`);
+
+        if (count('dabian',1) >= 5) weekParts.push(`大便基本正常`);
+        else if (count('dabian',1) >= 3) weekParts.push(`大便${count('dabian',1)}天，要注意`);
+
+        const avgLiquid = avg('liquid');
+        if (avgLiquid >= 1800) weekParts.push(`日均喝水${avgLiquid}ml，达标情况良好`);
+        else if (avgLiquid > 0) weekParts.push(`日均喝水${avgLiquid}ml，还需提高`);
+
+        if (sStreak >= 3) weekParts.push(`早睡连续${sStreak}天，作息规律`);
+
+        // 健康趋势
+        const healthRecords = weekDays.map(d => getHealth(d)).filter(h => h && Object.keys(h).length > 0);
+        const nightUrinationDays = healthRecords.filter(h => h.夜尿 && h.夜尿.次数 > 0).length;
+        const bloatingDays = healthRecords.filter(h => h.胀气 && h.胀气.有).length;
+        if (bloatingDays >= 3) weekParts.push(`胀气${bloatingDays}天了，饮食要调整一下`);
+        if (nightUrinationDays >= 4) weekParts.push(`夜尿偏多（${nightUrinationDays}天），注意晚上摄水量`);
+
+        let weekText = '';
+        if (weekParts.length > 0) {
+            weekText = '<div style="margin-top:12px;padding-top:12px;border-top:1px dashed #ddd;font-size:12px;color:#888;">📊 本周趋势：' + weekParts.join('；') + '</div>';
+        }
+
+        // 当日建议
+        const tips = [];
+        if (liquid < 2000) tips.push('多喝水');
+        if (duanlian < 30 && duanlian > 0) tips.push('再锻炼一会');
+        if (!paojiao) tips.push('晚上泡脚');
+        if (!shuijiao) tips.push('早点睡觉');
+
+        let tipText = '';
+        if (tips.length > 0) {
+            tipText = '<div style="margin-top:10px;font-size:12px;color:#666;">💬 建议：' + tips.join(' / ') + '</div>';
+        }
+
+        return `<div style="background:linear-gradient(135deg,#fff9e6,#fff3cd);border-radius:16px;padding:16px;margin-top:16px;border-left:4px solid #ffc107;">
+            <div style="font-size:13px;color:#555;line-height:1.8;">${mainText}${weekText}${tipText}</div>
+        </div>`;
+    }
+    
+    function calcStreak(habitId, dateStr) {
+        if (!habitData) return 0;
+        let streak = 0;
+        const d = new Date(dateStr + 'T12:00:00');
+        for (let i = 0; i < 365; i++) {
+            const check = new Date(d);
+            check.setDate(check.getDate() - i);
+            const ds = check.toISOString().split('T')[0];
+            const rec = habitData[ds] || null;
+            const val = rec ? rec[habitId] : 0;
+            let done = val > 0;
+            if (habitId === 'heshui') done = val >= 2000;
+            if (habitId === 'doujiang' || habitId === 'milk' || habitId === 'zhongyao') done = val > 0;
+            if (!done) break;
+            streak++;
+        }
+        return streak;
+    }
+    
+    function render(dateStr) {
+        const rec = getRecord(dateStr);
+        const h = getHealth(dateStr);
+        const habits = getHabitList();
+        const d = new Date(dateStr + 'T12:00:00');
+        const weekday = ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+        const dateDisplay = `${d.getMonth()+1}月${d.getDate()}日（${weekday}）`;
+        const isToday = dateStr === new Date().toISOString().split('T')[0];
+        
+        // 服药判断
+        const TREATMENT_START = new Date('2026-03-27');
+        const VD_START = new Date('2026-04-01');
+        const HEPARIN_BASE = new Date('2026-04-02'); // 04-02右边
+        const daysSinceStart = Math.floor((d - TREATMENT_START) / (1000*60*60*24)) + 1;
+        const vdDays = Math.floor((d - VD_START) / (1000*60*60*24)) + 1;
+        const isEven = daysSinceStart % 2 === 0;
+        const vdToday = (vdDays - 1) % 3 === 0;
+        // 肝素：左右交替（04-02右，04-03左...）
+        const heparinIdx = Math.floor((d - HEPARIN_BASE) / (1000*60*60*24));
+        const heparinSide = heparinIdx % 2 === 0 ? '右边' : '左边';
+        // 阿司匹林：隔天一次，从04-03算第一天
+        const ASPIRIN_BASE = new Date('2026-04-03');
+        const aspirinDays = Math.floor((d - ASPIRIN_BASE) / (1000*60*60*24)) + 1;
+        const aspirinToday = aspirinDays % 2 === 1; // 奇数天吃
+        // 黄体酮：偶数天打，左右交替（第1次右，第2次左...）
+        const progIdx = Math.floor(daysSinceStart / 2); // 第几次注射
+        const progSide = progIdx % 2 === 1 ? '右边' : '左边';
+        
+        // 计算总液体（heshui已经是所有液体的累计，不需要再相加）
+        const totalLiquid = rec ? (rec.heshui || 0) : 0;
+        const liquidPct = Math.min(100, Math.round((totalLiquid / 2000) * 100));
+        const liquidDone = totalLiquid >= 2000;
+        
+        // 计算锻炼
+        const duanlianVal = rec ? rec.duanlian || 0 : 0;
+        const duanlianDone = duanlianVal >= 30;
+        
+        // 周打卡统计
+        const dow = d.getDay();
+        const monday = new Date(d);
+        monday.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+        const weekDays = [];
+        for (let i = 0; i < 7; i++) {
+            const wd = new Date(monday);
+            wd.setDate(monday.getDate() + i);
+            weekDays.push(wd.toISOString().split('T')[0]);
+        }
+        
+        let weekDoneCount = 0;
+        weekDays.forEach(wd => {
+            const wr = getRecord(wd);
+            if (wr) {
+                if (wr.paojiao > 0) weekDoneCount++;
+                if ((wr.heshui||0) >= 2000) weekDoneCount++;
+                if (wr.duanlian >= 30) weekDoneCount++;
+                if (wr.shuijiao > 0) weekDoneCount++;
+            }
+        });
+        const weekRate = Math.round((weekDoneCount / (habits.length * 7)) * 100);
+        const totalStreaks = habits.reduce((sum, h) => sum + calcStreak(h.id, dateStr), 0);
+        
+        let html = '';
+        
+        // 服药卡片
+        // 服药卡片：cond=true显示蓝色"计划"，cond=false显示灰色"—"
+        const medItems = [
+            ['💊','阿司匹林', aspirinToday, '✅吃', '❌不吃'],
+            ['💉','肝素针', true, `✅打（${heparinSide}）`, ''],
+            ['💊','维生素D', vdToday, '✅吃', '—'],
+            ['🍵','中药', true, '✅早晚各1袋', ''],
+            ['💊','羟氯喹', true, '✅早晚饭后各1粒', ''],
+            ['💊','微量维生素', true, '✅早上1粒', ''],
+            ['💊','泼尼松', true, '✅早上1粒', ''],
+        ];
+        
+        html += `<div class="card">
+            <h2>💊 服药提醒（治疗第${daysSinceStart}天）</h2>
+            <div style="text-align:center;font-size:11px;color:#888;margin-bottom:8px;">💡 蓝色=今日计划 | 灰色=今日不用做</div>
+            <div class="med-grid">`;
+        medItems.forEach(([icon, name, cond, yesS, noS]) => {
+            const cls = cond ? 'plan-yes' : (noS ? 'plan-no' : '');
+            const status = cond ? yesS : (noS || '—');
+            html += `<div class="med-item ${cls}">
+                <div class="med-icon">${icon}</div>
+                <div class="med-name">${name}</div>
+                <div class="med-status">${status}</div>
+            </div>`;
+        });
+        html += '</div></div>';
+        
+        // 统计卡片
+        html += `<div class="card">
+            <div class="stats">
+                <div class="stat-box"><div class="stat-number">${habits.length}</div><div class="stat-label">当前习惯</div></div>
+                <div class="stat-box"><div class="stat-number">${totalStreaks}天</div><div class="stat-label">累计连续</div></div>
+                <div class="stat-box"><div class="stat-number">${weekRate}%</div><div class="stat-label">本周完成</div></div>
+            </div>
+        </div>`;
+        
+        // 今日习惯
+        html += `<div class="card">
+            <h2>📅 习惯 ${dateDisplay}</h2>`;
+        
+        // 注意：heshui在数据里已经是所有液体的累计（=水+豆浆+牛奶+中药），不要重复相加
+        const habitDisplayItems = [
+            ['heshui', '💧', '液体合计', rec ? rec.heshui || 0 : 0, 'ml', 2000],
+            ['water', '💦', '白开水', rec ? rec.water || 0 : 0, 'ml', 500],
+            ['doujiang', '🥛', '豆浆', rec ? rec.doujiang || 0 : 0, 'ml', 500],
+            ['milk', '🥛', '牛奶', rec ? rec.milk || 0 : 0, 'ml', 200],
+            ['zhongyao', '🍵', '中药', rec ? rec.zhongyao || 0 : 0, 'ml', 400],
+            ['paojiao', '🦶', '泡脚', rec ? rec.paojiao || 0 : 0, '', 1],
+            ['duanlian', '🏃', '锻炼', duanlianVal, '分钟', 30],
+            ['shuijiao', '😴', '早睡', rec ? rec.shuijiao || 0 : 0, '', 1],
+            ['dabian', '💩', '大便', rec ? rec.dabian || 0 : 0, '', 1],
+        ];
+        
+        habitDisplayItems.forEach(([id, icon, name, val, unit, goal]) => {
+            const done = unit === 'ml' ? val >= goal : val >= goal;
+            const pct = Math.min(100, Math.round((val / goal) * 100));
+            const streak = calcStreak(id, dateStr);
+            let statusIcon = '⚪';
+            let statusCls = '';
+            if (done) { statusIcon = '✅'; statusCls = 'done'; }
+            else if (val > 0) { statusIcon = '🔶'; statusCls = 'mid'; }
+            else { statusIcon = '❌'; statusCls = 'miss'; }
+            
+            const displayVal = unit === 'ml' ? `${val}ml` : (unit === '分钟' ? `${val}分钟` : (val > 0 ? '✅' : '❌'));
+            html += `<div class="habit-row">
+                <div class="habit-left">
+                    <span class="habit-icon">${icon}</span>
+                    <div>
+                        <div class="habit-name">${name}</div>
+                        <div class="habit-value">${displayVal} / ${unit === 'ml' ? goal+'ml' : (unit === '分钟' ? goal+'分钟' : '完成')} · 连续${streak}天</div>
+                    </div>
+                </div>
+                <span class="habit-status ${statusCls}">${statusIcon}</span>
+            </div>`;
+        });
+        html += '</div>';
+        
+        // 健康追踪（当日 + 近7日）
+        const healthItems = [
+            ['胀气', h.胀气 ? h.胀气.详情 : ''],
+            ['打嗝', h.打嗝 ? h.打嗝.详情 : ''],
+            ['夜尿', h.夜尿 ? `${h.夜尿.次数}次` : ''],
+            ['大便', h.大便 ? h.大便.形状 : ''],
+        ];
+        
+        // 近7日健康历史
+        const healthHistory = [];
+        const todayD = new Date(dateStr + 'T12:00:00');
+        for (let i = 0; i < 7; i++) {
+            const hd = new Date(todayD);
+            hd.setDate(hd.getDate() - i);
+            const hds = hd.toISOString().split('T')[0];
+            const hdRec = getHealth(hds);
+            if (Object.keys(hdRec).length > 0) {
+                const wd = ['周日','周一','周二','周三','周四','周五','周六'][hd.getDay()];
+                const items = [];
+                if (hdRec.胀气?.有) items.push(`胀${hdRec.胀气.详情 || '有'}`);
+                if (hdRec.打嗝?.有) items.push('打嗝');
+                if (hdRec.夜尿?.次数 > 0) items.push(`夜尿${hdRec.夜尿.次数}次${hdRec.夜尿.时间点?.length ? hdRec.夜尿.时间点.join(',') : ''}`);
+                if (hdRec.大便?.形状) items.push(`💩${hdRec.大便.形状}`);
+                if (items.length > 0) {
+                    healthHistory.push({date: `${hd.getMonth()+1}/${hd.getDate()}(${wd})`, items: items.join(' ')});
+                }
+            }
+        }
+        
+        html += `<div class="card"><h2>🏥 健康 ${dateDisplay}</h2><div class="health-grid">`;
+        healthItems.forEach(([label, val]) => {
+            const has = val && val !== '0次';
+            html += `<div class="health-item ${has ? 'alert' : ''}">
+                <div class="health-label">${label}</div>
+                <div class="health-value ${has ? 'alert' : ''}">${val || '无'}</div>
+            </div>`;
+        });
+        // 夜尿详细时间
+        if (h.夜尿?.时间点?.length) {
+            html += `<div class="health-item alert" style="grid-column: span 2;">
+                <div class="health-label">夜尿时间</div>
+                <div class="health-value alert">${h.夜尿.时间点.join(', ')}</div>
+            </div>`;
+        }
+        // 大便时间
+        if (h.大便?.时间) {
+            html += `<div class="health-item" style="grid-column: span 2;">
+                <div class="health-label">大便时间</div>
+                <div class="health-value">${h.大便.时间}</div>
+            </div>`;
+        }
+        html += '</div>';
+        
+        // 近7日健康历史
+        if (healthHistory.length > 0) {
+            html += `<div style="margin-top:12px;padding-top:12px;border-top:1px solid #eee;">
+                <div style="font-size:11px;color:#888;margin-bottom:6px;">近7日健康</div>`;
+            healthHistory.forEach(r => {
+                html += `<div style="display:flex;gap:8px;font-size:12px;padding:3px 0;color:#666;">
+                    <span style="min-width:60px;">${r.date}</span>
+                    <span>${r.items}</span>
+                </div>`;
+            });
+            html += '</div>';
+        }
+        html += '</div>';
+        
+        // 周视图
+        const dayNames = ['周日','周一','周二','周三','周四','周五','周六'];
+        html += `<div class="card"><h2>📆 本周（${weekRate}%完成）</h2><div class="week-view">`;
+        weekDays.forEach((wd, i) => {
+            const wdDate = new Date(wd + 'T12:00:00');
+            const isWdToday = wd === dateStr;
+            const wr = getRecord(wd);
+            const habits4 = [
+                ['paojiao','🦶'],
+                ['heshui','💧'],
+                ['duanlian','🏃'],
+                ['shuijiao','😴'],
+                ['dabian','💩'],
+            ];
+            html += `<div class="week-day ${isWdToday ? 'today' : ''}">
+                <div class="day-name">${dayNames[i]}</div>
+                <div class="day-date">${wdDate.getMonth()+1}/${wdDate.getDate()}</div>
+                <div class="week-habits">`;
+            habits4.forEach(([hid, icon]) => {
+                let cls = 'wh-empty';
+                if (wr) {
+                    const v = wr[hid] || 0;
+                    if (hid === 'heshui') cls = v >= 2000 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
+                    else if (hid === 'duanlian') cls = v >= 30 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
+                    else if (hid === 'dabian') cls = v >= 1 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
+                    else cls = v > 0 ? 'wh-done' : 'wh-empty';
+                }
+                html += `<div class="week-habit ${cls}">${icon}</div>`;
+            });
+            html += '</div></div>';
+        });
+        html += '</div></div>';
+        
+        // 查看30天按钮
+        html += `<div style="text-align:center;margin-top:12px;">
+            <button onclick="showHistoryModal()" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;padding:10px 24px;border-radius:20px;font-size:13px;cursor:pointer;box-shadow:0 2px 10px rgba(102,126,234,0.4);">
+                📋 查看30天
+            </button>
+        </div>`;
+        
+        // 进度条
+        html += `<div class="card"><h2>📈 今日进度</h2>`;
+        const progressItems = [
+            ['💧', '液体', totalLiquid, 2000, 'ml', 'fill-blue'],
+            ['🏃', '锻炼', duanlianVal, 30, '分钟', 'fill-green'],
+            ['🦶', '泡脚', rec ? rec.paojiao || 0 : 0, 1, '', 'fill-purple'],
+            ['😴', '早睡', rec ? rec.shuijiao || 0 : 0, 1, '', 'fill-orange'],
+        ];
+        progressItems.forEach(([icon, name, val, goal, unit, cls]) => {
+            const pct = Math.min(100, Math.round((val / goal) * 100));
+            const label = unit === 'ml' ? `${val}ml / ${goal}ml` : (unit === '分钟' ? `${val}分钟 / ${goal}分钟` : (val >= goal ? '已完成' : '未完成'));
+            html += `<div class="progress-item">
+                <div class="progress-label"><span>${icon} ${name}</span><span>${label}</span></div>
+                <div class="progress-bar"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div>
+            </div>`;
+        });
+        html += '</div>';
+
+        // 自动生成点评
+        if (isToday) {
+            html += generateDailyCommentary(rec, dateStr);
+        }
+        
+        // 数据更新说明
+        const lastUpdate = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        html += `<div class="footer">${isToday ? '今日' : dateDisplay} · 数据更新于 ${lastUpdate} <span style="opacity:0.5">(同步延迟约1-3分钟)</span></div>`;
+        
+        document.getElementById('content').innerHTML = html;
+    }
+    
+    // 30天历史弹窗
+    function showHistoryModal() {
+        const modal = document.getElementById('historyModal');
+        modal.classList.add('active');
+        renderHistory30();
+    }
+    
+    function closeHistoryModal() {
+        document.getElementById('historyModal').classList.remove('active');
+    }
+    
+    function renderHistory30() {
+        const container = document.getElementById('historyContent');
+        const habits = [
+            ['heshui','💧'],['doujiang','🥛'],['milk','🥛'],['zhongyao','🍵'],
+            ['paojiao','🦶'],['duanlian','🏃'],['shuijiao','😴'],['dabian','💩'],
+        ];
+
+        const today = new Date();
+        today.setHours(12,0,0,0);
+        const days = [];
+        for (let i = 0; i < 30; i++) {
+            const d = new Date(today);
+            d.setDate(d.getDate() - i);
+            days.push(d.toISOString().split('T')[0]);
+        }
+
+        // Part 1: 习惯 + 健康图标网格
+        let html = '<div class="history-grid">';
+        const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+        days.forEach(dateStr => {
+            const d = new Date(dateStr + 'T12:00:00');
+            const wd = d.getDay();
+            const isToday = dateStr === new Date().toISOString().split('T')[0];
+            const rec = getRecord(dateStr);
+            const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
+            const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.zhongyao||0);
+
+            const habitDots = [];
+            habits.forEach(([hid, icon]) => {
+                let done = false;
+                if (hid === 'heshui') done = totalLiquid >= 2000;
+                else if (hid === 'duanlian') done = (rec?.duanlian||0) >= 30;
+                else if (['doujiang','milk','zhongyao'].includes(hid)) done = (rec?.[hid]||0) > 0;
+                else done = (rec?.[hid]||0) > 0;
+                habitDots.push(`<span class="history-dot ${done ? 'dot-done' : 'dot-empty'}" title="${hid}">${icon}</span>`);
+            });
+
+            const healthDots = [];
+            if (hd) {
+                if (hd.大便 && hd.大便.形状) healthDots.push('🚽');
+                if (hd.夜尿 && hd.夜尿.次数 > 0) healthDots.push('🌙×'+hd.夜尿.次数);
+                if (hd.胀气 && hd.胀气.有) healthDots.push('💨');
+            }
+
+            const hasData = rec && Object.keys(rec).some(k => rec[k] > 0);
+            const hasHealth = healthDots.length > 0;
+            html += `<div class="history-day ${hasData || hasHealth ? 'has-data' : ''} ${isToday ? 'today' : ''}">
+                <div class="weekday">${weekdays[wd]}</div>
+                <div class="date">${d.getMonth()+1}/${d.getDate()}</div>
+                <div class="habits">${habitDots.join('')}</div>
+                ${hasHealth ? `<div style="font-size:9px;margin-top:2px;color:#e64a19;">${healthDots.join(' ')}</div>` : ''}
+            </div>`;
+        });
+        html += '</div>';
+
+        // Part 2: 健康详情（只显示有记录的日子）
+        const weekdaysFull = ['周日','周一','周二','周三','周四','周五','周六'];
+        const healthDays = [];
+        days.forEach(dateStr => {
+            const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
+            if (!hd) return;
+            const d = new Date(dateStr + 'T12:00:00');
+            const parts = [];
+            if (hd.胀气 && hd.胀气.有) parts.push(`💨 胀气${hd.胀气.详情 ? '：'+hd.胀气.详情 : ''}`);
+            if (hd.夜尿 && hd.夜尿.次数 > 0) parts.push(`🌙 夜尿${hd.夜尿.次数}次${hd.夜尿.时间点?.length ? '（'+hd.夜尿.时间点.join(',')+'）' : ''}`);
+            if (hd.大便 && hd.大便.形状) parts.push(`🚽 大便${hd.大便.形状}${hd.大便.时间 ? '·'+hd.大便.时间 : ''}`);
+            if (parts.length) {
+                const wd = d.getDay();
+                healthDays.push({date: `${d.getMonth()+1}月${d.getDate()}日${weekdaysFull[wd]}`, items: parts.join(' | ')});
+            }
+        });
+
+        html += `<div style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
+            <h4 style="margin:0 0 10px 0;color:#666;font-size:13px;">🏥 健康记录（近30天）</h4>`;
+        if (healthDays.length === 0) {
+            html += `<div style="color:#aaa;font-size:12px;text-align:center;padding:10px;">近30天无健康记录</div>`;
+        } else {
+            healthDays.slice(0,15).forEach(day => {
+                html += `<div style="background:#fff3e0;border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:12px;">
+                    <span style="font-weight:bold;color:#e64a19;">${day.date}</span>
+                    <div style="color:#555;margin-top:3px;">${day.items}</div>
+                </div>`;
+            });
+        }
+        html += '</div>';
+
+        container.innerHTML = html;
+    }
+    
+    loadAll();
+    </script>
+    
+    <!-- 30天历史弹窗 -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 近30天记录</h3>
+                <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+            </div>
+            <div id="historyContent"></div>
+        </div>
+    </div>
 </body>
 </html>
