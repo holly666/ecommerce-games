@@ -459,7 +459,7 @@ window._selBG=function(i){alert('选中了:'+i+' '+BGS[i].name);S.bg=BGS[i];var 
   if(b.init.bravo)S.bravo=b.init.bravo;
   document.getElementById('sel-bg').innerHTML='<div class=sel>✓ 已选择：<strong>'+b.name+'</strong> — '+b.desc+'</div><button class=cbtn onclick="s2()">下一步 →</button>';
 };
-window.s2=function(){alert('s2被调用了!准备切换到心性选择');
+window.s2=function(){
   document.getElementById('step1').classList.remove('on');
   document.getElementById('step2').classList.add('on');
   var h='';
@@ -475,7 +475,7 @@ window._selTrait=function(i){
   if(t.effect.prestige)S.prestige+=t.effect.prestige;
   document.getElementById('sel-trait').innerHTML='<div class=sel>✓ 已选择：<strong>'+t.name+'</strong> — '+t.desc+'</div><button class=cbtn onclick="s3()">下一步 →</button>';
 };
-window.s3=function(){alert('s3被调用了!准备进入游戏');document.getElementById('step2').classList.remove('on');
+window.s3=function(){document.getElementById('step2').classList.remove('on');
   document.getElementById('step3').classList.add('on');
   var names=['念卿','锦绣','如玉','秋水','碧落','凝霜','映雪','思柔'];
   var dn=names[Math.floor(Math.random()*names.length)];
@@ -489,7 +489,7 @@ window.s3=function(){alert('s3被调用了!准备进入游戏');document.getElem
 window.startGame=function(){
   var savedBg=S.bg;
   var savedTrait=S.trait;
-  var savedName=document.getElementById('player-name')?document.getElementById('player-name').value.trim():'';alert('startGame调用了!');
+  var savedName=document.getElementById('player-name')?document.getElementById('player-name').value.trim():'';
   initS();
   S.bg=savedBg;
   S.trait=savedTrait;
