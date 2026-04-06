@@ -1905,9 +1905,20 @@ function man_detail(manId){
   var man=AVAILABLE_MEN.find(function(m){return m.id===manId;});
   if(!man){showScene('打听',['此人信息不详。'],[{text:'返回',next:'go_home',type:'safe'}]);return;}
   var canRecruit=S.identity>=2&&S.cls!=='无业'&&S.affection>=60;
+  S.manChatCount=S.manChatCount||{};
+  S.manChatCount[manId]=S.manChatCount[manId]||0;
+  var chatCount=S.manChatCount[manId];
+  var canDeepTalk=chatCount>=2;
+  var canSpecial=chatCount>=3;
   var choices=[
     {text:'和他多聊几句',next:'man_chat_'+manId,type:'love',tag:'💬'},
   ];
+  if(canDeepTalk){
+    choices.push({text:'深入交谈',next:'man_deep_'+manId,type:'love',tag:'💕'});
+  }
+  if(canSpecial){
+    choices.push({text:'和他单独待一会儿',next:'man_special_'+manId,type:'love',tag:'✨'});
+  }
   if(canRecruit&&S.concubines.indexOf(manId)<0){
     choices.push({text:'请他常来坐坐（纳妾）',next:'recruit_'+manId,type:'love',tag:'🌸'});
   }
@@ -1915,7 +1926,7 @@ function man_detail(manId){
     choices.push({text:'已是纳入门下，改日再去探望',next:'go_home',type:'safe',tag:'🌸'});
   }
   choices.push({text:'就此别过',next:'go_home',type:'safe',tag:'🌙'});
-  showScene(man.name,[man.desc,'你对他产生了好奇——他究竟是什么样的人？'],choices,'👤 '+man.name);
+  showScene(man.name,[man.desc,'你对他产生了好奇——他究竟是什么样的人？'],choices,'👤 '+man.name+'('+chatCount+'次)');
 }
 function man_chat(manId){
   var man=AVAILABLE_MEN.find(function(m){return m.id===manId;});
@@ -3442,11 +3453,11 @@ window.go=function(n,t){
     if(typeof n==='string'){
       // 打听/纳妾动态路由
       if(n.startsWith('man_detail_')){
-        var mid=n.split('_')[2];
+        var mid=n.split('_').slice(2).join('_');
         man_detail(mid);return;
       }
       if(n.startsWith('man_chat_')){
-        var cid=n.split('_')[2];
+        var cid=n.split('_').slice(2).join('_');
         man_chat(cid);return;
       }
       if(n.startsWith('recruit_')){
