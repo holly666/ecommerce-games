@@ -149,7 +149,7 @@ function initS(){if(!S.log)S.log=[];if(!S.wit)S.wit=0;if(!S.social)S.social=0;if
 function addLog(m){S.log.push(m);var le=document.getElementById('log');if(!le)return;var e=document.createElement('div');e.className='le';e.textContent=('[第'+S.day+'天] '+m).substring(0,28);le.appendChild(e);le.scrollTop=le.scrollHeight;while(le.children.length>15)le.removeChild(le.firstChild);}
 function toggleLog(){var lw=document.getElementById('log-wrap');if(lw)lw.classList.toggle('on');}
 function saveGame(){localStorage.setItem('nvzh_v5',JSON.stringify(S));addLog('已存档');}
-function loadGame(){var d=localStorage.getItem('nvzh_v5');if(d){S=JSON.parse(d);showGame();document.getElementById('aff-wrap').classList.add('on');document.getElementById('sbar').classList.add('on');renderStats();updateAff();addLog('读档成功');}else{addLog('无存档');}}
+function loadGame(){var d=localStorage.getItem('nvzh_v5');if(d){S=JSON.parse(d);showGame();document.getElementById('sbar').classList.add('on');if(S.isMarried)document.getElementById('aff-wrap').classList.add('on');renderStats();updateAff();addLog('读档成功');}else{addLog('无存档');}}
 function resetGame(){localStorage.removeItem('nvzh_v5');location.reload();}
 function showGame(){document.getElementById('scene').classList.add('on');document.getElementById('stats-bar').style.display='block';}
 function checkIdentity(){if(S.examLevel==='none'&&S.hasShop){S.identity=2;S.cls='布庄老板';}else if(S.examLevel!=='none'&&S.examLevel!=='官员'){S.identity=2;S.cls=S.examLevel;}else if(S.examLevel==='官员'){S.identity=3;S.cls=S.govTitle||'官员';}if(S.identity===2&&S.day>=60&&S.examLevel==='none'&&S.marketProfit>=200){S.identity=3;}if(S.identity===3&&S.day>=120){S.identity=4;}}
@@ -3150,6 +3150,7 @@ function m_pick_tsundere(){S.money-=15;S.husband=HUSBANDS.find(function(h){retur
 function n_study_alone(){
   S.wit = (S.wit||0) + 1;
   addLog('夜读 智慧+1');
+  renderStats();
   var texts=['夜深人静，你点亮油灯，翻开一本杂书。','字里行间，有些东西悄然流入心底。'];
   showScene('夜读',texts,[{text:'休息',next:'n_sleep',type:'safe'}],'📖 独自夜读');
 }
