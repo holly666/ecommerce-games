@@ -704,7 +704,7 @@ function go_work(){
   else if(tid==='warm'){S.social+=1;extraText='帮工时你和伙计们相处融洽，结交了几个朋友！人脉+1';addLog('结交朋友 人脉+1');}
   else if(tid==='fierce'){S.bravo+=1;extraText='干活时有人想压你工钱，你当场拍桌理论，拿回了应得的！魄力+1';addLog('据理力争 魄力+1');}
   else if(tid==='calm'){S.prestige+=1;extraText='你默默干活，东家看在眼里，临走时特意多给了赏钱：「这姑娘沉稳，做事牢靠。」声望+1';addLog('额外认可 声望+1');}
-  addLog(job.name+' +'+formatMoney(job.money)+');
+  addLog(job.name+' +'+formatMoney(job.money));
   if(extraText)job.text+=' '+extraText;
   renderStats();
   showScene('打工归来',[job.text,'暮色渐沉，你拖着疲惫的身体往家走。今天虽然辛苦，但银两实实在在多了几文。'],[{text:'回家休息',next:'go_home',type:'safe'}]);
@@ -1483,7 +1483,7 @@ function go_home(){
 
 function flower_party(){
   if(S.prestige>=10){
-    showScene('柳府赏花宴',['你盛装打扮，来到柳府。','满园花开，衣香鬓影。柳夫人热情地拉着你介绍给众宾客：「(S.isMarried?'这位就是我跟你们说的，我家小媳妇，人又能干又机灵！':'这位就是我跟你们说的，新来的姑娘，人又能干又机灵！')+'你举止得体，谈笑风生，给众人留下了极好的印象。声望大涨！'','你举止得体，谈笑风生，给众人留下了极好的印象。声望大涨！'], [{text:'结交名流',next:'flower_party_2',type:'love'},{text:'和柳夫人深谈合作',next:'flower_party_3',type:'smart'}],'🌸 柳府赏花宴');
+    showScene('柳府赏花宴',['你盛装打扮，来到柳府。','满园花开，衣香鬓影。柳夫人热情地拉着你介绍给众宾客：「'+(S.isMarried?'这位就是我跟你们说的，我家小媳妇，人又能干又机灵！':'这位就是我跟你们说的，新来的姑娘，人又能干又机灵！')+'，你举止得体，谈笑风生，给众人留下了极好的印象。声望大涨！'], [{text:'结交名流',next:'flower_party_2',type:'love'},{text:'和柳夫人深谈合作',next:'flower_party_3',type:'smart'}],'🌸 柳府赏花宴');
   } else {
     showScene('柳府赏花宴',['你来到柳府，但因声望不够，只能在偏厅等候。柳夫人歉意地说：「今日贵客太多，委屈你了。」','虽然没有见到大场面，但你还是认识了几个小商人，略有收获。'], [{text:'回家',next:'go_home_return',type:'safe'}],'🌸 赏花宴（小场面）');
   }
