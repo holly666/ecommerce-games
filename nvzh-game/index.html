@@ -134,18 +134,45 @@ var HUSBANDS=[
   {id:'tsundere',name:'楚灼',bg:'寒门子弟',desc:'嘴硬心软，明明在意却偏要装作不在乎。相处久了会发现意外的温柔。',traits:['傲娇','别扭']}
 ];
 var AVAILABLE_MEN=[
-  {id:'doc_yan',name:'言墨',bg:'游方郎中',appearance:'眉目如画，气质如兰，眼角一颗淡色泪痣，肤若凝脂。身形修长挺拔，肩宽腰窄，常年游历江湖让他周身带着一种说不出的洒脱。',desc:'背着药箱走南闯北，见多识广，笑容温和。不知为何对你格外留意。',traits:['神秘','温柔'],meetEvent:'social_event',meetScene:'柳府赏花宴'},
+  {id:'doc_yan',name:'言墨',bg:'游方郎中',appearance:'眉目如画，气质如兰，眼角一颗淡色泪痣，肤若凝脂。身形修长挺拔，肩宽腰窄，常年游历江湖让他周身带着一种说不出的洒脱。',desc:'背着药箱走南闯北，见多识广，笑容温和。不知为何对你格外留意。',traits:['神秘','温柔',
+
+  {id:'martial_he',name:'贺兰珩',bg:'世袭武将',appearance:'剑眉星目，面容棱角如刀裁。身形高大挺拔，肩宽腰窄，周身一股凛然气势。眸光锐利如鹰隼，偶然一笑却能融化冰霜。',desc:'贺兰将军之子，年纪轻轻已承袭轻车都尉之职。外表冷峻刚毅，内心赤诚热血。待人真诚，不善矫饰。',traits:['英武','赤诚'],meetEvent:'gov_dispute_military',meetScene:'县衙公务'},
+  {id:'rich_shen',name:'沈绪',bg:'皇商世家',appearance:'桃花眼含笑流转，面如冠玉，肌肤白皙如玉。身形颀长匀称，一袭锦袍加身，慵懒中透着矜贵。周身气度从容，似乎天塌下来都能笑着面对。',desc:'皇商沈家独子，自幼随父走南闯北，见惯了世面。慵懒的外表下藏着精明，诗词歌赋、琴棋书画无一不通。性格温和，不争不抢。',traits:['贵气','精明'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
+  {id:'officer_zhao',name:'赵晏清',bg:'知府之子',appearance:'眉目如画温润如玉，眸底清澈却深不见底。面如春山初绽，唇角常带三分笑意。身形修长清瘦，一袭青衫显得他如谪仙人。',desc:'知府赵大人之子，自幼熟读诗书，温文尔雅。性格温和，待人接物如沐春风。虽出身官宦，却无半分傲气，反而谦和有礼。',traits:['温润','谦和'],meetEvent:'gov_dispute_official',meetScene:'县衙公务'},
+],meetEvent:'social_event',meetScene:'柳府赏花宴'},
   {id:'rich_xu',name:'徐子衿',bg:'富商之子',appearance:'桃花眼常带笑意，面如冠玉，皮肤白皙如玉。身形颀长匀称，天生贵气，一袭锦衣也压不住他骨子里的慵懒。',desc:'家中豪富，却不愿受束缚。温文尔雅，诗词歌赋无一不通。性格有些慵懒。',traits:['才华','慵懒'],meetEvent:'social_event_2',meetScene:'柳府赏花宴'},
   {id:'martial_pei',name:'裴轻尘',bg:'武学世家',appearance:'丹凤眼棱角分明，眉峰如剑，鼻梁高挺。身形高大健硕却不粗笨，肌肉线条流畅。往那儿一站，便有一股不怒自威的气势。',desc:'出身武学世家，却不愿习武，偏爱琴棋书画。外表冷峻，内心柔软。性格有些别扭，但对你很真诚。',traits:['傲气','内敛'],meetEvent:'gov_dispute_fair',meetScene:'县衙事务'},
   {id:'artisan_lin',name:'林小川',bg:'工匠之子',appearance:'眉眼开阔明朗，一笑起来整个人像在发光。身形精瘦但结实，手指修长灵巧，常年做工让他的双手布满薄茧却格外有力。',desc:'心灵手巧，编织、木工、剪纸样样精通。性格开朗，常自嘲没出息，但其实很有生活智慧。',traits:['开朗','多才'],meetEvent:'shop_restock',meetScene:'集市进货'},
   {id:'scholar_lei',name:'雷子鸣',bg:'落魄书生',appearance:'眉目清冷出尘，气质如雪山之莲。身形清瘦修长，一袭洗得发白的青衫也掩不住他周身的书卷气。偶一抬头，目光清亮如寒潭。',desc:'家道中落的书生，满腹经纶却时运不济。性格有些孤傲，但和你很聊得来。',traits:['孤傲','才学'],meetEvent:'go_town',meetScene:'镇上偶遇'},
   {id:'priest_ye',name:'叶清羽',bg:'云游道医',appearance:'眉如远山淡淡，双眸清澈见底却又深不可测。面容清隽如玉，身形清瘦如竹，一袭白衣行走世间如谪仙临凡。',desc:'年轻的游方道医，医术精湛，言语清淡。总是带着淡淡的笑，让人捉摸不透。',traits:['清淡','神秘'],meetEvent:'go_work',meetScene:'药铺打工'},
-  {id:'jinshi_pan',name:'裴云亭',bg:'新科进士',appearance:'眉宇疏朗，气质如松柏常青。一双眸子清亮而深邃，鼻梁挺直，唇角微微上扬，带着三分书卷气、七分清贵气。身形修长有力，举止间自有一股子端方磊落。',desc:'新科进士，裴氏世家嫡长子。清贵之气浑然天成，谈吐间引经据典却无酸腐气。待人谦和，却自有分寸。似乎对你颇有几分好奇。',traits:['清贵','端方'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
+  {id:'jinshi_pan',name:'裴云亭',bg:,traits:['清贵','端方'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
+  {id:'martial_he',name:'贺兰珩',bg:'世袭武将',appearance:'剑眉星目，面容棱角如刀裁。身形高大挺拔，肩宽腰窄，周身一股凛然气势。眸光锐利如鹰隼，偶然一笑却能融化冰霜。',desc:'贺兰将军之子，年纪轻轻已承袭轻车都尉之职。外表冷峻刚毅，内心赤诚热血。待人真诚，不善矫饰。',traits:['英武','赤诚'],meetEvent:'gov_dispute_military',meetScene:'县衙公务'},
+  {id:'rich_shen',name:'沈绪',bg:'皇商世家',appearance:'桃花眼含笑流转，面如冠玉，肌肤白皙如玉。身形颀长匀称，一袭锦袍加身，慵懒中透着矜贵。周身气度从容，似乎天塌下来都能笑着面对。',desc:'皇商沈家独子，自幼随父走南闯北，见惯了世面。慵懒的外表下藏着精明，诗词歌赋、琴棋书画无一不通。性格温和，不争不抢。',traits:['贵气','精明'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
+  {id:'officer_zhao',name:'赵晏清',bg:'知府之子',appearance:'眉目如画温润如玉，眸底清澈却深不见底。面如春山初绽，唇角常带三分笑意。身形修长清瘦，一袭青衫显得他如谪仙人。',desc:'知府赵大人之子，自幼熟读诗书，温文尔雅。性格温和，待人接物如沐春风。虽出身官宦，却无半分傲气，反而谦和有礼。',traits:['温润','谦和'],meetEvent:'gov_dispute_official',meetScene:'县衙公务'}
+  var HUSBANDS=[
+  {id:'scholar',name:'顾长卿',bg:'书香门第',desc:'眉清目秀，谈吐斯文。家中曾有功名，如今家道中落。',traits:['才华','文静']},
+  {id:'outgoing',name:'柳云舟',bg:'商贾之家',desc:'爱说爱笑，走到哪里都是焦点。没什么心机，但总能让人开心。',traits:['人缘','活泼']},
+  {id:'quiet',name:'沈墨白',bg:'武勋世家',desc:'话不多，喜怒不形于色。心思细腻，往往能注意到别人忽略的细节。',traits:['细腻','机敏']},
+  {id:'tsundere',name:'楚灼',bg:'寒门子弟',desc:'嘴硬心软，明明在意却偏要装作不在乎。相处久了会发现意外的温柔。',traits:['傲娇','别扭']}
+];
+var AVAILABLE_MEN=[
+  {id:'doc_yan',name:'言墨',bg:'游方郎中',appearance:'眉目如画，气质如兰，眼角一颗淡色泪痣，肤若凝脂。身形修长挺拔，肩宽腰窄，常年游历江湖让他周身带着一种说不出的洒脱。',desc:'背着药箱走南闯北，见多识广，笑容温和。不知为何对你格外留意。',traits:['神秘','温柔',
+
   {id:'martial_he',name:'贺兰珩',bg:'世袭武将',appearance:'剑眉星目，面容棱角如刀裁。身形高大挺拔，肩宽腰窄，周身一股凛然气势。眸光锐利如鹰隼，偶然一笑却能融化冰霜。',desc:'贺兰将军之子，年纪轻轻已承袭轻车都尉之职。外表冷峻刚毅，内心赤诚热血。待人真诚，不善矫饰。',traits:['英武','赤诚'],meetEvent:'gov_dispute_military',meetScene:'县衙公务'},
   {id:'rich_shen',name:'沈绪',bg:'皇商世家',appearance:'桃花眼含笑流转，面如冠玉，肌肤白皙如玉。身形颀长匀称，一袭锦袍加身，慵懒中透着矜贵。周身气度从容，似乎天塌下来都能笑着面对。',desc:'皇商沈家独子，自幼随父走南闯北，见惯了世面。慵懒的外表下藏着精明，诗词歌赋、琴棋书画无一不通。性格温和，不争不抢。',traits:['贵气','精明'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
   {id:'officer_zhao',name:'赵晏清',bg:'知府之子',appearance:'眉目如画温润如玉，眸底清澈却深不见底。面如春山初绽，唇角常带三分笑意。身形修长清瘦，一袭青衫显得他如谪仙人。',desc:'知府赵大人之子，自幼熟读诗书，温文尔雅。性格温和，待人接物如沐春风。虽出身官宦，却无半分傲气，反而谦和有礼。',traits:['温润','谦和'],meetEvent:'gov_dispute_official',meetScene:'县衙公务'},
-];
-var HUSBANDS=[
+],meetEvent:'social_event',meetScene:'柳府赏花宴'},
+  {id:'rich_xu',name:'徐子衿',bg:'富商之子',appearance:'桃花眼常带笑意，面如冠玉，皮肤白皙如玉。身形颀长匀称，天生贵气，一袭锦衣也压不住他骨子里的慵懒。',desc:'家中豪富，却不愿受束缚。温文尔雅，诗词歌赋无一不通。性格有些慵懒。',traits:['才华','慵懒'],meetEvent:'social_event_2',meetScene:'柳府赏花宴'},
+  {id:'martial_pei',name:'裴轻尘',bg:'武学世家',appearance:'丹凤眼棱角分明，眉峰如剑，鼻梁高挺。身形高大健硕却不粗笨，肌肉线条流畅。往那儿一站，便有一股不怒自威的气势。',desc:'出身武学世家，却不愿习武，偏爱琴棋书画。外表冷峻，内心柔软。性格有些别扭，但对你很真诚。',traits:['傲气','内敛'],meetEvent:'gov_dispute_fair',meetScene:'县衙事务'},
+  {id:'artisan_lin',name:'林小川',bg:'工匠之子',appearance:'眉眼开阔明朗，一笑起来整个人像在发光。身形精瘦但结实，手指修长灵巧，常年做工让他的双手布满薄茧却格外有力。',desc:'心灵手巧，编织、木工、剪纸样样精通。性格开朗，常自嘲没出息，但其实很有生活智慧。',traits:['开朗','多才'],meetEvent:'shop_restock',meetScene:'集市进货'},
+  {id:'scholar_lei',name:'雷子鸣',bg:'落魄书生',appearance:'眉目清冷出尘，气质如雪山之莲。身形清瘦修长，一袭洗得发白的青衫也掩不住他周身的书卷气。偶一抬头，目光清亮如寒潭。',desc:'家道中落的书生，满腹经纶却时运不济。性格有些孤傲，但和你很聊得来。',traits:['孤傲','才学'],meetEvent:'go_town',meetScene:'镇上偶遇'},
+  {id:'priest_ye',name:'叶清羽',bg:'云游道医',appearance:'眉如远山淡淡，双眸清澈见底却又深不可测。面容清隽如玉，身形清瘦如竹，一袭白衣行走世间如谪仙临凡。',desc:'年轻的游方道医，医术精湛，言语清淡。总是带着淡淡的笑，让人捉摸不透。',traits:['清淡','神秘'],meetEvent:'go_work',meetScene:'药铺打工'},
+  {id:'jinshi_pan',name:'裴云亭',bg:'新科进士',appearance:'眉宇疏朗，气质如松柏常青。一双眸子清亮而深邃，鼻梁挺直，唇角微微上扬，带着三分书卷气、七分清贵气。身形修长有力，举止间自有一股子端方磊落。',desc:'新科进士，裴氏世家嫡长子。清贵之气浑然天成，谈吐间引经据典却无酸腐气。待人谦和，却自有分寸。似乎对你颇有几分好奇。',traits:['清贵','端方'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'
+  {id:'martial_he',name:'贺兰珩',bg:'世袭武将',appearance:'剑眉星目，面容棱角如刀裁。身形高大挺拔，肩宽腰窄，周身一股凛然气势。眸光锐利如鹰隼，偶然一笑却能融化冰霜。',desc:'贺兰将军之子，年纪轻轻已承袭轻车都尉之职。外表冷峻刚毅，内心赤诚热血。待人真诚，不善矫饰。',traits:['英武','赤诚'],meetEvent:'gov_dispute_military',meetScene:'县衙公务'},
+  {id:'rich_shen',name:'沈绪',bg:'皇商世家',appearance:'桃花眼含笑流转，面如冠玉，肌肤白皙如玉。身形颀长匀称，一袭锦袍加身，慵懒中透着矜贵。周身气度从容，似乎天塌下来都能笑着面对。',desc:'皇商沈家独子，自幼随父走南闯北，见惯了世面。慵懒的外表下藏着精明，诗词歌赋、琴棋书画无一不通。性格温和，不争不抢。',traits:['贵气','精明'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
+  {id:'officer_zhao',name:'赵晏清',bg:'知府之子',appearance:'眉目如画温润如玉，眸底清澈却深不见底。面如春山初绽，唇角常带三分笑意。身形修长清瘦，一袭青衫显得他如谪仙人。',desc:'知府赵大人之子，自幼熟读诗书，温文尔雅。性格温和，待人接物如沐春风。虽出身官宦，却无半分傲气，反而谦和有礼。',traits:['温润','谦和'],meetEvent:'gov_dispute_official',meetScene:'县衙公务'}
+
+  var HUSBANDS=[
   {id:'scholar',name:'顾长卿',bg:'书香门第',appearance:'剑眉星目，眸光清润如寒潭秋水。面如冠玉，身形清瘦而挺拔，长身玉立，周身书卷气环绕，举止从容有度，行走间衣袂翩然若仙。',traits:['才华','文静']},
   {id:'outgoing',name:'柳云舟',bg:'商贾之家',appearance:'一双桃花眼笑起来眯成月牙，俊朗阳光。面若潘安，身形匀称健美，一袭锦衣华服更衬得他气宇轩昂，往人前一站便是焦点所在。',traits:['人缘','活泼']},
   {id:'quiet',name:'沈墨白',bg:'武勋世家',appearance:'面容冷峻，眉峰如刀裁。一双深眸目光锐利，鼻梁挺直。身姿如松柏般挺拔，肩宽腰窄，周身透着一股凛然不可侵犯的气势。',traits:['细腻','机敏']},
@@ -352,7 +379,7 @@ function showNight(){
   }
 
   // 生日
-  if(S.husband&&S.flags.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent&&S.day===S.flags.husbandBirthdayDay){
+  if(S.husband&&S.flags?.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent&&S.day===S.flags?.husbandBirthdayDay){
     opts.push({text:'今天是他的生日！给他送礼物',next:'n_birthday',type:'love',tag:'🎂'});
   }
 
@@ -524,7 +551,7 @@ window.startGame=function(){
   S.playerName=(ni&&ni.value.trim())||'念卿';
   S.affection=50;
   addLog('角色：'+S.playerName+'（'+(S.bg?S.bg.name:'')+'·'+(S.trait?S.trait.name:'')+'）');
-  S.flags.husbandBirthdayDay=45+Math.floor(Math.random()*21);
+  S.flags?.husbandBirthdayDay=45+Math.floor(Math.random()*21);
   S.flags.husbandBirthdayDone=false;
   document.getElementById('step3').classList.remove('on');
   showGame();
@@ -1491,7 +1518,7 @@ function go_home(){
     return;
   }
   // 每月生日检测
-  if(S.day===S.flags.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent){
+  if(S.day===S.flags?.husbandBirthdayDay&&!S.eventsTriggered.birthday_gift_sent){
     S.eventsTriggered.birthday_gift_sent=false;
   }
   showNight();
@@ -1515,7 +1542,7 @@ function n_sleep(){
   S.day++;
   checkIdentity();
 
-  // 未婚：直接跳到第二天清晨
+  // 未婚：显示夜间选项
   if(!S.isMarried){
     S.todayWeather=getWeather();
     S.todaySeason=getSeason();
@@ -1610,8 +1637,8 @@ function n_sleep(){
 
   // ========== 宅斗/随机事件检测 ==========
   // 节日庆祝（季节性）
-  if(S.nearFestival&&!S.flags.festivalTodayTriggered){
-    S.flags.festivalTodayTriggered=true;
+  if(S.nearFestival&&!S.flags?.festivalTodayTriggered){
+    S.flags?.festivalTodayTriggered=true;
     festival_celebration();
     return;
   }
@@ -1621,12 +1648,12 @@ function n_sleep(){
     var rand=Math.random();
     if(S.concubines&&S.concubines.length>=2&&rand<0.15){
       // 宅斗事件
-      S.flags.randomEventTriggered=true;
+      if(S.flags)S.flags.randomEventTriggered=true;
       harem_conflict_event();
       return;
     } else if(S.concubines&&S.concubines.length>=1&&rand>=0.15&&rand<0.28){
       // 妾室随机剧情
-      S.flags.randomEventTriggered=true;
+      if(S.flags)S.flags.randomEventTriggered=true;
       var concRand=Math.random();
       if(concRand<0.33){
         random_concubine_illness();return;
@@ -1637,14 +1664,14 @@ function n_sleep(){
       }
     } else if(S.concubines&&S.concubines.length>=1&&S.affection<50&&rand>=0.28&&rand<0.40){
       // 正夫吃醋剧情
-      S.flags.randomEventTriggered=true;
+      if(S.flags)S.flags.randomEventTriggered=true;
       harem_jealous_husband();return;
     }
   }
 
   // 孩子成长：每日age++，每10天触发育儿事件（每次最多触发一个）
-  if(S.children&&S.children.length>0&&!S.flags.childEventShown){
-    S.flags.childEventShown=true;
+  if(S.children&&S.children.length>0&&!S.flags?.childEventShown){
+    S.flags?.childEventShown=true;
     for(var ci=0;ci<S.children.length;ci++){
       var ch=S.children[ci];
       ch.age=(ch.age||0)+1;
@@ -1654,7 +1681,7 @@ function n_sleep(){
         return; // 事件会暂停流程，等用户交互结束后再继续
       }
     }
-    S.flags.childEventShown=false;
+    S.flags?.childEventShown=false;
   }
 
   // ========== 丈夫心情更新 + 今日事件池 + 天气/季节 ==========
