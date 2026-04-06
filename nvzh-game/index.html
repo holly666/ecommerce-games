@@ -723,6 +723,14 @@ function talk_husband_early(){
 }
 function go_town(){
   addLog('镇上打听');
+  // 偶遇书香门第顾长卿
+  if(!S.isMarried&&!S.metMen.scholar&&Math.random()<0.25){
+    meet_husband_scholar();return;
+  }
+  // 偶遇寒门子弟楚灼
+  if(!S.isMarried&&!S.metMen.tsundere&&Math.random()<0.25){
+    meet_husband_tsundere();return;
+  }
   var infos=[
     '你逢人便打招呼，聊些家常。镇上的风土人情渐渐了然于胸——谁家有什么背景，谁和谁有过节，这些消息日后或许都有用。',
     '你特意去了趟茶馆，要了一壶茶，坐在角落里听人聊天。果然，有人提到县衙最近在招女吏——这是一条仕途的路子。',
@@ -784,6 +792,10 @@ function exam_announce(examType,examDay){
 }
 
 function exam_wenMiao(){
+  // 偶遇书香门第顾长卿（学宫）
+  if(!S.isMarried&&!S.metMen.scholar&&Math.random()<0.30){
+    meet_husband_scholar();return;
+  }
   addLog('前往县学宫');
   var level=S.examLevel;
   var texts=[];
@@ -1036,6 +1048,10 @@ function exam_take_palace(){
 
 // ========== 仕途公务系统 ==========
 function gov_work(){
+  // 偶遇武勋世家沈墨白（县衙）
+  if(!S.isMarried&&!S.metMen.quiet&&Math.random()<0.25){
+    meet_husband_quiet();return;
+  }
   if(!S.governance)S.governance={justice:0,tax:0,security:0,publicSentiment:0};
   addLog("处理公务");
   var tasks=[
@@ -1888,6 +1904,60 @@ function child_scene(){
   updateAff();
 }
 
+// ========== 偶遇夫君候选人 ==========
+function meet_husband_outgoing(){
+  S.metMen.outgoing=true;
+  if(!S.availableMen)S.availableMen=[];
+  if(S.availableMen.indexOf('outgoing')<0)S.availableMen.push('outgoing');
+  addLog('遇见柳云舟');
+  showScene('集市偶遇',['你走在集市里，忽然被一阵笑声吸引。','一个锦衣公子正和摊贩讨价还价，嘴里啦啦啦说个不停：「老板！再便宜点啦！你看我这小脸，都快哭给你看了！」','摊贩被他逗得哭笑不得：「柳公子，您就别为难我了！」','他转过头，目光落在你身上，忽然眼睛一亮：「哎？这位姑娘好生面善！」'], [{text:'礼貌颔首',next:'outgoing_intro',type:'safe'},{text:'微笑回应',next:'outgoing_intro',type:'love'}],'🌟 偶遇');
+}
+function meet_husband_scholar(){
+  S.metMen.scholar=true;
+  if(!S.availableMen)S.availableMen=[];
+  if(S.availableMen.indexOf('scholar')<0)S.availableMen.push('scholar');
+  addLog('遇见顾长卿');
+  showScene('学宫偶遇',['你在学宫附近漫步，忽然看见一个青衫书生正坐在石凳上读书。','他眉清目秀，周身透着一股书卷气。读到兴起处，他轻声念了一句诗，声音温润如玉。','他抬起头，目光与你相触，微微一愣，然后礼貌地点了点头，继续低头看书。'], [{text:'上前攀谈',next:'scholar_intro',type:'safe'},{text:'默默离开',next:'go_home',type:'safe'}],'📖 偶遇');
+}
+function meet_husband_quiet(){
+  S.metMen.quiet=true;
+  if(!S.availableMen)S.availableMen=[];
+  if(S.availableMen.indexOf('quiet')<0)S.availableMen.push('quiet');
+  addLog('遇见沈墨白');
+  showScene('县衙偶遇',['你在县衙处理完公务，正要离开时，看到一个青年站在院子里。','他面容清冷，沉默地站在院中，似乎在等什么人。注意到你的目光，他微微侧过头，眼神里带着几分审视。','片刻后，他轻声说：「姑娘也是来县衙办事的？」'], [{text:'点头回应',next:'quiet_intro',type:'safe'},{text:'好奇地打量他',next:'quiet_intro',type:'smart'}],'⚔ 偶遇');
+}
+function meet_husband_tsundere(){
+  S.metMen.tsundere=true;
+  if(!S.availableMen)S.availableMen=[];
+  if(S.availableMen.indexOf('tsundere')<0)S.availableMen.push('tsundere');
+  addLog('遇见楚灼');
+  showScene('街头偶遇',['你在镇上的小巷里穿梭，忽然和一个挑担子的青年撞了个满怀。','「哎呀！」他手里的东西撒了一地，「你、你走路不长眼的吗！」他瞪着你，气鼓鼓地蹲下去捡东西。','仔细一看，他的衣服虽然旧了些，但浆洗得很干净。耳根还有点发红，不知道是气的还是别的什么。'], [{text:'帮忙捡东西',next:'tsundere_intro',type:'love'},{text:'道歉后离开',next:'go_home',type:'safe'}],'💢 偶遇');
+}
+function outgoing_intro(){
+  S.concubineAffection.outgoing=(S.concubineAffection.outgoing||30)+5;
+  addLog('柳云舟 好感+5');
+  renderStats();
+  showScene('柳云舟',['柳云舟，名副其实的商贾之子，笑声如铃，走到哪儿都是焦点。','「我叫柳云舟！你呢？」他眼睛亮晶晶的，「我跟你说，我最讨厌无聊了！你看起来很有意思！」','你们聊了一会儿，他就拉着你说要带你去看集市上最好玩的东西。你还没反应过来，他已经笑着往前跑了。'], [{text:'回去',next:'go_home',type:'safe'}],'💬 柳云舟');
+}
+function scholar_intro(){
+  S.concubineAffection.scholar=(S.concubineAffection.scholar||30)+5;
+  addLog('顾长卿 好感+5');
+  renderStats();
+  showScene('顾长卿',['顾长卿，书香门第，眉清目秀，谈吐斯文。','「在下顾长卿，敢问姑娘贵姓？」他放下书，起身作揖，举止从容。','「姑娘也是来县学宫的吗？」他微微一笑，「此地常有志同道合之人相聚，姑娘若有兴趣，可常来走走。」'], [{text:'回去',next:'go_home',type:'safe'}],'📖 顾长卿');
+}
+function quiet_intro(){
+  S.concubineAffection.quiet=(S.concubineAffection.quiet||30)+5;
+  addLog('沈墨白 好感+5');
+  renderStats();
+  showScene('沈墨白',['沈墨白，武勋世家，话不多，喜怒不形于色。','「……姑娘。」他微微点头，算是打了招呼。','你注意到他手里拿着一本兵书，书角有些卷曲，显然是常被翻阅的。他似乎对你的目光有些不适应，沉默片刻后轻声说：「姑娘……有事？」'], [{text:'随便问问',next:'go_home',type:'safe'}],'⚔ 沈墨白');
+}
+function tsundere_intro(){
+  S.concubineAffection.tsundere=(S.concubineAffection.tsundere||30)+5;
+  addLog('楚灼 好感+5');
+  renderStats();
+  showScene('楚灼',['楚灼，寒门子弟，嘴硬心软，别扭得要命。','你蹲下来帮他捡东西，他愣了一下，耳根更红了：「谁、谁要你帮了！我自己可以的！」','但他接过东西的时候，手指不小心碰到了你的指尖，他一下子别过头去：「谢、谢什么谢！不用谢！」他嘴角微微翘起，但立刻压了下去。'], [{text:'回去',next:'go_home',type:'safe'}],'💢 楚灼');
+}
+
 // ========== 认识新人 ==========
 function meet_new_man(manId){
   // 在AVAILABLE_MEN中找一个未遇到的
@@ -1991,7 +2061,7 @@ function man_chat(manId){
       ['「娘子，」雷子鸣忽然认真地说，「我有一种感觉——你和我认识的那些人都不一样。」','「哪里不一样？」你问。他想了想：「你眼里没有歧视。不管我是穷是富，你都愿意和我说话。」']
     ],
     'priest_ye':[
-      ['叶清羽这次给你泡了一壶茶。茶很淡，却有一种说不出的清香。','「这道茶叫'忘忧'。」他轻声说，「喝了会忘记烦恼。」'],
+      ['叶清羽这次给你泡了一壶茶。茶很淡，却有一种说不出的清香。','「这道茶叫\'忘忧\'。」他轻声说，「喝了会忘记烦恼。」'],
       ['叶清羽忽然问：「娘子，你有什么放不下的事吗？」你一时答不上来。','他轻轻地说：「放不下，是因为还不够痛。等哪天痛够了，自然就放下了。」']
     ]
   };
@@ -3436,7 +3506,14 @@ window.go=function(n,t){
     case 'social_event_liu':social_event_liu();break;
     case 'gov_work':gov_work();break;
     case 'exam_prep_study':exam_prep_study();break;
-            case 'gov_work':gov_work();break;
+    case 'meet_husband_outgoing':meet_husband_outgoing();break;
+    case 'meet_husband_scholar':meet_husband_scholar();break;
+    case 'meet_husband_quiet':meet_husband_quiet();break;
+    case 'meet_husband_tsundere':meet_husband_tsundere();break;
+    case 'outgoing_intro':outgoing_intro();break;
+    case 'scholar_intro':scholar_intro();break;
+    case 'quiet_intro':quiet_intro();break;
+    case 'tsundere_intro':tsundere_intro();break;
     case 'gov_promotion':gov_promotion();break;
         case 'n_eat':n_eat();break;
     case 'n_talk':n_talk();break;
