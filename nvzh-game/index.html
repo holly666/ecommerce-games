@@ -139,7 +139,11 @@ var AVAILABLE_MEN=[
   {id:'martial_pei',name:'裴轻尘',bg:'武学世家',appearance:'丹凤眼棱角分明，眉峰如剑，鼻梁高挺。身形高大健硕却不粗笨，肌肉线条流畅。往那儿一站，便有一股不怒自威的气势。',desc:'出身武学世家，却不愿习武，偏爱琴棋书画。外表冷峻，内心柔软。性格有些别扭，但对你很真诚。',traits:['傲气','内敛'],meetEvent:'gov_dispute_fair',meetScene:'县衙事务'},
   {id:'artisan_lin',name:'林小川',bg:'工匠之子',appearance:'眉眼开阔明朗，一笑起来整个人像在发光。身形精瘦但结实，手指修长灵巧，常年做工让他的双手布满薄茧却格外有力。',desc:'心灵手巧，编织、木工、剪纸样样精通。性格开朗，常自嘲没出息，但其实很有生活智慧。',traits:['开朗','多才'],meetEvent:'shop_restock',meetScene:'集市进货'},
   {id:'scholar_lei',name:'雷子鸣',bg:'落魄书生',appearance:'眉目清冷出尘，气质如雪山之莲。身形清瘦修长，一袭洗得发白的青衫也掩不住他周身的书卷气。偶一抬头，目光清亮如寒潭。',desc:'家道中落的书生，满腹经纶却时运不济。性格有些孤傲，但和你很聊得来。',traits:['孤傲','才学'],meetEvent:'go_town',meetScene:'镇上偶遇'},
-  {id:'priest_ye',name:'叶清羽',bg:'云游道医',appearance:'眉如远山淡淡，双眸清澈见底却又深不可测。面容清隽如玉，身形清瘦如竹，一袭白衣行走世间如谪仙临凡。',desc:'年轻的游方道医，医术精湛，言语清淡。总是带着淡淡的笑，让人捉摸不透。',traits:['清淡','神秘'],meetEvent:'go_work',meetScene:'药铺打工'}
+  {id:'priest_ye',name:'叶清羽',bg:'云游道医',appearance:'眉如远山淡淡，双眸清澈见底却又深不可测。面容清隽如玉，身形清瘦如竹，一袭白衣行走世间如谪仙临凡。',desc:'年轻的游方道医，医术精湛，言语清淡。总是带着淡淡的笑，让人捉摸不透。',traits:['清淡','神秘'],meetEvent:'go_work',meetScene:'药铺打工'},
+  {id:'jinshi_pan',name:'裴云亭',bg:'新科进士',appearance:'眉宇疏朗，气质如松柏常青。一双眸子清亮而深邃，鼻梁挺直，唇角微微上扬，带着三分书卷气、七分清贵气。身形修长有力，举止间自有一股子端方磊落。',desc:'新科进士，裴氏世家嫡长子。清贵之气浑然天成，谈吐间引经据典却无酸腐气。待人谦和，却自有分寸。似乎对你颇有几分好奇。',traits:['清贵','端方'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
+  {id:'martial_he',name:'贺兰珩',bg:'世袭武将',appearance:'剑眉星目，面容棱角如刀裁。身形高大挺拔，肩宽腰窄，周身一股凛然气势。眸光锐利如鹰隼，偶然一笑却能融化冰霜。',desc:'贺兰将军之子，年纪轻轻已承袭轻车都尉之职。外表冷峻刚毅，内心赤诚热血。待人真诚，不善矫饰。',traits:['英武','赤诚'],meetEvent:'gov_dispute_military',meetScene:'县衙公务'},
+  {id:'rich_shen',name:'沈绪',bg:'皇商世家',appearance:'桃花眼含笑流转，面如冠玉，肌肤白皙如玉。身形颀长匀称，一袭锦袍加身，慵懒中透着矜贵。周身气度从容，似乎天塌下来都能笑着面对。',desc:'皇商沈家独子，自幼随父走南闯北，见惯了世面。慵懒的外表下藏着精明，诗词歌赋、琴棋书画无一不通。性格温和，不争不抢。',traits:['贵气','精明'],meetEvent:'social_event_vip',meetScene:'柳府赏花宴'},
+  {id:'officer_zhao',name:'赵晏清',bg:'知府之子',appearance:'眉目如画温润如玉，眸底清澈却深不见底。面如春山初绽，唇角常带三分笑意。身形修长清瘦，一袭青衫显得他如谪仙人。',desc:'知府赵大人之子，自幼熟读诗书，温文尔雅。性格温和，待人接物如沐春风。虽出身官宦，却无半分傲气，反而谦和有礼。',traits:['温润','谦和'],meetEvent:'gov_dispute_official',meetScene:'县衙公务'},
 ];
 var HUSBANDS=[
   {id:'scholar',name:'顾长卿',bg:'书香门第',appearance:'剑眉星目，眸光清润如寒潭秋水。面如冠玉，身形清瘦而挺拔，长身玉立，周身书卷气环绕，举止从容有度，行走间衣袂翩然若仙。',traits:['才华','文静']},
@@ -678,7 +682,8 @@ function getMorningGreeting(){
   return base;
 }
 
-function showMorning(){var hname=S.husband?S.husband.name:'';var greet=S.husband?getMorningGreeting():'新的一天开始了，你独自面对这小镇的清晨。';var choices=[];var rankNames={'none':'白身','merchant':'商人','童生':'童生','秀才':'秀才','举人':'举人','进士':'进士','官员':S.govTitle||'官员'};var idLabel=(!S.examLevel||S.examLevel==='none')?(S.hasShop?'白身·商人':'白身'):(rankNames[S.examLevel]||'白身');var govOpt=null;if(S.examLevel==='none'||S.examStatus==='idle'){govOpt={text:'去县学宫看看（科举仕途）',next:'exam_wenMiao',type:'gov',tag:'🏛'};}else if(S.examStatus==='prepping'){var daysLeft=Math.max(0,S.examDay-S.day);govOpt={text:'备考中（还剩'+daysLeft+'天）',next:'exam_prep_start',type:'gov',tag:'📖'};}var govWorkOpt=null;if(['童生','秀才','举人','进士','官员'].indexOf(S.examLevel)>=0){govWorkOpt={text:'去县衙处理公务（政绩）',next:'gov_work',type:'gov',tag:'📋'};}if(S.hasShop&&S.examLevel==='none'){choices.push({text:'经营布庄',next:'manage_shop',type:'safe'});choices.push({text:'去集市进货',next:'shop_restock',type:'smart'});choices.push({text:'参加社交活动',next:'social_event',type:'love'});}if(govWorkOpt)choices.push(govWorkOpt);if(['童生','秀才','举人'].indexOf(S.examLevel)>=0&&S.examStatus==='idle'){choices.push({text:'温习功课（备考）',next:'exam_prep_study',type:'smart',tag:'📖'});}choices.push({text:'去集市逛逛',next:'go_market',type:'safe'});choices.push({text:'去找点活干',next:'go_work',type:'safe'});if(S.husband){choices.push({text:'和'+hname+'商量经营',next:'shop_husband_chat',type:'love'});}choices.push({text:'去镇上打听消息',next:'go_town',type:'smart'});if(govOpt)choices.push(govOpt);if(!S.isMarried){choices.push({text:'去媒人处看看',next:'go_matchmaker',type:'safe',tag:'🌸'});}if((S.hasShop||S.examLevel!=='none')&&Math.random()<0.10){if(checkMeetNewMan())return;}if(!S.isMarried&&S.day%7===0){S.gossipPressure=(S.gossipPressure||0)+1;if(S.gossipPressure>=10&&S.gossipPressure<15&&!S.eventsTriggered.gossip_10){S.eventsTriggered.gossip_10=true;showScene('流言蜚语',['「一个姑娘家，这么大了还不嫁人……」','街坊邻居的议论渐渐多了起来。你虽不在意，却也知道——婚事，终究是绕不过去的。'],[{text:'知道了',next:'showMorning',type:'safe'}],'⚠️ 社会议论');return;}}var weathers=['晴朗的早晨','薄云遮日','微风轻拂','天色阴沉'];var weather=weathers[Math.floor(Math.random()*weathers.length)];var salaryHint='';if(S.salary>0&&S.lastSalaryDay>0&&S.day-S.lastSalaryDay>=30){var months=Math.floor((S.day-S.lastSalaryDay)/30);if(months>=1)salaryHint='【俸禄待领：'+S.salary*months+'两】';}if(!S.isMarried&&S.prestige>=10&&!S.matchmakerVisited&&Math.random()<0.15){S.matchmakerVisited=true;showScene('媒婆上门',['媒人登门','声望渐涨，上门说亲的媒人也多了起来。今日有位口碑不错的刘婆婆来访……'],[{text:'请她进门详谈',next:'matchmaker_auto',type:'safe'},{text:'婉拒，说自己想再拼两年事业',next:'matchmaker_decline',type:'smart'}],'🌸 媒人登门');return;}showScene('第'+S.day+'日 · 清晨'+salaryHint,[weather+'。阳光从窗纸透进来，在地上投下斑驳的光影。',greet,'新的一天开始了。（当前：'+idLabel+'）'],choices);}
+function showMorning(){var hname=S.husband?S.husband.name:'';var greet=S.husband?getMorningGreeting():'新的一天开始了，你独自面对这小镇的清晨。';var choices=[];var rankNames={'none':'白身','merchant':'商人','童生':'童生','秀才':'秀才','举人':'举人','进士':'进士','官员':S.govTitle||'官员'};var idLabel=(!S.examLevel||S.examLevel==='none')?(S.hasShop?'白身·商人':'白身'):(rankNames[S.examLevel]||'白身');var govOpt=null;if(S.examLevel==='none'||S.examStatus==='idle'){govOpt={text:'去县学宫看看（科举仕途）',next:'exam_wenMiao',type:'gov',tag:'🏛'};}else if(S.examStatus==='prepping'){var daysLeft=Math.max(0,S.examDay-S.day);govOpt={text:'备考中（还剩'+daysLeft+'天）',next:'exam_prep_start',type:'gov',tag:'📖'};}var govWorkOpt=null;if(['童生','秀才','举人','进士','官员'].indexOf(S.examLevel)>=0){govWorkOpt={text:'去县衙处理公务（政绩）',next:'gov_work',type:'gov',tag:'📋'};}if(S.hasShop&&S.examLevel==='none'){choices.push({text:'经营布庄',next:'manage_shop',type:'safe'});choices.push({text:'去集市进货',next:'shop_restock',type:'smart'});choices.push({text:'参加社交活动',next:'social_event',type:'love'});
+    if(S.prestige>=30)choices.push({text:'参加高端赏花宴',next:'social_event_vip',type:'love',tag:'🌸'});}if(govWorkOpt)choices.push(govWorkOpt);if(['童生','秀才','举人'].indexOf(S.examLevel)>=0&&S.examStatus==='idle'){choices.push({text:'温习功课（备考）',next:'exam_prep_study',type:'smart',tag:'📖'});}choices.push({text:'去集市逛逛',next:'go_market',type:'safe'});choices.push({text:'去找点活干',next:'go_work',type:'safe'});if(S.husband){choices.push({text:'和'+hname+'商量经营',next:'shop_husband_chat',type:'love'});}choices.push({text:'去镇上打听消息',next:'go_town',type:'smart'});if(govOpt)choices.push(govOpt);if(!S.isMarried){choices.push({text:'去媒人处看看',next:'go_matchmaker',type:'safe',tag:'🌸'});}if((S.hasShop||S.examLevel!=='none')&&Math.random()<0.10){if(checkMeetNewMan())return;}if(!S.isMarried&&S.day%7===0){S.gossipPressure=(S.gossipPressure||0)+1;if(S.gossipPressure>=10&&S.gossipPressure<15&&!S.eventsTriggered.gossip_10){S.eventsTriggered.gossip_10=true;showScene('流言蜚语',['「一个姑娘家，这么大了还不嫁人……」','街坊邻居的议论渐渐多了起来。你虽不在意，却也知道——婚事，终究是绕不过去的。'],[{text:'知道了',next:'showMorning',type:'safe'}],'⚠️ 社会议论');return;}}var weathers=['晴朗的早晨','薄云遮日','微风轻拂','天色阴沉'];var weather=weathers[Math.floor(Math.random()*weathers.length)];var salaryHint='';if(S.salary>0&&S.lastSalaryDay>0&&S.day-S.lastSalaryDay>=30){var months=Math.floor((S.day-S.lastSalaryDay)/30);if(months>=1)salaryHint='【俸禄待领：'+S.salary*months+'两】';}if(!S.isMarried&&S.prestige>=10&&!S.matchmakerVisited&&Math.random()<0.15){S.matchmakerVisited=true;showScene('媒婆上门',['媒人登门','声望渐涨，上门说亲的媒人也多了起来。今日有位口碑不错的刘婆婆来访……'],[{text:'请她进门详谈',next:'matchmaker_auto',type:'safe'},{text:'婉拒，说自己想再拼两年事业',next:'matchmaker_decline',type:'smart'}],'🌸 媒人登门');return;}showScene('第'+S.day+'日 · 清晨'+salaryHint,[weather+'。阳光从窗纸透进来，在地上投下斑驳的光影。',greet,'新的一天开始了。（当前：'+idLabel+'）'],choices);}
 function go_market(){
   addLog('去集市');
   // 偶遇柳云舟（未婚未遇见过）
@@ -2833,9 +2838,13 @@ function checkMeetNewMan(){
   var unmet=AVAILABLE_MEN.filter(function(m){return !S.metMen[m.id];});
   if(unmet.length===0)return;
   // 身份要求：赏花宴需要声望>=10
+  // 高端赏花宴需要声望>=30，官员+声望>=20/30
   var eligible=unmet.filter(function(m){
     if(m.meetEvent==='social_event'||m.meetEvent==='social_event_2')return S.prestige>=10;
+    if(m.meetEvent==='social_event_vip')return S.prestige>=30;
     if(m.meetEvent==='gov_dispute_fair')return S.isOfficial;
+    if(m.meetEvent==='gov_dispute_military')return S.isOfficial&&S.prestige>=20;
+    if(m.meetEvent==='gov_dispute_official')return S.isOfficial&&S.prestige>=30;
     return true;
   });
   if(eligible.length===0)return;
@@ -2846,6 +2855,22 @@ function checkMeetNewMan(){
     return true;
   }
   return false;
+}
+
+
+function gov_meet_vip(){
+  addLog('县衙会见宾客');
+  var pool=[
+    {man:'martial_he',text:['县衙内，贺兰珩一身戎装，正在与知府商议边境事务。','他眸光如电，往你这边扫了一眼，微微点头。','「这位便是传闻中的女强人？」他抱拳行礼，「久仰大名。」']},
+    {man:'officer_zhao',text:['知府之子赵晏清随父亲在县衙办事，见你来了，温和地笑了笑。','「姑娘便是家父常提起的那位奇女子？」他眉眼弯弯，让人如沐春风。','「改日有空，请姑娘到府上饮茶。」']}
+  ];
+  var ev=pool[Math.floor(Math.random()*pool.length)];
+  if(!S.metMen[ev.man]){S.metMen[ev.man]=0;S.availableMen.push(ev.man);}
+  S.metMen[ev.man]=(S.metMen[ev.man]||0)+1;
+  S.prestige=Math.min(100,S.prestige+2);
+  addLog('结识'+ev.man+' 声望+2');
+  showScene('县衙会见',ev.text,[{text:'与他交谈',next:'man_detail_'+ev.man,type:'love',tag:'💕'},{text:'告辞离开',next:'go_home',type:'safe'}],'🏛 公务');
+  renderStats();
 }
 
 // ========== 宅斗系统 ==========
@@ -3678,6 +3703,8 @@ window.go=function(n,t){
     case 'biz_hire':biz_hire();break;
     case 'biz_refuse':biz_refuse();break;
     case 'social_event':social_event();break;
+    case 'social_event_vip':social_event_vip();break;
+    case 'gov_meet_vip':gov_meet_vip();break;
     case 'social_event_2':social_event_2();break;
     case 'social_event_liu':social_event_liu();break;
     case 'gov_work':gov_work();break;
