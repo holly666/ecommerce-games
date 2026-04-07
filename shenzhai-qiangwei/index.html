@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>深宅蔷薇</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#1a1520;color:#e8d5b7;min-height:100vh}
+#game{max-width:680px;margin:0 auto;padding:20px}
+#cover{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:92vh;text-align:center}
+h1{color:#c9a96e;font-size:2.4em;margin-bottom:8px;letter-spacing:8px}
+.sub{color:#a89070;font-size:1.0em;margin-bottom:32px;letter-spacing:4px}
+.desc{color:#7a6a50;font-size:0.88em;max-width:400px;line-height:1.8;margin-bottom:36px}
+.btn{background:#c9a96e;color:#1a1520;border:none;padding:14px 50px;border-radius:8px;cursor:pointer;font-size:1.05em;font-weight:bold;letter-spacing:4px}
+.btn:hover{background:#e0c080}
+.scene{display:none}
+.scene.on{display:block}
+.scene-title{color:#c9a96e;font-size:0.85em;text-align:center;margin-bottom:8px;letter-spacing:2px}
+.scene-text{color:#d4c4a8;font-size:0.92em;line-height:2.0;margin-bottom:24px;white-space:pre-wrap}
+.choices{margin-top:16px}
+.choice-btn{display:block;width:100%;background:#2a1f30;border:1px solid #5a4a6a;color:#e8d5b7;padding:14px 16px;margin:8px 0;border-radius:8px;cursor:pointer;text-align:left;font-size:0.92em;line-height:1.6;transition:all 0.18s}
+.choice-btn:hover{background:#3a2a40;border-color:#8a6a9a;transform:translateX(4px)}
+.choice-btn:active{transform:translateX(2px)}
+.top-bar{display:none;background:#1a1520;border-bottom:1px solid #3a2a40;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;font-size:0.78em;color:#7a6a50;margin-bottom:16px}
+.top-bar span{letter-spacing:1px}
+.log-wrap{background:#120e18;border:1px solid #2a1f30;border-radius:8px;padding:10px;max-height:120px;overflow-y:auto;font-size:0.75em;color:#6a5a7a;line-height:1.8;margin-top:16px}
+.log-entry{border-bottom:1px solid #1a1520;padding:2px 0}
+</style>
+</head>
+<body>
+<div id=game>
+
+<div id=cover>
+<h1>🏮深宅蔷薇</h1>
+<div class=sub>沈墨白·攻略</div>
+<div class=desc>大燕王朝，京城。<br>你女扮男装赴京谈生意，<br>却卷入一场算计与真情交织的棋局。</div>
+<button class=btn onclick="startGame()">开始游戏</button>
+</div>
+
+<div id=scene class=scene>
+<div class=top-bar>
+<span id=day-label>第1天</span>
+<span id=affection-label>好感 0</span>
+</div>
+<div class=scene-title id=scene-title></div>
+<div class=scene-text id=scene-text></div>
+<div class=choices id=choices></div>
+<div class=log-wrap id=log-wrap></div>
+</div>
+
+</div>
+<script>
+// ========== GAME STATE ==========
+var S = {
+  day: 1,
+  affection: 0,
+  flags: {},
+  currentScene: null,
+  log: []
+};
+
+// ========== SCENE DATA ==========
+var SCENES = {
+
+  // ---- 第一章：相遇 ----
+
+  "ch1_s1": {
+    title: "第一章 · 相遇 | 宴会",
+    text: `京城的夜，灯火通明。
+
+某世家举办商业宴会，你女扮男装混迹其中。
+
+你端着茶杯四处周旋，试图接近几个大商人——但所有人对你客气却疏离。
+
+你没有背景，没有靠山。在这座城市，你什么都不是。
+
+你的目光扫过全场，落在角落里。
+
+一个白衣公子独自坐着，周围人对他奉承巴结，他似乎对谁都不感兴趣。
+
+他似乎感觉到了你的目光。
+
+抬头，目光相触。
+
+他微微一笑，移开了视线。`,
+    choices: [
+      { text: "继续观察他", next: "ch1_s2" },
+      { text: "假装没看见，继续谈生意", next: "ch1_s2_passive" }
+    ]
+  },
+
+  "ch1_s2": {
+    title: "第一章 · 相遇 | 刁难",
+    text: `你正要离开，一个中年商人挡在了你面前。
+
+"这位小兄弟，"他皮笑肉不笑，"我听闻你是江南来的茶商？可我怎么听说……你是苏州苏家的人？"
+
+他故意把"苏家"两个字咬得很重，周围人的目光开始异样。
+
+"一个姑娘家，抛头露面做生意，啧啧。"
+
+你的身份被当众揭穿了。
+
+骑虎难下，你的手指微微发凉。
+
+这时，一个清淡的声音从你身后传来——`,
+    choices: [
+      { text: "……", next: "ch1_s2_save" }
+    ]
+  },
+
+  "ch1_s2_save": {
+    title: "第一章 · 相遇 | 解围",
+    text: `"一个姑娘家出来做事不容易，"
+
+那个白衣公子不知何时走到了你身边，手里还端着茶杯，神态悠闲。
+
+"何必为难人家。"
+
+他的语气很轻，但那个中年商人脸色顿时变了。
+
+"沈、沈大公子……"
+
+"我说的不对吗？"他看了那人一眼，唇角微微勾起，笑意不达眼底。
+
+那人讪讪退开，周围瞬间安静了。
+
+他转身，看向你。
+
+"没事吧。"
+
+你："多谢沈公子。"
+
+他："不用谢。"
+
+说完，他又回到了角落里，继续喝茶，像是什么都没发生过。`,
+    choices: [
+      { text: "追上去问他为什么帮你", next: "ch1_s3" },
+      { text: "先记住这个人，以后再说", next: "ch1_s3_passive" }
+    ]
+  },
+
+  "ch1_s2_passive": {
+    title: "第一章 · 相遇 | 风波",
+    text: `你正要离开，一个中年商人挡在了你面前。
+
+"这位小兄弟，"他皮笑肉不笑，"我听闻你是江南来的茶商？可我怎么听说……你是苏州苏家的人？"
+
+他故意把"苏家"两个字咬得很重，周围人的目光开始异样。
+
+你的身份被当众揭穿了。
+
+你正要开口解释，一只手忽然搭上了你的肩膀。
+
+"我说的对吧，这位……苏姑娘？"
+
+那个白衣公子不知何时走到了你身边，笑得如沐春风。
+
+"我沈家的合作伙伴，还轮不到外人来质疑。"
+
+那人脸色大变，连连赔笑退开了。
+
+你还没反应过来，他已经转身走了。`,
+    choices: [
+      { text: "追上去问他为什么帮你", next: "ch1_s3" },
+      { text: "先记住这个人，以后再说", next: "ch1_s3_passive" }
+    ]
+  },
+
+  "ch1_s3": {
+    title: "第一章 · 相遇 | 救他",
+    text: `你追上他时，他正站在宴会外的廊下，月光洒在他身上。
+
+"沈公子——"
+
+他回头，看着你。
+
+"你怎么知道我……"
+
+话没说完，你听到了一阵脚步声。
+
+从暗处冲出几个黑衣人，向沈墨白逼近——！
+
+你下意识抓起廊下的一只花瓶，狠狠砸向其中一个黑衣人的后脑！
+
+"铛！"的一声，花瓶碎裂，黑衣人倒地。
+
+其余几人互相对视，迅速消失在夜色中。
+
+沈墨白看着你，眼里有一丝意外。
+
+然后，他笑了。
+
+"有点意思。"
+
+他走近你一步，低头看着你："你叫什么名字？"
+
+"我姓苏……"
+
+他打断了你，问了一句毫不相干的话：
+
+"你是不是江南苏州人？"
+
+你愣了一下："……是。"
+
+他沉默了片刻。
+
+然后，他说：
+
+"记住我的名字。沈墨白。"
+
+转身，消失在夜色中。`,
+    onEnter: function() { S.flags.metShen = true; addLog("初遇沈墨白"); },
+    choices: [
+      { text: "……他怎么知道我是苏州人？", next: "ch1_s4", condition: function(){ return true; } }
+    ]
+  },
+
+  "ch1_s3_passive": {
+    title: "第一章 · 相遇 | 暗处",
+    text: `你没有追上去。
+
+但你的余光看到了宴会外的廊下——他站在月光下，似乎在等什么。
+
+几个黑衣人从暗处冲出，向他逼近！
+
+你正要喊人，却看到他身形一动——
+
+几息之间，黑衣人全部倒地。
+
+他拍了拍袖子，像是拍掉了什么脏东西。
+
+然后他抬头，目光穿过人群，正好和你对视。
+
+他笑了一下。
+
+然后转身，消失在夜色里。
+
+你心里留下了一个疑问。
+
+这个人……会武？`,
+    onEnter: function() { S.flags.metShen = true; addLog("初遇沈墨白"); },
+    choices: [
+      { text: "继续留在宴会", next: "ch1_s4", condition: function(){ return true; } }
+    ]
+  },
+
+  "ch1_s4": {
+    title: "第一章 · 相知 | 父亲病倒",
+    text: `三天后。
+
+你父亲突然病倒了。
+
+来势汹汹，高烧不退，御医请了好几个，都说病情古怪。
+
+你日日守在床边，心急如焚。
+
+京城的生意无人打理，父亲的商队还停在城外。
+
+正当你绝望的时候，有人敲门。
+
+是沈家的人。
+
+"苏姑娘，我家公子说，沈家医馆有位老大夫，擅长疑难杂症。若苏姑娘不嫌弃，可以带你父亲去看看。"
+
+你愣住。
+
+他怎么知道你父亲病了？
+
+你问："沈公子怎么知道……"
+
+沈家人微微一笑："公子说，恰好认识一个大夫。"
+
+你看着病榻上的父亲，没有别的选择。`,
+    onEnter: function() { S.flags.fatherSick = true; },
+    choices: [
+      { text: "带父亲去沈家医馆", next: "ch1_s5" },
+      { text: "先打听一下沈家医馆的来历", next: "ch1_s5_investigate" }
+    ]
+  },
+
+  "ch1_s4_investigate": {
+    title: "第一章 · 相知 | 打听",
+    text: `你没有立刻答应。
+
+你去打听了一下沈家医馆——才发现这是沈家的产业，只为京城权贵服务，普通人根本进不去。
+
+但奇怪的是，他们愿意为你破例。
+
+更重要的是——你打听到了一些关于你父亲的传言。
+
+"苏家老爷的病，来得蹊跷。"
+"我听说，是有人下过慢性药……"
+"啧啧，得罪了不该得罪的人啊。"
+
+你心里一沉。
+
+父亲的病，不是天灾，是人祸。
+
+谁？为什么要害父亲？`,
+    choices: [
+      { text: "带父亲去沈家医馆", next: "ch1_s5" }
+    ]
+  },
+
+  "ch1_s5": {
+    title: "第一章 · 相知 | 生意",
+    text: `父亲的病情稳定了下来。
+
+但你心里一直有一个疑问——沈墨白为什么要帮你？
+
+你暂时没有答案。
+
+你决定先把生意谈下来。
+
+你去谈一笔茶叶生意，对方是京城一个大商号的老板。你磨了三天，条件快谈妥了，但对方突然不肯松口。
+
+你正要放弃的时候，对方突然派人来找你。
+
+"苏姑娘，那笔生意，我们答应了。而且……价格还可以再提一成。"
+
+你一头雾水。
+
+你问："为什么突然答应了？"
+
+对方脸色微妙："沈家……打了招呼。"
+
+沈家？又是沈家？`,
+    choices: [
+      { text: "去找沈墨白问清楚", next: "ch1_s6" },
+      { text: "先收下这笔生意，以后再说", next: "ch1_s5_business" }
+    ]
+  },
+
+  "ch1_s5_investigate": {
+    title: "第一章 · 相知 | 暗中调查",
+    text: `父亲的病情稳定了。
+
+你开始暗中调查——父亲的病到底是谁下的药？
+
+你去查了父亲身边的下人，查到了一个奇怪的名字：
+
+"瑞王府。"
+
+这个名字出现了三次——每一次，都和父亲的生意受阻有关。
+
+但你没有证据。
+
+更奇怪的是，每次你查到关键的地方，就会被人"恰好"打断。
+
+是巧合？还是有人在监视你？`,
+    choices: [
+      { text: "去找沈墨白问清楚", next: "ch1_s6" }
+    ]
+  },
+
+  "ch1_s5_business": {
+    title: "第一章 · 相知 | 大少奶奶",
+    text: `你决定先把生意稳住。
+
+你去了集市，准备采购一批茶叶。
+
+奇怪的是，每个茶商见你，都主动给了最低价。
+
+"苏姑娘，这点茶叶算什么钱！"
+
+"以后还要仰仗大少奶奶多多关照！"
+
+你："等等——什么大少奶奶？？"
+
+茶商们互相对视，都笑了。
+
+"就是沈家大少奶奶啊！整个京城都知道了，沈大公子在宴会上当众护着的那位……"
+
+你的脸一下子红了。
+
+沈家。大少奶奶。谁在外面乱说？？`,
+    choices: [
+      { text: "冲去沈家问他", next: "ch1_s6" }
+    ]
+  },
+
+  "ch1_s6": {
+    title: "第一章 · 相知 | 质问",
+    text: `你冲进沈家，找到了沈墨白。
+
+他坐在书房里，手里拿着一本书，听到你的脚步声才抬头。
+
+"来了。"
+
+他的语气很平淡，像是早就在等你。
+
+"你是不是苏州人？"
+"我父亲的病是不是你派人治的？"
+"外面那些大少奶奶的传言，是不是你放的？"
+
+他放下书，站起来，走到你面前。
+
+他比你高很多，低头看着你，唇角微微勾起。
+
+"是我。怎么了？"
+
+你："你凭什么？！我们苏家和你们沈家——"
+
+"我知道。"他打断你，"你们苏家和沈家有旧怨。你祖父的弟弟，死在沈家对头手里。沈家当时袖手旁观。"
+
+你愣住了。
+
+他……都知道？
+
+"你是走，还是留？"
+
+他看着你，眼神平静。
+
+"选项我都给你了。"`,
+    onEnter: function() { S.affection += 5; updateAffection(); },
+    choices: [
+      { text: "【质问】你凭什么管我？", next: "ch1_s7_confront", aff: -5 },
+      { text: "【试探】你……到底想要什么？", next: "ch1_s7_trust", aff: 5 },
+      { text: "【威胁】我明天就走！", next: "ch1_s7_leave", aff: -10 }
+    ]
+  },
+
+  "ch1_s7_confront": {
+    title: "第一章 · 深入 | 对抗",
+    text: `你瞪着他，气得发抖。
+
+"你凭什么管我的事？！我们苏家和你沈家——"
+
+"有旧怨。"他替你说完了，"你祖父的弟弟，死在沈家对头手里。"
+
+你愣住。
+
+"你知道？"
+
+"我什么都知道。"他低头看着你，唇角勾起一个弧度，"包括有人在盯着你。"
+
+你背后一凉。
+
+"你以为你父亲的病是意外？你以为那些在暗中调查的人，是什么善茬？"
+
+他伸手，轻轻点了一下你的额头。
+
+"你太笨了。"
+
+你气死了，一把打开他的手。
+
+"你——！"
+
+"你可以气我。"他说，"但别想走。"
+
+他转身走回书桌前，又拿起了书。
+
+"门在你身后。要走就走。"
+
+但你知道，你走不出这个门。
+
+他的意思你明白——你的命，现在在他手里。`,
+    onEnter: function() { S.flags.route = "confront"; addLog("选择：对抗线"); },
+    choices: [
+      { text: "……", next: "ch1_end" }
+    ]
+  },
+
+  "ch1_s7_trust": {
+    title: "第一章 · 深入 | 信任",
+    text: `你看着他，问了一句很轻的话。
+
+"你到底想要什么？"
+
+他沉默了片刻。
+
+然后他笑了——不是那种温润的笑，是一种你看不懂的笑。
+
+"我想要的东西，"他说，"很久没有这么想要过了。"
+
+他走近你一步，低头看着你。
+
+"你不用信我。你也不用谢我。"
+
+"但有一件事，你必须记住——"
+
+"别去查瑞王府。"
+
+你心里一沉。
+
+他……怎么知道瑞王府？
+
+"我说了，你别查。"他的语气忽然变得很认真，"你查下去，会出事。"
+
+"我不查，"你说，"你怎么知道我会不会出事？"
+
+他愣了一下。
+
+然后他笑了，这次是真的笑了。
+
+"你这个人……还挺有意思。"
+
+他转身走回书桌前，说了一句让你愣住的话：
+
+"那件衣服，不适合你。换一件。"
+
+你低头一看——你今天穿的，正好是他那天夸过颜色的衣服。`,
+    onEnter: function() { S.flags.route = "trust"; S.affection += 5; addLog("选择：信任线"); updateAffection(); },
+    choices: [
+      { text: "……你怎么连我穿什么都管？", next: "ch1_end" }
+    ]
+  },
+
+  "ch1_s7_leave": {
+    title: "第一章 · 深入 | 威胁",
+    text: `"我明天就走！"
+
+你气急了，扔下这句话就要往外走。
+
+他一动不动，只是淡淡地说了一句：
+
+"你走得出沈家的门，走不出京城。"
+
+你僵在原地。
+
+"你以为你父亲的病，是沈家害的？"
+
+他站起来，走到你身后。
+
+"你查的那个瑞王府，他们已经在查你了。"
+
+"你以为你在查他们，其实是他们在钓鱼。"
+
+他低头，看着你的眼睛。
+
+"你现在离开，是想死吗？"
+
+你后背发凉。
+
+"我……"
+
+"你可以气我，可以骂我，可以恨我。"他的声音忽然轻了下来，"但别离开我的视线。"
+
+你第一次看到他认真的表情。
+
+他不是在威胁你。
+
+他是在告诉你——有人在追杀你。`,
+    onEnter: function() { S.flags.route = "danger"; S.affection += 3; addLog("选择：危险线"); updateAffection(); },
+    choices: [
+      { text: "……你为什么告诉我这些？", next: "ch1_end" }
+    ]
+  },
+
+  "ch1_end": {
+    title: "第一章 · 完 | 夜的尾声",
+    text: `那一夜，你留在沈家。
+
+没有发生什么，只是他给你安排了一间客房。
+
+你睡不着，坐在窗边发呆。
+
+他经过的时候，停了一下。
+
+"还不睡？"
+
+你："睡不着。"
+
+他走进你房间，在你对面坐下。
+
+"那我陪你说会儿话。"
+
+你看了他一眼："说什么？"
+
+他想了想，说了一句让你又想打他的话：
+
+"说你今天穿的还挺好看。"
+
+"……你还惦记这个？"
+
+"你没换衣服就来找我，说明你没有别的衣服了。"
+
+你气得笑了。
+
+他看着你笑，也跟着笑了一下。
+
+那是你第一次看到他真正的笑容。
+
+不是温润如玉的假笑，是真的、有点欠揍的笑。
+
+"睡吧。"他说，"明天还有事。"`,
+    onEnter: function() { S.day = 2; updateDay(); addLog("第一章 完"); },
+    choices: [
+      { text: "【第一章 完】", next: "chapter2_start" }
+    ]
+  }
+
+};
+
+var CHAPTER2_SCENES = {
+  "chapter2_start": {
+    title: "第二章 · 暗涌 | 日常",
+    text: `第二天清晨。
+
+你醒来的时候，沈墨白已经不在府上了。
+
+沈家的下人对你毕恭毕敬，你想做什么他们都配合。
+
+但你知道，你在沈家的每一天，都在欠他的。
+
+你父亲的病好转了，京城的生意也谈下来了。
+
+你以为自己可以离开了。
+
+但每次你提到"要走"，他都会用一种你看不懂的眼神看着你。
+
+然后说："再等等。"
+
+他在等什么？`,
+    choices: [
+      { text: "继续", next: "chapter2_2" }
+    ]
+  },
+
+  "chapter2_2": {
+    title: "第二章 · 暗涌 | 跟踪者",
+    text: `那天你去集市，发现有人在跟踪你。
+
+不是沈家的人——你认得沈墨白安排在你身边的那个护卫。
+
+是另一群人。
+
+他们跟了你三条街，然后在你拐进一条小巷的时候，消失了。
+
+你正要松一口气，一张纸条从背后贴了上来。
+
+"苏姑娘，有些事，不要查了。"
+
+你猛然回头——没有人。
+
+纸条在你手里化成碎片。
+
+有人在警告你。
+
+也有人在威胁你。
+
+你开始明白沈墨白那天说的话——"你查下去，会出事"。
+
+但你已经查到了瑞王府。
+
+你能停得下来吗？`,
+    choices: [
+      { text: "继续", next: "chapter2_3" }
+    ]
+  },
+
+  "chapter2_3": {
+    title: "第二章 · 暗涌 | 棋局",
+    text: `那天晚上，沈墨白来找你。
+
+他带着一封信，放在你面前。
+
+"这是你父亲的笔迹吧。"
+
+你一看，心脏差点停了。
+
+信上写的是——你祖父当年和瑞王府的一笔交易。
+
+你们苏家，不是什么清白商人出身。
+
+你祖父当年靠着出卖沈家，赚到了第一桶金。后来沈家报复，苏家才家道中落。
+
+你父亲的弟弟，不是死在沈家对头手里——
+
+是死在沈家手里。
+
+"这就是你们苏家和沈家的旧怨。"他看着你，"不是你以为的那样。"
+
+你手里的信在发抖。
+
+"你给我看这个……是什么意思？"
+
+他轻轻拿走你手里的信，烧掉了。
+
+"我就是让你知道，"他说，"你以为的真相，不一定是真的。"
+
+他低头，看着你的眼睛。
+
+"就像你以为我在害你，其实我在救你。"`,
+    choices: [
+      { text: "……那你为什么要救我？", next: "chapter2_end" }
+    ]
+  },
+
+  "chapter2_end": {
+    title: "第二章 · 完 | 他的答案",
+    text: `他沉默了片刻。
+
+然后他做了一件你意想不到的事——
+
+他伸手，轻轻摸了摸你的头。
+
+"因为你笨。"
+
+你："……"
+
+"被人骗了一辈子都不知道。"
+
+你正要发火，他忽然俯身，在你耳边说了一句话。
+
+那句话很轻，你几乎听不清。
+
+但你听清了每一个字。
+
+"因为你是我的人。"
+
+他说完，转身就走了。
+
+你坐在原地，心跳得像擂鼓。
+
+他的背影消失在门口。
+
+你发现自己的脸烫得厉害。
+
+你从来没遇到过这样的人。
+
+让你生气，让你无奈，让你想打他——
+
+也让你心跳加速。
+
+"混蛋……"你小声骂了一句。
+
+但你心里知道，你已经走不掉了。`,
+    onEnter: function() { S.day = 5; S.affection += 15; updateDay(); updateAffection(); addLog("第二章 完 —— 情愫渐生"); },
+    choices: [
+      { text: "【第二章 完】", next: "game_end_demo" }
+    ]
+  },
+
+  "game_end_demo": {
+    title: "未完待续",
+    text: `第二章Demo到此为止。
+
+后续剧情包括：
+- 瑞王府的阴谋
+- 两家恩怨的完整真相
+- 你和沈墨白的三种结局
+
+感谢体验Demo版本。
+
+—— 深宅蔷薇 开发中`,
+    choices: [
+      { text: "重新开始", next: "restart" }
+    ]
+  }
+
+};
+
+// ========== FUNCTIONS ==========
+function startGame() {
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('scene').classList.add('on');
+  document.querySelector('.top-bar').style.display = 'flex';
+  loadScene('ch1_s1');
+}
+
+function loadScene(sceneId) {
+  var scene;
+  if (SCENES[sceneId]) scene = SCENES[sceneId];
+  else if (CHAPTER2_SCENES[sceneId]) scene = CHAPTER2_SCENES[sceneId];
+  else return;
+
+  S.currentScene = sceneId;
+
+  if (scene.onEnter) scene.onEnter();
+
+  document.getElementById('scene-title').textContent = scene.title || '';
+  document.getElementById('scene-text').textContent = scene.text || '';
+
+  var choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+
+  (scene.choices || []).forEach(function(c) {
+    if (c.condition && !c.condition()) return;
+    var btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c.text;
+    btn.onclick = function() {
+      if (c.aff !== undefined) {
+        S.affection += c.aff;
+        updateAffection();
+      }
+      loadScene(c.next);
+    };
+    choicesEl.appendChild(btn);
+  });
+
+  renderLog();
+}
+
+function addLog(msg) {
+  S.log.push(msg);
+  if (S.log.length > 50) S.log.shift();
+}
+
+function renderLog() {
+  var el = document.getElementById('log-wrap');
+  el.innerHTML = S.log.map(function(m) {
+    return '<div class=log-entry>· ' + m + '</div>';
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function updateDay() {
+  document.getElementById('day-label').textContent = '第' + S.day + '天';
+}
+
+function updateAffection() {
+  var label = document.getElementById('affection-label');
+  var val = S.affection;
+  var text = '好感 ' + val;
+  if (val >= 80) text += ' ★★★★★';
+  else if (val >= 60) text += ' ★★★★';
+  else if (val >= 40) text += ' ★★★';
+  else if (val >= 20) text += ' ★★';
+  else if (val >= 10) text += ' ★';
+  label.textContent = text;
+}
+
+window.startGame = startGame;
+window.loadScene = loadScene;
+</script>
+</body>
+</html>
