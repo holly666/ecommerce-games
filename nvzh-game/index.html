@@ -340,7 +340,44 @@ function rollDailyHusbandEvents(){
   return tonight;
 }
 
+function checkFamousScene(){
+  // 检测名场面触发
+  if(!S.isMarried||!S.husband||S.affection<60)return false;
+  var fid='famousSceneDone_'+S.husband.id;
+  if(S.flags[fid])return false;
+  var season=getSeason();
+  var weather=S.todayWeather||'';
+  var h=S.husband.id;
+  // 书生：雨夜守护
+  if(h==='scholar'&&(weather==='雨'||weather==='雷雨')&&Math.random()<0.6){
+    S.flags[fid]=true;S.affection+=5;
+    showScene('雨夜·他守了一夜',['夜深了，你辗转难眠，额头有些发烫。','「娘子？」他的声音从门外传来，轻轻推开门，手里端着一碗热姜汤。','「我方才路过听到你咳嗽……」他垂下眼，「姜汤还烫，我放这里。」','他放下碗，却没有要走的意思。','「外面雨大，」他说，「我就在这里坐一会儿。」','那一夜，他在灯下守了你一整夜。书页翻动的声音很轻，像是怕吵醒你，又像是在等你睡着。','翌日清晨，你醒来时，他已在窗边支着头睡着了，手边还放着一卷《伤寒论》。'],[{text:'……',next:'n_sleep',type:'love',tag:'💕',cond:true}],'🌧 名场面');
+    return true;
+  }
+  // 柳云舟（outgoing）：秘密解决危机
+  if(h==='outgoing'&&Math.random()<0.5){
+    S.flags[fid]=true;S.affection+=5;
+    showScene('他不说，你却知道了',['那天你回来，发现桌上多了一封信。','是一笔布匹生意的订单——是你之前接洽了许久、对方却迟迟不肯签下的一笔单子。','「有这个就能赚不少呢！」有人告诉你，","「是柳家那位公子出面谈下来的，他不让告诉你，说是你自己跑来的功劳。」','','他坐在窗边，见你来了，只是笑，「娘子回来了？饿不饿？」','一个字都没提那封信的事。'],[{text:'……',next:'n_sleep',type:'love',tag:'💕',cond:true}],'💕 名场面');
+    return true;
+  }
+  // 沈墨白（quiet）：记得你说的话
+  if(h==='quiet'&&Math.random()<0.5){
+    S.flags[fid]=true;S.affection+=5;
+    showScene('他记得',['那天你随口说想吃城东的桂花糕，第二天桌上就多了一盒。','你也没在意，以为他顺手买的。','','直到有一天，你在他书案上看到了那张字条——上面写着：','','「城东，福记，每月十五进货。」','','「那天她说想吃。记住了。」','','他依旧是那副淡淡的表情，在灯下看书，像是早就忘了这件事。','只是窗台上，那盆你随口夸过一句"好看"的兰花，换成了更好的品种。'],[{text:'……',next:'n_sleep',type:'love',tag:'💕',cond:true}],'💕 名场面');
+    return true;
+  }
+  // 楚灼（tsundere）：口嫌体正直
+  if(h==='tsundere'&&Math.random()<0.5){
+    S.flags[fid]=true;S.affection+=5;
+    showScene('他不说',['那天晚上你正要睡下，听见门外有动静。','推开门，他却正站在门口，像是犹豫了很久。','','「……没什么事。」他别过脸去，「我就是……来看看。」','','你让他进来，他嘴硬说"谁要进来"，脚却已经迈进了门槛。','「你被子那么薄，晚上要着凉的。」他嘀咕着，却已经把自己的被子抱了一床过来。','','你让他回去睡，他说"知道了"，却在你床边坐了很久。','最后你迷迷糊糊睡着了，醒来时，他靠在床边的椅子上，睡着了。','','嘴上说的和心里想的，从来都不是一回事。'],[{text:'……',next:'n_sleep',type:'love',tag:'💕',cond:true}],'💕 名场面');
+    return true;
+  }
+  return false;
+}
+
 function showNight(){
+  // 名场面检测（优先于一切）
+  if(checkFamousScene())return;
   // 天气特殊事件（未婚优先检测）
   var weather=S.todayWeather||'';
   if(weather==='雨'||weather==='雷雨'){
