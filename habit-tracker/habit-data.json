@@ -129,11 +129,16 @@
     }
   },
   "2026-04-07": {
-    "aspirin": true,
-    "vitaminD": true,
-    "chineseMedicine_morning": true,
-    "soyMilk": 500,
-    "water": 200,
-    "exercise": true
+    "paojiao": 0,
+    "heshui": 900,
+    "doujiang": 500,
+    "milk": 0,
+    "zhongyao": 200,
+    "dabian": 0,
+    "duanlian": 1,
+    "shuijiao": 0,
+    "chiyao": 1,
+    "heparin": 1,
+    "water": 200
   }
 }
