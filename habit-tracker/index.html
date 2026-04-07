@@ -215,7 +215,15 @@
     let habitData = null;
     let healthData = null;
     let currentDate = new Date();
-    
+
+    // 返回 local 日期字符串 "YYYY-MM-DD"（避免 toISOString 的 UTC 时区问题）
+    function localDateStr(d) {
+        d = d || new Date();
+        return d.getFullYear() + '-' +
+            String(d.getMonth() + 1).padStart(2, '0') + '-' +
+            String(d.getDate()).padStart(2, '0');
+    }
+
     async function loadAll() {
         try {
             const [h, hl] = await Promise.all([
@@ -224,7 +232,7 @@
             ]);
             habitData = h;
             healthData = hl;
-            const today = new Date().toISOString().split('T')[0];
+            const today = localDateStr();
             currentDate = new Date();
             document.getElementById('datePicker').value = today;
             render(today);
@@ -235,14 +243,14 @@
     
     function changeDate(delta) {
         currentDate.setDate(currentDate.getDate() + delta);
-        const d = currentDate.toISOString().split('T')[0];
+        const d = localDateStr(currentDate);
         document.getElementById('datePicker').value = d;
         render(d);
     }
     
     function goToday() {
         currentDate = new Date();
-        const today = currentDate.toISOString().split('T')[0];
+        const today = localDateStr();
         document.getElementById('datePicker').value = today;
         render(today);
     }
@@ -340,7 +348,7 @@
         for (let i = 6; i >= 0; i--) {
             const dt = new Date(today);
             dt.setDate(dt.getDate() - i);
-            weekDays.push(dt.toISOString().split('T')[0]);
+            weekDays.push(localDateStr(dt));
         }
 
         const weekStats = weekDays.map(d => {
@@ -428,7 +436,7 @@
         for (let i = 0; i < 365; i++) {
             const check = new Date(d);
             check.setDate(check.getDate() - i);
-            const ds = check.toISOString().split('T')[0];
+            const ds = localDateStr(check);
             const rec = habitData[ds] || null;
             const val = rec ? rec[habitId] : 0;
             let done = val > 0;
@@ -447,7 +455,7 @@
         const d = new Date(dateStr + 'T12:00:00');
         const weekday = ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
         const dateDisplay = `${d.getMonth()+1}月${d.getDate()}日（${weekday}）`;
-        const isToday = dateStr === new Date().toISOString().split('T')[0];
+        const isToday = dateStr === localDateStr();
         
         // 服药判断
         const TREATMENT_START = new Date('2026-03-27');
@@ -485,7 +493,7 @@
         for (let i = 0; i < 7; i++) {
             const wd = new Date(monday);
             wd.setDate(monday.getDate() + i);
-            weekDays.push(wd.toISOString().split('T')[0]);
+            weekDays.push(localDateStr(wd));
         }
         
         let weekDoneCount = 0;
@@ -594,7 +602,7 @@
         for (let i = 0; i < 7; i++) {
             const hd = new Date(todayD);
             hd.setDate(hd.getDate() - i);
-            const hds = hd.toISOString().split('T')[0];
+            const hds = localDateStr(hd);
             const hdRec = getHealth(hds);
             if (Object.keys(hdRec).length > 0) {
                 const wd = ['周日','周一','周二','周三','周四','周五','周六'][hd.getDay()];
@@ -741,7 +749,7 @@
         for (let i = 0; i < 30; i++) {
             const d = new Date(today);
             d.setDate(d.getDate() - i);
-            days.push(d.toISOString().split('T')[0]);
+            days.push(localDateStr(d));
         }
 
         // Part 1: 习惯 + 健康图标网格
@@ -750,7 +758,7 @@
         days.forEach(dateStr => {
             const d = new Date(dateStr + 'T12:00:00');
             const wd = d.getDay();
-            const isToday = dateStr === new Date().toISOString().split('T')[0];
+            const isToday = dateStr === localDateStr();
             const rec = getRecord(dateStr);
             const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
             const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.zhongyao||0);
