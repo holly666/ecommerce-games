@@ -2,28 +2,120 @@
   "project": "女尊世界·当家主",
   "lastUpdated": "2026-04-07",
   "features": [
-    { "name": "角色创建-身世选择", "passes": true, "notes": "4种身世，各有初始属性差异" },
-    { "name": "角色创建-心性选择", "passes": true, "notes": "影响属性成长和部分事件" },
-    { "name": "角色创建-名字输入", "passes": true, "notes": "" },
-    { "name": "存档系统-手动存档", "passes": true, "notes": "💾按钮，localStorage" },
-    { "name": "存档系统-自动存档", "passes": true, "notes": "每次操作autoSave，右上角提示" },
-    { "name": "存档系统-读档恢复UI", "passes": true, "notes": "区分创建中途/已开始游戏" },
-    { "name": "基础属性系统", "passes": true, "notes": "银两/声望/智慧/魄力/身份/日期" },
-    { "name": "每日清晨事件", "passes": true, "notes": "集市/工作/县城/科举等选项" },
-    { "name": "媒婆婚姻系统", "passes": true, "notes": "4种夫君类型，各有专属剧情" },
-    { "name": "夫君好感系统", "passes": true, "notes": "5级：陌生人→命定之人" },
-    { "name": "夜间场景", "passes": true, "notes": "吃饭/谈心/秘密/算账/节日/生日等" },
-    { "name": "科举系统", "passes": true, "notes": "童生→官员完整路径" },
-    { "name": "政务系统", "passes": true, "notes": "县衙公务/晋升/领俸禄" },
-    { "name": "随机事件", "passes": true, "notes": "集市/流氓/房东/商机等" },
-    { "name": "赏花宴社交", "passes": true, "notes": "名流交际/柳夫人线" },
-    { "name": "妾室系统", "passes": true, "notes": "纳妾/好感/争宠/ illness" },
-    { "name": "子女系统", "passes": true, "notes": "生育/起名/培养" },
-    { "name": "身份进阶", "passes": true, "notes": "窘境→商→仕→霸主" },
-    { "name": "四季天气系统", "passes": true, "notes": "" },
-    { "name": "对话日志", "passes": true, "notes": "底部滚动日志" },
-    { "name": "夫君名场面系统", "passes": false, "notes": "每个夫君好感度≥60时触发专属名场面，不可跳过" },
-    { "name": "关键选择节点系统", "passes": false, "notes": "表白/第一次冲突/和好，选项影响好感度和后续剧情" },
-    { "name": "多存档槽位", "passes": false, "notes": "支持3个存档槽位" }
+    {
+      "name": "角色创建-身世选择",
+      "passes": true,
+      "notes": "4种身世，各有初始属性差异"
+    },
+    {
+      "name": "角色创建-心性选择",
+      "passes": true,
+      "notes": "影响属性成长和部分事件"
+    },
+    {
+      "name": "角色创建-名字输入",
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "name": "存档系统-手动存档",
+      "passes": true,
+      "notes": "💾按钮，localStorage"
+    },
+    {
+      "name": "存档系统-自动存档",
+      "passes": true,
+      "notes": "每次操作autoSave，右上角提示"
+    },
+    {
+      "name": "存档系统-读档恢复UI",
+      "passes": true,
+      "notes": "区分创建中途/已开始游戏"
+    },
+    {
+      "name": "基础属性系统",
+      "passes": true,
+      "notes": "银两/声望/智慧/魄力/身份/日期"
+    },
+    {
+      "name": "每日清晨事件",
+      "passes": true,
+      "notes": "集市/工作/县城/科举等选项"
+    },
+    {
+      "name": "媒婆婚姻系统",
+      "passes": true,
+      "notes": "4种夫君类型，各有专属剧情"
+    },
+    {
+      "name": "夫君好感系统",
+      "passes": true,
+      "notes": "5级：陌生人→命定之人"
+    },
+    {
+      "name": "夜间场景",
+      "passes": true,
+      "notes": "吃饭/谈心/秘密/算账/节日/生日等"
+    },
+    {
+      "name": "科举系统",
+      "passes": true,
+      "notes": "童生→官员完整路径"
+    },
+    {
+      "name": "政务系统",
+      "passes": true,
+      "notes": "县衙公务/晋升/领俸禄"
+    },
+    {
+      "name": "随机事件",
+      "passes": true,
+      "notes": "集市/流氓/房东/商机等"
+    },
+    {
+      "name": "赏花宴社交",
+      "passes": true,
+      "notes": "名流交际/柳夫人线"
+    },
+    {
+      "name": "妾室系统",
+      "passes": true,
+      "notes": "纳妾/好感/争宠/ illness"
+    },
+    {
+      "name": "子女系统",
+      "passes": true,
+      "notes": "生育/起名/培养"
+    },
+    {
+      "name": "身份进阶",
+      "passes": true,
+      "notes": "窘境→商→仕→霸主"
+    },
+    {
+      "name": "四季天气系统",
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "name": "对话日志",
+      "passes": true,
+      "notes": "底部滚动日志"
+    },
+    {
+      "name": "夫君名场面系统",
+      "passes": true,
+      "notes": "4个夫君各有名场面(书生雨夜守夜/柳秘密解决危机/沈记得你说的话/楚口嫌体正直)"
+    },
+    {
+      "name": "关键选择节点系统",
+      "passes": false,
+      "notes": "表白/第一次冲突/和好，选项影响好感度和后续剧情"
+    },
+    {
+      "name": "多存档槽位",
+      "passes": false,
+      "notes": "支持3个存档槽位"
+    }
   ]
 }
