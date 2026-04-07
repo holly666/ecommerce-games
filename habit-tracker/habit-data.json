@@ -131,6 +131,9 @@
   "2026-04-07": {
     "aspirin": true,
     "vitaminD": true,
-    "chineseMedicine_morning": true
+    "chineseMedicine_morning": true,
+    "soyMilk": 500,
+    "water": 200,
+    "exercise": true
   }
 }
