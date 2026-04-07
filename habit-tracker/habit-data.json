@@ -127,5 +127,10 @@
       "完成": true,
       "备注": "昨天洗澡代替泡脚"
     }
+  },
+  "2026-04-07": {
+    "aspirin": true,
+    "vitaminD": true,
+    "chineseMedicine_morning": true
   }
 }
