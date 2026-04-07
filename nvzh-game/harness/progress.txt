@@ -38,3 +38,13 @@
 ## 文件变更
 - index.html: 增加名场面相关函数
 - harness/feature-list.json: 已更新
+
+## 2026-04-07 完成记录
+
+✅ 夫君名场面系统
+- checkFamousScene() 在showNight()入口优先检测
+- 书生/柳云舟/沈墨白/楚灼 各有一个专属名场面
+- 触发后S.flags[famousSceneDone_<id>]=true，永不重复
+- 触发后好感+5
+
+下一个待做: 关键选择节点系统（表白/冲突/和好）
