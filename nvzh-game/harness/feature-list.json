@@ -21,18 +21,9 @@
     { "name": "子女系统", "passes": true, "notes": "生育/起名/培养" },
     { "name": "身份进阶", "passes": true, "notes": "窘境→商→仕→霸主" },
     { "name": "四季天气系统", "passes": true, "notes": "" },
-    { "name": "周年纪念日", "passes": true, "notes": "" },
     { "name": "对话日志", "passes": true, "notes": "底部滚动日志" },
-    { "name": "游戏初始化(initS)", "passes": true, "notes": "大量字段初始化，冗长有tech debt" },
-
-    { "name": "BUGFIX-关闭浏览器后丢失选中的身世/心性", "passes": true, "notes": "2026-04-07: autoSave在选择时保存" },
-    { "name": "BUGFIX-读档后封面不消失", "passes": true, "notes": "2026-04-07: loadGame重写UI恢复逻辑" },
-
-    { "name": "新功能-无婚姻路线", "passes": false, "notes": "玩家可选不婚路线，独立成长" },
-    { "name": "新功能-小妾争宠事件", "passes": false, "notes": "妾室之间的冲突和玩家裁决" },
-    { "name": "新功能-商业对手竞争", "passes": false, "notes": "其他布庄的竞争事件" },
-    { "name": "新功能-子女成年后出路", "passes": false, "notes": "科举/经商/武职等" },
-    { "name": "新功能-多存档槽位", "passes": false, "notes": "支持多个存档而不是覆盖" },
-    { "name": "新功能-游戏结算画面", "passes": false, "notes": "通关后展示成就统计" }
+    { "name": "夫君名场面系统", "passes": false, "notes": "每个夫君好感度≥60时触发专属名场面，不可跳过" },
+    { "name": "关键选择节点系统", "passes": false, "notes": "表白/第一次冲突/和好，选项影响好感度和后续剧情" },
+    { "name": "多存档槽位", "passes": false, "notes": "支持3个存档槽位" }
   ]
 }
