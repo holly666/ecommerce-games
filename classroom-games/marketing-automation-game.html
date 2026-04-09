@@ -224,6 +224,7 @@ function shuffle(arr) {
 }
 
 function startGame() {
+  document.removeEventListener('click', handleClassifyClick);
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'block';
   currentLevel = 0;
@@ -274,14 +275,14 @@ function loadLevel(idx) {
     level.categories.forEach(c => { levelState.placed[c.id] = []; });
     
     let catsHtml = level.categories.map(c => `
-      <div class="category-box" id="cat-${c.id}" onclick="placeInCategory('${c.id}')">
+      <div class="category-box" id="cat-${c.id}" data-cat="${c.id}">
         <div class="cat-title" style="color:#ffd700;">${c.title}</div>
         <div class="cat-items" id="cat-items-${c.id}"></div>
       </div>
     `).join('');
 
     let tagsHtml = levelState.tags.map((t, i) => 
-      `<span class="tag" id="tag-${i}" onclick="selectTag(${i})">${t}</span>`
+      `<span class="tag" id="tag-${i}" data-original-idx="${i}">${t}</span>`
     ).join('');
 
     cont.innerHTML = `
@@ -291,7 +292,7 @@ function loadLevel(idx) {
         <div class="situation-text">${level.situation}</div>
       </div>
       <div class="pool-box">
-        <div class="pool-title">📋 待分类工具</div>
+        <div class="pool-title">📋 待分类工具（点击标签，再点击目标分类筐放入）</div>
         <div class="pool-items" id="tag-pool">${tagsHtml}</div>
       </div>
       <div class="classify-area">${catsHtml}</div>
@@ -300,6 +301,9 @@ function loadLevel(idx) {
         <button class="action-btn" id="confirmBtn" onclick="confirmClassify()">确认提交</button>
       </div>
     `;
+    
+    // Event delegation for all tags and category boxes
+    document.addEventListener('click', handleClassifyClick);
   } else if (level.type === 'sequence') {
     levelState.shuffledSteps = shuffle(level.steps.map((s, i) => ({ ...s, origIdx: i })));
     levelState.sequenceOrder = new Array(level.steps.length).fill(null);
@@ -389,63 +393,86 @@ function confirmChoice() {
 }
 
 // ====== 归类题 ======
-function selectTag(idx) {
+// 事件委托：处理第二关所有点击
+function handleClassifyClick(e) {
+  // 只有在第二关（classify）才处理
+  const level = gameData.levels[currentLevel];
+  if (!level || level.type !== 'classify') return;
   if (levelState.answered) return;
-  document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
-  document.getElementById('tag-' + idx).classList.add('selected');
-  levelState.selectedTag = idx;
+  const target = e.target;
+  
+  // 点击了标签
+  if (target.classList.contains('tag')) {
+    const tagText = target.textContent;
+    const catId = target.dataset.cat; // 有值说明在分类筐里
+    
+    if (catId) {
+      // 在分类筐里：点这个标签 → 移回待选池
+      returnToPoolByEl(target);
+    } else {
+      // 在待选池里：点这个标签 → 选中它
+      selectTagByEl(target);
+    }
+    return;
+  }
+  
+  // 点击了分类筐空白区域
+  if (target.classList.contains('category-box') || target.closest('.category-box')) {
+    const box = target.classList.contains('category-box') ? target : target.closest('.category-box');
+    const catId = box.dataset.cat;
+    if (catId) {
+      placeInCategoryByEl(catId);
+    }
+  }
 }
 
-function placeInCategory(catId) {
-  if (levelState.answered) return;
+function selectTagByEl(el) {
+  document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  // 从 el.dataset.originalIdx 获取原始索引
+  levelState.selectedTag = parseInt(el.dataset.originalIdx);
+}
+
+function placeInCategoryByEl(catId) {
   if (levelState.selectedTag === null) return;
+  const el = document.querySelector(`.tag[data-original-idx="${levelState.selectedTag}"]`);
+  if (!el) return;
+  const tagText = el.textContent;
   
-  const tagEl = document.getElementById('tag-' + levelState.selectedTag);
-  const tagText = tagEl.textContent;
-  
-  // Remove from previous if any
+  // Remove from any category first
   Object.keys(levelState.placed).forEach(k => {
     levelState.placed[k] = levelState.placed[k].filter(t => t !== tagText);
   });
   
   levelState.placed[catId].push(tagText);
   
-  // Move tag to category
-  const catItems = document.getElementById('cat-items-' + catId);
-  tagEl.classList.remove('selected');
-  tagEl.classList.add('placed');
-  tagEl.onclick = function() { returnToPool(tagText, catId); };
-  catItems.appendChild(tagEl);
+  el.classList.remove('selected');
+  el.classList.add('placed');
+  el.dataset.cat = catId;
+  document.getElementById('cat-items-' + catId).appendChild(el);
   
   levelState.selectedTag = null;
   updateClassifyBtn();
 }
 
-function returnToPool(tagText, fromCatId) {
-  if (levelState.answered) return;
+function returnToPoolByEl(el) {
+  const catId = el.dataset.cat;
+  if (!catId) return;
+  const tagText = el.textContent;
   
   // Remove from placed
-  levelState.placed[fromCatId] = levelState.placed[fromCatId].filter(t => t !== tagText);
+  levelState.placed[catId] = levelState.placed[catId].filter(t => t !== tagText);
   
-  // Find the tag element and move back to pool
-  const tagEls = document.querySelectorAll('.tag.placed');
-  for (const el of tagEls) {
-    if (el.textContent === tagText) {
-      el.classList.remove('placed', 'correct-tag', 'wrong-tag');
-      // Find its original index and restore onclick
-      const idx = parseInt(el.id.split('-')[1]);
-      el.onclick = function() { selectTag(idx); };
-      document.getElementById('tag-pool').appendChild(el);
-      break;
-    }
-  }
+  el.classList.remove('placed', 'correct-tag', 'wrong-tag');
+  delete el.dataset.cat;
+  document.getElementById('tag-pool').appendChild(el);
   
   updateClassifyBtn();
 }
 
 function updateClassifyBtn() {
   const totalPlaced = Object.values(levelState.placed).reduce((s, arr) => s + arr.length, 0);
-  document.getElementById('confirmBtn').disabled = (totalPlaced < levelState.tags.length);
+  document.getElementById('confirmBtn').disabled = (totalPlaced === 0);
 }
 
 function confirmClassify() {
