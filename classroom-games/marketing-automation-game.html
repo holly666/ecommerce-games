@@ -44,7 +44,6 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 
 /* 归类游戏 */
 .classify-area { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
-.classify-area > .category-box:last-child { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; }
 .category-box { background: #16213e; border-radius: 12px; padding: 16px; min-height: 80px; }
 .category-title { color: #ffd700; font-size: 0.9em; margin-bottom: 10px; }
 .category-items { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
@@ -146,8 +145,7 @@ const gameData = {
       situation: '小吴发现店铺用了多种营销工具，请你帮他分类：哪些是电商平台自带工具，哪些是第三方工具？',
       categories: [
         { id: 'platform', title: '🏢 电商平台自带工具', correctTags: ['生意参谋', '千牛工作台', '京东商智'] },
-        { id: 'third', title: '🔧 第三方工具', correctTags: ['店侦探', '爆乐码', '数据蛇'] },
-        { id: 'other', title: '❓ 其他/不属于这两类', correctTags: [] }
+        { id: 'third', title: '🔧 第三方工具', correctTags: ['店侦探', '爆乐码', '数据蛇'] }
       ],
       tags: ['生意参谋', '店侦探', '千牛工作台', '爆乐码', '京东商智', '数据蛇'],
       feedback: {
