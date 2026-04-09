@@ -186,12 +186,12 @@ const gameData = {
       type: 'sequence',
       situation: '小吴刚入职某美妆品牌，运营主管让他负责设计一套"客户复购提醒"自动化流程，先做什么后做什么？',
       steps: [
-        { text: '① 业务目标设定', correctPos: 0 },
-        { text: '② 客户细分', correctPos: 1 },
-        { text: '③ 内容创建', correctPos: 2 },
-        { text: '④ 自动化流程设计', correctPos: 3 },
-        { text: '⑤ 执行与监控', correctPos: 4 },
-        { text: '⑥ 反馈与改进', correctPos: 5 }
+        { text: '第一步：明确业务目标', correctPos: 0 },
+        { text: '第二步：进行客户细分', correctPos: 1 },
+        { text: '第三步：设计内容创建', correctPos: 2 },
+        { text: '第四步：完成自动化流程设计', correctPos: 3 },
+        { text: '第五步：执行并实时监控', correctPos: 4 },
+        { text: '第六步：反馈数据并持续改进', correctPos: 5 }
       ],
       feedback: {
         correct: { title: '✅ 流程正确！', text: '这套"客户复购提醒"自动化流程走完了：先定目标→再圈客户分层→创作内容→设计触发规则→执行监控→最后反馈改进，形成完整的营销自动化闭环。', tip: '记忆口诀：目标→客户→内容→设计→执行→反馈（闭环）' }
@@ -294,11 +294,12 @@ function loadLevel(idx) {
   } else if (level.type === 'sequence') {
     levelState.shuffledSteps = shuffle(level.steps.map((s, i) => ({ ...s, origIdx: i })));
     levelState.sequenceOrder = new Array(level.steps.length).fill(null);
+    pendingSeqIdx = null;
     
-    // 渲染待选步骤（乱序显示）
+    // 渲染待选步骤（乱序显示，编号仅作序号）
     let poolHtml = levelState.shuffledSteps.map((s, i) => 
-      `<div class="seq-item seq-pool-item" id="seq-pool-${i}" onclick="seqPoolClick(${i})" style="cursor:pointer;">
-        <div class="seq-num" id="seq-num-${i}" style="background:#334;color:#aaa;">${i + 1}</div>
+      `<div class="seq-item seq-pool-item" id="seq-pool-${i}" data-idx="${i}" style="cursor:pointer;">
+        <div class="seq-num" style="background:#334;color:#aaa;">${i + 1}</div>
         <div class="seq-text">${s.text}</div>
       </div>`
     ).join('');
@@ -310,7 +311,7 @@ function loadLevel(idx) {
         <div class="situation-text">${level.situation}</div>
       </div>
       <div class="category-box" style="background:#0f3460;border:2px solid #334;">
-        <div class="category-title" style="color:#ffd700;font-weight:bold;">📌 步骤池（点击选择，再点下方空位放入）</div>
+        <div class="category-title" style="color:#ffd700;font-weight:bold;">📌 步骤池（点击选中，再点下方空位放入）</div>
         <div id="seq-pool" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">${poolHtml}</div>
       </div>
       <div class="category-box" style="background:#1a1a2e;border:2px solid #3b5998;margin-top:12px;">
@@ -322,6 +323,16 @@ function loadLevel(idx) {
         <button class="action-btn" id="confirmBtn" onclick="confirmSequence()" disabled>确认提交</button>
       </div>
     `;
+    
+    // 绑定池中点击
+    document.querySelectorAll('.seq-pool-item').forEach(el => {
+      el.addEventListener('click', function() {
+        const idx = parseInt(this.dataset.idx);
+        seqPoolClick(idx);
+      });
+    });
+    
+    updateSeqSlots();
   }
 }
 
@@ -507,29 +518,26 @@ function confirmClassify() {
 }
 
 // ====== 排序题 ======
-let pendingSeqIdx = null; // 当前选中的步骤索引
+let pendingSeqIdx = null;
 
 function seqPoolClick(idx) {
   if (levelState.answered) return;
-  const el = document.getElementById('seq-pool-' + idx);
-  if (!el || el.classList.contains('placed')) return;
+  if (document.getElementById('seq-pool-' + idx).classList.contains('placed')) return;
   
-  // 取消之前的选中高亮
   document.querySelectorAll('.seq-pool-item').forEach(e => {
     e.style.borderColor = 'transparent';
     e.style.background = '#16213e';
   });
   
-  // 选中当前
-  el.style.borderColor = '#ffd700';
-  el.style.background = 'rgba(255,215,0,0.1)';
+  document.getElementById('seq-pool-' + idx).style.borderColor = '#ffd700';
+  document.getElementById('seq-pool-' + idx).style.background = 'rgba(255,215,0,0.1)';
   pendingSeqIdx = idx;
-  
   updateSeqSlots();
 }
 
 function updateSeqSlots() {
   const container = document.getElementById('seq-order');
+  if (!container) return;
   let html = '';
   for (let pos = 0; pos < levelState.shuffledSteps.length; pos++) {
     const seqIdx = levelState.sequenceOrder[pos];
@@ -540,16 +548,17 @@ function updateSeqSlots() {
       </div>`;
     } else {
       const isNext = pendingSeqIdx !== null;
-      html += `<div class="seq-item" onclick="seqSlotClick(${pos})" style="cursor:pointer;min-height:44px;${isNext ? 'border-color:#667eea;background:rgba(102,126,234,0.1);' : 'opacity:0.5;border-style:dashed;'}">
+      html += `<div class="seq-item ${isNext ? 'seq-slot-empty' : ''}" onclick="${isNext ? 'seqSlotClick(' + pos + ')' : ''}" style="cursor:${isNext ? 'pointer' : 'default'};min-height:52px;${isNext ? 'border-color:#667eea;background:rgba(102,126,234,0.15);' : 'opacity:0.4;border-style:dashed;'}">
         <div class="seq-num" style="background:#334;color:#aaa;">${pos + 1}</div>
-        <div class="seq-text" style="color:#aaa;">${isNext ? '点击放入' : '—'}</div>
+        <div class="seq-text" style="color:${isNext ? '#a0b0ff' : '#666'};">${isNext ? '点击放入' : '—'}</div>
       </div>`;
     }
   }
   container.innerHTML = html;
   
   const filled = levelState.sequenceOrder.filter(o => o !== null).length;
-  document.getElementById('confirmBtn').disabled = (filled < levelState.shuffledSteps.length);
+  const btn = document.getElementById('confirmBtn');
+  if (btn) btn.disabled = (filled < levelState.shuffledSteps.length);
 }
 
 function seqSlotClick(pos) {
@@ -557,7 +566,6 @@ function seqSlotClick(pos) {
   if (pendingSeqIdx === null) return;
   if (levelState.sequenceOrder[pos] !== null) return;
   
-  // 放入
   levelState.sequenceOrder[pos] = pendingSeqIdx;
   
   const poolEl = document.getElementById('seq-pool-' + pendingSeqIdx);
@@ -565,10 +573,9 @@ function seqSlotClick(pos) {
   poolEl.style.borderColor = 'transparent';
   poolEl.style.background = '#16213e';
   poolEl.style.opacity = '0.4';
-  poolEl.onclick = null;
+  poolEl.style.pointerEvents = 'none';
   
   pendingSeqIdx = null;
-  
   document.querySelectorAll('.seq-pool-item').forEach(e => {
     e.style.borderColor = 'transparent';
     e.style.background = '#16213e';
@@ -589,20 +596,27 @@ function confirmSequence() {
     }
   });
   
-  // Mark correct/wrong
-  levelState.sequenceOrder.forEach((seqIdx, pos) => {
-    const el = document.getElementById('seq-' + seqIdx);
-    if (levelState.shuffledSteps[seqIdx].correctPos === pos) {
-      el.classList.add('correct');
-    } else {
-      el.classList.add('wrong');
+  // Mark correct/wrong on the placed items in seq-order
+  const orderItems = document.querySelectorAll('#seq-order .seq-item');
+  orderItems.forEach((el, pos) => {
+    if (pos < levelState.sequenceOrder.length) {
+      const seqIdx = levelState.sequenceOrder[pos];
+      if (levelState.shuffledSteps[seqIdx].correctPos === pos) {
+        el.classList.add('correct');
+        el.style.borderColor = '#51cf66';
+        el.style.background = 'rgba(81,207,102,0.15)';
+      } else {
+        el.classList.add('wrong');
+        el.style.borderColor = '#ff6b6b';
+        el.style.background = 'rgba(255,107,107,0.15)';
+      }
     }
-    el.onclick = null; // disable
   });
   
   answers.push({ level: currentLevel, pass: allCorrect });
   
   const fb = document.getElementById('feedback');
+  if (!fb) return;
   fb.className = 'feedback-box show';
   if (allCorrect) {
     fb.innerHTML = `
@@ -612,10 +626,11 @@ function confirmSequence() {
     `;
   } else {
     // Show correct order
-    let correctOrder = level.steps.map(s => s.text).join(' → ');
+    let correctOrder = level.steps.map((s, i) => `${i + 1}. ${s.text}`).join('<br>');
     fb.innerHTML = `
       <div class="feedback-title wrong">⚠️ 顺序不对</div>
-      <div class="feedback-text">正确顺序：${correctOrder}</div>
+      <div class="feedback-text" style="margin-top:8px;">正确顺序：</div>
+      <div style="color:#51cf66;font-size:0.9em;margin-top:6px;">${correctOrder}</div>
     `;
   }
   
