@@ -247,8 +247,8 @@ function loadLevel(idx) {
   const cont = document.getElementById('levelContainer');
   
   if (level.type === 'choice') {
-    // 选项保持原始顺序（A→B→C→D固定）
-    const options = level.options.map((o, i) => ({ ...o, origIdx: i }));
+    // 选项保持固定顺序（不shuffle）
+    const options = level.options;
     levelState.shuffledOptions = options;
     
     let optionsHtml = options.map((o, i) => 
