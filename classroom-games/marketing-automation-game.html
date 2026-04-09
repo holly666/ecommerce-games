@@ -49,9 +49,9 @@ body { background: #1a1a2e; color: #eee; min-height: 100vh; font-family: "PingFa
 .tag { display: inline-block; padding: 10px 16px; background: linear-gradient(135deg, #1e3a5f, #16213e); border: 2px solid #3b5998; border-radius: 10px; font-size: 0.95em; cursor: pointer; transition: all 0.2s; color: #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
 .tag:hover { border-color: #ffd700; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,215,0,0.2); }
 .tag.selected { border-color: #ffd700; background: rgba(255,215,0,0.15); color: #ffd700; transform: translateY(-2px); }
-.tag.placed { opacity: 0.4; pointer-events: none; }
-.tag.correct-tag { border-color: #51cf66; background: rgba(81,207,102,0.2); color: #51cf66; opacity: 1; }
-.tag.wrong-tag { border-color: #ff6b6b; background: rgba(255,107,107,0.2); color: #ff6b6b; opacity: 1; }
+.tag.placed { opacity: 1; cursor: pointer; }
+.tag.correct-tag { border-color: #51cf66; background: rgba(81,207,102,0.2); color: #51cf66; }
+.tag.wrong-tag { border-color: #ff6b6b; background: rgba(255,107,107,0.2); color: #ff6b6b; }
 
 .category-box { background: #1a3a5c; border-radius: 16px; padding: 20px 16px 16px; min-height: 140px; border: 3px dashed #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.15); transition: all 0.2s; position: relative; }
 .category-box:hover { border-color: #667eea; }
