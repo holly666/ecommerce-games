@@ -428,14 +428,17 @@ function returnToPool(tagText, fromCatId) {
   levelState.placed[fromCatId] = levelState.placed[fromCatId].filter(t => t !== tagText);
   
   // Find the tag element and move back to pool
-  const tagEls = document.querySelectorAll('.tag');
-  tagEls.forEach(el => {
-    if (el.textContent === tagText && el.classList.contains('placed')) {
+  const tagEls = document.querySelectorAll('.tag.placed');
+  for (const el of tagEls) {
+    if (el.textContent === tagText) {
       el.classList.remove('placed', 'correct-tag', 'wrong-tag');
-      el.onclick = null; // reset to original select behavior
+      // Find its original index and restore onclick
+      const idx = parseInt(el.id.split('-')[1]);
+      el.onclick = function() { selectTag(idx); };
       document.getElementById('tag-pool').appendChild(el);
+      break;
     }
-  });
+  }
   
   updateClassifyBtn();
 }
