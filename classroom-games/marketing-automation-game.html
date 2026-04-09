@@ -298,6 +298,7 @@ function loadLevel(idx) {
       <div class="classify-area">${catsHtml}</div>
       <div id="feedback" class="feedback-box"></div>
       <div style="text-align:center;">
+        <button class="action-btn" style="background:#c0392b;" id="resetBtn" onclick="resetClassify()">重置本关</button>
         <button class="action-btn" id="confirmBtn" onclick="confirmClassify()">确认提交</button>
       </div>
     `;
@@ -332,6 +333,7 @@ function loadLevel(idx) {
       </div>
       <div id="feedback" class="feedback-box"></div>
       <div style="text-align:center;">
+        <button class="action-btn" style="background:#c0392b;" id="resetSeqBtn" onclick="resetSequence()">重置本关</button>
         <button class="action-btn" id="confirmBtn" onclick="confirmSequence()" disabled>确认提交</button>
       </div>
     `;
@@ -473,6 +475,26 @@ function returnToPoolByEl(el) {
 function updateClassifyBtn() {
   const totalPlaced = Object.values(levelState.placed).reduce((s, arr) => s + arr.length, 0);
   document.getElementById('confirmBtn').disabled = (totalPlaced === 0);
+}
+
+function resetClassify() {
+  const level = gameData.levels[currentLevel];
+  if (!level || level.type !== 'classify') return;
+  
+  // Reset all placed tags back to pool
+  Object.keys(levelState.placed).forEach(catId => {
+    levelState.placed[catId] = [];
+  });
+  
+  // Move all tags back to pool and remove cat data attribute
+  document.querySelectorAll('.tag.placed').forEach(el => {
+    el.classList.remove('placed', 'correct-tag', 'wrong-tag', 'selected');
+    delete el.dataset.cat;
+    document.getElementById('tag-pool').appendChild(el);
+  });
+  
+  levelState.selectedTag = null;
+  document.getElementById('confirmBtn').disabled = true;
 }
 
 function confirmClassify() {
