@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>营销自动化通关挑战</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
-.container { max-width: 900px; margin: 0 auto; padding: 20px; }
-@media (max-width: 768px) { .container { max-width: 100%; padding: 16px; } }
-
 /* 开始页面 */
 #start-screen { text-align: center; padding-top: 40px; }
 .title { font-size: 2.2em; color: #ffd700; margin-bottom: 10px; }
@@ -34,58 +29,43 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
 
-/* 移动端适配 */
-@media (max-width: 768px) {
-  .container { padding: 16px; }
-  .title { font-size: 2em; }
-  .subtitle { font-size: 1em; margin-bottom: 24px; }
-  .level-title { font-size: 1.2em; }
-  .level-subtitle { font-size: 0.95em; }
-  .situation-box { padding: 16px; }
-  .situation-text { font-size: 1em; line-height: 1.6; }
-  .category-box { padding: 16px; min-height: 80px; }
-  .category-title { font-size: 1em; }
-  .tag { padding: 10px 16px; font-size: 0.95em; border-radius: 24px; }
-  .classify-area { gap: 12px; }
-  .classify-area > .category-box { grid-column: 1 / -1; }
-  .seq-pool-item { padding: 14px 16px; }
-  .seq-text { font-size: 1em; }
-  .option-btn { font-size: 1em; padding: 16px; min-height: 56px; }
-  .start-btn { padding: 18px 48px; font-size: 1.1em; }
-  .action-btn { padding: 16px 40px; font-size: 1em; border-radius: 50px; }
-  .seq-order .seq-item { min-height: 52px; padding: 12px 16px; }
-  .feedback-text { font-size: 0.95em; }
-}
-
-.option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; min-height: 60px; display: flex; align-items: center; line-height: 1.5; }
+.option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; min-height: 60px; display: flex; align-items: center; line-height: 1.5; transition: all 0.15s; }
 .option-btn:hover { border-color: #667eea; }
-.option-btn.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); }
-.option-btn.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
-.option-btn.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
-
-.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 20px; display: inline-block; }
-.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.option-btn.selected { border-color: #ffd700; background: rgba(255,215,0,0.1); }
+.option-btn.correct { border-color: #51cf66; background: rgba(81,207,102,0.15); color: #51cf66; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.15); color: #ff6b6b; }
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 20px; display: inline-block; transition: transform 0.2s; }
+.action-btn:hover { transform: scale(1.03); }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 .action-btn-secondary { background: transparent; border: 2px solid #667eea; color: #667eea; padding: 12px 28px; font-size: 0.95em; border-radius: 50px; cursor: pointer; margin-top: 12px; display: inline-block; }
 
 /* 归类游戏 */
-.classify-area { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
-.category-box { background: #16213e; border-radius: 12px; padding: 16px; min-height: 80px; }
-.category-title { color: #ffd700; font-size: 0.9em; margin-bottom: 10px; }
-.category-items { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
-.tag { display: inline-block; padding: 8px 14px; background: #0f3460; border: 1px solid #334; border-radius: 20px; font-size: 0.85em; cursor: pointer; transition: all 0.15s; color: #ddd; }
-.tag:hover { border-color: #667eea; }
-.tag.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.15); }
+.tag { display: inline-block; padding: 10px 16px; background: linear-gradient(135deg, #1e3a5f, #16213e); border: 2px solid #3b5998; border-radius: 10px; font-size: 0.95em; cursor: pointer; transition: all 0.2s; color: #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.tag:hover { border-color: #ffd700; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,215,0,0.2); }
+.tag.selected { border-color: #ffd700; background: rgba(255,215,0,0.15); color: #ffd700; transform: translateY(-2px); }
 .tag.placed { opacity: 0.4; pointer-events: none; }
-.tag.correct-tag { border-color: #51cf66; background: rgba(81, 207, 102, 0.2); color: #51cf66; }
-.tag.wrong-tag { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+.tag.correct-tag { border-color: #51cf66; background: rgba(81,207,102,0.2); color: #51cf66; opacity: 1; }
+.tag.wrong-tag { border-color: #ff6b6b; background: rgba(255,107,107,0.2); color: #ff6b6b; opacity: 1; }
+
+.category-box { background: #0f3460; border-radius: 16px; padding: 20px 16px 16px; min-height: 140px; border: 3px dashed #3b5998; transition: all 0.2s; position: relative; }
+.category-box:hover { border-color: #667eea; }
+.category-box .cat-title { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #1a1a2e; padding: 4px 18px; border-radius: 20px; font-size: 0.9em; font-weight: bold; white-space: nowrap; }
+.cat-items { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; min-height: 50px; }
+
+.classify-area { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+@media (max-width: 600px) { .classify-area { grid-template-columns: 1fr; } }
+
+.pool-box { background: #16213e; border-radius: 16px; padding: 20px 16px 16px; border: 2px solid #3b5998; margin-bottom: 16px; position: relative; }
+.pool-title { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #ffd700; color: #1a1a2e; padding: 4px 18px; border-radius: 20px; font-size: 0.9em; font-weight: bold; white-space: nowrap; }
+.pool-items { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 
 /* 排序游戏 */
-.sequence-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
 .seq-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #16213e; border-radius: 10px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
 .seq-item:hover { border-color: #667eea; }
-.seq-item.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); }
-.seq-item.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
-.seq-item.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+.seq-item.selected { border-color: #ffd700; background: rgba(255,215,0,0.1); }
+.seq-item.placed { opacity: 0.4; cursor: default; }
+.seq-item.correct { border-color: #51cf66; background: rgba(81,207,102,0.15); color: #51cf66; opacity: 1; }
+.seq-item.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.15); color: #ff6b6b; opacity: 1; }
 .seq-num { width: 28px; height: 28px; border-radius: 50%; background: #334; display: flex; align-items: center; justify-content: center; font-size: 0.85em; flex-shrink: 0; color: #aaa; }
 .seq-num.active { background: #ffd700; color: #1a1a2e; font-weight: bold; }
 .seq-num.done { background: #51cf66; color: #fff; }
@@ -98,7 +78,7 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .feedback-title.correct { color: #51cf66; }
 .feedback-title.wrong { color: #ff6b6b; }
 .feedback-text { color: #aaa; font-size: 0.9em; line-height: 1.6; }
-.feedback-tip { margin-top: 10px; padding: 10px 14px; background: rgba(102, 126, 234, 0.15); border-radius: 8px; color: #a0b0ff; font-size: 0.85em; }
+.feedback-tip { margin-top: 10px; padding: 10px 14px; background: rgba(102,126,234,0.15); border-radius: 8px; color: #a0b0ff; font-size: 0.85em; }
 
 /* 结果页 */
 #result-screen { display: none; text-align: center; padding-top: 40px; }
@@ -110,7 +90,29 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .result-icon { font-size: 1.2em; flex-shrink: 0; }
 .result-icon.pass { color: #51cf66; }
 .result-icon.fail { color: #ff6b6b; }
-</style>
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .container { padding: 16px; }
+  .title { font-size: 2em; }
+  .subtitle { font-size: 1em; margin-bottom: 24px; }
+  .level-title { font-size: 1.2em; }
+  .level-subtitle { font-size: 0.95em; }
+  .situation-box { padding: 16px; }
+  .situation-text { font-size: 1em; line-height: 1.6; }
+  .category-box { padding: 18px 14px 14px; min-height: 120px; }
+  .tag { padding: 10px 14px; font-size: 0.9em; }
+  .pool-box { padding: 18px 14px 14px; }
+  .seq-pool-item { padding: 12px 14px; }
+  .seq-text { font-size: 0.95em; }
+  .option-btn { font-size: 1em; padding: 14px; min-height: 56px; }
+  .start-btn { padding: 18px 48px; font-size: 1.1em; }
+  .action-btn { padding: 16px 40px; font-size: 1em; }
+  .feedback-text { font-size: 0.95em; }
+  .seq-order .seq-item { min-height: 48px; }
+}
+
+
 </head>
 <body>
 <div class="container">
@@ -265,9 +267,9 @@ function loadLevel(idx) {
     level.categories.forEach(c => { levelState.placed[c.id] = []; });
     
     let catsHtml = level.categories.map(c => `
-      <div class="category-box" id="cat-${c.id}">
-        <div class="category-title">${c.title}</div>
-        <div class="category-items" id="cat-items-${c.id}" onclick="placeInCategory('${c.id}')"></div>
+      <div class="category-box" id="cat-${c.id}" onclick="placeInCategory('${c.id}')">
+        <div class="cat-title" style="color:#ffd700;">${c.title}</div>
+        <div class="cat-items" id="cat-items-${c.id}"></div>
       </div>
     `).join('');
 
@@ -281,9 +283,9 @@ function loadLevel(idx) {
       <div class="situation-box">
         <div class="situation-text">${level.situation}</div>
       </div>
-      <div class="category-box" style="background:#0f3460;border:1px solid #334;">
-        <div class="category-title" style="color:#aaa;">📋 待分类工具（点击标签，再点击目标筐）</div>
-        <div class="category-items" id="tag-pool">${tagsHtml}</div>
+      <div class="pool-box">
+        <div class="pool-title">📋 待分类工具</div>
+        <div class="pool-items" id="tag-pool">${tagsHtml}</div>
       </div>
       <div class="classify-area">${catsHtml}</div>
       <div id="feedback" class="feedback-box"></div>
@@ -296,9 +298,8 @@ function loadLevel(idx) {
     levelState.sequenceOrder = new Array(level.steps.length).fill(null);
     pendingSeqIdx = null;
     
-    // 渲染待选步骤（乱序显示，编号仅作序号）
     let poolHtml = levelState.shuffledSteps.map((s, i) => 
-      `<div class="seq-item seq-pool-item" id="seq-pool-${i}" data-idx="${i}" style="cursor:pointer;">
+      `<div class="seq-item seq-pool-item" id="seq-pool-${i}" data-idx="${i}">
         <div class="seq-num" style="background:#334;color:#aaa;">${i + 1}</div>
         <div class="seq-text">${s.text}</div>
       </div>`
@@ -310,12 +311,12 @@ function loadLevel(idx) {
       <div class="situation-box">
         <div class="situation-text">${level.situation}</div>
       </div>
-      <div class="category-box" style="background:#0f3460;border:2px solid #334;">
-        <div class="category-title" style="color:#ffd700;font-weight:bold;">📌 步骤池（点击选中，再点下方空位放入）</div>
+      <div class="pool-box">
+        <div class="pool-title">📌 步骤池（点击选中，再点下方空位放入）</div>
         <div id="seq-pool" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">${poolHtml}</div>
       </div>
-      <div class="category-box" style="background:#1a1a2e;border:2px solid #3b5998;margin-top:12px;">
-        <div class="category-title" style="color:#ffd700;font-weight:bold;">📋 排序结果（点击空位放入步骤）</div>
+      <div class="category-box" style="border-color:#3b5998;margin-top:16px;">
+        <div class="cat-title" style="color:#ffd700;">📋 排序结果（点击空位放入步骤）</div>
         <div id="seq-order" style="display:flex;flex-direction:column;gap:8px;margin-top:12px;"></div>
       </div>
       <div id="feedback" class="feedback-box"></div>
