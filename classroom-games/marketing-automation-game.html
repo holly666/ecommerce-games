@@ -367,9 +367,29 @@ function placeInCategory(catId) {
   const catItems = document.getElementById('cat-items-' + catId);
   tagEl.classList.remove('selected');
   tagEl.classList.add('placed');
+  tagEl.onclick = function() { returnToPool(tagText, catId); };
   catItems.appendChild(tagEl);
   
   levelState.selectedTag = null;
+  updateClassifyBtn();
+}
+
+function returnToPool(tagText, fromCatId) {
+  if (levelState.answered) return;
+  
+  // Remove from placed
+  levelState.placed[fromCatId] = levelState.placed[fromCatId].filter(t => t !== tagText);
+  
+  // Find the tag element and move back to pool
+  const tagEls = document.querySelectorAll('.tag');
+  tagEls.forEach(el => {
+    if (el.textContent === tagText && el.classList.contains('placed')) {
+      el.classList.remove('placed', 'correct-tag', 'wrong-tag');
+      el.onclick = null; // reset to original select behavior
+      document.getElementById('tag-pool').appendChild(el);
+    }
+  });
+  
   updateClassifyBtn();
 }
 
