@@ -299,7 +299,7 @@ function loadLevel(idx) {
       <div class="classify-area">${catsHtml}</div>
       <div id="feedback" class="feedback-box"></div>
       <div style="text-align:center;">
-        <button class="action-btn" style="background:#c0392b;" id="resetBtn" onclick="resetClassify()">重置本关</button>
+        <button class="action-btn" style="background:#c0392b;" id="resetBtn" onclick="resetClassify()" style="display:none;">重置本关</button>
         <button class="action-btn" id="confirmBtn" onclick="confirmClassify()">确认提交</button>
       </div>
     `;
@@ -334,7 +334,7 @@ function loadLevel(idx) {
       </div>
       <div id="feedback" class="feedback-box"></div>
       <div style="text-align:center;">
-        <button class="action-btn" style="background:#c0392b;" id="resetSeqBtn" onclick="resetSequence()">重置本关</button>
+        <button class="action-btn" style="background:#c0392b;" id="resetSeqBtn" onclick="resetSequence()" style="display:none;">重置本关</button>
         <button class="action-btn" id="confirmBtn" onclick="confirmSequence()" disabled>确认提交</button>
       </div>
     `;
@@ -496,6 +496,13 @@ function resetClassify() {
   
   levelState.selectedTag = null;
   document.getElementById('confirmBtn').disabled = true;
+  // Show reset button again for next attempt
+  const resetBtn2 = document.getElementById('resetBtn');
+  if (resetBtn2) resetBtn2.style.display = 'inline-block';
+  // Also re-attach event listeners to pool items
+  document.querySelectorAll('.tag').forEach(el => {
+    el.addEventListener('click', handleClassifyClick);
+  });
 }
 
 function confirmClassify() {
