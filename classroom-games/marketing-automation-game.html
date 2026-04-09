@@ -32,6 +32,28 @@ body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1
 .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
 
+/* 移动端适配 */
+@media (max-width: 600px) {
+  .container { padding: 12px; }
+  .title { font-size: 1.6em; }
+  .subtitle { font-size: 0.85em; }
+  .level-title { font-size: 1em; }
+  .level-subtitle { font-size: 0.8em; }
+  .situation-box { padding: 14px; }
+  .situation-text { font-size: 0.9em; }
+  .category-box { padding: 14px; min-height: 70px; }
+  .category-title { font-size: 0.85em; }
+  .tag { padding: 6px 10px; font-size: 0.8em; }
+  .classify-area { gap: 10px; }
+  .classify-area > .category-box { grid-column: 1 / -1; }
+  .seq-pool-item { padding: 10px 12px; }
+  .seq-text { font-size: 0.85em; }
+  .option-btn { font-size: 0.9em; padding: 12px; }
+  .start-btn { padding: 14px 36px; font-size: 1em; }
+  .action-btn { padding: 12px 28px; font-size: 0.95em; }
+  .seq-order .seq-item { min-height: 40px; }
+}
+
 .option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; min-height: 60px; display: flex; align-items: center; line-height: 1.5; }
 .option-btn:hover { border-color: #667eea; }
 .option-btn.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); }
