@@ -603,7 +603,7 @@ function updateSeqSlots() {
   for (let pos = 0; pos < levelState.shuffledSteps.length; pos++) {
     const seqIdx = levelState.sequenceOrder[pos];
     if (seqIdx !== null) {
-      html += `<div class="seq-item" style="cursor:default;">
+      html += `<div class="seq-item seq-placed-item" id="seq-placed-${pos}" data-pos="${pos}" style="cursor:pointer;">
         <div class="seq-num done">${pos + 1}</div>
         <div class="seq-text">${levelState.shuffledSteps[seqIdx].text}</div>
       </div>`;
@@ -616,6 +616,14 @@ function updateSeqSlots() {
     }
   }
   container.innerHTML = html;
+  
+  // 给已放置的步骤添加点击事件（移回池）
+  container.querySelectorAll('.seq-placed-item').forEach(el => {
+    el.addEventListener('click', function() {
+      const pos = parseInt(this.dataset.pos);
+      returnSeqFromSlot(pos);
+    });
+  });
   
   const filled = levelState.sequenceOrder.filter(o => o !== null).length;
   const btn = document.getElementById('confirmBtn');
@@ -641,6 +649,25 @@ function seqSlotClick(pos) {
     e.style.borderColor = 'transparent';
     e.style.background = '#16213e';
   });
+  
+  updateSeqSlots();
+}
+
+function returnSeqFromSlot(pos) {
+  if (levelState.answered) return;
+  const seqIdx = levelState.sequenceOrder[pos];
+  if (seqIdx === null) return;
+  
+  // 从序列中移除
+  levelState.sequenceOrder[pos] = null;
+  
+  // 恢复池中元素
+  const poolEl = document.getElementById('seq-pool-' + seqIdx);
+  poolEl.classList.remove('placed');
+  poolEl.style.borderColor = 'transparent';
+  poolEl.style.background = '#16213e';
+  poolEl.style.opacity = '1';
+  poolEl.style.pointerEvents = '';
   
   updateSeqSlots();
 }
