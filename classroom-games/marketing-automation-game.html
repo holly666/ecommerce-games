@@ -272,9 +272,10 @@ function loadLevel(idx) {
     levelState.shuffledSteps = shuffle(level.steps.map((s, i) => ({ ...s, origIdx: i })));
     levelState.sequenceOrder = new Array(level.steps.length).fill(null);
     
-    let stepsHtml = levelState.shuffledSteps.map((s, i) => 
-      `<div class="seq-item" id="seq-${i}" onclick="selectSeq(${i})">
-        <div class="seq-num" id="seq-num-${i}">?</div>
+    // 渲染待选步骤（乱序显示）
+    let poolHtml = levelState.shuffledSteps.map((s, i) => 
+      `<div class="seq-item seq-pool-item" id="seq-pool-${i}" onclick="seqPoolClick(${i})" style="cursor:pointer;">
+        <div class="seq-num" id="seq-num-${i}" style="background:#334;color:#aaa;">${i + 1}</div>
         <div class="seq-text">${s.text}</div>
       </div>`
     ).join('');
@@ -285,9 +286,13 @@ function loadLevel(idx) {
       <div class="situation-box">
         <div class="situation-text">${level.situation}</div>
       </div>
-      <div class="category-box" style="background:#0f3460;border:1px solid #334;">
-        <div class="category-title" style="color:#aaa;">📌 请按正确顺序点击排列（点击选择序号位置）</div>
-        <div class="sequence-list" id="seq-order"></div>
+      <div class="category-box" style="background:#0f3460;border:2px solid #334;">
+        <div class="category-title" style="color:#ffd700;font-weight:bold;">📌 步骤池（点击选择，再点下方空位放入）</div>
+        <div id="seq-pool" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;">${poolHtml}</div>
+      </div>
+      <div class="category-box" style="background:#1a1a2e;border:2px solid #3b5998;margin-top:12px;">
+        <div class="category-title" style="color:#ffd700;font-weight:bold;">📋 排序结果（点击空位放入步骤）</div>
+        <div id="seq-order" style="display:flex;flex-direction:column;gap:8px;margin-top:12px;"></div>
       </div>
       <div id="feedback" class="feedback-box"></div>
       <div style="text-align:center;">
@@ -479,41 +484,74 @@ function confirmClassify() {
 }
 
 // ====== 排序题 ======
-function selectSeq(idx) {
+let pendingSeqIdx = null; // 当前选中的步骤索引
+
+function seqPoolClick(idx) {
   if (levelState.answered) return;
-  const seqEl = document.getElementById('seq-' + idx);
-  if (seqEl.classList.contains('correct') || seqEl.classList.contains('wrong')) return;
+  const el = document.getElementById('seq-pool-' + idx);
+  if (!el || el.classList.contains('placed')) return;
   
-  const nextEmpty = levelState.sequenceOrder.findIndex(o => o === null);
+  // 取消之前的选中高亮
+  document.querySelectorAll('.seq-pool-item').forEach(e => {
+    e.style.borderColor = 'transparent';
+    e.style.background = '#16213e';
+  });
   
-  if (nextEmpty === -1) return; // full
+  // 选中当前
+  el.style.borderColor = '#ffd700';
+  el.style.background = 'rgba(255,215,0,0.1)';
+  pendingSeqIdx = idx;
   
-  levelState.sequenceOrder[nextEmpty] = idx;
-  
-  const numEl = document.getElementById('seq-num-' + idx);
-  numEl.textContent = nextEmpty + 1;
-  numEl.className = 'seq-num active';
-  
-  if (levelState.sequenceOrder.filter(o => o !== null).length === levelState.shuffledSteps.length) {
-    document.getElementById('confirmBtn').disabled = false;
-  }
-  
-  // Update visual: show order list
-  updateSeqOrder();
+  updateSeqSlots();
 }
 
-function updateSeqOrder() {
+function updateSeqSlots() {
   const container = document.getElementById('seq-order');
   let html = '';
-  levelState.sequenceOrder.forEach((seqIdx, pos) => {
+  for (let pos = 0; pos < levelState.shuffledSteps.length; pos++) {
+    const seqIdx = levelState.sequenceOrder[pos];
     if (seqIdx !== null) {
-      html += `<div class="seq-item selected" style="padding:8px 12px;">
+      html += `<div class="seq-item" style="cursor:default;">
         <div class="seq-num done">${pos + 1}</div>
-        <div class="seq-text" style="font-size:0.9em;">${levelState.shuffledSteps[seqIdx].text}</div>
+        <div class="seq-text">${levelState.shuffledSteps[seqIdx].text}</div>
+      </div>`;
+    } else {
+      const isNext = pendingSeqIdx !== null;
+      html += `<div class="seq-item" onclick="seqSlotClick(${pos})" style="cursor:pointer;min-height:44px;${isNext ? 'border-color:#667eea;background:rgba(102,126,234,0.1);' : 'opacity:0.5;border-style:dashed;'}">
+        <div class="seq-num" style="background:#334;color:#aaa;">${pos + 1}</div>
+        <div class="seq-text" style="color:#aaa;">${isNext ? '点击放入' : '—'}</div>
       </div>`;
     }
-  });
+  }
   container.innerHTML = html;
+  
+  const filled = levelState.sequenceOrder.filter(o => o !== null).length;
+  document.getElementById('confirmBtn').disabled = (filled < levelState.shuffledSteps.length);
+}
+
+function seqSlotClick(pos) {
+  if (levelState.answered) return;
+  if (pendingSeqIdx === null) return;
+  if (levelState.sequenceOrder[pos] !== null) return;
+  
+  // 放入
+  levelState.sequenceOrder[pos] = pendingSeqIdx;
+  
+  const poolEl = document.getElementById('seq-pool-' + pendingSeqIdx);
+  poolEl.classList.add('placed');
+  poolEl.style.borderColor = 'transparent';
+  poolEl.style.background = '#16213e';
+  poolEl.style.opacity = '0.4';
+  poolEl.onclick = null;
+  
+  pendingSeqIdx = null;
+  
+  document.querySelectorAll('.seq-pool-item').forEach(e => {
+    e.style.borderColor = 'transparent';
+    e.style.background = '#16213e';
+  });
+  
+  updateSeqSlots();
 }
 
 function confirmSequence() {
