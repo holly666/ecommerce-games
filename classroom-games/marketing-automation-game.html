@@ -247,10 +247,11 @@ function loadLevel(idx) {
   const cont = document.getElementById('levelContainer');
   
   if (level.type === 'choice') {
-    const shuffled = shuffle(level.options.map((o, i) => ({ ...o, origIdx: i })));
-    levelState.shuffledOptions = shuffled;
+    // 选项保持原始顺序（A→B→C→D固定）
+    const options = level.options.map((o, i) => ({ ...o, origIdx: i }));
+    levelState.shuffledOptions = options;
     
-    let optionsHtml = shuffled.map((o, i) => 
+    let optionsHtml = options.map((o, i) => 
       `<button class="option-btn" id="opt-${i}" onclick="selectOption(${i})">${o.text}</button>`
     ).join('');
 
