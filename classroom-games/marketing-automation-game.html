@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>营销自动化通关挑战</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+/* 开始页面 */
+#start-screen { text-align: center; padding-top: 40px; }
+.title { font-size: 2.2em; color: #ffd700; margin-bottom: 10px; }
+.subtitle { color: #aaa; margin-bottom: 30px; font-size: 0.95em; line-height: 1.6; }
+.start-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 16px 48px; font-size: 1.2em; border-radius: 50px; cursor: pointer; }
+
+/* 游戏页面 */
+#game-screen { display: none; }
+.progress-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.step-dot { width: 12px; height: 12px; border-radius: 50%; background: #334; flex-shrink: 0; }
+.step-dot.done { background: #51cf66; }
+.step-dot.active { background: #ffd700; box-shadow: 0 0 8px #ffd700; }
+.step-line { flex: 1; height: 2px; background: #334; }
+.step-line.done { background: #51cf66; }
+
+.level-title { font-size: 1.1em; color: #ffd700; margin-bottom: 8px; }
+.level-subtitle { color: #aaa; font-size: 0.85em; margin-bottom: 16px; }
+
+.situation-box { background: linear-gradient(135deg, #16213e, #0f3460); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.situation-text { font-size: 1em; line-height: 1.7; color: #ddd; }
+
+.options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+
+.option-btn { background: #16213e; border: 2px solid #334; color: #ddd; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-size: 0.95em; text-align: left; min-height: 60px; display: flex; align-items: center; line-height: 1.5; }
+.option-btn:hover { border-color: #667eea; }
+.option-btn.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); }
+.option-btn.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+
+.action-btn { background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: white; padding: 14px 36px; font-size: 1em; border-radius: 50px; cursor: pointer; margin-top: 20px; display: inline-block; }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.action-btn-secondary { background: transparent; border: 2px solid #667eea; color: #667eea; padding: 12px 28px; font-size: 0.95em; border-radius: 50px; cursor: pointer; margin-top: 12px; display: inline-block; }
+
+/* 归类游戏 */
+.classify-area { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.category-box { background: #16213e; border-radius: 12px; padding: 16px; min-height: 80px; }
+.category-title { color: #ffd700; font-size: 0.9em; margin-bottom: 10px; }
+.category-items { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+.tag { display: inline-block; padding: 8px 14px; background: #0f3460; border: 1px solid #334; border-radius: 20px; font-size: 0.85em; cursor: pointer; transition: all 0.15s; color: #ddd; }
+.tag:hover { border-color: #667eea; }
+.tag.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.15); }
+.tag.placed { opacity: 0.4; pointer-events: none; }
+.tag.correct-tag { border-color: #51cf66; background: rgba(81, 207, 102, 0.2); color: #51cf66; }
+.tag.wrong-tag { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+
+/* 排序游戏 */
+.sequence-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.seq-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #16213e; border-radius: 10px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
+.seq-item:hover { border-color: #667eea; }
+.seq-item.selected { border-color: #ffd700; background: rgba(255, 215, 0, 0.1); }
+.seq-item.correct { border-color: #51cf66; background: rgba(81, 207, 102, 0.15); color: #51cf66; }
+.seq-item.wrong { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+.seq-num { width: 28px; height: 28px; border-radius: 50%; background: #334; display: flex; align-items: center; justify-content: center; font-size: 0.85em; flex-shrink: 0; color: #aaa; }
+.seq-num.active { background: #ffd700; color: #1a1a2e; font-weight: bold; }
+.seq-num.done { background: #51cf66; color: #fff; }
+.seq-text { font-size: 0.95em; }
+
+/* 反馈 */
+.feedback-box { background: #16213e; border-radius: 12px; padding: 20px; margin-top: 16px; display: none; }
+.feedback-box.show { display: block; }
+.feedback-title { font-size: 1.1em; margin-bottom: 8px; }
+.feedback-title.correct { color: #51cf66; }
+.feedback-title.wrong { color: #ff6b6b; }
+.feedback-text { color: #aaa; font-size: 0.9em; line-height: 1.6; }
+.feedback-tip { margin-top: 10px; padding: 10px 14px; background: rgba(102, 126, 234, 0.15); border-radius: 8px; color: #a0b0ff; font-size: 0.85em; }
+
+/* 结果页 */
+#result-screen { display: none; text-align: center; padding-top: 40px; }
+.result-score { font-size: 4em; color: #ffd700; font-weight: bold; }
+.result-label { color: #aaa; margin-bottom: 24px; }
+.result-detail { background: #16213e; border-radius: 16px; padding: 20px; text-align: left; margin-bottom: 24px; }
+.result-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #2a2a4a; }
+.result-item:last-child { border-bottom: none; }
+.result-icon { font-size: 1.2em; flex-shrink: 0; }
+.result-icon.pass { color: #51cf66; }
+.result-icon.fail { color: #ff6b6b; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 开始页面 -->
+<div id="start-screen">
+  <div class="title">🤖 营销自动化挑战</div>
+  <div class="subtitle">3关 · 理解营销自动化的定义、工具和工作流程<br>考试重点：★★ 理解定义 ｜ ★ 了解工具与流程</div>
+  <button class="start-btn" onclick="startGame()">开始挑战</button>
+</div>
+
+<!-- 游戏页面 -->
+<div id="game-screen">
+  <div class="progress-bar" id="progressBar"></div>
+  <div id="levelContainer"></div>
+</div>
+
+<!-- 结果页面 -->
+<div id="result-screen">
+  <div class="result-score" id="resultScore"></div>
+  <div class="result-label">本次得分</div>
+  <div class="result-detail" id="resultDetail"></div>
+  <button class="action-btn" onclick="restartGame()">再玩一次</button>
+</div>
+
+</div>
+
+<script>
+// ====== 游戏数据 ======
+const gameData = {
+  levels: [
+    // ====== 第1关：理解定义 ======
+    {
+      id: 1,
+      title: '第一关 · 理解定义',
+      subtitle: '选出关于"营销自动化"最准确的描述',
+      type: 'choice',
+      situation: '小吴是某服装网店的运营主管，老板让他解释什么叫"营销自动化"。他应该怎么说？',
+      question: '哪个描述最准确？',
+      options: [
+        { text: 'A. 用软件自动发送推广短信，无需人工操作', key: 'wrong',
+          feedback: { title: '⚠️ 不完整', text: '这只是营销自动化的一个具体应用，不是定义本身。营销自动化的核心是整个流程的智能化管理，不只是"发短信"这一件事。' }},
+        { text: 'B. 通过软件和技术实现营销流程的自动化管理，提高效率，增强精准度和个性化', key: 'correct',
+          feedback: { title: '✅ 正确！', text: '这正是营销自动化的标准定义：核心是"流程自动化+效率提升+精准个性化"，三者缺一不可。', tip: '记忆口诀：流程自动化 + 效率提升 + 精准个性化' }},
+        { text: 'C. 用AI机器人替代人工客服回答客户问题', key: 'wrong',
+          feedback: { title: '⚠️ 片面', text: 'AI客服只是营销自动化的一个场景，不是定义。营销自动化涵盖的是整个营销流程，不只是客服环节。' }},
+        { text: 'D. 雇更多实习生手动整理客户数据报表', key: 'wrong',
+          feedback: { title: '⚠️ 方向相反', text: '这是纯人工操作，和"自动化"完全相反。自动化是用技术减少人工，不是增加人工。' }},
+      ]
+    },
+    // ====== 第2关：了解工具 ======
+    {
+      id: 2,
+      title: '第二关 · 了解工具',
+      subtitle: '将工具拖入对应分类筐（点击标签，再点击目标筐）',
+      type: 'classify',
+      situation: '小吴发现店铺用了多种营销工具，请你帮他分类：哪些是电商平台自带工具，哪些是第三方工具？',
+      categories: [
+        { id: 'platform', title: '🏢 电商平台自带工具', correctTags: ['生意参谋', '千牛工作台', '京东商智'] },
+        { id: 'third', title: '🔧 第三方工具', correctTags: ['店侦探', '爆乐码', '数据蛇'] }
+      ],
+      tags: ['生意参谋', '店侦探', '千牛工作台', '爆乐码', '京东商智', '数据蛇'],
+      feedback: {
+        correct: { title: '✅ 全部正确！', text: '平台自带工具由电商官方提供，数据对接更稳定；第三方工具功能更灵活，常用来补充平台工具的不足。', tip: '常见平台工具：淘宝-生意参谋/千牛；京东-京小红书智投；第三方：店侦探/数据魔方/蝉妈妈等' },
+        wrong: { title: '⚠️ 还有分类错误的', text: '请检查每个工具的归属，再次点击标签调整分类。' }
+      }
+    },
+    // ====== 第3关：了解流程 ======
+    {
+      id: 3,
+      title: '第三关 · 了解流程',
+      subtitle: '按正确的顺序点击排列（点击选中序号，再点击填写位置）',
+      type: 'sequence',
+      situation: '小吴要设计一个邮件自动化流程，负责人提醒他要按正确顺序操作。正确的顺序是什么？',
+      steps: [
+        { text: '① 业务目标设定', correctPos: 0 },
+        { text: '② 客户细分', correctPos: 1 },
+        { text: '③ 内容创建', correctPos: 2 },
+        { text: '④ 自动化流程设计', correctPos: 3 },
+        { text: '⑤ 执行与监控', correctPos: 4 },
+        { text: '⑥ 反馈与改进', correctPos: 5 }
+      ],
+      feedback: {
+        correct: { title: '✅ 流程正确！', text: '营销自动化六步缺一不可：先定目标→再圈客户→然后创作内容→设计流程→执行监控→最后反馈改进形成闭环。', tip: '记忆口诀：目标→客户→内容→设计→执行→反馈（闭环）' }
+      }
+    }
+  ]
+};
+
+// ====== 游戏状态 ======
+let currentLevel = 0;
+let levelState = {};
+let answers = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startGame() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  currentLevel = 0;
+  answers = [];
+  loadLevel(currentLevel);
+}
+
+function loadLevel(idx) {
+  const level = gameData.levels[idx];
+  levelState = { selectedTag: null, placed: {}, sequenceSelected: null, sequenceOrder: [], answered: false };
+  
+  // Progress bar
+  let pb = '<div class="step-dot ' + (idx > 0 ? 'done' : 'active') + '"></div>';
+  for (let i = 0; i < gameData.levels.length - 1; i++) {
+    pb += '<div class="step-line ' + (idx > i ? 'done' : '') + '"></div>';
+    pb += '<div class="step-dot ' + (idx === i + 1 ? 'active' : (idx > i + 1 ? 'done' : '')) + '"></div>';
+  }
+  document.getElementById('progressBar').innerHTML = pb;
+
+  const cont = document.getElementById('levelContainer');
+  
+  if (level.type === 'choice') {
+    const shuffled = shuffle(level.options.map((o, i) => ({ ...o, origIdx: i })));
+    levelState.shuffledOptions = shuffled;
+    
+    let optionsHtml = shuffled.map((o, i) => 
+      `<button class="option-btn" id="opt-${i}" onclick="selectOption(${i})">${o.text}</button>`
+    ).join('');
+
+    cont.innerHTML = `
+      <div class="level-title">${level.title}</div>
+      <div class="level-subtitle">${level.subtitle}</div>
+      <div class="situation-box">
+        <div class="situation-text">${level.situation}</div>
+      </div>
+      <div class="situation-box" style="background:#1a1a2e;border:1px solid #334;padding:14px 16px;margin-top:-8px;">
+        <div style="color:#ffd700;font-size:0.9em;margin-bottom:6px;">${level.question}</div>
+      </div>
+      <div class="options-grid">${optionsHtml}</div>
+      <div id="feedback" class="feedback-box"></div>
+      <div style="text-align:center;">
+        <button class="action-btn" id="confirmBtn" onclick="confirmChoice()" disabled>确认答案</button>
+      </div>
+    `;
+  } else if (level.type === 'classify') {
+    levelState.tags = shuffle([...level.tags]);
+    levelState.placed = {};
+    level.categories.forEach(c => { levelState.placed[c.id] = []; });
+    
+    let catsHtml = level.categories.map(c => `
+      <div class="category-box" id="cat-${c.id}">
+        <div class="category-title">${c.title}</div>
+        <div class="category-items" id="cat-items-${c.id}" onclick="placeInCategory('${c.id}')"></div>
+      </div>
+    `).join('');
+
+    let tagsHtml = levelState.tags.map((t, i) => 
+      `<span class="tag" id="tag-${i}" onclick="selectTag(${i})">${t}</span>`
+    ).join('');
+
+    cont.innerHTML = `
+      <div class="level-title">${level.title}</div>
+      <div class="level-subtitle">${level.subtitle}</div>
+      <div class="situation-box">
+        <div class="situation-text">${level.situation}</div>
+      </div>
+      <div class="category-box" style="background:#0f3460;border:1px solid #334;">
+        <div class="category-title" style="color:#aaa;">📋 待分类工具（点击标签，再点击目标筐）</div>
+        <div class="category-items" id="tag-pool">${tagsHtml}</div>
+      </div>
+      <div class="classify-area">${catsHtml}</div>
+      <div id="feedback" class="feedback-box"></div>
+      <div style="text-align:center;">
+        <button class="action-btn" id="confirmBtn" onclick="confirmClassify()">确认提交</button>
+      </div>
+    `;
+  } else if (level.type === 'sequence') {
+    levelState.shuffledSteps = shuffle(level.steps.map((s, i) => ({ ...s, origIdx: i })));
+    levelState.sequenceOrder = new Array(level.steps.length).fill(null);
+    
+    let stepsHtml = levelState.shuffledSteps.map((s, i) => 
+      `<div class="seq-item" id="seq-${i}" onclick="selectSeq(${i})">
+        <div class="seq-num" id="seq-num-${i}">?</div>
+        <div class="seq-text">${s.text}</div>
+      </div>`
+    ).join('');
+
+    cont.innerHTML = `
+      <div class="level-title">${level.title}</div>
+      <div class="level-subtitle">${level.subtitle}</div>
+      <div class="situation-box">
+        <div class="situation-text">${level.situation}</div>
+      </div>
+      <div class="category-box" style="background:#0f3460;border:1px solid #334;">
+        <div class="category-title" style="color:#aaa;">📌 请按正确顺序点击排列（点击选择序号位置）</div>
+        <div class="sequence-list" id="seq-order"></div>
+      </div>
+      <div id="feedback" class="feedback-box"></div>
+      <div style="text-align:center;">
+        <button class="action-btn" id="confirmBtn" onclick="confirmSequence()" disabled>确认提交</button>
+      </div>
+    `;
+  }
+}
+
+// ====== 选择题 ======
+function selectOption(idx) {
+  if (levelState.answered) return;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('opt-' + idx).classList.add('selected');
+  levelState.selected = idx;
+  document.getElementById('confirmBtn').disabled = false;
+}
+
+function confirmChoice() {
+  if (levelState.answered) return;
+  levelState.answered = true;
+  const chosen = levelState.shuffledOptions[levelState.selected];
+  const fb = document.getElementById('feedback');
+  
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  
+  if (chosen.key === 'correct') {
+    document.getElementById('opt-' + levelState.selected).classList.add('correct');
+    answers.push({ level: currentLevel, pass: true });
+    fb.className = 'feedback-box show';
+    fb.innerHTML = `
+      <div class="feedback-title correct">${chosen.feedback.title}</div>
+      <div class="feedback-text">${chosen.feedback.text}</div>
+      ${chosen.feedback.tip ? `<div class="feedback-tip">💡 ${chosen.feedback.tip}</div>` : ''}
+    `;
+  } else {
+    document.getElementById('opt-' + levelState.selected).classList.add('wrong');
+    // Show correct
+    levelState.shuffledOptions.forEach((o, i) => {
+      if (o.key === 'correct') document.getElementById('opt-' + i).classList.add('correct');
+    });
+    answers.push({ level: currentLevel, pass: false });
+    fb.className = 'feedback-box show';
+    fb.innerHTML = `
+      <div class="feedback-title wrong">${chosen.feedback.title}</div>
+      <div class="feedback-text">${chosen.feedback.text}</div>
+    `;
+  }
+  
+  document.getElementById('confirmBtn').style.display = 'none';
+  addNextButton();
+}
+
+// ====== 归类题 ======
+function selectTag(idx) {
+  if (levelState.answered) return;
+  document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+  document.getElementById('tag-' + idx).classList.add('selected');
+  levelState.selectedTag = idx;
+}
+
+function placeInCategory(catId) {
+  if (levelState.answered) return;
+  if (levelState.selectedTag === null) return;
+  
+  const tagEl = document.getElementById('tag-' + levelState.selectedTag);
+  const tagText = tagEl.textContent;
+  
+  // Remove from previous if any
+  Object.keys(levelState.placed).forEach(k => {
+    levelState.placed[k] = levelState.placed[k].filter(t => t !== tagText);
+  });
+  
+  levelState.placed[catId].push(tagText);
+  
+  // Move tag to category
+  const catItems = document.getElementById('cat-items-' + catId);
+  tagEl.classList.remove('selected');
+  tagEl.classList.add('placed');
+  catItems.appendChild(tagEl);
+  
+  levelState.selectedTag = null;
+  updateClassifyBtn();
+}
+
+function updateClassifyBtn() {
+  const totalPlaced = Object.values(levelState.placed).reduce((s, arr) => s + arr.length, 0);
+  document.getElementById('confirmBtn').disabled = (totalPlaced < levelState.tags.length);
+}
+
+function confirmClassify() {
+  if (levelState.answered) return;
+  levelState.answered = true;
+  const level = gameData.levels[currentLevel];
+  
+  let allCorrect = true;
+  let hasError = false;
+  
+  level.categories.forEach(cat => {
+    const placed = levelState.placed[cat.id] || [];
+    cat.correctTags.forEach(t => {
+      if (!placed.includes(t)) {
+        allCorrect = false;
+        hasError = true;
+      }
+    });
+    placed.forEach(t => {
+      if (!cat.correctTags.includes(t)) {
+        allCorrect = false;
+        hasError = true;
+      }
+    });
+  });
+  
+  // Mark tags
+  level.categories.forEach(cat => {
+    const placed = levelState.placed[cat.id] || [];
+    placed.forEach(t => {
+      const el = document.querySelector(`[id^="tag-"]:not(.placed)`);
+      // find by text
+      document.querySelectorAll('.tag.placed').forEach(el => {
+        if (el.textContent === t) {
+          if (cat.correctTags.includes(t)) {
+            el.classList.add('correct-tag');
+          } else {
+            el.classList.add('wrong-tag');
+          }
+        }
+      });
+    });
+  });
+  
+  // Simpler: check all placed tags
+  document.querySelectorAll('.tag.placed').forEach(el => {
+    const txt = el.textContent;
+    let correct = false;
+    level.categories.forEach(cat => {
+      if (cat.correctTags.includes(txt) && levelState.placed[cat.id].includes(txt)) {
+        correct = true;
+      }
+    });
+    if (!correct) {
+      el.classList.add('wrong-tag');
+      allCorrect = false;
+    } else {
+      el.classList.add('correct-tag');
+    }
+  });
+  
+  answers.push({ level: currentLevel, pass: allCorrect });
+  
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-box show';
+  if (allCorrect) {
+    fb.innerHTML = `
+      <div class="feedback-title correct">${level.feedback.correct.title}</div>
+      <div class="feedback-text">${level.feedback.correct.text}</div>
+      ${level.feedback.correct.tip ? `<div class="feedback-tip">💡 ${level.feedback.correct.tip}</div>` : ''}
+    `;
+  } else {
+    fb.innerHTML = `
+      <div class="feedback-title wrong">${level.feedback.wrong.title}</div>
+      <div class="feedback-text">${level.feedback.wrong.text}</div>
+    `;
+  }
+  
+  document.getElementById('confirmBtn').style.display = 'none';
+  addNextButton();
+}
+
+// ====== 排序题 ======
+function selectSeq(idx) {
+  if (levelState.answered) return;
+  const seqEl = document.getElementById('seq-' + idx);
+  if (seqEl.classList.contains('correct') || seqEl.classList.contains('wrong')) return;
+  
+  const nextEmpty = levelState.sequenceOrder.findIndex(o => o === null);
+  
+  if (nextEmpty === -1) return; // full
+  
+  levelState.sequenceOrder[nextEmpty] = idx;
+  
+  const numEl = document.getElementById('seq-num-' + idx);
+  numEl.textContent = nextEmpty + 1;
+  numEl.className = 'seq-num active';
+  
+  if (levelState.sequenceOrder.filter(o => o !== null).length === levelState.shuffledSteps.length) {
+    document.getElementById('confirmBtn').disabled = false;
+  }
+  
+  // Update visual: show order list
+  updateSeqOrder();
+}
+
+function updateSeqOrder() {
+  const container = document.getElementById('seq-order');
+  let html = '';
+  levelState.sequenceOrder.forEach((seqIdx, pos) => {
+    if (seqIdx !== null) {
+      html += `<div class="seq-item selected" style="padding:8px 12px;">
+        <div class="seq-num done">${pos + 1}</div>
+        <div class="seq-text" style="font-size:0.9em;">${levelState.shuffledSteps[seqIdx].text}</div>
+      </div>`;
+    }
+  });
+  container.innerHTML = html;
+}
+
+function confirmSequence() {
+  if (levelState.answered) return;
+  levelState.answered = true;
+  const level = gameData.levels[currentLevel];
+  
+  let allCorrect = true;
+  levelState.sequenceOrder.forEach((seqIdx, pos) => {
+    if (levelState.shuffledSteps[seqIdx].correctPos !== pos) {
+      allCorrect = false;
+    }
+  });
+  
+  // Mark correct/wrong
+  levelState.sequenceOrder.forEach((seqIdx, pos) => {
+    const el = document.getElementById('seq-' + seqIdx);
+    if (levelState.shuffledSteps[seqIdx].correctPos === pos) {
+      el.classList.add('correct');
+    } else {
+      el.classList.add('wrong');
+    }
+    el.onclick = null; // disable
+  });
+  
+  answers.push({ level: currentLevel, pass: allCorrect });
+  
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-box show';
+  if (allCorrect) {
+    fb.innerHTML = `
+      <div class="feedback-title correct">${level.feedback.correct.title}</div>
+      <div class="feedback-text">${level.feedback.correct.text}</div>
+      ${level.feedback.correct.tip ? `<div class="feedback-tip">💡 ${level.feedback.correct.tip}</div>` : ''}
+    `;
+  } else {
+    // Show correct order
+    let correctOrder = level.steps.map(s => s.text).join(' → ');
+    fb.innerHTML = `
+      <div class="feedback-title wrong">⚠️ 顺序不对</div>
+      <div class="feedback-text">正确顺序：${correctOrder}</div>
+    `;
+  }
+  
+  document.getElementById('confirmBtn').style.display = 'none';
+  addNextButton();
+}
+
+// ====== 通用 ======
+function addNextButton() {
+  const cont = document.getElementById('levelContainer');
+  if (currentLevel < gameData.levels.length - 1) {
+    cont.insertAdjacentHTML('beforeend', 
+      `<div style="text-align:center;"><button class="action-btn-secondary" onclick="nextLevel()">下一关 →</button></div>`
+    );
+  } else {
+    cont.insertAdjacentHTML('beforeend', 
+      `<div style="text-align:center;"><button class="action-btn" onclick="showResult()">查看成绩</button></div>`
+    );
+  }
+}
+
+function nextLevel() {
+  currentLevel++;
+  loadLevel(currentLevel);
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  
+  const passCount = answers.filter(a => a.pass).length;
+  const total = answers.length;
+  const score = Math.round(passCount / total * 100);
+  
+  document.getElementById('resultScore').textContent = score + '分';
+  
+  let detailHtml = '';
+  gameData.levels.forEach((level, i) => {
+    const pass = answers[i] && answers[i].pass;
+    detailHtml += `
+      <div class="result-item">
+        <span class="result-icon ${pass ? 'pass' : 'fail'}">${pass ? '✅' : '❌'}</span>
+        <div>
+          <div style="font-size:0.9em;color:#aaa;">第${i + 1}关</div>
+          <div>${level.title.replace('第' + (i+1) + '关 · ', '')}</div>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('resultDetail').innerHTML = detailHtml;
+}
+
+function restartGame() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'block';
+}
+</script>
+</body>
+</html>
