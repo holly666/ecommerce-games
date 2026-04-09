@@ -186,15 +186,15 @@ const gameData = {
       type: 'sequence',
       situation: '小吴刚入职某美妆品牌，运营主管让他负责设计一套"客户复购提醒"自动化流程，先做什么后做什么？',
       steps: [
-        { text: '第一步：明确业务目标', correctPos: 0 },
-        { text: '第二步：进行客户细分', correctPos: 1 },
-        { text: '第三步：设计内容创建', correctPos: 2 },
-        { text: '第四步：完成自动化流程设计', correctPos: 3 },
-        { text: '第五步：执行并实时监控', correctPos: 4 },
-        { text: '第六步：反馈数据并持续改进', correctPos: 5 }
+        { text: '明确本次营销活动的核心目标（拉新/促活/复购）', correctPos: 0 },
+        { text: '按消费频次、客单价等维度对客户分层', correctPos: 1 },
+        { text: '针对不同客群设计对应营销内容', correctPos: 2 },
+        { text: '设置触发规则（如图文推送/短信/优惠券自动发送）', correctPos: 3 },
+        { text: '上线后监控打开率、转化率等核心指标', correctPos: 4 },
+        { text: '根据数据反馈调整策略，形成闭环优化', correctPos: 5 }
       ],
       feedback: {
-        correct: { title: '✅ 流程正确！', text: '这套"客户复购提醒"自动化流程走完了：先定目标→再圈客户分层→创作内容→设计触发规则→执行监控→最后反馈改进，形成完整的营销自动化闭环。', tip: '记忆口诀：目标→客户→内容→设计→执行→反馈（闭环）' }
+        correct: { title: '✅ 流程正确！', text: '完全正确！这六步顺序完全符合逻辑：', tip: '记忆口诀：目标→客户→内容→设计→执行→反馈（闭环）' }
       }
     }
   ]
@@ -625,12 +625,12 @@ function confirmSequence() {
       ${level.feedback.correct.tip ? `<div class="feedback-tip">💡 ${level.feedback.correct.tip}</div>` : ''}
     `;
   } else {
-    // Show correct order
+    // Show correct order as numbered list
     let correctOrder = level.steps.map((s, i) => `${i + 1}. ${s.text}`).join('<br>');
     fb.innerHTML = `
       <div class="feedback-title wrong">⚠️ 顺序不对</div>
-      <div class="feedback-text" style="margin-top:8px;">正确顺序：</div>
-      <div style="color:#51cf66;font-size:0.9em;margin-top:6px;">${correctOrder}</div>
+      <div class="feedback-text" style="margin-top:8px;">正确顺序是：</div>
+      <div style="color:#51cf66;font-size:0.9em;margin-top:6px;line-height:1.8;">${correctOrder}</div>
     `;
   }
   
