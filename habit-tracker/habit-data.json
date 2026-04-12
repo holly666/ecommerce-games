@@ -158,5 +158,33 @@
     "备注": "大便羊屎状，偏干",
     "water": 300,
     "heshui": 1200
+  },
+  "2026-04-10": {
+    "doujiang": 500,
+    "milk": 200,
+    "dabian": 1,
+    "duanlian": 30,
+    "heshui": 300,
+    "paojiao": 0,
+    "shuijiao": 0
+  },
+  "2026-04-11": {
+    "doujiang": 500,
+    "milk": 200,
+    "dabian": 1,
+    "duanlian": 30,
+    "heshui": 300,
+    "paojiao": 0,
+    "shuijiao": 0
+  },
+  "2026-04-12": {
+    "doujiang": 500,
+    "milk": 0,
+    "water": 200,
+    "dabian": 0,
+    "duanlian": 30,
+    "heshui": 0,
+    "paojiao": 0,
+    "shuijiao": 0
   }
 }
