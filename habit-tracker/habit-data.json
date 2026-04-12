@@ -183,8 +183,9 @@
     "water": 500,
     "dabian": 0,
     "duanlian": 30,
-    "heshui": 1000,
+    "heshui": 1200,
     "paojiao": 0,
-    "shuijiao": 0
+    "shuijiao": 0,
+    "zhongyao": 200
   }
 }
