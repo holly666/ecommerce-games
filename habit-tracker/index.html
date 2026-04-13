@@ -290,13 +290,11 @@
 
     // 自动生成每日点评（温暖鼓励风格）
     function generateDailyCommentary(rec, dateStr) {
-        if (!rec) return '';
-
-        const liquid = (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.zhongyao||0);
-        const duanlian = rec.duanlian||0;
-        const paojiao = rec.paojiao||0;
-        const shuijiao = rec.shuijiao||0;
-        const dabian = rec.dabian||0;
+        const liquid = rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.zhongyao||0) : 0;
+        const duanlian = rec ? (rec.duanlian||0) : 0;
+        const paojiao = rec ? (rec.paojiao||0) : 0;
+        const shuijiao = rec ? (rec.shuijiao||0) : 0;
+        const dabian = rec ? (rec.dabian||0) : 0;
         const hd = getHealth(dateStr);
 
         const parts = [];
@@ -712,10 +710,8 @@
         });
         html += '</div>';
 
-        // 自动生成点评
-        if (isToday) {
-            html += generateDailyCommentary(rec, dateStr);
-        }
+        // 自动生成点评（本周趋势，有数据或本周有记录时显示）
+        html += generateDailyCommentary(rec, dateStr);
         
         // 数据更新说明
         const lastUpdate = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
