@@ -505,6 +505,34 @@ function resetClassify() {
   });
 }
 
+function resetSequence() {
+  const level = gameData.levels[currentLevel];
+  if (!level || level.type !== 'sequence') return;
+
+  // Reset sequence order
+  levelState.sequenceOrder = new Array(level.steps.length).fill(null);
+
+  // Restore all pool items
+  document.querySelectorAll('.seq-pool-item').forEach(el => {
+    el.classList.remove('placed');
+    el.style.borderColor = 'transparent';
+    el.style.background = '#16213e';
+    el.style.opacity = '1';
+    el.style.pointerEvents = '';
+  });
+
+  pendingSeqIdx = null;
+  levelState.answered = false;
+  document.getElementById('confirmBtn').disabled = true;
+  document.getElementById('confirmBtn').style.display = 'inline-block';
+  document.getElementById('feedback').className = 'feedback-box';
+
+  const resetBtn2 = document.getElementById('resetSeqBtn');
+  if (resetBtn2) resetBtn2.style.display = 'inline-block';
+
+  updateSeqSlots();
+}
+
 function confirmClassify() {
   if (levelState.answered) return;
   levelState.answered = true;
@@ -728,8 +756,12 @@ function confirmSequence() {
       <div style="color:#51cf66;font-size:0.9em;margin-top:6px;line-height:1.8;">${correctOrder}</div>
     `;
   }
-  
+
   document.getElementById('confirmBtn').style.display = 'none';
+  if (!allCorrect) {
+    const resetBtn2 = document.getElementById('resetSeqBtn');
+    if (resetBtn2) resetBtn2.style.display = 'inline-block';
+  }
   addNextButton();
 }
 
