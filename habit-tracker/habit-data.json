@@ -233,7 +233,8 @@
   },
   "2026-04-25": {
     "doujiang": 400,
-    "heshui": 400,
-    "dabian": 1
+    "heshui": 750,
+    "dabian": 1,
+    "water": 350
   }
 }
