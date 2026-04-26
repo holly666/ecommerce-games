@@ -129,6 +129,17 @@
         .fill-purple { background: linear-gradient(90deg, #667eea, #764ba2); }
         .fill-orange { background: linear-gradient(90deg, #fa709a, #fee140); }
 
+        /* 体重图表 */
+        .weight-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .weight-summary { display: flex; justify-content: space-around; text-align: center; margin-bottom: 15px; }
+        .weight-current { font-size: 32px; font-weight: bold; color: #667eea; }
+        .weight-unit { font-size: 14px; color: #888; }
+        .weight-change { font-size: 14px; }
+        .weight-change.down { color: #43e97b; }
+        .weight-change.up { color: #ff6b6b; }
+        .weight-chart { width: 100%; height: 120px; }
+        .weight-chart-empty { text-align: center; color: #888; padding: 30px; font-size: 13px; }
+
         /* 30天历史弹窗 */
         .modal-overlay {
             display: none;
@@ -695,6 +706,82 @@
             </button>
         </div>`;
         
+        // 体重折线图
+        const weightData = [];
+        if (habitData) {
+            Object.keys(habitData).forEach(date => {
+                if (habitData[date].体重 !== undefined) {
+                    weightData.push({ date, weight: habitData[date].体重 });
+                }
+            });
+        }
+        weightData.sort((a, b) => a.date.localeCompare(b.date));
+
+        let weightHtml = '';
+        if (weightData.length > 0) {
+            const latest = weightData[weightData.length - 1];
+            const first = weightData[0];
+            const change = (latest.weight - first.weight).toFixed(2);
+            const changeClass = change < 0 ? 'down' : change > 0 ? 'up' : '';
+            const changeSign = change > 0 ? '+' : '';
+
+            // 生成SVG折线图
+            const chartWidth = 600;
+            const chartHeight = 100;
+            const padding = 10;
+            const minW = Math.min(...weightData.map(d => d.weight)) - 0.5;
+            const maxW = Math.max(...weightData.map(d => d.weight)) + 0.5;
+            const range = maxW - minW || 1;
+
+            const points = weightData.map((d, i) => {
+                const x = padding + (i / (weightData.length - 1 || 1)) * (chartWidth - padding * 2);
+                const y = chartHeight - padding - ((d.weight - minW) / range) * (chartHeight - padding * 2);
+                return `${x},${y}`;
+            });
+            const polylinePoints = points.join(' ');
+
+            // X轴标签（只显示首尾和偶尔的中间点）
+            const labels = weightData.map((d, i) => {
+                const x = padding + (i / (weightData.length - 1 || 1)) * (chartWidth - padding * 2);
+                const show = i === 0 || i === weightData.length - 1 || i === Math.floor(weightData.length / 2);
+                return show ? `<text x="${x}" y="${chartHeight - 2}" text-anchor="middle" font-size="10" fill="#888">${d.date.slice(5)}</text>` : '';
+            }).join('');
+
+            // 数据点
+            const dots = weightData.map((d, i) => {
+                const x = padding + (i / (weightData.length - 1 || 1)) * (chartWidth - padding * 2);
+                const y = chartHeight - padding - ((d.weight - minW) / range) * (chartHeight - padding * 2);
+                return `<circle cx="${x}" cy="${y}" r="3" fill="#667eea"/>`;
+            }).join('');
+
+            weightHtml = `
+                <div class="weight-card">
+                    <h2>⚖️ 体重追踪</h2>
+                    <div class="weight-summary">
+                        <div>
+                            <div class="weight-current">${latest.weight.toFixed(1)}<span class="weight-unit"> kg</span></div>
+                            <div style="font-size:11px;color:#888;">最新（${latest.date.slice(5)}）</div>
+                        </div>
+                        <div>
+                            <div class="weight-change ${changeClass}">${changeSign}${change} kg</div>
+                            <div style="font-size:11px;color:#888;">累计变化（${first.date.slice(5)}→${latest.date.slice(5)}）</div>
+                        </div>
+                        <div>
+                            <div style="font-size:14px;color:#888;">${weightData.length}次记录</div>
+                            <div style="font-size:11px;color:#888;">最近30天</div>
+                        </div>
+                    </div>
+                    <svg class="weight-chart" viewBox="0 0 ${chartWidth} ${chartHeight}" preserveAspectRatio="xMidYMid meet">
+                        <polyline points="${polylinePoints}" fill="none" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        ${dots}
+                        ${labels}
+                    </svg>
+                </div>`;
+        } else {
+            weightHtml = `<div class="weight-card"><h2>⚖️ 体重追踪</h2><div class="weight-chart-empty">暂无体重数据</div></div>`;
+        }
+        html += weightHtml;
+
         // 进度条
         html += `<div class="card"><h2>📈 今日进度</h2>`;
         const progressItems = [
