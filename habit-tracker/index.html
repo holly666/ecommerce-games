@@ -288,10 +288,7 @@
     
     function getHabitList() {
         return habitData && habitData.习惯列表 ? habitData.习惯列表 : [
-            {id:'heshui', name:'喝水', icon:'💧'},
-            {id:'doujiang', name:'豆浆', icon:'🥛'},
-            {id:'milk', name:'牛奶', icon:'🥛'},
-            {id:'shihushu', name:'石斛水', icon:'🍵'},
+            {id:'液体', name:'喝水', icon:'💧'},
             {id:'paojiao', name:'泡脚', icon:'🦶'},
             {id:'duanlian', name:'锻炼', icon:'🏃'},
             {id:'shuijiao', name:'早睡', icon:'😴'},
@@ -301,7 +298,7 @@
 
     // 自动生成每日点评（温暖鼓励风格）
     function generateDailyCommentary(rec, dateStr) {
-        const liquid = rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.shihushu||0) : 0;
+        const liquid = rec ? (rec['液体']||0) : 0;
         const duanlian = rec ? (rec.duanlian||0) : 0;
         const paojiao = rec ? (rec.paojiao||0) : 0;
         const shuijiao = rec ? (rec.shuijiao||0) : 0;
@@ -364,7 +361,7 @@
             const r = getRecord(d);
             return {
                 date: d,
-                liquid: r ? (r.heshui||0)+(r.doujiang||0)+(r.milk||0)+(r.shihushu||0) : 0,
+                liquid: r ? (r['液体']||0) : 0,
                 duanlian: r ? (r.duanlian||0) : 0,
                 paojiao: r ? (r.paojiao||0) : 0,
                 shuijiao: r ? (r.shuijiao||0) : 0,
@@ -449,11 +446,7 @@
             const rec = habitData[ds] || null;
             const val = rec ? rec[habitId] : 0;
             let done = val > 0;
-            if (habitId === 'heshui') {
-                const totalLiquid = (rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.shihushu||0) : 0);
-                done = totalLiquid >= 2000;
-            }
-            if (habitId === 'doujiang' || habitId === 'milk' || habitId === 'shihushu') done = val > 0;
+            if (habitId === '液体') done = val >= 2000;
             if (!done) break;
             streak++;
         }
@@ -489,7 +482,7 @@
         const progSide = progIdx % 2 === 1 ? '右边' : '左边';
         
         // 计算总液体（heshui已经是所有液体的累计，不需要再相加）
-        const totalLiquid = rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.shihushu||0) : 0;
+        const totalLiquid = rec ? (rec['液体']||0) : 0;
         const liquidPct = Math.min(100, Math.round((totalLiquid / 2000) * 100));
         const liquidDone = totalLiquid >= 2000;
         
@@ -513,8 +506,7 @@
             const wr = getRecord(wd);
             if (wr) {
                 if (wr.paojiao > 0) weekDoneCount++;
-                const wrTotalLiquid = wr ? (wr.heshui||0) + (wr.doujiang||0) + (wr.milk||0) + (wr.shihushu||0) : 0;
-                if (wrTotalLiquid >= 2000) weekDoneCount++;
+                if ((wr['液体']||0) >= 2000) weekDoneCount++;
                 if (wr.duanlian >= 30) weekDoneCount++;
                 if (wr.shuijiao > 0) weekDoneCount++;
             }
@@ -568,11 +560,7 @@
         
         // 注意：heshui在数据里已经是所有液体的累计（=水+豆浆+牛奶+中药），不要重复相加
         const habitDisplayItems = [
-            ['heshui', '💧', '液体合计', totalLiquid, 'ml', 2000],
-            ['water', '💦', '白开水', rec ? rec.water || 0 : 0, 'ml', 500],
-            ['doujiang', '🥛', '豆浆', rec ? rec.doujiang || 0 : 0, 'ml', 500],
-            ['milk', '🥛', '牛奶', rec ? rec.milk || 0 : 0, 'ml', 200],
-            ['shihushu', '🍵', '石斛水', rec ? rec.shihushu || 0 : 0, 'ml', 400],
+            ['液体', '💧', '液体合计', totalLiquid, 'ml', 2000],
             ['paojiao', '🦶', '泡脚', rec ? rec.paojiao || 0 : 0, '', 1],
             ['duanlian', '🏃', '锻炼', duanlianVal, '分钟', 30],
             ['shuijiao', '😴', '早睡', rec ? rec.shuijiao || 0 : 0, '', 1],
@@ -679,7 +667,7 @@
             const wr = getRecord(wd);
             const habits4 = [
                 ['paojiao','🦶'],
-                ['heshui','💧'],
+                ['液体','💧'],
                 ['duanlian','🏃'],
                 ['shuijiao','😴'],
                 ['dabian','💩'],
@@ -692,8 +680,8 @@
                 let cls = 'wh-empty';
                 if (wr) {
                     const v = wr[hid] || 0;
-                    if (hid === 'heshui') {
-                        const wdTotal = wr ? (wr.heshui||0) + (wr.doujiang||0) + (wr.milk||0) + (wr.shihushu||0) : 0;
+                    if (hid === '液体') {
+                        const wdTotal = wr ? (wr['液体']||0) : 0;
                         cls = wdTotal >= 2000 ? 'wh-done' : (wdTotal > 0 ? 'wh-miss' : 'wh-empty');
                     }
                     else if (hid === 'duanlian') cls = v >= 30 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
@@ -831,7 +819,7 @@
     function renderHistory30() {
         const container = document.getElementById('historyContent');
         const habits = [
-            ['heshui','💧'],['doujiang','🥛'],['milk','🥛'],['shihushu','🍵'],
+            ['液体','💧'],
             ['paojiao','🦶'],['duanlian','🏃'],['shuijiao','😴'],['dabian','💩'],
         ];
 
@@ -853,14 +841,14 @@
             const isToday = dateStr === localDateStr();
             const rec = getRecord(dateStr);
             const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
-            const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.shihushu||0);
+            const totalLiquid = (rec?.['液体']||0);
 
             const habitDots = [];
             habits.forEach(([hid, icon]) => {
                 let done = false;
-                if (hid === 'heshui') done = totalLiquid >= 2000;
+                if (hid === '液体') done = totalLiquid >= 2000;
                 else if (hid === 'duanlian') done = (rec?.duanlian||0) >= 30;
-                else if (['doujiang','milk','shihushu'].includes(hid)) done = (rec?.[hid]||0) > 0;
+
                 else done = (rec?.[hid]||0) > 0;
                 habitDots.push(`<span class="history-dot ${done ? 'dot-done' : 'dot-miss'}" title="${hid}">${icon}</span>`);
             });
@@ -882,6 +870,18 @@
             </div>`;
         });
         html += '</div>';
+
+        // ===== 液体折线图 =====
+        window._liquidData = [];
+        days.slice().reverse().forEach(dateStr => {
+            const rec = getRecord(dateStr);
+            window._liquidData.push({ date: dateStr, value: rec ? (rec['液体']||0) : 0 });
+        });
+
+        html += \`<div style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
+            <h4 style="margin:0 0 10px 0;color:#666;font-size:13px;">💧 饮水趋势（近30天）</h4>
+            <canvas id="liquidChart" width="800" height="200" style="width:100%;border-radius:12px;"></canvas>
+        </div>\`;
 
         // Part 2: 健康详情（只显示有记录的日子）
         const weekdaysFull = ['周日','周一','周二','周三','周四','周五','周六'];
@@ -917,6 +917,106 @@
         container.innerHTML = html;
     }
     
+    function drawLiquidChart() {
+        const canvas = document.getElementById('liquidChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width, H = canvas.height;
+        const padding = {top: 20, right: 20, bottom: 35, left: 50};
+        const chartW = W - padding.left - padding.right;
+        const chartH = H - padding.top - padding.bottom;
+
+        ctx.clearRect(0, 0, W, H);
+
+        const data = (window._liquidData||[]).map(d => d.value);
+        const maxVal = Math.max(2500, Math.max(...data) * 1.1);
+        const minVal = 0;
+        const xStep = chartW / (data.length - 1 || 1);
+        const yScale = chartH / (maxVal - minVal);
+
+        const toX = i => padding.left + i * xStep;
+        const toY = v => padding.top + chartH - (v - minVal) * yScale;
+
+        // Grid lines
+        ctx.strokeStyle = '#f0f0f0';
+        ctx.lineWidth = 1;
+        for (let v = 0; v <= maxVal; v += 500) {
+            const y = toY(v);
+            ctx.beginPath();
+            ctx.moveTo(padding.left, y);
+            ctx.lineTo(W - padding.right, y);
+            ctx.stroke();
+        }
+
+        // Y axis labels
+        ctx.fillStyle = '#999';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'right';
+        for (let v = 0; v <= maxVal; v += 500) {
+            ctx.fillText(v + 'ml', padding.left - 5, toY(v) + 4);
+        }
+
+        // 2000ml target line
+        if (maxVal >= 2000) {
+            const ty = toY(2000);
+            ctx.strokeStyle = '#43e97b';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 3]);
+            ctx.beginPath();
+            ctx.moveTo(padding.left, ty);
+            ctx.lineTo(W - padding.right, ty);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#43e97b';
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('目标2000ml', W - padding.right - 70, ty - 5);
+        }
+
+        // Gradient fill
+        const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
+        gradient.addColorStop(0, 'rgba(102,126,234,0.3)');
+        gradient.addColorStop(1, 'rgba(102,126,234,0.02)');
+
+        // Draw line
+        ctx.beginPath();
+        data.forEach((v, i) => {
+            const x = toX(i), y = toY(v);
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Fill area
+        ctx.lineTo(toX(data.length - 1), padding.top + chartH);
+        ctx.lineTo(toX(0), padding.top + chartH);
+        ctx.closePath();
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        // Draw dots
+        data.forEach((v, i) => {
+            const x = toX(i), y = toY(v);
+            ctx.beginPath();
+            ctx.arc(x, y, v > 0 ? 3 : 2, 0, Math.PI * 2);
+            ctx.fillStyle = v >= 2000 ? '#43e97b' : v > 0 ? '#667eea' : '#ccc';
+            ctx.fill();
+        });
+
+        // X axis labels (show every 5 days)
+        ctx.fillStyle = '#999';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        (window._liquidData||[]).forEach((d, i) => {
+            const date = new Date(d.date + 'T12:00:00');
+            if (i % 5 === 0 || i === data.length - 1) {
+                const x = toX(i);
+                ctx.fillText(\`\${date.getMonth()+1}/\${date.getDate()}\`, x, H - 5);
+            }
+        });
+    }
+
     loadAll();
     </script>
     
