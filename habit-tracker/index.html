@@ -878,10 +878,10 @@
             window._liquidData.push({ date: dateStr, value: rec ? (rec['液体']||0) : 0 });
         });
 
-        html += \`<div style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
+        html += `<div style="margin-top:20px;border-top:1px solid #eee;padding-top:15px;">
             <h4 style="margin:0 0 10px 0;color:#666;font-size:13px;">💧 饮水趋势（近30天）</h4>
             <canvas id="liquidChart" width="800" height="200" style="width:100%;border-radius:12px;"></canvas>
-        </div>\`;
+        </div>`;
 
         // Part 2: 健康详情（只显示有记录的日子）
         const weekdaysFull = ['周日','周一','周二','周三','周四','周五','周六'];
@@ -1012,7 +1012,7 @@
             const date = new Date(d.date + 'T12:00:00');
             if (i % 5 === 0 || i === data.length - 1) {
                 const x = toX(i);
-                ctx.fillText(\`\${date.getMonth()+1}/\${date.getDate()}\`, x, H - 5);
+                ctx.fillText(`${date.getMonth()+1}/${date.getDate()}`, x, H - 5);
             }
         });
     }
