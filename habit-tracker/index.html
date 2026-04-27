@@ -449,7 +449,10 @@
             const rec = habitData[ds] || null;
             const val = rec ? rec[habitId] : 0;
             let done = val > 0;
-            if (habitId === 'heshui') done = val >= 2000;
+            if (habitId === 'heshui') {
+                const totalLiquid = (rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.shihushu||0) : 0);
+                done = totalLiquid >= 2000;
+            }
             if (habitId === 'doujiang' || habitId === 'milk' || habitId === 'shihushu') done = val > 0;
             if (!done) break;
             streak++;
@@ -486,7 +489,7 @@
         const progSide = progIdx % 2 === 1 ? '右边' : '左边';
         
         // 计算总液体（heshui已经是所有液体的累计，不需要再相加）
-        const totalLiquid = rec ? (rec.heshui || 0) : 0;
+        const totalLiquid = rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.shihushu||0) : 0;
         const liquidPct = Math.min(100, Math.round((totalLiquid / 2000) * 100));
         const liquidDone = totalLiquid >= 2000;
         
@@ -510,7 +513,8 @@
             const wr = getRecord(wd);
             if (wr) {
                 if (wr.paojiao > 0) weekDoneCount++;
-                if ((wr.heshui||0) >= 2000) weekDoneCount++;
+                const wrTotalLiquid = wr ? (wr.heshui||0) + (wr.doujiang||0) + (wr.milk||0) + (wr.shihushu||0) : 0;
+                if (wrTotalLiquid >= 2000) weekDoneCount++;
                 if (wr.duanlian >= 30) weekDoneCount++;
                 if (wr.shuijiao > 0) weekDoneCount++;
             }
@@ -564,7 +568,7 @@
         
         // 注意：heshui在数据里已经是所有液体的累计（=水+豆浆+牛奶+中药），不要重复相加
         const habitDisplayItems = [
-            ['heshui', '💧', '液体合计', rec ? rec.heshui || 0 : 0, 'ml', 2000],
+            ['heshui', '💧', '液体合计', totalLiquid, 'ml', 2000],
             ['water', '💦', '白开水', rec ? rec.water || 0 : 0, 'ml', 500],
             ['doujiang', '🥛', '豆浆', rec ? rec.doujiang || 0 : 0, 'ml', 500],
             ['milk', '🥛', '牛奶', rec ? rec.milk || 0 : 0, 'ml', 200],
@@ -688,7 +692,10 @@
                 let cls = 'wh-empty';
                 if (wr) {
                     const v = wr[hid] || 0;
-                    if (hid === 'heshui') cls = v >= 2000 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
+                    if (hid === 'heshui') {
+                        const wdTotal = wr ? (wr.heshui||0) + (wr.doujiang||0) + (wr.milk||0) + (wr.shihushu||0) : 0;
+                        cls = wdTotal >= 2000 ? 'wh-done' : (wdTotal > 0 ? 'wh-miss' : 'wh-empty');
+                    }
                     else if (hid === 'duanlian') cls = v >= 30 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
                     else if (hid === 'dabian') cls = v >= 1 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
                     else cls = v > 0 ? 'wh-done' : 'wh-empty';
