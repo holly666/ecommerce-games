@@ -46,60 +46,60 @@
     "heshui": 1000,
     "doujiang": 400,
     "milk": 0,
-    "zhongyao": 200,
     "dabian": 0,
     "duanlian": 30,
     "shuijiao": 0,
     "chiyao": 1,
-    "water": 400
+    "water": 400,
+    "shihushu": 200
   },
   "2026-03-30": {
     "paojiao": 1,
     "heshui": 3350,
     "doujiang": 400,
     "milk": 0,
-    "zhongyao": 200,
     "dabian": 1,
     "duanlian": 0,
     "shuijiao": 1,
     "chiyao": 0,
-    "water": 2750
+    "water": 2750,
+    "shihushu": 200
   },
   "2026-04-01": {
     "paojiao": 0,
     "heshui": 1900,
     "doujiang": 400,
     "milk": 200,
-    "zhongyao": 400,
     "dabian": 1,
     "duanlian": 60,
     "shuijiao": 0,
     "chiyao": 0,
-    "water": 1500
+    "water": 1500,
+    "shihushu": 400
   },
   "2026-04-02": {
     "paojiao": 1,
     "heshui": 2100,
     "doujiang": 500,
     "milk": 200,
-    "zhongyao": 400,
     "dabian": 1,
     "duanlian": 30,
     "shuijiao": 0,
     "chiyao": 1,
-    "water": 1000
+    "water": 1000,
+    "shihushu": 400
   },
   "2026-04-03": {
     "paojiao": 0,
     "heshui": 750,
     "doujiang": 500,
     "milk": 0,
-    "zhongyao": 200,
     "dabian": 1,
     "duanlian": 0,
     "shuijiao": 0,
     "chiyao": 0,
-    "water": 50
+    "water": 50,
+    "shihushu": 200
   },
   "2026-04-04": {
     "paojiao": 0,
@@ -109,14 +109,13 @@
     "shuijiao": 0,
     "chiyao": 0,
     "heparin": 1,
-    "zhongyao": 200
+    "shihushu": 200
   },
   "2026-04-06": {
     "paojiao": 0,
     "heshui": 1000,
     "doujiang": 500,
     "milk": 0,
-    "zhongyao": 200,
     "dabian": 1,
     "duanlian": 30,
     "shuijiao": 0,
@@ -126,38 +125,39 @@
     "泡脚": {
       "完成": true,
       "备注": "昨天洗澡代替泡脚"
-    }
+    },
+    "shihushu": 200
   },
   "2026-04-07": {
     "paojiao": 0,
     "heshui": 900,
     "doujiang": 500,
     "milk": 0,
-    "zhongyao": 200,
     "dabian": 0,
     "duanlian": 1,
     "shuijiao": 0,
     "chiyao": 1,
     "heparin": 1,
-    "water": 200
+    "water": 200,
+    "shihushu": 200
   },
   "2026-04-08": {
     "doujiang": 500,
     "heshui": 700,
     "milk": 200,
     "dabian": 1,
-    "zhongyao": 400,
-    "duanlian": 30
+    "duanlian": 30,
+    "shihushu": 400
   },
   "2026-04-09": {
     "doujiang": 500,
     "milk": 200,
-    "zhongyao": 200,
     "heparin": 1,
     "dabian": 1,
     "备注": "大便羊屎状，偏干",
     "water": 300,
-    "heshui": 1200
+    "heshui": 1200,
+    "shihushu": 200
   },
   "2026-04-10": {
     "doujiang": 500,
@@ -186,28 +186,28 @@
     "heshui": 1200,
     "paojiao": 1,
     "shuijiao": 0,
-    "zhongyao": 200
+    "shihushu": 200
   },
   "2026-04-13": {
     "dabian": 1,
     "milk": 200,
     "doujiang": 400,
     "heshui": 500,
-    "zhongyao": 400,
-    "duanlian": 30
+    "duanlian": 30,
+    "shihushu": 400
   },
   "2026-04-14": {
     "doujiang": 500,
     "heshui": 200,
-    "zhongyao": 200,
     "duanlian": 30,
-    "dabian": 1
+    "dabian": 1,
+    "shihushu": 200
   },
   "2026-04-15": {
-    "zhongyao": 2,
     "heshui": 1300,
     "doujiang": 500,
-    "water": 400
+    "water": 400,
+    "shihushu": 2
   },
   "2026-04-16": {
     "chiyao": 1
@@ -250,5 +250,9 @@
   },
   "2026-03-05": {
     "体重": 51
+  },
+  "2026-04-27": {
+    "heshui": 400,
+    "doujiang": 500
   }
 }
