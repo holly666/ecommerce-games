@@ -291,7 +291,7 @@
             {id:'heshui', name:'喝水', icon:'💧'},
             {id:'doujiang', name:'豆浆', icon:'🥛'},
             {id:'milk', name:'牛奶', icon:'🥛'},
-            {id:'zhongyao', name:'中药', icon:'🍵'},
+            {id:'shihushu', name:'石斛水', icon:'🍵'},
             {id:'paojiao', name:'泡脚', icon:'🦶'},
             {id:'duanlian', name:'锻炼', icon:'🏃'},
             {id:'shuijiao', name:'早睡', icon:'😴'},
@@ -301,7 +301,7 @@
 
     // 自动生成每日点评（温暖鼓励风格）
     function generateDailyCommentary(rec, dateStr) {
-        const liquid = rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.zhongyao||0) : 0;
+        const liquid = rec ? (rec.heshui||0) + (rec.doujiang||0) + (rec.milk||0) + (rec.shihushu||0) : 0;
         const duanlian = rec ? (rec.duanlian||0) : 0;
         const paojiao = rec ? (rec.paojiao||0) : 0;
         const shuijiao = rec ? (rec.shuijiao||0) : 0;
@@ -364,7 +364,7 @@
             const r = getRecord(d);
             return {
                 date: d,
-                liquid: r ? (r.heshui||0)+(r.doujiang||0)+(r.milk||0)+(r.zhongyao||0) : 0,
+                liquid: r ? (r.heshui||0)+(r.doujiang||0)+(r.milk||0)+(r.shihushu||0) : 0,
                 duanlian: r ? (r.duanlian||0) : 0,
                 paojiao: r ? (r.paojiao||0) : 0,
                 shuijiao: r ? (r.shuijiao||0) : 0,
@@ -450,7 +450,7 @@
             const val = rec ? rec[habitId] : 0;
             let done = val > 0;
             if (habitId === 'heshui') done = val >= 2000;
-            if (habitId === 'doujiang' || habitId === 'milk' || habitId === 'zhongyao') done = val > 0;
+            if (habitId === 'doujiang' || habitId === 'milk' || habitId === 'shihushu') done = val > 0;
             if (!done) break;
             streak++;
         }
@@ -568,7 +568,7 @@
             ['water', '💦', '白开水', rec ? rec.water || 0 : 0, 'ml', 500],
             ['doujiang', '🥛', '豆浆', rec ? rec.doujiang || 0 : 0, 'ml', 500],
             ['milk', '🥛', '牛奶', rec ? rec.milk || 0 : 0, 'ml', 200],
-            ['zhongyao', '🍵', '中药', rec ? rec.zhongyao || 0 : 0, 'ml', 400],
+            ['shihushu', '🍵', '石斛水', rec ? rec.shihushu || 0 : 0, 'ml', 400],
             ['paojiao', '🦶', '泡脚', rec ? rec.paojiao || 0 : 0, '', 1],
             ['duanlian', '🏃', '锻炼', duanlianVal, '分钟', 30],
             ['shuijiao', '😴', '早睡', rec ? rec.shuijiao || 0 : 0, '', 1],
@@ -824,7 +824,7 @@
     function renderHistory30() {
         const container = document.getElementById('historyContent');
         const habits = [
-            ['heshui','💧'],['doujiang','🥛'],['milk','🥛'],['zhongyao','🍵'],
+            ['heshui','💧'],['doujiang','🥛'],['milk','🥛'],['shihushu','🍵'],
             ['paojiao','🦶'],['duanlian','🏃'],['shuijiao','😴'],['dabian','💩'],
         ];
 
@@ -846,14 +846,14 @@
             const isToday = dateStr === localDateStr();
             const rec = getRecord(dateStr);
             const hd = healthData ? (healthData['健康记录'] || healthData)[dateStr] : null;
-            const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.zhongyao||0);
+            const totalLiquid = (rec?.heshui||0) + (rec?.doujiang||0) + (rec?.milk||0) + (rec?.shihushu||0);
 
             const habitDots = [];
             habits.forEach(([hid, icon]) => {
                 let done = false;
                 if (hid === 'heshui') done = totalLiquid >= 2000;
                 else if (hid === 'duanlian') done = (rec?.duanlian||0) >= 30;
-                else if (['doujiang','milk','zhongyao'].includes(hid)) done = (rec?.[hid]||0) > 0;
+                else if (['doujiang','milk','shihushu'].includes(hid)) done = (rec?.[hid]||0) > 0;
                 else done = (rec?.[hid]||0) > 0;
                 habitDots.push(`<span class="history-dot ${done ? 'dot-done' : 'dot-miss'}" title="${hid}">${icon}</span>`);
             });
