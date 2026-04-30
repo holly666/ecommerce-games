@@ -308,7 +308,7 @@
         const parts = [];
 
         // 今日点评
-        if (liquid >= 2000) {
+        if (liquid >= 2500) {
             parts.push('水分补得很足，今天喝够了');
         } else if (liquid >= 1000) {
             parts.push(`喝了${liquid}ml，再来一点就达标了`);
@@ -420,7 +420,7 @@
 
         // 当日建议
         const tips = [];
-        if (liquid < 2000) tips.push('多喝水');
+        if (liquid < 2500) tips.push('多喝水');
         if (duanlian < 30 && duanlian > 0) tips.push('再锻炼一会');
         if (!paojiao) tips.push('晚上泡脚');
         if (!shuijiao) tips.push('早点睡觉');
@@ -446,7 +446,7 @@
             const rec = habitData[ds] || null;
             const val = rec ? rec[habitId] : 0;
             let done = val > 0;
-            if (habitId === '液体') done = val >= 2000;
+            if (habitId === '液体') done = val >= 2500;
             if (!done) break;
             streak++;
         }
@@ -483,8 +483,8 @@
         
         // 计算总液体（heshui已经是所有液体的累计，不需要再相加）
         const totalLiquid = rec ? (rec['液体']||0) : 0;
-        const liquidPct = Math.min(100, Math.round((totalLiquid / 2000) * 100));
-        const liquidDone = totalLiquid >= 2000;
+        const liquidPct = Math.min(100, Math.round((totalLiquid / 2500) * 100));
+        const liquidDone = totalLiquid >= 2500;
         
         // 计算锻炼
         const duanlianVal = rec ? rec.duanlian || 0 : 0;
@@ -506,7 +506,7 @@
             const wr = getRecord(wd);
             if (wr) {
                 if (wr.paojiao > 0) weekDoneCount++;
-                if ((wr['液体']||0) >= 2000) weekDoneCount++;
+                if ((wr['液体']||0) >= 2500) weekDoneCount++;
                 if (wr.duanlian >= 30) weekDoneCount++;
                 if (wr.shuijiao > 0) weekDoneCount++;
             }
@@ -592,7 +592,7 @@
                     ctx.fillText(v+'ml', pad.l-4, y+4);
                 }
 
-                const ty = pad.t + ch - (2000/maxV)*ch;
+                const ty = pad.t + ch - (2500/maxV)*ch;
                 ctx.strokeStyle='#43e97b'; ctx.lineWidth=2; ctx.setLineDash([4,3]);
                 ctx.beginPath(); ctx.moveTo(pad.l,ty); ctx.lineTo(W-pad.r,ty); ctx.stroke();
                 ctx.setLineDash([]);
@@ -614,7 +614,7 @@
                 vals.forEach((v,i) => {
                     const x=toX(i), y=toY(v);
                     ctx.beginPath(); ctx.arc(x,y, v>0?3:2, 0, Math.PI*2);
-                    ctx.fillStyle=v>=2000?'#43e97b':v>0?'#667eea':'#ddd'; ctx.fill();
+                    ctx.fillStyle=v>=2500?'#43e97b':v>0?'#667eea':'#ddd'; ctx.fill();
                 });
 
                 ctx.fillStyle='#888'; ctx.font='10px sans-serif'; ctx.textAlign='center';
@@ -632,7 +632,7 @@
         
         // 注意：heshui在数据里已经是所有液体的累计（=水+豆浆+牛奶+中药），不要重复相加
         const habitDisplayItems = [
-            ['液体', '💧', '液体合计', totalLiquid, 'ml', 2000],
+            ['液体', '💧', '液体合计', totalLiquid, 'ml', 2500],
             ['paojiao', '🦶', '泡脚', rec ? rec.paojiao || 0 : 0, '', 1],
             ['duanlian', '🏃', '锻炼', duanlianVal, '分钟', 30],
             ['shuijiao', '😴', '早睡', rec ? rec.shuijiao || 0 : 0, '', 1],
@@ -754,7 +754,7 @@
                     const v = wr[hid] || 0;
                     if (hid === '液体') {
                         const wdTotal = wr ? (wr['液体']||0) : 0;
-                        cls = wdTotal >= 2000 ? 'wh-done' : (wdTotal > 0 ? 'wh-miss' : 'wh-empty');
+                        cls = wdTotal >= 2500 ? 'wh-done' : (wdTotal > 0 ? 'wh-miss' : 'wh-empty');
                     }
                     else if (hid === 'duanlian') cls = v >= 30 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
                     else if (hid === 'dabian') cls = v >= 1 ? 'wh-done' : (v > 0 ? 'wh-miss' : 'wh-empty');
@@ -852,7 +852,7 @@
         // 进度条
         html += `<div class="card"><h2>📈 今日进度</h2>`;
         const progressItems = [
-            ['💧', '液体', totalLiquid, 2000, 'ml', 'fill-blue'],
+            ['💧', '液体', totalLiquid, 2500, 'ml', 'fill-blue'],
             ['🏃', '锻炼', duanlianVal, 30, '分钟', 'fill-green'],
             ['🦶', '泡脚', rec ? rec.paojiao || 0 : 0, 1, '', 'fill-purple'],
             ['😴', '早睡', rec ? rec.shuijiao || 0 : 0, 1, '', 'fill-orange'],
@@ -918,7 +918,7 @@
             const habitDots = [];
             habits.forEach(([hid, icon]) => {
                 let done = false;
-                if (hid === '液体') done = totalLiquid >= 2000;
+                if (hid === '液体') done = totalLiquid >= 2500;
                 else if (hid === 'duanlian') done = (rec?.duanlian||0) >= 30;
 
                 else done = (rec?.[hid]||0) > 0;
@@ -1028,9 +1028,9 @@
             ctx.fillText(v + 'ml', padding.left - 5, toY(v) + 4);
         }
 
-        // 2000ml target line
-        if (maxVal >= 2000) {
-            const ty = toY(2000);
+        // 2500ml target line
+        if (maxVal >= 2500) {
+            const ty = toY(2500);
             ctx.strokeStyle = '#43e97b';
             ctx.lineWidth = 2;
             ctx.setLineDash([5, 3]);
@@ -1042,7 +1042,7 @@
             ctx.fillStyle = '#43e97b';
             ctx.font = '10px sans-serif';
             ctx.textAlign = 'left';
-            ctx.fillText('目标2000ml', W - padding.right - 70, ty - 5);
+            ctx.fillText('目标2500ml', W - padding.right - 70, ty - 5);
         }
 
         // Gradient fill
@@ -1072,7 +1072,7 @@
             const x = toX(i), y = toY(v);
             ctx.beginPath();
             ctx.arc(x, y, v > 0 ? 3 : 2, 0, Math.PI * 2);
-            ctx.fillStyle = v >= 2000 ? '#43e97b' : v > 0 ? '#667eea' : '#ccc';
+            ctx.fillStyle = v >= 2500 ? '#43e97b' : v > 0 ? '#667eea' : '#ccc';
             ctx.fill();
         });
 
